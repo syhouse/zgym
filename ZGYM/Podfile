@@ -1,0 +1,57 @@
+inhibit_all_warnings!
+
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '9.0'
+
+target 'ZGYM' do
+    pod 'Bugly'
+    pod 'Alamofire'
+    pod 'ObjectMapper'
+    pod 'SwiftyJSON', '~> 4.0'
+    pod 'SnapKit' , '~> 4.0.0'
+    pod 'GBDeviceInfo'
+#UI
+    pod 'MBProgressHUD'
+    pod 'YYImage', '~> 1.0.4'
+    pod 'YYText'
+    pod 'SDWebImage'
+    pod 'IQKeyboardManager'
+    pod 'MJRefresh'
+    pod 'JXCategoryView'
+    pod 'FDFullscreenPopGesture_Bell', '~> 2.0'
+    pod 'EmptyDataSet-Swift', '~> 5.0.0'
+    pod 'MGSwipeTableCell'
+    pod 'UITableView+FDTemplateLayoutCell', '~> 1.6'
+#    pod 'MLeaksFinder'
+
+    pod 'TZImagePickerController'
+    pod 'NightNight'
+    
+#    视频预览
+    pod 'YBImageBrowser/Video'
+    
+    pod 'JCore', '2.1.4-noidfa'
+    pod 'JPush', '3.2.4-noidfa'
+    
+    # 腾讯IM依赖库
+    pod 'MMLayout', '~> 0.2.0'
+    pod 'Toast'
+    pod 'ReactiveObjC'
+    pod 'ISVImageScrollView'
+#    pod 'TXIMSDK_TUIKit_iOS'
+#    pod 'TXLiteAVSDK_TRTC'
+
+#   高德地图
+    pod 'AMapLocation'
+    pod 'AMapSearch'
+    pod 'AMap3DMap'
+    pod 'Masonry'
+
+#   分享
+    pod 'WechatOpenSDK' , '~> 1.8.6'
+    
+#    pod 'mob_linksdk_pro', '~> 3.2.6'
+    use_frameworks!
+end
+
+

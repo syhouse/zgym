@@ -1,0 +1,82 @@
+//
+//  SLTransferClassTableViewCell.swift
+//  ZGYM
+//
+//  Created by sl_mac on 2019/11/22.
+//  Copyright © 2019 hnsl_mac. All rights reserved.
+//
+
+import UIKit
+import NightNight
+
+class SLTransferClassTableViewCell: UITableViewCell {
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
+        
+        self.contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+        
+        self.contentView.addSubview(self.lbTitle)
+        self.contentView.addSubview(self.btnChose)
+        
+        self.lbTitle.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(self.contentView.snp_centerY)
+            make.left.equalTo(15)
+        })
+        
+        self.btnChose.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(self.contentView.snp_centerY)
+            make.right.equalTo(-15)
+            make.width.height.equalTo(17)
+        })
+        
+        self.contentView.sl_addLine(position: LinePosition.bottom, color: UIColor.gray, leftMargin: 0, rightMargin: 0, lineHeight: 0.5)
+    }
+    
+    var model: SLTransferItemModel? {
+        didSet {
+            self.lbTitle.text = self.model?.name
+            self.btnChose.isSelected = self.model?.isSelected ?? false
+        }
+    }
+    
+    // MARK: - Action
+    @objc func choseClick(sender: SLButton) {
+        sender.isSelected = !sender.isSelected
+    }
+    
+    // MARK: - LazyLoad
+    lazy var lbTitle: SLLabel = {
+        let lb = SLLabel()
+        lb.mixedTextColor = MixedColor(normal: k575A60Color, night: kNight898F9A)
+        lb.text = ""
+        lb.font = UIFont.systemFont(ofSize: 15)
+        return lb
+    }()
+    
+    lazy var btnChose: SLButton = {
+        let btn = SLButton()
+        btn.isUserInteractionEnabled = false
+        btn.setImage(UIImage(named: "sl_chose_normal"), for: .normal)
+        btn.setImage(UIImage(named: "sl_chose_selected"), for: .selected)
+        btn.addTarget(self, action: #selector(choseClick(sender:)), for: .touchUpInside)
+        return btn
+    }()
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
