@@ -10,6 +10,8 @@ target 'ZGYM' do
     pod 'SwiftyJSON', '~> 4.0'
     pod 'SnapKit' , '~> 4.0.0'
     pod 'GBDeviceInfo'
+    
+#    pod 'LifetimeTracker'
 #UI
     pod 'MBProgressHUD'
     pod 'YYImage', '~> 1.0.4'
@@ -21,11 +23,10 @@ target 'ZGYM' do
     pod 'FDFullscreenPopGesture_Bell', '~> 2.0'
     pod 'EmptyDataSet-Swift', '~> 5.0.0'
     pod 'MGSwipeTableCell'
-    pod 'UITableView+FDTemplateLayoutCell', '~> 1.6'
-#    pod 'MLeaksFinder'
-
+#    pod 'UITableView+FDTemplateLayoutCell', '~> 1.6'
     pod 'TZImagePickerController'
     pod 'NightNight'
+    pod 'FLEX', '~> 2.4.0'
     
 #    视频预览
     pod 'YBImageBrowser/Video'
