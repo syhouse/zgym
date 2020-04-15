@@ -199,6 +199,8 @@ class YXSHomeController: YXSHomeBaseController {
                 }else{
                     self.firstPageCacheSource = list
                 }
+            }else{
+                self.tsLast = nil
             }
             
             self.lastRecordId = list.last?.id ?? 0

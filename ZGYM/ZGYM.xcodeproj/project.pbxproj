@@ -15,7 +15,7 @@
 		6F07032A2445D8020090975B /* UITextField+YXSClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE142445D7F20090975B /* UITextField+YXSClearButton.swift */; };
 		6F07032B2445D8020090975B /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE162445D7F20090975B /* UITableViewExtensions.swift */; };
 		6F07032C2445D8020090975B /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE172445D7F20090975B /* UIScrollViewExtensions.swift */; };
-		6F07032D2445D8020090975B /* CALayer+SLAnimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE182445D7F20090975B /* CALayer+SLAnimal.swift */; };
+		6F07032D2445D8020090975B /* CALayer+YXSAnimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE182445D7F20090975B /* CALayer+YXSAnimal.swift */; };
 		6F07032E2445D8020090975B /* Extension+UIBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE192445D7F20090975B /* Extension+UIBarButtonItem.swift */; };
 		6F07032F2445D8020090975B /* UITextFieldExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE1A2445D7F20090975B /* UITextFieldExtensions.swift */; };
 		6F0703302445D8020090975B /* UINavigationItemExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE1B2445D7F20090975B /* UINavigationItemExtensions.swift */; };
@@ -222,7 +222,7 @@
 		6F0703FA2445D8030090975B /* YXSAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FFEB2445D7FD0090975B /* YXSAvatarView.swift */; };
 		6F0703FB2445D8030090975B /* YXSRouterEventProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FFEC2445D7FD0090975B /* YXSRouterEventProtocol.swift */; };
 		6F0703FC2445D8030090975B /* YXSVoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FFED2445D7FD0090975B /* YXSVoiceView.swift */; };
-		6F0703FD2445D8030090975B /* SLCommonBottomAlerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FFEE2445D7FD0090975B /* SLCommonBottomAlerView.swift */; };
+		6F0703FD2445D8030090975B /* YXSCommonBottomAlerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FFEE2445D7FD0090975B /* YXSCommonBottomAlerView.swift */; };
 		6F0703FE2445D8030090975B /* YXSGuideViewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FFF02445D7FD0090975B /* YXSGuideViewWindow.swift */; };
 		6F0703FF2445D8030090975B /* YXSGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FFF12445D7FD0090975B /* YXSGuideView.swift */; };
 		6F0704002445D8030090975B /* NSUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FFF22445D7FD0090975B /* NSUtil.swift */; };
@@ -390,7 +390,7 @@
 		6F0704A22445D8040090975B /* YXSTeacherClassListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700C42445D7FE0090975B /* YXSTeacherClassListViewController.swift */; };
 		6F0704A32445D8040090975B /* YXSClassManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700C52445D7FE0090975B /* YXSClassManageViewController.swift */; };
 		6F0704A42445D8040090975B /* YXSClassMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700C62445D7FE0090975B /* YXSClassMembersViewController.swift */; };
-		6F0704A52445D8040090975B /* SLPhotoShowAlbumItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700C92445D7FE0090975B /* SLPhotoShowAlbumItemController.swift */; };
+		6F0704A52445D8040090975B /* YXSPhotoShowAlbumItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700C92445D7FE0090975B /* YXSPhotoShowAlbumItemController.swift */; };
 		6F0704A62445D8040090975B /* SLPhotoCreateAlbumController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700CA2445D7FE0090975B /* SLPhotoCreateAlbumController.swift */; };
 		6F0704A72445D8040090975B /* SLPhotoClassPhotoAlbumListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700CB2445D7FE0090975B /* SLPhotoClassPhotoAlbumListController.swift */; };
 		6F0704A82445D8040090975B /* SLPhotoClassListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700CC2445D7FE0090975B /* SLPhotoClassListController.swift */; };
@@ -953,7 +953,7 @@
 		6F0700C42445D7FE0090975B /* YXSTeacherClassListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSTeacherClassListViewController.swift; sourceTree = "<group>"; };
 		6F0700C52445D7FE0090975B /* YXSClassManageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassManageViewController.swift; sourceTree = "<group>"; };
 		6F0700C62445D7FE0090975B /* YXSClassMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassMembersViewController.swift; sourceTree = "<group>"; };
-		6F0700C92445D7FE0090975B /* SLPhotoShowAlbumItemController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLPhotoShowAlbumItemController.swift; sourceTree = "<group>"; };
+		6F0700C92445D7FE0090975B /* YXSPhotoShowAlbumItemController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPhotoShowAlbumItemController.swift; sourceTree = "<group>"; };
 		6F0700CA2445D7FE0090975B /* SLPhotoCreateAlbumController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLPhotoCreateAlbumController.swift; sourceTree = "<group>"; };
 		6F0700CB2445D7FE0090975B /* SLPhotoClassPhotoAlbumListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLPhotoClassPhotoAlbumListController.swift; sourceTree = "<group>"; };
 		6F0700CC2445D7FE0090975B /* SLPhotoClassListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLPhotoClassListController.swift; sourceTree = "<group>"; };
@@ -1471,7 +1471,7 @@
 		6F07FE142445D7F20090975B /* UITextField+YXSClearButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+YXSClearButton.swift"; sourceTree = "<group>"; };
 		6F07FE162445D7F20090975B /* UITableViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtensions.swift; sourceTree = "<group>"; };
 		6F07FE172445D7F20090975B /* UIScrollViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIScrollViewExtensions.swift; sourceTree = "<group>"; };
-		6F07FE182445D7F20090975B /* CALayer+SLAnimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+SLAnimal.swift"; sourceTree = "<group>"; };
+		6F07FE182445D7F20090975B /* CALayer+YXSAnimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+YXSAnimal.swift"; sourceTree = "<group>"; };
 		6F07FE192445D7F20090975B /* Extension+UIBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+UIBarButtonItem.swift"; sourceTree = "<group>"; };
 		6F07FE1A2445D7F20090975B /* UITextFieldExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldExtensions.swift; sourceTree = "<group>"; };
 		6F07FE1B2445D7F20090975B /* UINavigationItemExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationItemExtensions.swift; sourceTree = "<group>"; };
@@ -1885,7 +1885,7 @@
 		6F07FFEB2445D7FD0090975B /* YXSAvatarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSAvatarView.swift; sourceTree = "<group>"; };
 		6F07FFEC2445D7FD0090975B /* YXSRouterEventProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSRouterEventProtocol.swift; sourceTree = "<group>"; };
 		6F07FFED2445D7FD0090975B /* YXSVoiceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVoiceView.swift; sourceTree = "<group>"; };
-		6F07FFEE2445D7FD0090975B /* SLCommonBottomAlerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLCommonBottomAlerView.swift; sourceTree = "<group>"; };
+		6F07FFEE2445D7FD0090975B /* YXSCommonBottomAlerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSCommonBottomAlerView.swift; sourceTree = "<group>"; };
 		6F07FFF02445D7FD0090975B /* YXSGuideViewWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSGuideViewWindow.swift; sourceTree = "<group>"; };
 		6F07FFF12445D7FD0090975B /* YXSGuideView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSGuideView.swift; sourceTree = "<group>"; };
 		6F07FFF22445D7FD0090975B /* NSUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUtil.swift; sourceTree = "<group>"; };
@@ -2021,7 +2021,7 @@
 			path = YXSPhotoBrowserTool;
 			sourceTree = "<group>";
 		};
-		6F07001F2445D7FD0090975B /* SLWidget */ = {
+		6F07001F2445D7FD0090975B /* YXSWidget */ = {
 			isa = PBXGroup;
 			children = (
 				6F0700202445D7FD0090975B /* YXSUnReadView.m */,
@@ -2029,7 +2029,7 @@
 				6F0700222445D7FD0090975B /* YXSUnReadView.h */,
 				6F0700232445D7FD0090975B /* YXSQSTextField.h */,
 			);
-			path = SLWidget;
+			path = YXSWidget;
 			sourceTree = "<group>";
 		};
 		6F07002D2445D7FE0090975B /* YXSModule */ = {
@@ -2045,7 +2045,7 @@
 				6F07009C2445D7FE0090975B /* YXSClassScheduleCard */,
 				6F0700A22445D7FE0090975B /* YXSFirstLaunch */,
 				6F0700A52445D7FE0090975B /* YXSClass */,
-				6F0700C72445D7FE0090975B /* SLPhotos */,
+				6F0700C72445D7FE0090975B /* YXSPhotos */,
 				6F0700DB2445D7FF0090975B /* YXSPunchCard */,
 				6F0700FC2445D7FF0090975B /* SLSolitaire */,
 				6F0701052445D7FF0090975B /* YXSChat */,
@@ -2389,20 +2389,20 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		6F0700C72445D7FE0090975B /* SLPhotos */ = {
+		6F0700C72445D7FE0090975B /* YXSPhotos */ = {
 			isa = PBXGroup;
 			children = (
 				6F0700C82445D7FE0090975B /* Controller */,
 				6F0700D12445D7FE0090975B /* Model */,
 				6F0700D52445D7FE0090975B /* View */,
 			);
-			path = SLPhotos;
+			path = YXSPhotos;
 			sourceTree = "<group>";
 		};
 		6F0700C82445D7FE0090975B /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				6F0700C92445D7FE0090975B /* SLPhotoShowAlbumItemController.swift */,
+				6F0700C92445D7FE0090975B /* YXSPhotoShowAlbumItemController.swift */,
 				6F0700CA2445D7FE0090975B /* SLPhotoCreateAlbumController.swift */,
 				6F0700CB2445D7FE0090975B /* SLPhotoClassPhotoAlbumListController.swift */,
 				6F0700CC2445D7FE0090975B /* SLPhotoClassListController.swift */,
@@ -3854,7 +3854,7 @@
 			children = (
 				6F07FE162445D7F20090975B /* UITableViewExtensions.swift */,
 				6F07FE172445D7F20090975B /* UIScrollViewExtensions.swift */,
-				6F07FE182445D7F20090975B /* CALayer+SLAnimal.swift */,
+				6F07FE182445D7F20090975B /* CALayer+YXSAnimal.swift */,
 				6F07FE192445D7F20090975B /* Extension+UIBarButtonItem.swift */,
 				6F07FE1A2445D7F20090975B /* UITextFieldExtensions.swift */,
 				6F07FE1B2445D7F20090975B /* UINavigationItemExtensions.swift */,
@@ -4691,7 +4691,7 @@
 				6F07FFEB2445D7FD0090975B /* YXSAvatarView.swift */,
 				6F07FFEC2445D7FD0090975B /* YXSRouterEventProtocol.swift */,
 				6F07FFED2445D7FD0090975B /* YXSVoiceView.swift */,
-				6F07FFEE2445D7FD0090975B /* SLCommonBottomAlerView.swift */,
+				6F07FFEE2445D7FD0090975B /* YXSCommonBottomAlerView.swift */,
 				6F07FFEF2445D7FD0090975B /* YXSGuideTool */,
 				6F07FFF22445D7FD0090975B /* NSUtil.swift */,
 				6F07FFF32445D7FD0090975B /* YXSLAuthorityTool.swift */,
@@ -4711,7 +4711,7 @@
 				6F07001C2445D7FD0090975B /* UIUtil.swift */,
 				6F07001D2445D7FD0090975B /* YXSShowBrowserHelper.swift */,
 				6F07001E2445D7FD0090975B /* YXSLabelView.swift */,
-				6F07001F2445D7FD0090975B /* SLWidget */,
+				6F07001F2445D7FD0090975B /* YXSWidget */,
 				6F0700242445D7FD0090975B /* YXSCountDownTool.swift */,
 				6F0700252445D7FD0090975B /* YXSLocalMessageHelper.swift */,
 				6F0700262445D7FD0090975B /* YXSCustomImageControl.swift */,
@@ -5377,7 +5377,7 @@
 				6F0704B02445D8040090975B /* SLPhotoShowAlubmFooterView.swift in Sources */,
 				6F0705C32445D8060090975B /* LFZoomingView.m in Sources */,
 				6F07045A2445D8040090975B /* SLFileGroupCell.swift in Sources */,
-				6F0704A52445D8040090975B /* SLPhotoShowAlbumItemController.swift in Sources */,
+				6F0704A52445D8040090975B /* YXSPhotoShowAlbumItemController.swift in Sources */,
 				6F0703332445D8020090975B /* UIViewExtensions.swift in Sources */,
 				6F0705EE2445D8060090975B /* LFAlbum.m in Sources */,
 				6F0704352445D8040090975B /* YXSSettingViewController.swift in Sources */,
@@ -5385,7 +5385,7 @@
 				6F07053F2445D8050090975B /* YXSHomeworkPublishController.swift in Sources */,
 				6F0705502445D8050090975B /* SLFriendCircleModel.swift in Sources */,
 				6F0704762445D8040090975B /* YXSBannerModel.swift in Sources */,
-				6F0703FD2445D8030090975B /* SLCommonBottomAlerView.swift in Sources */,
+				6F0703FD2445D8030090975B /* YXSCommonBottomAlerView.swift in Sources */,
 				6F0703632445D8030090975B /* TCommonAvatarCell.m in Sources */,
 				6F07037E2445D8030090975B /* TUIGroupConversationListController.m in Sources */,
 				6F0704262445D8040090975B /* YXSCirleProgressView.swift in Sources */,
@@ -5543,7 +5543,7 @@
 				6F07032C2445D8020090975B /* UIScrollViewExtensions.swift in Sources */,
 				6F07050B2445D8050090975B /* SLClassStarTeacherDetialHeaderMidView.swift in Sources */,
 				6F0703FA2445D8030090975B /* YXSAvatarView.swift in Sources */,
-				6F07032D2445D8020090975B /* CALayer+SLAnimal.swift in Sources */,
+				6F07032D2445D8020090975B /* CALayer+YXSAnimal.swift in Sources */,
 				6F0703702445D8030090975B /* TUINewFriendViewModel.m in Sources */,
 				6F0704662445D8040090975B /* YXSPersonDataModel.swift in Sources */,
 				6F0703912445D8030090975B /* TUIIncommingTextCellLayout.m in Sources */,
@@ -5989,7 +5989,7 @@
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/TencentIM/TUIKit/Classes/Third/voiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/XMLY",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation;
 				PRODUCT_MODULE_NAME = ZGYM;
 				PRODUCT_NAME = "优学业";
@@ -6033,7 +6033,7 @@
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/TencentIM/TUIKit/Classes/Third/voiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/XMLY",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation;
 				PRODUCT_MODULE_NAME = ZGYM;
 				PRODUCT_NAME = "优学业";

@@ -286,7 +286,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     /// - Parameter indexPath: 操作当前indexPath
     private func yxs_showTopAlert(indexPath: IndexPath){
         let listModel = yxs_dataSource[indexPath.section].items[indexPath.row]
-        SLCommonBottomAlerView.showIn(topButtonTitle: ((listModel.isTop ?? 0)  == 1) ? "取消置顶" : "置顶") { [weak self] in
+        YXSCommonBottomAlerView.showIn(topButtonTitle: ((listModel.isTop ?? 0)  == 1) ? "取消置顶" : "置顶") { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.yxs_updateTopEvent(model: listModel)
         }

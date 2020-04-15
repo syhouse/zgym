@@ -136,7 +136,7 @@ class YXSSatchelFileViewController: SLClassFileViewController {
         } else {
             let lists = [YXSCommonBottomParams.init(title: "从相册选择", event: "album"),YXSCommonBottomParams.init(title: "新建文件夹", event: "createFolder")]
             
-            SLCommonBottomAlerView.showIn(buttons: lists) { [weak self](model) in
+            YXSCommonBottomAlerView.showIn(buttons: lists) { [weak self](model) in
                 guard let strongSelf = self else { return }
                 switch model.event {
                 case "album":

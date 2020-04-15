@@ -164,7 +164,7 @@ class YXSClassScheduleCardDetialController: YXSBaseViewController{
             lists.append(YXSCommonBottomParams.init(title: "删除", event: "delect"))
         }
         
-        SLCommonBottomAlerView.showIn(buttons: lists) { [weak self](model) in
+        YXSCommonBottomAlerView.showIn(buttons: lists) { [weak self](model) in
             guard let strongSelf = self else { return }
             switch model.event {
             case "photo":

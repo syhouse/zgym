@@ -1,5 +1,5 @@
 //
-//  SLPhotoShowAlbumItemController.swift
+//  YXSPhotoShowAlbumItemController.swift
 //  ZGYM
 //
 //  Created by sy_mac on 2020/3/16.
@@ -9,7 +9,7 @@
 import UIKit
 import JXCategoryView
 
-class SLPhotoShowAlbumItemController:YXSBaseViewController, JXCategoryListContentViewDelegate {
+class YXSPhotoShowAlbumItemController:YXSBaseViewController, JXCategoryListContentViewDelegate {
     var model: SLPhotoAlbumsDetailListModel{
         didSet{
             playerButton.isHidden = model.resourceType == 1 ? false : true

@@ -157,6 +157,8 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         voiceView.snp_removeConstraints()
         favView.snp_removeConstraints()
         
+        model.isMyPublish = YXSPersonDataModel.sharePerson.personRole == .TEACHER && model.teacherId == self.yxs_user.id
+        
         //其他老师&家长展示盖章
         if !model.isMyPublish && (model.excellent ?? false){
             finishView.isHidden = false

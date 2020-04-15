@@ -72,7 +72,7 @@ class SLSolitaireListController: YXSCommonScreenListBaseController {
     // MARK: -UI
     override func showTopAlert(indexPath: IndexPath){
         let listModel = solitaireLists[indexPath.row]
-        SLCommonBottomAlerView.showIn( topButtonTitle: ((listModel.isTop ?? 0)  == 1) ? "取消置顶" : "置顶") {
+        YXSCommonBottomAlerView.showIn( topButtonTitle: ((listModel.isTop ?? 0)  == 1) ? "取消置顶" : "置顶") {
             UIUtil.yxs_loadUpdateTopData(type: .solitaire, id: listModel.censusId ?? 0, createTime: "", isTop: ((listModel.isTop ?? 0)  == 1) ? 0 : 1,positon: .list){
                 [weak self] in
                 guard let strongSelf = self else { return }
