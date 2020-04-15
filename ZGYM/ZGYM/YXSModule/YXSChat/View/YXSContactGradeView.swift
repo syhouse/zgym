@@ -28,7 +28,7 @@ class YXSContactGradeView: UICollectionView, UICollectionViewDelegateFlowLayout,
     
     
     // MARK: - Setter
-    var model: [SLClassModel]? {
+    var model: [YXSClassModel]? {
         didSet {
             self.reloadData()
         }

@@ -84,7 +84,7 @@ class YXSTransferClassViewController: YXSBaseTableViewController {
             }
         })
         
-        self.navigationController?.yxs_existViewController(existClass: YXSClassDetialListController(classModel: SLClassModel.init(JSON: ["":""])!), complete: { (isExist, resultVC) in
+        self.navigationController?.yxs_existViewController(existClass: YXSClassDetialListController(classModel: YXSClassModel.init(JSON: ["":""])!), complete: { (isExist, resultVC) in
             if isExist {
                 resultVC.navRightBarButtonTitle = "班级信息"
                 self.navigationController?.popToViewController(resultVC, animated: true)

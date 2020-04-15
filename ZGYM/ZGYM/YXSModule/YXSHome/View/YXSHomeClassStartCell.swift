@@ -31,7 +31,7 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
     // MARK: -action
     @objc func goRemindClick(){
         MBProgressHUD.yxs_showLoading()
-        YXSEducationTeacherTeacherBaseInfoRequest.init(childrenId: model.childrenId ?? 0, classId: model.classId ?? 0).requestCollection({ (items:[SLClassStartTeacherModel]) in
+        YXSEducationTeacherTeacherBaseInfoRequest.init(childrenId: model.childrenId ?? 0, classId: model.classId ?? 0).requestCollection({ (items:[YXSClassStartTeacherModel]) in
             MBProgressHUD.yxs_hideHUD()
             UIUtil.yxs_loadClassStartReminderRequest(teacherLists: items,childrenId: self.model.childrenId ?? 0, classId: self.model.classId ?? 0)
         }) { (msg, code) in
@@ -126,7 +126,7 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
         }
     }
     
-    func yxs_setCellModel(_ classStarModel: SLClassStarPartentModel? , dateType: DateType = .W){
+    func yxs_setCellModel(_ classStarModel: YXSClassStarPartentModel? , dateType: DateType = .W){
         setTagUI("班级之星", backgroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#F4E2DF"), textColor: UIColor.yxs_hexToAdecimalColor(hex: "#E8534C"))
         yxs_title.isHidden = true
         yxs_lookDetial.isHidden = true

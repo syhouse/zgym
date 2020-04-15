@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 class YXSPublishModel: NSObject, NSCoding {
-    var classs:[SLClassModel]!
+    var classs:[YXSClassModel]!
     //发布内容文本
     var publishText: String?
     //主题文本
@@ -97,7 +97,7 @@ class YXSPublishModel: NSObject, NSCoding {
     var medias: [SLPublishMediaModel]!
     @objc required init(coder aDecoder: NSCoder)
     {
-        classs = aDecoder.decodeObject(forKey: "classs") as? [SLClassModel]
+        classs = aDecoder.decodeObject(forKey: "classs") as? [YXSClassModel]
         publishText = aDecoder.decodeObject(forKey: "publishText") as? String
         subjectText = aDecoder.decodeObject(forKey: "subjectText") as? String
         isTop = aDecoder.decodeBool(forKey: "isTop")

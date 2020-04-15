@@ -45,7 +45,7 @@ class YXSBaseCommentCell: UITableViewCell {
     }()
     
     // MARK: - YYLabel异步优化有问题   点赞取消点赞 评论cell会闪动
-    //    func yxs_setCellModel(_ model: SLFriendsCommentModel){
+    //    func yxs_setCellModel(_ model: YXSFriendsCommentModel){
     //        DispatchQueue.global().async {
     //            self.model = model
     //            var text:NSMutableAttributedString

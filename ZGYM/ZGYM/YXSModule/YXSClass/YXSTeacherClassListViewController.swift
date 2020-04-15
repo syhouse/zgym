@@ -12,8 +12,8 @@ import ObjectMapper
 
 class YXSTeacherClassListViewController: YXSBaseTableViewController {
 
-    var createClassList: [SLClassModel] = [SLClassModel]()
-    var joinClassList: [SLClassModel] = [SLClassModel]()
+    var createClassList: [YXSClassModel] = [YXSClassModel]()
+    var joinClassList: [YXSClassModel] = [YXSClassModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,8 +47,8 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
     func loadData() {
         YXSEducationGradeListRequest().request({ [weak self](json) in
             guard let weakSelf = self else {return}
-            weakSelf.joinClassList = Mapper<SLClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [SLClassModel]()
-            weakSelf.createClassList = Mapper<SLClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [SLClassModel]()
+            weakSelf.joinClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
+            weakSelf.createClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
             
             weakSelf.tableView.reloadData()
             weakSelf.checkEmptyData()
@@ -131,7 +131,7 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model: SLClassModel
+        let model: YXSClassModel
         if indexPath.section == 0 {
             model = createClassList[indexPath.row]
         } else {
@@ -188,7 +188,7 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let model: SLClassModel
+        let model: YXSClassModel
         if indexPath.section == 0 {
             model = createClassList[indexPath.row]
             yxs_loadClassDetailData(classId: model.id ?? 0)

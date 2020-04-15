@@ -142,7 +142,7 @@ class YXSComplaintDetailViewController: YXSBaseViewController {
                 MBProgressHUD.yxs_hideHUD()
                 MBProgressHUD.yxs_showMessage(message: "提交成功")
                 DispatchQueue.main.asyncAfter(deadline: .now()+1.0) {
-                    weakSelf.navigationController?.yxs_existViewController(existClass: SLFriendsCircleInfoController(userId: 0, childId: 0, type: ""), complete: { (isContain, resultVC) in
+                    weakSelf.navigationController?.yxs_existViewController(existClass: YXSFriendsCircleInfoController(userId: 0, childId: 0, type: ""), complete: { (isContain, resultVC) in
                         weakSelf.navigationController?.popToViewController(resultVC, animated: true)
                     })
                 }
@@ -351,11 +351,11 @@ class SLComplaintImagesView: UIView,YXSSelectMediaHelperDelegate {
     }
     
     // MARK: - Other
-    func getItem(_ model: YXSMediaModel? = nil, isAdd: Bool = false) -> SLFriendDragItem{
+    func getItem(_ model: YXSMediaModel? = nil, isAdd: Bool = false) -> YXSFriendDragItem{
         var publishMedia = SLPublishMediaModel()
         publishMedia.asset = model?.asset
         
-        let item = SLFriendDragItem.init(frame: CGRect.zero)
+        let item = YXSFriendDragItem.init(frame: CGRect.zero)
         item.contentMode = .scaleAspectFill
         item.clipsToBounds = true
         if isAdd{
@@ -431,8 +431,8 @@ class SLComplaintImagesView: UIView,YXSSelectMediaHelperDelegate {
         return lb
     }()
     
-    lazy var listView:SLFriendDragListView = {
-        let listView = SLFriendDragListView.init(frame: CGRect.init(x: 0, y: 170, width: SCREEN_WIDTH - 30, height: 0))
+    lazy var listView:YXSFriendDragListView = {
+        let listView = YXSFriendDragListView.init(frame: CGRect.init(x: 0, y: 170, width: SCREEN_WIDTH - 30, height: 0))
         listView.scaleItemInSort = 1.3
         listView.isSort = false
         listView.maxItem = 3

@@ -12,7 +12,7 @@ import YYText
 
 class YXSMineCommentViewController: YXSBaseTableViewController {
 
-    var dataSource:[SLClassStarHistoryModel] = [SLClassStarHistoryModel]()
+    var dataSource:[YXSClassStarHistoryModel] = [YXSClassStarHistoryModel]()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "我的点评"
@@ -37,7 +37,7 @@ class YXSMineCommentViewController: YXSBaseTableViewController {
     
     // MARK: - Request
     @objc func requestData() {
-        YXSEducationTeacherMyEvaluationHistoryListRequest(currentPage: curruntPage, stage: self.yxs_user.stage ?? "").requestCollection({ [weak self](list:[SLClassStarHistoryModel]) in
+        YXSEducationTeacherMyEvaluationHistoryListRequest(currentPage: curruntPage, stage: self.yxs_user.stage ?? "").requestCollection({ [weak self](list:[YXSClassStarHistoryModel]) in
             guard let weakSelf = self else {return}
             weakSelf.yxs_endingRefresh()
             if weakSelf.curruntPage == 1{
@@ -73,7 +73,7 @@ class YXSMineCommentViewController: YXSBaseTableViewController {
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
-            let model:SLClassStarHistoryModel = dataSource[indexPath.row]
+            let model:YXSClassStarHistoryModel = dataSource[indexPath.row]
             MBProgressHUD.yxs_showLoading()
             YXSEducationTeacherDeleteEvaluationHistoryRequest(classId: model.classId ?? 0, evaluationHistoryId: model.id ?? 0).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
@@ -149,7 +149,7 @@ class MineCommentCell: YXSBaseTableViewCell {
     }
     
     // MARK: - Setter
-    var model: SLClassStarHistoryModel? {
+    var model: YXSClassStarHistoryModel? {
         didSet {
             let placeholderImg = YXSPersonDataModel.sharePerson.personRole == .TEACHER ? kImageUserIconTeacherDefualtImage:kImageUserIconStudentDefualtImage
             let newUrl = (self.model?.evaluationUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!

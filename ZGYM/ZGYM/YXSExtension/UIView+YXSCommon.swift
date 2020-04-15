@@ -40,15 +40,15 @@ extension UIView {
             }
             
         case .solitaire:
-            UIUtil.curruntNav().pushViewController(SLSolitaireListController(classId: classId,childId: childId))
+            UIUtil.curruntNav().pushViewController(YXSSolitaireListController(classId: classId,childId: childId))
         case .homework:
             UIUtil.curruntNav().pushViewController(YXSHomeworkListController(classId: classId,childId: childId))
         case .punchCard:
             UIUtil.curruntNav().pushViewController(YXSPunchCardListController(classId: classId,childId: childId))
         case .notice:
-            UIUtil.curruntNav().pushViewController(SLNoticeListController(classId: classId,childId: childId))
+            UIUtil.curruntNav().pushViewController(YXSNoticeListController(classId: classId,childId: childId))
         case .photo:
-            UIUtil.curruntNav().pushViewController(SLPhotoClassListController())
+            UIUtil.curruntNav().pushViewController(YXSPhotoClassListController())
         case .score:
             UIUtil.curruntNav().pushViewController(YXSScoreDetialController())
             
@@ -59,7 +59,7 @@ extension UIView {
             if YXSPersonDataModel.sharePerson.personRole == .PARENT{
                 
                 if let childModel = childModel{
-                    UIUtil.curruntNav().pushViewController(SLClassStarPartentDetialController.init(childrenModel: childModel))
+                    UIUtil.curruntNav().pushViewController(YXSClassStarPartentDetialController.init(childrenModel: childModel))
                 }
             }else{
                 var curruntClassId: Int? = classId
@@ -67,9 +67,9 @@ extension UIView {
                     curruntClassId = yxs_user.gradeIds?.first
                 }
                 if let curruntClassId = curruntClassId{
-                    UIUtil.curruntNav().pushViewController(SLClassStarSignleClassDetialController.init(classId: curruntClassId))
+                    UIUtil.curruntNav().pushViewController(YXSClassStarSignleClassDetialController.init(classId: curruntClassId))
                 }else{
-                    UIUtil.curruntNav().pushViewController(SLClassStartTeacherClassListController())
+                    UIUtil.curruntNav().pushViewController(YXSClassStartTeacherClassListController())
                 }
                 
             }

@@ -22,7 +22,7 @@ class YXSClassDetailModel : NSObject, Mappable{
     var teachers : Int?
     var stage : String?
     
-    func getCurruntChild(classModel: SLClassModel) -> YXSChildrenModel?{
+    func getCurruntChild(classModel: YXSClassModel) -> YXSChildrenModel?{
         var children: YXSChildrenModel?
         if let childrens = self.children{
             for model in childrens{

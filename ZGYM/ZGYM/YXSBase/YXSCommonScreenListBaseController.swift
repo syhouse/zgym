@@ -29,7 +29,7 @@ enum SLCommonScreenSelectType: String{
 
 class YXSCommonScreenListBaseController: YXSBaseTableViewController{
     var dataSource: [YXSHomeListModel] = [YXSHomeListModel]()
-    var createClassList:[SLClassModel]?
+    var createClassList:[YXSClassModel]?
     
     var classId: Int?
     var childId: Int?
@@ -196,7 +196,7 @@ class YXSCommonScreenListBaseController: YXSBaseTableViewController{
     // MARK: -loaddata
     func loadClassListData(){
         YXSEducationGradeListRequest().request({ (json) in
-            self.createClassList = Mapper<SLClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [SLClassModel]()
+            self.createClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
             self.group.leave()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)

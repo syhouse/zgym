@@ -15,7 +15,7 @@ class YXSSelectClassController: YXSBaseTableViewController {
     /// 只能选择单个班级
     var isSelectSingleClass: Bool = false
     
-    var dataSource: [SLClassModel] = [SLClassModel](){
+    var dataSource: [YXSClassModel] = [YXSClassModel](){
         didSet{
             if let selectClass = self.selectClass{
                 for model in selectClass{
@@ -28,9 +28,9 @@ class YXSSelectClassController: YXSBaseTableViewController {
             }
         }
     }
-    var selectBlock: ((_ selectClasss: [SLClassModel]) ->())?
-    var selectClass: [SLClassModel]?
-    init(_ selectClass:[SLClassModel]? = nil,dataSource: [SLClassModel]? = nil) {
+    var selectBlock: ((_ selectClasss: [YXSClassModel]) ->())?
+    var selectClass: [YXSClassModel]?
+    init(_ selectClass:[YXSClassModel]? = nil,dataSource: [YXSClassModel]? = nil) {
         super.init()
         self.selectClass = selectClass
         showBegainRefresh = false
@@ -44,7 +44,7 @@ class YXSSelectClassController: YXSBaseTableViewController {
     }
     
     override func setValue(_ value: Any?, forKey key: String) {
-        guard let dataSource = value as? [SLClassModel] else{
+        guard let dataSource = value as? [YXSClassModel] else{
             return
         }
         self.dataSource = dataSource
@@ -74,7 +74,7 @@ class YXSSelectClassController: YXSBaseTableViewController {
     // MARK: -UI
     
     @objc func yxs_saveClick(){
-        var selectclasss = [SLClassModel]()
+        var selectclasss = [YXSClassModel]()
         for model in dataSource{
             if model.isSelect{
                 selectclasss.append(model)

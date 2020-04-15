@@ -518,7 +518,7 @@ extension YXSPunchCardSingleStudentBaseListController{
                 pointInView.y = rc.minY + 14.0
             }
         }
-        SLFriendsCircleDelectCommentView.showAlert(pointInView) {
+        YXSFriendsCircleDelectCommentView.showAlert(pointInView) {
             [weak self]in
             guard let strongSelf = self else { return }
             strongSelf.loadDelectCommentData(section, commentModel: commentModel)
@@ -530,7 +530,7 @@ extension YXSPunchCardSingleStudentBaseListController{
             return
         }
         let tips = commentModel == nil ? "评论：" : "回复\(commentModel!.showUserName ?? "")："
-        let alter = SLFriendsCommentAlert.showAlert(tips) { [weak self](content) in
+        let alter = YXSFriendsCommentAlert.showAlert(tips) { [weak self](content) in
             guard let strongSelf = self else { return }
             strongSelf.loadCommentData(section, content: content!, commentModel: commentModel)
             

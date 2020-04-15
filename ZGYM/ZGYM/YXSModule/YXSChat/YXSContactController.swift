@@ -117,8 +117,8 @@ class YXSContactController: YXSBaseTableViewController{
         YXSEducationGradeListRequest().request({ [weak self](json) in
             guard let weakSelf = self else {return}
 //            MBProgressHUD.yxs_hideHUD()
-            let joinClassList = Mapper<SLClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [SLClassModel]()
-            let createClassList = Mapper<SLClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [SLClassModel]()
+            let joinClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
+            let createClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
             var model = joinClassList + createClassList
             model = weakSelf.filter(classList: model)
             weakSelf.classesModel = model
@@ -154,7 +154,7 @@ class YXSContactController: YXSBaseTableViewController{
         YXSEducationGradeListRequest().request({ [weak self](json) in
             guard let weakSelf = self else {return}
 //            MBProgressHUD.yxs_hideHUD()
-            var model = Mapper<SLClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [SLClassModel]()
+            var model = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
             /// 去重
             model = model.yxs_filterDuplicates({$0.id})
             model = weakSelf.filter(classList: model)
@@ -195,7 +195,7 @@ class YXSContactController: YXSBaseTableViewController{
     }
     
     // MARK: - Setter
-    var classesModel: [SLClassModel]? {
+    var classesModel: [YXSClassModel]? {
         didSet {
             gradeView.model = self.classesModel
         }
@@ -372,12 +372,12 @@ class YXSContactController: YXSBaseTableViewController{
     
     // MARK: - Other
     /// 过滤若有班级ID 仅显示当前一个班级的成员
-    @objc func filter(classList:[SLClassModel]) -> [SLClassModel]{
+    @objc func filter(classList:[YXSClassModel]) -> [YXSClassModel]{
         if self.classId == nil {
             return classList
             
         } else {
-            var model: SLClassModel = SLClassModel(JSON: ["":""])!
+            var model: YXSClassModel = YXSClassModel(JSON: ["":""])!
             for sub in classList {
                 if sub.id == self.classId {
                     model = sub

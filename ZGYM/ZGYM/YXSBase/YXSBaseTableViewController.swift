@@ -217,27 +217,27 @@ extension YXSBaseScrollViewController{
             self.navigationController?.pushViewController(vc)
         }
         else if event == .notice{
-            let vc = SLNoticePublishController()
+            let vc = YXSNoticePublishController()
             vc.singlePublishClassId = classId
             self.navigationController?.pushViewController(vc)
         }
         else if event == .solitaire{
-            let vc = SLSolitairePublishController()
+            let vc = YXSSolitairePublishController()
             vc.singlePublishClassId = classId
             self.navigationController?.pushViewController(vc)
         }
         else if event == .friendCicle{
-            let vc = SLFriendPublishController()
+            let vc = YXSFriendPublishController()
             vc.singlePublishClassId = classId
             self.navigationController?.pushViewController(vc)
         }
         else if event == .classstart{
             //教师班级之星 只有单个班级
             if yxs_user.gradeIds!.count == 1{
-                let vc = SLClassStarTeacherPublishCommentController.init(model: nil,isPublish: true,classId: yxs_user.gradeIds?.first ?? 0)
+                let vc = YXSClassStarTeacherPublishCommentController.init(model: nil,isPublish: true,classId: yxs_user.gradeIds?.first ?? 0)
                 self.navigationController?.pushViewController(vc)
             }else{
-                let vc = SLClassStartTeacherClassListController.init(classId: classId, isPublish: true)
+                let vc = YXSClassStartTeacherClassListController.init(classId: classId, isPublish: true)
                 self.navigationController?.pushViewController(vc)
             }
             
