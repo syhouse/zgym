@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1F822DB2F8FEBE4193BA5026 /* Pods_ZGYM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */; };
+		560B20AE244706E4003D8A19 /* YXSXMLYNativeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */; };
 		6F0703262445D8020090975B /* Date+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE102445D7F20090975B /* Date+YXSCategory.swift */; };
 		6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE112445D7F20090975B /* String+YXSCategory.swift */; };
 		6F0703282445D8020090975B /* UITextField+YXSPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE122445D7F20090975B /* UITextField+YXSPlaceholder.swift */; };
@@ -788,6 +789,7 @@
 /* Begin PBXFileReference section */
 		19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.debug.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.debug.xcconfig"; sourceTree = "<group>"; };
 		523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.release.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.release.xcconfig"; sourceTree = "<group>"; };
+		560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSXMLYNativeRequest.swift; sourceTree = "<group>"; };
 		6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0700002445D7FD0090975B /* YXSMediaModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSMediaModel.swift; sourceTree = "<group>"; };
 		6F0700012445D7FD0090975B /* YXSSelectMediaHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSelectMediaHelper.swift; sourceTree = "<group>"; };
@@ -4678,6 +4680,7 @@
 				6F07FFE72445D7FC0090975B /* YXSXMLYRequest.swift */,
 				6F07FFE82445D7FC0090975B /* YXSNoticeRequset.swift */,
 				6F07FFE92445D7FC0090975B /* YXSSatchelRequest.swift */,
+				560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */,
 			);
 			path = YXSNetwork;
 			sourceTree = "<group>";
@@ -5387,6 +5390,7 @@
 				6F07037E2445D8030090975B /* TUIGroupConversationListController.m in Sources */,
 				6F0704262445D8040090975B /* YXSCirleProgressView.swift in Sources */,
 				6F0703352445D8020090975B /* UIColor+YXSHexColor.swift in Sources */,
+				560B20AE244706E4003D8A19 /* YXSXMLYNativeRequest.swift in Sources */,
 				6F0705CB2445D8060090975B /* LFGifPlayerManager.m in Sources */,
 				6F0703882445D8030090975B /* TUIMessageCellData.m in Sources */,
 				6F07054B2445D8050090975B /* YXSClassModel.swift in Sources */,
