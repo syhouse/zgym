@@ -751,6 +751,8 @@
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
+		E583FBE52446B5D1005C8F72 /* confuse.sh in Resources */ = {isa = PBXBuildFile; fileRef = E583FBE32446B5D0005C8F72 /* confuse.sh */; };
+		E583FBE62446B5D1005C8F72 /* func.list in Resources */ = {isa = PBXBuildFile; fileRef = E583FBE42446B5D1005C8F72 /* func.list */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1909,6 +1911,9 @@
 		6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZGYMUITests.swift; sourceTree = "<group>"; };
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
+		E583FBE12446B54E005C8F72 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		E583FBE32446B5D0005C8F72 /* confuse.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = confuse.sh; sourceTree = SOURCE_ROOT; };
+		E583FBE42446B5D1005C8F72 /* func.list */ = {isa = PBXFileReference; lastKnownFileType = file; path = func.list; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4787,6 +4792,8 @@
 		6FA0F328242B451800E2E035 /* ZGYM */ = {
 			isa = PBXGroup;
 			children = (
+				E583FBE32446B5D0005C8F72 /* confuse.sh */,
+				E583FBE42446B5D1005C8F72 /* func.list */,
 				6F07FE0D2445D7E80090975B /* YXSBaseTabBarController.swift */,
 				6F07FFEA2445D7FD0090975B /* YXSCommon */,
 				6F07FE0F2445D7F20090975B /* YXSExtension */,
@@ -4803,6 +4810,7 @@
 				6F07FDE82445D7290090975B /* Assets.xcassets */,
 				6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */,
 				6FA0F337242B451E00E2E035 /* Info.plist */,
+				E583FBE12446B54E005C8F72 /* PrefixHeader.pch */,
 			);
 			path = ZGYM;
 			sourceTree = "<group>";
@@ -4848,6 +4856,7 @@
 				3A6F959F91D86A232965ED3C /* [CP] Embed Pods Frameworks */,
 				0D4E5DACA1C7BC1392BF2228 /* [CP] Copy Pods Resources */,
 				6FA0FA9E242B500200E2E035 /* Embed Frameworks */,
+				E583FBE22446B58E005C8F72 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -4946,6 +4955,7 @@
 				6F0704142445D8030090975B /* address in Resources */,
 				6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */,
 				6F0705902445D8060090975B /* LFMediaEditingController.bundle in Resources */,
+				E583FBE52446B5D1005C8F72 /* confuse.sh in Resources */,
 				6F07057C2445D8060090975B /* LFMediaDisplayView.bundle in Resources */,
 				6F07FDE92445D7290090975B /* Assets.xcassets in Resources */,
 				6F0703EA2445D8030090975B /* XMResource.bundle in Resources */,
@@ -4956,6 +4966,7 @@
 				6F0703C72445D8030090975B /* TUIKitResource.bundle in Resources */,
 				6F0703C82445D8030090975B /* TUIKitFace.bundle in Resources */,
 				6F0703D32445D8030090975B /* CLPlayer.bundle in Resources */,
+				E583FBE62446B5D1005C8F72 /* func.list in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5031,6 +5042,23 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		E583FBE22446B58E005C8F72 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$PROJECT_DIR/confuse.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

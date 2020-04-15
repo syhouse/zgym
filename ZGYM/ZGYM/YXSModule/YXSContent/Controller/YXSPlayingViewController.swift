@@ -1,6 +1,6 @@
 //
 //  YXSPlayingViewController.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by Liu Jie on 2020/4/13.
 //  Copyright © 2020 hmym. All rights reserved.

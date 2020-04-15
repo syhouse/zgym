@@ -1,6 +1,6 @@
 //
 //  YXSHomeworkCommentModel.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by yihao on 2020/4/7.
 //  Copyright © 2020 hmym. All rights reserved.

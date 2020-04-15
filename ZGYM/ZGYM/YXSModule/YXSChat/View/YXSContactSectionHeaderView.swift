@@ -1,6 +1,6 @@
 //
 //  YXSContactSectionHeaderView.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by Liu Jie on 2020/3/16.
 //  Copyright © 2020 hmym. All rights reserved.

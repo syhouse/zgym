@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by hunanyoumeng on 2020/2/11.
 //  Copyright © 2020 zgjy_mac. All rights reserved.
@@ -216,14 +216,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 
     // MARK: - CoreData
     lazy var managedObjectModel: NSManagedObjectModel = {
-        let modelURL = Bundle.main.url(forResource: "HNYMEducation", withExtension: "momd")
+        var modelURL = Bundle.main.url(forResource: "ZGYMEducation", withExtension: "mom")
+        if modelURL == nil {
+            modelURL = Bundle.main.url(forResource: "ZGYMEducation", withExtension: "momd")
+        }
         let managedObjectModel = NSManagedObjectModel.init(contentsOf: modelURL!)
         return managedObjectModel!
     }()
 
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
         let persistentStoreCoordinator = NSPersistentStoreCoordinator.init(managedObjectModel: managedObjectModel)
-        let sqliteURL = documentDir.appendingPathComponent("HNYMEducation.sqlite")
+        let sqliteURL = documentDir.appendingPathComponent("ZGYMEducation.sqlite")
         let options = [NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true]
         var failureReason = "创建NSPersistentStoreCoordinator时出现错误"
 

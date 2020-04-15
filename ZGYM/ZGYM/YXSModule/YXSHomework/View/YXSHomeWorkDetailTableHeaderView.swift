@@ -1,6 +1,6 @@
 //
 //  YXSHomeWorkDetailTableHeaderView.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by yanlong on 2020/3/26.
 //  Copyright © 2020 hmym. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  SLFriendsTipsModel.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by sy_mac on 2020/2/18.
 //  Copyright © 2020 zgjy_mac. All rights reserved.

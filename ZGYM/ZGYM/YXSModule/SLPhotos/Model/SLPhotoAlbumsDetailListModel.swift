@@ -1,6 +1,6 @@
 //
 //  SLPhotoAlbumsDetailListModel.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by sy_mac on 2020/3/7.
 //  Copyright © 2020 hmym. All rights reserved.
