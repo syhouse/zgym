@@ -15,7 +15,7 @@ class YXSEducationBabyVoiceCollectionSaveRequest: YXSBaseRequset {
     init(voiceId: Int,voiceTitle: String,voiceDuration: Int) {
         super.init()
         method = .post
-        host = homeHost
+//        host = homeHost
         path = babyVoiceCollectionSave
         param = ["voiceId": voiceId,
         "voiceTitle": voiceTitle,
@@ -29,7 +29,7 @@ class YXSEducationBabyVoiceCollectionJudgeRequest: YXSBaseRequset {
     init(voiceId: Int) {
         super.init()
         method = .post
-        host = homeHost
+//        host = homeHost
         path = babyVoiceCollectionJudge
         param = ["voiceId": voiceId]
     }
@@ -41,7 +41,7 @@ class YXSEducationBabyVoiceCollectionCancelRequest: YXSBaseRequset {
     init(voiceId: Int) {
         super.init()
         method = .post
-        host = homeHost
+//        host = homeHost
         path = babyVoiceCollectionCancel
         param = ["voiceId": voiceId]
     }

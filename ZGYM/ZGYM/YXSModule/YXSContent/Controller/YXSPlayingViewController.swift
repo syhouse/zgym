@@ -75,7 +75,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         btnNext.addTarget(self, action: #selector(playNextTrack(sender:)), for: .touchUpInside)
         progressView.addTarget(self, action: #selector(sliderValueChanged(sender:)), for: .valueChanged)
         btnMenu.addTarget(self, action: #selector(menuClick(sender:)), for: .touchUpInside)
-        btnCollect.addTarget(self, action: #selector(collectClick(sennder:)), for: .touchUpInside)
+        btnCollect.addTarget(self, action: #selector(collectClick(sender:)), for: .touchUpInside)
         
         stop()
         play()
@@ -148,6 +148,19 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             make.right.equalTo(-15)
         })
     }
+    
+    // MARK: - Request
+    @objc func requestJudge(voiceId: Int) {
+        YXSEducationBabyVoiceCollectionJudgeRequest(voiceId: voiceId).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            let isCollect: Bool = json["collection"].boolValue
+            weakSelf.btnCollect.isSelected = isCollect
+            
+        }) { (msg, code) in
+            
+        }
+    }
+
     
     // MARK: - Action
     @objc func playPauseClick(sender: YXSButton) {
@@ -265,8 +278,27 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         navigationController?.present(playListVC!, animated: true, completion: nil)
     }
     
-    @objc func collectClick(sennder: YXSButton) {
+    @objc func collectClick(sender: YXSButton) {
+        let track = XMSDKPlayer.shared()?.currentTrack()
         
+        if sender.isSelected {
+            /// 取消
+            YXSEducationBabyVoiceCollectionCancelRequest(voiceId: track?.trackId ?? 0).request({ (json) in
+                sender.isSelected = !sender.isSelected
+                
+            }) { (msg, code) in
+                
+            }
+            
+        } else {
+            /// 收藏
+            YXSEducationBabyVoiceCollectionSaveRequest(voiceId: track?.trackId ?? 0, voiceTitle: track?.trackTitle ?? "", voiceDuration: track?.duration ?? 0).request({ (json) in
+                sender.isSelected = !sender.isSelected
+                
+            }) { (msg, code) in
+                
+            }
+        }
     }
     
     @objc func onBackClick(sender: UIButton) {
@@ -289,6 +321,9 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }
     
     func xmTrackPlayerDidStart() {
+        let track = XMSDKPlayer.shared()?.currentTrack()
+        requestJudge(voiceId: track?.trackId ?? 0)
+        
         customNav.title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
         lbTotalDuration.text = stringWithDuration(duration: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0)
         imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: nil)
@@ -366,7 +401,9 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     lazy var btnCollect: YXSButton = {
         let btn = YXSButton()
-        btn.setMixedImage(MixedImage(normal: "sl_player_collect", night: "sl_player_collect"), forState: .normal)
+        btn.setMixedImage(MixedImage(normal: "yxs_xmly_no_fav", night: "yxs_xmly_no_fav"), forState: .normal)
+        btn.setMixedImage(MixedImage(normal: "yxs_xmly_has_fav", night: "yxs_xmly_has_fav"), forState: .selected)
+        
         return btn
     }()
     
