@@ -31,7 +31,8 @@ class YXSHomeTableSectionView: UITableViewHeaderFooterView {
     lazy var yxs_label: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#858E9C"))
+//        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#858E9C"))
+        label.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
         return label
     }()
 }

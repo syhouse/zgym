@@ -37,7 +37,7 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
         layout.minimumInteritemSpacing = 16.5
         layout.sectionInset = UIEdgeInsets.init(top: 10, left: 15, bottom: 0, right: 15)
         let itemW = (SCREEN_WIDTH - CGFloat(15*2) - 2*16.5)/3
-        layout.itemSize = CGSize.init(width: itemW, height: itemW + 28)
+        layout.itemSize = CGSize.init(width: itemW, height: itemW + 30)
         
         self.layout = layout
     }
@@ -54,7 +54,7 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
         collectionView.snp.remakeConstraints { (make) in
             make.left.right.equalTo(0)
             make.top.equalTo(showHeader ? headerView.height : 0)
-            make.bottom.equalTo(-kTabBottomHeight)
+            make.bottom.equalTo(0)
         }
         collectionView.register(YXSContentListCell.self, forCellWithReuseIdentifier: "YXSContentListCell")
         loadBannerData()
@@ -78,7 +78,7 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     }
     
     func yxs_loadData() {
-        YXSEducationXMLYOperationColumnsListRequest.init(page: 1, id: id).requestCollection({ (list:[YXSColumnContentModel], pageCount) in
+        YXSEducationXMLYOperationColumnsListRequest.init(page: curruntPage, id: id).requestCollection({ (list:[YXSColumnContentModel], pageCount) in
             if self.curruntPage == 1{
                 self.dataSource.removeAll()
             }
