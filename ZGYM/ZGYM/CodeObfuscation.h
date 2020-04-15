@@ -1,10 +1,10 @@
 #ifndef CodeObfuscation_h
 #define Demo_codeObfuscation_h
-//confuse string at Wed Apr 15 16:20:51 CST 2020
-#define detailModel EeSoaLaulPOcjYJQ
-#define homeModel ULFBqBMfoZIocPar
-#define messageModel XjaMaLlHwWxNPhyy
-#define deModel vkXvHVtMQDqqeOGJ
-#define curruntIndexPath BqCLwAczKoadDaHN
-#define refreshData ZLGbynztpIXIOLCZ
+//confuse string at Wed Apr 15 16:36:43 CST 2020
+#define detailModel bBplEsCghMWOPXuv
+#define homeModel ECfkWCcPhJQoeyRN
+#define messageModel zKoBmLXgROZyxdgz
+#define deModel GQJYmvxruMztzkIQ
+#define curruntIndexPath TdDTqVGxhvkzweJc
+#define refreshData KVRtAhCjmsquHSyS
 #endif
