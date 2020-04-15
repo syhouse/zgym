@@ -1,6 +1,6 @@
 //
 //  YXSUnReadView.m
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by zgjy_mac on 2020/1/14.
 //  Copyright © 2020 hunanyoumeng. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  SLSDWebImageMixedNight.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by sy_mac on 2020/2/26.
 //  Copyright © 2020 hmym. All rights reserved.

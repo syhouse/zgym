@@ -1,6 +1,6 @@
 //
 //  UIView+GradualBackground.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by mac_hm on 2019/11/16.
 //  Copyright © 2019 zgjy_mac. All rights reserved.

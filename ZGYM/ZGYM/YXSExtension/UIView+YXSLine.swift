@@ -1,6 +1,6 @@
 //
 //  UIView+line.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by mac on 2019/6/27.
 //  Copyright © 2019 mac. All rights reserved.

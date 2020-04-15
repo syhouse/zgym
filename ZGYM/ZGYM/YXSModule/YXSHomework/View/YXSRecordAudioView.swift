@@ -1,6 +1,6 @@
 //
 //  YXSRecordAudioView.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by zgjy_mac on 2019/11/25.
 //  Copyright © 2019 zgjy_mac. All rights reserved.
@@ -308,7 +308,7 @@ class YXSRecordAudioView: UIView {
                     }else{
                         playerUrl = URL.init(string: audioModel.servicePath ?? "")!
                     }
-                    YXSSSAudioPlayer.sharedInstance.play(url: playerUrl, loop: 1) {
+                    YXSSSAudioPlayer.sharedInstance.play(url: playerUrl, loop: 1, cacheAudio: true) {
                         [weak self] in
                         guard let strongSelf = self else { return }
                         strongSelf.status = .redayShow

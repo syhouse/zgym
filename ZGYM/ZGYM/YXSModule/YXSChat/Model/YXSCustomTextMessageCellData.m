@@ -1,6 +1,6 @@
 //
 //  YXSCustomTextMessageCellData.m
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by Liu Jie on 2020/3/11.
 //  Copyright © 2020 hmym. All rights reserved.

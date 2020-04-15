@@ -1,6 +1,6 @@
 //
 //  YXSLocalMessageHelper.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by zgjy_mac on 2020/1/9.
 //  Copyright © 2020 zgjy_mac. All rights reserved.

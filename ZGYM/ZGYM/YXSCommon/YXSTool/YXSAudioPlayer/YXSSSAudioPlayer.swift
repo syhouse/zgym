@@ -1,6 +1,6 @@
 //
 //  SSAudioPlayer.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by zgjy_mac on 2019/12/18.
 //  Copyright © 2019 zgjy_mac. All rights reserved.
@@ -37,43 +37,51 @@ class YXSSSAudioPlayer: NSObject {
     var isFinish: Bool = false
     
     var finish: (() -> ())?
-    @objc public func play(url:URL, loop: Int = 1,finish: (() -> ())? = nil) {
-//        if targetUrl == nil || targetUrl?.count == 0 {
-//            return
-//        }
-        
-        var localUrl: URL = url
-        //下载音频资源
-        if YXSDownloaderHelper.helper.hasDownloadSucess(url: url.absoluteString){
-            localUrl = URL.init(fileURLWithPath: YXSDownloaderHelper.helper.downloadPath(url: url.absoluteString))
-        }else{
-            YXSDownloaderHelper.helper.downloadFile(urlStr: url.absoluteString)
-        }
-        
+    
+    ///仅仅播放音频
+    @objc public func play(url:URL, loop: Int = 1,finish: (() -> ())? = nil){
         self.sourceUrl = url
         self.finish = finish
         self.loop = loop
-        
         let session = AVAudioSession()
-        do{
-            try session.setCategory(AVAudioSession.Category.playback,options: [.mixWithOthers])
-            try session.setActive(true)
-        }catch{
-            SLLog(error)
+         do{
+             try session.setCategory(AVAudioSession.Category.playback,options: [.mixWithOthers])
+             try session.setActive(true)
+         }catch{
+             SLLog(error)
+         }
+         playerItem = AVPlayerItem(url: url)
+         //如果要切换视频需要调AVPlayer的replaceCurrentItemWithPlayerItem:方法
+         if player?.currentItem != nil {
+             player?.replaceCurrentItem(with: playerItem)
+             
+         } else {
+             player = AVPlayer(playerItem: playerItem)
+         }
+         player?.play()
+         isPause = false
+         isFinish = false
+         
+         NotificationCenter.default.addObserver(self, selector: #selector(videoPlayEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+    }
+    
+    
+    ///播放音频并缓存
+    @objc public func play(url:URL, loop: Int = 1,cacheAudio: Bool,finish: (() -> ())? = nil) {
+        var localUrl: URL = url
+        //下载音频资源
+        if cacheAudio{
+            if YXSDownloaderHelper.helper.hasDownloadSucess(url: url.absoluteString){
+                localUrl = URL.init(fileURLWithPath: YXSDownloaderHelper.helper.downloadPath(url: url.absoluteString))
+            }else{
+                YXSDownloaderHelper.helper.downloadFile(urlStr: url.absoluteString)
+            }
         }
-        playerItem = AVPlayerItem(url: localUrl)
-        //如果要切换视频需要调AVPlayer的replaceCurrentItemWithPlayerItem:方法
-        if player?.currentItem != nil {
-            player?.replaceCurrentItem(with: playerItem)
-            
-        } else {
-            player = AVPlayer(playerItem: playerItem)
-        }
-        player?.play()
-        isPause = false
-        isFinish = false
         
-        NotificationCenter.default.addObserver(self, selector: #selector(videoPlayEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        play(url: localUrl, loop: loop, finish: finish)
+
+        
+ 
     }
     
     /// 停止播放

@@ -1,6 +1,6 @@
 //
 //  SLVideoPlayController.m
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by yanlong on 2020/2/27.
 //  Copyright © 2020 hmym. All rights reserved.

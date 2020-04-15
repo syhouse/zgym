@@ -1,6 +1,6 @@
 //
 //  YXSRegistViewController.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by mac_hm on 2019/11/15.
 //  Copyright © 2019 zgjy_mac. All rights reserved.

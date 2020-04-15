@@ -1,6 +1,6 @@
 //
 //  YXSContentListViewController.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by sy_mac on 2020/4/11.
 //  Copyright © 2020 hmym. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  YXSTableView.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by zgjy_mac on 2019/12/5.
 //  Copyright © 2019 zgjy_mac. All rights reserved.

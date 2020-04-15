@@ -1,6 +1,6 @@
 //
 //  YXSPhotoBrowserTool.h
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by yanlong on 2020/3/23.
 //  Copyright © 2020 hmym. All rights reserved.

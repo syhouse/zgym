@@ -1,6 +1,6 @@
 //
 //  SLMineTopCornerRadioTableViewCell.swift
-//  HNYMEducation
+//  ZGYM
 //
 //  Created by Liu Jie on 2020/3/10.
 //  Copyright © 2020 hmym. All rights reserved.
