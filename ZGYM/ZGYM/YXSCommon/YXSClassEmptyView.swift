@@ -42,7 +42,7 @@ class YXSClassEmptyView: SLBaseEmptyView {
         let share = YXSShareView(items: [.YXSShareWechatFriendInvite, .YXSShareQRcode]) {[weak self](item, type,view) in
             guard let strongSelf = self else { return }
             if type == .YXSShareQRcode {
-                let vc = SLInviteViewController(gradeNum: model.num ?? "", gradeName: model.name ?? "", headmasterName: model.headmasterName ?? "")
+                let vc = YXSInviteViewController(gradeNum: model.num ?? "", gradeName: model.name ?? "", headmasterName: model.headmasterName ?? "")
                 strongSelf.pushVC(vc: vc)
 
             } else {

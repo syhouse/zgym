@@ -95,7 +95,7 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
             let model = weakSelf.createClassList[sender.tag]
             
             if type == .YXSShareQRcode {
-                let vc = SLInviteViewController(gradeNum: model.num ?? "", gradeName: model.name ?? "", headmasterName: weakSelf.yxs_user.name ?? "")
+                let vc = YXSInviteViewController(gradeNum: model.num ?? "", gradeName: model.name ?? "", headmasterName: weakSelf.yxs_user.name ?? "")
                 weakSelf.navigationController?.pushViewController(vc)
                 
             } else {

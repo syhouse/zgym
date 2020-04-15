@@ -300,8 +300,8 @@
 		6F0704482445D8040090975B /* YXSSystemMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700562445D7FE0090975B /* YXSSystemMessageViewController.swift */; };
 		6F0704492445D8040090975B /* YXSMineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700572445D7FE0090975B /* YXSMineViewController.swift */; };
 		6F07044A2445D8040090975B /* YXSProfileChildrenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700582445D7FE0090975B /* YXSProfileChildrenViewController.swift */; };
-		6F07044B2445D8040090975B /* SLDottedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07005A2445D7FE0090975B /* SLDottedView.swift */; };
-		6F07044C2445D8040090975B /* SLInviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07005B2445D7FE0090975B /* SLInviteViewController.swift */; };
+		6F07044B2445D8040090975B /* YXSDottedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07005A2445D7FE0090975B /* YXSDottedView.swift */; };
+		6F07044C2445D8040090975B /* YXSInviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07005B2445D7FE0090975B /* YXSInviteViewController.swift */; };
 		6F07044D2445D8040090975B /* SLNoticeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07005D2445D7FE0090975B /* SLNoticeContainerViewController.swift */; };
 		6F07044E2445D8040090975B /* SLNoticeReplyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07005E2445D7FE0090975B /* SLNoticeReplyListViewController.swift */; };
 		6F07044F2445D8040090975B /* SLNoticeListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07005F2445D7FE0090975B /* SLNoticeListCell.swift */; };
@@ -860,8 +860,8 @@
 		6F0700562445D7FE0090975B /* YXSSystemMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSystemMessageViewController.swift; sourceTree = "<group>"; };
 		6F0700572445D7FE0090975B /* YXSMineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSMineViewController.swift; sourceTree = "<group>"; };
 		6F0700582445D7FE0090975B /* YXSProfileChildrenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSProfileChildrenViewController.swift; sourceTree = "<group>"; };
-		6F07005A2445D7FE0090975B /* SLDottedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLDottedView.swift; sourceTree = "<group>"; };
-		6F07005B2445D7FE0090975B /* SLInviteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLInviteViewController.swift; sourceTree = "<group>"; };
+		6F07005A2445D7FE0090975B /* YXSDottedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSDottedView.swift; sourceTree = "<group>"; };
+		6F07005B2445D7FE0090975B /* YXSInviteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSInviteViewController.swift; sourceTree = "<group>"; };
 		6F07005D2445D7FE0090975B /* SLNoticeContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLNoticeContainerViewController.swift; sourceTree = "<group>"; };
 		6F07005E2445D7FE0090975B /* SLNoticeReplyListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLNoticeReplyListViewController.swift; sourceTree = "<group>"; };
 		6F07005F2445D7FE0090975B /* SLNoticeListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SLNoticeListCell.swift; sourceTree = "<group>"; };
@@ -2030,10 +2030,10 @@
 			isa = PBXGroup;
 			children = (
 				6F07002E2445D7FE0090975B /* YXSMine */,
-				6F0700592445D7FE0090975B /* SLInvite */,
+				6F0700592445D7FE0090975B /* YXSInvite */,
 				6F07005C2445D7FE0090975B /* SLNotice */,
-				6F0700642445D7FE0090975B /* SLClassFile */,
-				6F0700742445D7FE0090975B /* SLLogin */,
+				6F0700642445D7FE0090975B /* YXSClassFile */,
+				6F0700742445D7FE0090975B /* YXSLogin */,
 				6F0700842445D7FE0090975B /* YXSGlobalJump */,
 				6F0700862445D7FE0090975B /* YXSContent */,
 				6F07009C2445D7FE0090975B /* YXSClassScheduleCard */,
@@ -2046,7 +2046,6 @@
 				6F07011E2445D7FF0090975B /* YXSHome */,
 				6F0701372445D7FF0090975B /* SLClassStar */,
 				6F07015B2445D7FF0090975B /* YXSHomework */,
-				6F0701862445D7FF0090975B /* SLChat */,
 				6F0701882445D7FF0090975B /* SLFriendsCircle */,
 			);
 			path = YXSModule;
@@ -2150,13 +2149,13 @@
 			path = Setting;
 			sourceTree = "<group>";
 		};
-		6F0700592445D7FE0090975B /* SLInvite */ = {
+		6F0700592445D7FE0090975B /* YXSInvite */ = {
 			isa = PBXGroup;
 			children = (
-				6F07005A2445D7FE0090975B /* SLDottedView.swift */,
-				6F07005B2445D7FE0090975B /* SLInviteViewController.swift */,
+				6F07005A2445D7FE0090975B /* YXSDottedView.swift */,
+				6F07005B2445D7FE0090975B /* YXSInviteViewController.swift */,
 			);
-			path = SLInvite;
+			path = YXSInvite;
 			sourceTree = "<group>";
 		};
 		6F07005C2445D7FE0090975B /* SLNotice */ = {
@@ -2173,7 +2172,7 @@
 			path = SLNotice;
 			sourceTree = "<group>";
 		};
-		6F0700642445D7FE0090975B /* SLClassFile */ = {
+		6F0700642445D7FE0090975B /* YXSClassFile */ = {
 			isa = PBXGroup;
 			children = (
 				6F0700652445D7FE0090975B /* SLMoveToViewController.swift */,
@@ -2184,7 +2183,7 @@
 				6F0700722445D7FE0090975B /* SLClassFileViewController.swift */,
 				6F0700732445D7FE0090975B /* SLFileManagerHelper.swift */,
 			);
-			path = SLClassFile;
+			path = YXSClassFile;
 			sourceTree = "<group>";
 		};
 		6F0700672445D7FE0090975B /* Model */ = {
@@ -2209,7 +2208,7 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		6F0700742445D7FE0090975B /* SLLogin */ = {
+		6F0700742445D7FE0090975B /* YXSLogin */ = {
 			isa = PBXGroup;
 			children = (
 				6F0700752445D7FE0090975B /* YXSEditPasswordViewController.swift */,
@@ -2224,7 +2223,7 @@
 				6F0700822445D7FE0090975B /* YXSChoseNameStageController.swift */,
 				6F0700832445D7FE0090975B /* YXSLoginViewController.swift */,
 			);
-			path = SLLogin;
+			path = YXSLogin;
 			sourceTree = "<group>";
 		};
 		6F07007A2445D7FE0090975B /* Model */ = {
@@ -2755,21 +2754,6 @@
 				6F07017E2445D7FF0090975B /* YXSHomeworkCommitListCell.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		6F0701862445D7FF0090975B /* SLChat */ = {
-			isa = PBXGroup;
-			children = (
-				6F0701872445D7FF0090975B /* Util */,
-			);
-			path = SLChat;
-			sourceTree = "<group>";
-		};
-		6F0701872445D7FF0090975B /* Util */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Util;
 			sourceTree = "<group>";
 		};
 		6F0701882445D7FF0090975B /* SLFriendsCircle */ = {
@@ -5261,7 +5245,7 @@
 				6F0704362445D8040090975B /* YXSInputViewController.swift in Sources */,
 				6F0705262445D8050090975B /* YXSHomeworkCommentCell.swift in Sources */,
 				6F0703602445D8030090975B /* TCommonTextCell.m in Sources */,
-				6F07044B2445D8040090975B /* SLDottedView.swift in Sources */,
+				6F07044B2445D8040090975B /* YXSDottedView.swift in Sources */,
 				6F0703362445D8020090975B /* UIView+YXSGradualBackground.swift in Sources */,
 				6F07038B2445D8030090975B /* TUIGroupPendencyCellData.m in Sources */,
 				6F0704602445D8040090975B /* SLFileManagerHelper.swift in Sources */,
@@ -5518,7 +5502,7 @@
 				6F0705B42445D8060090975B /* LFPhotoEditingController.m in Sources */,
 				6F07FE0A2445D7C70090975B /* YXSButton.swift in Sources */,
 				6F07051A2445D8050090975B /* SLClassStarSignleClassDetialController.swift in Sources */,
-				6F07044C2445D8040090975B /* SLInviteViewController.swift in Sources */,
+				6F07044C2445D8040090975B /* YXSInviteViewController.swift in Sources */,
 				6F07041D2445D8030090975B /* UIUtil.swift in Sources */,
 				6F0703E22445D8030090975B /* AFImageDownloader.m in Sources */,
 				6F0705AB2445D8060090975B /* LFVideoEditingView.m in Sources */,

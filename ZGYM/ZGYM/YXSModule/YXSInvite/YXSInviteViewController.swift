@@ -10,7 +10,7 @@ import UIKit
 
 import YBImageBrowser
 
-class SLInviteViewController: YXSBaseViewController {
+class YXSInviteViewController: YXSBaseViewController {
 
     private var gradeNum: String?
     private var gradeName: String?
@@ -338,8 +338,8 @@ class SLInviteViewController: YXSBaseViewController {
         return view
     }()
     
-    lazy var dottedView: SLDottedView = {
-        let view = SLDottedView()
+    lazy var dottedView: YXSDottedView = {
+        let view = YXSDottedView()
         return view
     }()
     
@@ -503,7 +503,7 @@ class SLInviteViewController: YXSBaseViewController {
 }
 
 // MARK: -HMRouterEventProtocol
-extension SLInviteViewController: YXSRouterEventProtocol{
+extension YXSInviteViewController: YXSRouterEventProtocol{
     func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
         switch eventName {
         case kYXSCustomNavBackEvent:

@@ -9,7 +9,7 @@
 import UIKit
 
 /// 虚线View
-class SLDottedView: UIView {
+class YXSDottedView: UIView {
 
     //一定要在这里设置 背景色， 不要再draw里面设置，
     override init(frame: CGRect) {
