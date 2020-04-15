@@ -25,7 +25,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     var sourceDirectory: YXSCacheDirectory = .HomeWork
     
     /// 班级列表
-    var classDataSource: [SLClassModel]?
+    var classDataSource: [YXSClassModel]?
     
     /// 家长提交用来区分不同缓存文件名称使用
     var serviceId: Int?
@@ -144,7 +144,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         }
         
         yxs_loadPublishClassListData(isFriendSelectClass) { (classes) in
-            var selectClasses = [SLClassModel]()
+            var selectClasses = [YXSClassModel]()
             for classModel in classes{
                 if classModel.id == curruntClassId{
                     selectClasses.append(classModel)
@@ -272,7 +272,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     
     @objc func yxs_selectClassClick(){
         let vc = YXSSelectClassController.init(publishModel.classs,dataSource: self.classDataSource)
-        vc.selectBlock = {[weak self](selectClasss: [SLClassModel]) in
+        vc.selectBlock = {[weak self](selectClasss: [YXSClassModel]) in
             guard let strongSelf = self else { return }
             strongSelf.publishModel.classs = selectClasss
             strongSelf.selectClassView.setViewModel(selectClasss)

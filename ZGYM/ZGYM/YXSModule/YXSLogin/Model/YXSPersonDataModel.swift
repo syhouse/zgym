@@ -79,7 +79,7 @@ enum StageType: String {
     
     
     /// 朋友圈消息model
-    public var friendsTips: SLFriendsTipsModel?
+    public var friendsTips: YXSFriendsTipsModel?
     
     /// 用户角色
     public var personRole:PersonRole {

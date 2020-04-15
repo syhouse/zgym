@@ -79,7 +79,7 @@ class YXSClassManageViewController: YXSBaseTableViewController {
         saveRequest { [weak self](className, forbidJoin) in
             guard let weakSelf = self else {return}
 
-            weakSelf.navigationController?.yxs_existViewController(existClass: YXSClassDetialListController(classModel: SLClassModel.init(JSON: ["":""])!), complete: { (isExist, resultVC) in
+            weakSelf.navigationController?.yxs_existViewController(existClass: YXSClassDetialListController(classModel: YXSClassModel.init(JSON: ["":""])!), complete: { (isExist, resultVC) in
                 if isExist {
                     resultVC.title = className
                     weakSelf.completionHandler?(className, forbidJoin)

@@ -12,9 +12,9 @@ import NightNight
 
 /// 家长端
 class YXSClassInfoViewController: YXSBaseTableViewController {
-    let classModel: SLClassModel
+    let classModel: YXSClassModel
     private var smsCode: String!
-    init(classModel: SLClassModel) {
+    init(classModel: YXSClassModel) {
         self.classModel = classModel
         super.init()
     }

@@ -213,7 +213,7 @@ class YXSSettingViewController: YXSBaseViewController, UITableViewDelegate, UITa
     }
     
     func choseStage(completionHandler:((_ stage:StageType)->())?) {
-        let alert = SLSolitaireSelectReasonView(items: ["幼儿园","小学","中学"], selectedIndex: 0, inTarget: self.view) { [weak self](view, index) in
+        let alert = YXSSolitaireSelectReasonView(items: ["幼儿园","小学","中学"], selectedIndex: 0, inTarget: self.view) { [weak self](view, index) in
             guard let weakSelf = self else {return}
 
             var stage: StageType = .KINDERGARTEN

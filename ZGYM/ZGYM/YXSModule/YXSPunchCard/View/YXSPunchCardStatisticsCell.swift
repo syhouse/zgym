@@ -53,7 +53,7 @@ class YXSPunchCardStatisticsCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var model:SLClassModel!
+    var model:YXSClassModel!
     
     func yxs_setCellModel(_ model: YXSClockInListTopResponseList){
         yxs_nameLabel.text = model.realName

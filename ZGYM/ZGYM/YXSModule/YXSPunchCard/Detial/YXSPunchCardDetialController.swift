@@ -437,7 +437,7 @@ extension YXSPunchCardDetialController: YXSRouterEventProtocol{
             vc.title = "打卡排行榜"
             self.navigationController?.pushViewController(vc)
         case kFriendsCircleMessageViewGoMessageEvent:
-            let vc = SLCommonMessageListController.init(clockId: punchModel.clockInId ?? 0, isMyPublish: punchModel.promulgator ?? false)
+            let vc = YXSCommonMessageListController.init(clockId: punchModel.clockInId ?? 0, isMyPublish: punchModel.promulgator ?? false)
             vc.loadSucess = {
                 [weak self] in
                 guard let strongSelf = self else { return }

@@ -159,11 +159,11 @@ class YXSAgendaListController: YXSBaseTableViewController {
             navigationController?.pushViewController(vc)
             break
         case .notice:
-            let vc = SLNoticeListController.init(isAgenda: true)
+            let vc = YXSNoticeListController.init(isAgenda: true)
             navigationController?.pushViewController(vc)
             break
         case .solitaire:
-            let vc = SLSolitaireListController.init(isAgenda: true)
+            let vc = YXSSolitaireListController.init(isAgenda: true)
             navigationController?.pushViewController(vc)
             break
         case .punchCard:

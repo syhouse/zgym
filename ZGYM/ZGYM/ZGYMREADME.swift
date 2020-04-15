@@ -12,7 +12,7 @@
  YXSMediaView                文本+音频+图片9宫格
  YXSHomeworkThumbnailsView     九宫格图片
  SLAvatarContactView        头像+标题+副标题+圆角按钮
- SLSolitaireSelectReasonView  提示框（带单选选项）
+ YXSSolitaireSelectReasonView  提示框（带单选选项）
  YXSCommonBottomAlerView     底部选择弹窗
  YXSAddressPickerView        省市区选择器
  YBImageBrowser             九宫格图片预览器

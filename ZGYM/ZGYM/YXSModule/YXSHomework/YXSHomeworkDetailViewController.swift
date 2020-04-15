@@ -545,7 +545,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             return
         }
         let tips = commentModel == nil ? "评论：" : "回复\(commentModel!.showUserName ?? "")："
-        SLFriendsCommentAlert.showAlert(tips, maxCount: 400) { [weak self](content) in
+        YXSFriendsCommentAlert.showAlert(tips, maxCount: 400) { [weak self](content) in
             guard let strongSelf = self else { return }
             strongSelf.loadCommentData(section, content: content!, commentModel: commentModel)
         }
@@ -560,7 +560,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 pointInView.y = rc.minY + 14.0
             }
         }
-        SLFriendsCircleDelectCommentView.showAlert(pointInView) {
+        YXSFriendsCircleDelectCommentView.showAlert(pointInView) {
             [weak self]in
             guard let strongSelf = self else { return }
             strongSelf.loadDelectCommentData(section, commentModel: commentModel)
@@ -1041,7 +1041,7 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
     func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
         switch eventName {
         case kFriendsCircleMessageViewGoMessageEvent:
-            let vc = SLCommonMessageListController.init(hmModel: self.homeModel, deModel: self.model!)
+            let vc = YXSCommonMessageListController.init(hmModel: self.homeModel, deModel: self.model!)
             vc.loadSucess = {
                 [weak self] in
                 guard let strongSelf = self else { return }

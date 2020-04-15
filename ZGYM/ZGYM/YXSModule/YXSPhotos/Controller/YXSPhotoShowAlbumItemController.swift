@@ -10,7 +10,7 @@ import UIKit
 import JXCategoryView
 
 class YXSPhotoShowAlbumItemController:YXSBaseViewController, JXCategoryListContentViewDelegate {
-    var model: SLPhotoAlbumsDetailListModel{
+    var model: YXSPhotoAlbumsDetailListModel{
         didSet{
             playerButton.isHidden = model.resourceType == 1 ? false : true
             if model.resourceType == 1{
@@ -20,7 +20,7 @@ class YXSPhotoShowAlbumItemController:YXSBaseViewController, JXCategoryListConte
             }
         }
     }
-    init(model: SLPhotoAlbumsDetailListModel) {
+    init(model: YXSPhotoAlbumsDetailListModel) {
         self.model = model
         super.init()
     }

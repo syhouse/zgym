@@ -301,7 +301,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
     
     /// 头像点击
     @objc func tapClick(){
-        let vc = SLFriendsCircleInfoController.init(userId:   model.custodianId ?? 0, childId: model.childrenId ?? 0, type: PersonRole.PARENT.rawValue)
+        let vc = YXSFriendsCircleInfoController.init(userId:   model.custodianId ?? 0, childId: model.childrenId ?? 0, type: PersonRole.PARENT.rawValue)
         UIUtil.curruntNav().pushViewController(vc)
     }
     
@@ -394,8 +394,8 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         return favView
     }()
     
-    lazy var nineMediaView: SLNineMediaView = {
-        let nineMediaView = SLNineMediaView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 0))
+    lazy var nineMediaView: YXSNineMediaView = {
+        let nineMediaView = YXSNineMediaView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 0))
         nineMediaView.edges = UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 15)
         return nineMediaView
     }()

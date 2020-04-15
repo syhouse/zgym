@@ -368,8 +368,8 @@ class YXSCommonPublishView: UIView{
         return label
     }()
     
-    private lazy var listView:SLFriendDragListView = {
-        let listView = SLFriendDragListView.init(frame: CGRect.init(x: 0, y: 170, width: SCREEN_WIDTH, height: 0))
+    private lazy var listView:YXSFriendDragListView = {
+        let listView = YXSFriendDragListView.init(frame: CGRect.init(x: 0, y: 170, width: SCREEN_WIDTH, height: 0))
         listView.scaleItemInSort = 1.3
         listView.isSort = false
         listView.maxItem = maxcount
@@ -456,23 +456,23 @@ extension YXSCommonPublishView: YXSSelectMediaHelperDelegate{
     }
 }
 
-// MARK: - SLFriendDragItem
+// MARK: - YXSFriendDragItem
 extension YXSCommonPublishView{
-    /// 创建 SLFriendDragItem
+    /// 创建 YXSFriendDragItem
     /// - Parameter model: 本地资源Model
     /// - Parameter isAdd: 是否是添加按钮
-    func getItem(_ model: YXSMediaModel? = nil, isAdd: Bool = false) -> SLFriendDragItem{
+    func getItem(_ model: YXSMediaModel? = nil, isAdd: Bool = false) -> YXSFriendDragItem{
         let publishMedia = SLPublishMediaModel()
         publishMedia.asset = model?.asset
         return self.getItem(publishMedia, isAdd: isAdd)
     }
     
-    /// 创建 SLFriendDragItem
+    /// 创建 YXSFriendDragItem
     /// - Parameters:
     ///   - publishModel: 服务资源Model
     ///   - isAdd: 是否是添加按钮
-    func getItem(_ publishModel: SLPublishMediaModel? = nil, isAdd: Bool = false) -> SLFriendDragItem{
-        let item = SLFriendDragItem.init(frame: CGRect.zero)
+    func getItem(_ publishModel: SLPublishMediaModel? = nil, isAdd: Bool = false) -> YXSFriendDragItem{
+        let item = YXSFriendDragItem.init(frame: CGRect.zero)
         item.contentMode = .scaleAspectFill
         item.clipsToBounds = true
         if isAdd{

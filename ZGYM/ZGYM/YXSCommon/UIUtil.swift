@@ -279,7 +279,7 @@ extension UIUtil{
             if keys.count == 1 {
                 defaultIndex = 0
             }
-            SLSolitaireSelectReasonView(items: keys, selectedIndex: defaultIndex, title: "要拨打\(list.first?.realName ?? "")的电话吗？", inTarget: curruntNav().view) { (view, index) in
+            YXSSolitaireSelectReasonView(items: keys, selectedIndex: defaultIndex, title: "要拨打\(list.first?.realName ?? "")的电话吗？", inTarget: curruntNav().view) { (view, index) in
                 if keys.count > 0 {
                     var mobile = dic[keys[index]]
                     mobile = "telprompt://\(mobile ?? "")"
@@ -316,7 +316,7 @@ extension UIUtil{
             if keys.count == 1 {
                 defaultIndex = 0
             }
-            SLSolitaireSelectReasonView(items: keys, selectedIndex: defaultIndex, title: "要联系\(list.first?.realName ?? "")的私聊吗？", inTarget: curruntNav().view) { (view, index) in
+            YXSSolitaireSelectReasonView(items: keys, selectedIndex: defaultIndex, title: "要联系\(list.first?.realName ?? "")的私聊吗？", inTarget: curruntNav().view) { (view, index) in
                 let imId = dic[keys[index]]
                 UIUtil.TopViewController().yxs_pushChatVC(imId: imId ?? "")
                 view.cancelClick()
@@ -333,7 +333,7 @@ extension UIUtil{
     ///   - teacherIdList: 老师id
     ///   - childrenId: 孩子id
     ///   - classId:    班级id
-    static func yxs_loadClassStartReminderRequest(teacherLists: [SLClassStartTeacherModel],childrenId: Int,classId: Int){
+    static func yxs_loadClassStartReminderRequest(teacherLists: [YXSClassStartTeacherModel],childrenId: Int,classId: Int){
         var teacherIdList:[Int] = [Int]()
         for model in teacherLists {
             if (model.reminder ?? false) == false{
@@ -445,7 +445,7 @@ extension UIUtil{
     }
     
     static func yxs_loadClassCircleMessageListData(completion:(() -> ())? = nil){
-        YXSEducationClassCircleMessageTipsRequest().request({ (result: SLFriendsTipsModel) in
+        YXSEducationClassCircleMessageTipsRequest().request({ (result: YXSFriendsTipsModel) in
             YXSPersonDataModel.sharePerson.friendsTips = result
             if result.count ?? 0 > 0 {
                 RootController().yxs_showBadgeOnItem(index: 1, count: result.count!)
@@ -570,9 +570,9 @@ extension UIUtil{
 extension UIUtil{
     /// 朋友圈点赞
     /// - Parameters:
-    ///   - SLFriendCircleModel: SLFriendCircleModel model
+    ///   - YXSFriendCircleModel: YXSFriendCircleModel model
     ///   - reloadViewBlock: 点赞成功刷新
-    static func yxs_changeFriendCirclePrise(_ friendCircleModel: SLFriendCircleModel,positon: YXSOperationPosition = .home, reloadViewBlock:(() -> ())?){
+    static func yxs_changeFriendCirclePrise(_ friendCircleModel: YXSFriendCircleModel,positon: YXSOperationPosition = .home, reloadViewBlock:(() -> ())?){
         if YXSPersonDataModel.sharePerson.isNetWorkingConnect == false{
             //            friendCircleModel.isOnRequsetPraise = false
             MBProgressHUD.yxs_showMessage(message: "网络不给力，请检查网络")
@@ -653,7 +653,7 @@ extension UIUtil{
     ///   - content: 评论内容
     ///   - positon: 评论操作位置
     ///   - reloadViewBlock: 评论操作成功回调
-    static func yxs_changeCommentFriendCirclePrise(_ classCircleId: Int,commentId: Int? = nil,commentModel: SLFriendsCommentModel? = nil,content: String? = nil,positon: YXSOperationPosition = .home, reloadViewBlock:((SLFriendsCommentModel) -> ())?){
+    static func yxs_changeCommentFriendCirclePrise(_ classCircleId: Int,commentId: Int? = nil,commentModel: YXSFriendsCommentModel? = nil,content: String? = nil,positon: YXSOperationPosition = .home, reloadViewBlock:((YXSFriendsCommentModel) -> ())?){
         if YXSPersonDataModel.sharePerson.isNetWorkingConnect == false{
             MBProgressHUD.yxs_showMessage(message: "网络不给力，请检查网络")
             return
@@ -666,7 +666,7 @@ extension UIUtil{
         }else{
             request = YXSEducationClassCircleCommentSaveRequest.init(classCircleId: classCircleId, type: commentModel?.id == nil ? FriendCircleComment.COMMENT : FriendCircleComment.REPLY, content: content ?? "", id: commentModel?.id)
         }
-        request.request({ (model:SLFriendsCommentModel) in
+        request.request({ (model:YXSFriendsCommentModel) in
             if !isAddComment{
                 model.id = commentId
             }
@@ -697,7 +697,7 @@ extension UIUtil{
         NightNight.theme =  NightNight.theme == .night ? .normal : .night
         setCommonThemeConfig()
         
-        let vc: SLFriendsCircleController? = ((UIUtil.RootController() as? UITabBarController)?.viewControllers?[1] as? UINavigationController)?.topViewController as? SLFriendsCircleController
+        let vc: YXSFriendsCircleController? = ((UIUtil.RootController() as? UITabBarController)?.viewControllers?[1] as? UINavigationController)?.topViewController as? YXSFriendsCircleController
         vc?.tableView.reloadData()
     }
     

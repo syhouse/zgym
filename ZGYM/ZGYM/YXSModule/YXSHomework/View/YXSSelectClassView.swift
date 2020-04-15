@@ -51,7 +51,7 @@ class YXSSelectClassView: UIControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setViewModel(_ models:[SLClassModel]!){
+    func setViewModel(_ models:[YXSClassModel]!){
         if let models = models{
             for index in 0..<maxcount{
                 let label = viewWithTag(index + kLabelOrginTag)
