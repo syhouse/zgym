@@ -308,7 +308,7 @@ class YXSRecordAudioView: UIView {
                     }else{
                         playerUrl = URL.init(string: audioModel.servicePath ?? "")!
                     }
-                    YXSSSAudioPlayer.sharedInstance.play(url: playerUrl, loop: 1) {
+                    YXSSSAudioPlayer.sharedInstance.play(url: playerUrl, loop: 1, cacheAudio: true) {
                         [weak self] in
                         guard let strongSelf = self else { return }
                         strongSelf.status = .redayShow

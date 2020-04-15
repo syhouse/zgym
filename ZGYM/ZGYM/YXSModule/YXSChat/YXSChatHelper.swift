@@ -136,9 +136,9 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
         /* 用户自己到苹果注册开发者证书，在开发者帐号中下载并生成证书(p12 文件)，将生成的 p12 文件传到腾讯证书管理控制台，控制台会自动生成一个证书 ID，将证书 ID 传入一下 busiId 参数中。*/
         //企业证书 ID
         #if DEBUG
-        param.busiId = 18583
+        param.busiId = 18956
         #else
-        param.busiId = 18582
+        param.busiId = 18955
         #endif
         if let deviceToken = UserDefaults.standard.data(forKey: kAppleDeviceToken) {
             param.token = deviceToken

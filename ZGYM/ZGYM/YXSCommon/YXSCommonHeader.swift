@@ -93,8 +93,8 @@ public let KIMAPPID = "8779ee49bf4d328a791594f887a45d11"
 public let KIMAPPSECRET = "3ef96693c787"
 public let KWXAPPID = "wx9f73387249e2b572"
 public let KWXUNIVERSAL_LINK = "https://edu-pro.ym698.com/open/"
-public let KQQ_LINK = "https://edu-pro.ym698.com/qq_conn/1110081910"
-public let KQQAPPID = "1110081910"
+public let KQQ_LINK = "https://edu-pro.ym698.com/qq_conn/1110343963"
+public let KQQAPPID = "1110343963"
 
 // MARK: -key
 public let kEventKey = "EventKey"

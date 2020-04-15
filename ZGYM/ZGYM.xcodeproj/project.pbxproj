@@ -1900,6 +1900,7 @@
 		6F07FFFD2445D7FD0090975B /* YXSShareModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSShareModel.swift; sourceTree = "<group>"; };
 		6F07FFFE2445D7FD0090975B /* YXSShareTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSShareTool.swift; sourceTree = "<group>"; };
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
+		6F6511D62446937D0024A5DA /* 优学业.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "优学业.entitlements"; sourceTree = "<group>"; };
 		6FA0F326242B451800E2E035 /* 优学业.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "优学业.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FA0F330242B451800E2E035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6FA0F335242B451E00E2E035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -4794,6 +4795,7 @@
 			children = (
 				E583FBE32446B5D0005C8F72 /* confuse.sh */,
 				E583FBE42446B5D1005C8F72 /* func.list */,
+				6F6511D62446937D0024A5DA /* 优学业.entitlements */,
 				6F07FE0D2445D7E80090975B /* YXSBaseTabBarController.swift */,
 				6F07FFEA2445D7FD0090975B /* YXSCommon */,
 				6F07FE0F2445D7F20090975B /* YXSExtension */,
@@ -5959,6 +5961,7 @@
 			baseConfigurationReference = 19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6002,6 +6005,7 @@
 			baseConfigurationReference = 523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (

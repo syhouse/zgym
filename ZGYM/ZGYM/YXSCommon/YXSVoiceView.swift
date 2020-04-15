@@ -94,7 +94,7 @@ class YXSVoiceView: UIView {
             lbSecond.text = "\(self.model?.voiceDuration ?? 0)\""
             /// 装载音频
             if let url = URL(string: model?.voiceUlr ?? "") {
-                YXSSSAudioPlayer.sharedInstance.play(url: url){
+                YXSSSAudioPlayer.sharedInstance.play(url: url, cacheAudio: true){
                     self.stopVoiceAnimation()
                 }
                 YXSSSAudioPlayer.sharedInstance.pauseVoice()
@@ -124,7 +124,7 @@ class YXSVoiceView: UIView {
             SLLog(">>>>voiceUlr:\(self.model?.voiceUlr ?? "")")
             if YXSSSAudioPlayer.sharedInstance.sourceUrl?.absoluteString != self.model?.voiceUlr {
                 if let url = URL(string: model?.voiceUlr ?? "") {
-                    YXSSSAudioPlayer.sharedInstance.play(url: url){ [weak self] in
+                    YXSSSAudioPlayer.sharedInstance.play(url: url,cacheAudio: true){ [weak self] in
                         guard let weakSelf = self else {return}
                         weakSelf.stopVoiceAnimation()
                     }

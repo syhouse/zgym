@@ -216,10 +216,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 
     // MARK: - CoreData
     lazy var managedObjectModel: NSManagedObjectModel = {
+<<<<<<< HEAD
         var modelURL = Bundle.main.url(forResource: "ZGYMEducation", withExtension: "mom")
         if modelURL == nil {
             modelURL = Bundle.main.url(forResource: "ZGYMEducation", withExtension: "momd")
         }
+=======
+        let modelURL = Bundle.main.url(forResource: "ZGYMEducation", withExtension: "mom")
+>>>>>>> 0094422e387c232bbc1845e4f047324f2d4ec49e
         let managedObjectModel = NSManagedObjectModel.init(contentsOf: modelURL!)
         return managedObjectModel!
     }()
