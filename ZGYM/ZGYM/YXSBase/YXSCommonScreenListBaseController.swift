@@ -112,7 +112,7 @@ class YXSCommonScreenListBaseController: YXSBaseTableViewController{
     
     func showTopAlert(indexPath: IndexPath){
         let homeListModel = dataSource[indexPath.row]
-        SLCommonBottomAlerView.showIn(topButtonTitle: ((homeListModel.isTop ?? 0)  == 1) ? "取消置顶" : "置顶") {
+        YXSCommonBottomAlerView.showIn(topButtonTitle: ((homeListModel.isTop ?? 0)  == 1) ? "取消置顶" : "置顶") {
             UIUtil.yxs_loadUpdateTopData(type: homeListModel.type,id: homeListModel.serviceId ?? 0, createTime: homeListModel.createTime ?? "", isTop: (homeListModel.isTop ?? 0) == 1 ? 0 : 1,positon: .list){
                 [weak self] in
                 guard let strongSelf = self else { return }

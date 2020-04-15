@@ -18,7 +18,7 @@ class SLPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate, 
     }
     
     func listContainerView(_ listContainerView: JXCategoryListContainerView!, initListFor index: Int) -> JXCategoryListContentViewDelegate! {
-        let vc = SLPhotoShowAlbumItemController(model: dataSource[index])
+        let vc = YXSPhotoShowAlbumItemController(model: dataSource[index])
         return vc
     }
     

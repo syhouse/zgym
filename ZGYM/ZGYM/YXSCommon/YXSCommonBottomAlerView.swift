@@ -1,5 +1,5 @@
 //
-//  SLCommonBottomAlerView.swift
+//  YXSCommonBottomAlerView.swift
 //  ZGYM
 //
 //  Created by zgjy_mac on 2019/12/19.
@@ -28,7 +28,7 @@ class YXSCommonBottomParams: NSObject{
 private let kButtonTag = 101
 
 /// 底部弹出选择窗口
-class SLCommonBottomAlerView: UIView {
+class YXSCommonBottomAlerView: UIView {
     
     var complete: (()->())?
     var completeParams: ((YXSCommonBottomParams)->())?
@@ -38,8 +38,8 @@ class SLCommonBottomAlerView: UIView {
     /// - Parameters:
     ///   - topButtonTitle: 单选文本
     ///   - complete: 选中回调
-    @discardableResult static func showIn(topButtonTitle: String = "置顶", complete:(()->())?) -> SLCommonBottomAlerView{
-        let view = SLCommonBottomAlerView(buttons: [YXSCommonBottomParams.init(title: topButtonTitle, event: "")])
+    @discardableResult static func showIn(topButtonTitle: String = "置顶", complete:(()->())?) -> YXSCommonBottomAlerView{
+        let view = YXSCommonBottomAlerView(buttons: [YXSCommonBottomParams.init(title: topButtonTitle, event: "")])
         view.complete = complete
         view.beginAnimation()
         return view
@@ -50,8 +50,8 @@ class SLCommonBottomAlerView: UIView {
     /// - Parameters:
     ///   - buttons: 多项参数
     ///   - completeParams: 选中回调
-    @discardableResult static func showIn(buttons: [YXSCommonBottomParams], completeParams:((YXSCommonBottomParams)->())?) -> SLCommonBottomAlerView{
-        let view = SLCommonBottomAlerView(buttons: buttons)
+    @discardableResult static func showIn(buttons: [YXSCommonBottomParams], completeParams:((YXSCommonBottomParams)->())?) -> YXSCommonBottomAlerView{
+        let view = YXSCommonBottomAlerView(buttons: buttons)
         view.completeParams = completeParams
         view.beginAnimation()
         return view
