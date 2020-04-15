@@ -47,7 +47,7 @@ class YXSFriendCircleMessageListCell: UITableViewCell {
     
     ///设置右边的展示图片  资源地址
     private func setRightUI(imgeUrl: String?){
-        if let attachment = imgeUrl{
+        if let attachment = imgeUrl, attachment.count != 0{
             if attachment.hasSuffix(kHMVedioAppendKey){
                 rightImage.isHidden = false
                 rightImage.yxs_setImageWithURL(url: URL.init(string: attachment.removingSuffix(kHMVedioAppendKey).yxs_getVediUrlImage()), placeholder: kImageDefualtMixedImage)

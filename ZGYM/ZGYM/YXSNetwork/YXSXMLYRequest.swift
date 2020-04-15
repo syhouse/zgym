@@ -174,3 +174,17 @@ class YXSEducationXMLYSearchAlbumsRequest: YXSXMLYRequest {
                  "q": searchText]
     }
 }
+
+
+// MARK: 搜索听单
+///搜索听单列表
+let searchTracksV2 = "/v2/search/tracks"
+class YXSEducationXMLYSearchTracksV2Request: YXSXMLYRequest {
+    ///id 听单id
+    init(id: Int) {
+        super.init()
+        path = searchTracksV2
+        destinationJsonPaths = ["columns"]
+        param = ["id": id]
+    }
+}
