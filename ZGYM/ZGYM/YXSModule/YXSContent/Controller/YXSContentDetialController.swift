@@ -158,7 +158,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
     }()
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > 64 + kSafeTopHeight{
+        if scrollView.contentOffset.y > 241 - 64 + kSafeTopHeight {//64 + kSafeTopHeight{
             customNav.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
         }else{
             customNav.backgroundColor = UIColor.clear
@@ -254,9 +254,25 @@ class YXSContentDetialCell: UITableViewCell {
 class YXSContentDetialHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        /// 背景图
+        addSubview(imgBgView)
+        imgBgView.snp.makeConstraints({ (make) in
+            make.edges.equalTo(0)
+        })
+        
+        /// 毛玻璃
+        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        self.insertSubview(blurEffectView, aboveSubview: imgBgView)
+        blurEffectView.snp.makeConstraints({ (make) in
+            make.edges.equalTo(0)
+        })
+        
         addSubview(imageView)
         addSubview(xmlyImageView)
         addSubview(titleLabel)
+        
         
         self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#745683"), night: UIColor.yxs_hexToAdecimalColor(hex: "#745683"))
         titleLabel.snp.makeConstraints { (make) in
@@ -291,6 +307,7 @@ class YXSContentDetialHeaderView: UIView {
             titleLabel.text = model.albumIntro
         }
         imageView.sd_setImage(with: URL.init(string: model.coverUrlMiddle ?? ""), placeholderImage: kImageDefualtImage)
+        imgBgView.sd_setImage(with: URL.init(string: model.coverUrlMiddle ?? ""), placeholderImage: kImageDefualtImage)
     }
     // MARK: -getter&setter
     lazy var imageView: UIImageView = {
@@ -309,5 +326,12 @@ class YXSContentDetialHeaderView: UIView {
     lazy var xmlyImageView: UIImageView = {
         let timeIcon = UIImageView.init(image: UIImage.init(named: "yxs_xmly_logo"))
         return timeIcon
+    }()
+    
+    /// 背景图
+    lazy var imgBgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
+        return imgView
     }()
 }

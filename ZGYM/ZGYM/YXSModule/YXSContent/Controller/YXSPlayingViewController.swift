@@ -22,7 +22,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        title = self.track?.trackTitle
+        
         customNav.title = self.track?.trackTitle
         view.addSubview(customNav)
         customNav.snp.makeConstraints { (make) in
@@ -31,7 +31,21 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         self.fd_prefersNavigationBarHidden = true
         
         // Do any additional setup after loading the view.
-        view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
+//        view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
+        
+        /// 背景图
+        view.addSubview(imgBgView)
+        imgBgView.snp.makeConstraints({ (make) in
+            make.edges.equalTo(0)
+        })
+        
+        /// 毛玻璃
+        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        view.insertSubview(blurEffectView, aboveSubview: imgBgView)
+        blurEffectView.snp.makeConstraints({ (make) in
+            make.edges.equalTo(0)
+        })
         
         XMSDKPlayer.shared()?.setAutoNexTrack(true)
         XMSDKPlayer.shared()?.trackPlayDelegate = self
@@ -51,6 +65,8 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         
         view.addSubview(imgWaterMark)
         view.addSubview(imgCover)
+        view.insertSubview(customBorderView, belowSubview: imgCover)
+        view.bringSubviewToFront(customNav)
         
         layout()
         
@@ -119,6 +135,12 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             make.bottom.equalTo(progressView.snp_top).offset(-125.0 * SCREEN_SCALE)
             make.width.height.equalTo(214.0 * SCREEN_SCALE)
             make.centerX.equalTo(view.snp_centerX)
+        })
+        
+        customBorderView.snp.makeConstraints({ (make) in
+            make.width.height.equalTo(214.0 * SCREEN_SCALE + 20)
+            make.centerX.equalTo(imgCover.snp_centerX)
+            make.centerY.equalTo(imgCover.snp_centerY)
         })
         
         imgWaterMark.snp.makeConstraints({ (make) in
@@ -267,10 +289,10 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }
     
     func xmTrackPlayerDidStart() {
-//        title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
         customNav.title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
         lbTotalDuration.text = stringWithDuration(duration: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0)
         imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: nil)
+        imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: nil)
     }
 
     // MARK: - Live Radio
@@ -289,18 +311,19 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         playListVC?.tableView.reloadData()
         
         if radio != nil {
-//            title = XMSDKPlayer.shared()?.currentPlayingRadio()?.radioName
             customNav.title = XMSDKPlayer.shared()?.currentPlayingRadio()?.radioName
             let totalDuration = Int(XMSDKPlayer.shared()?.currentPlayingRadio()?.radioDesc ?? "0")
             lbTotalDuration.text = stringWithDuration(duration: totalDuration ?? 0)
             imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingRadio()?.coverUrlLarge ?? ""), completed: nil)
+            imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingRadio()?.coverUrlLarge ?? ""), completed: nil)
             
         } else {
-//            title = XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.programName
+
             customNav.title = XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.programName
             let totalDuration = XMSDKPlayer.shared()?.currentPlayingProgram()?.totalPlayedTime
             lbTotalDuration.text = String.init(format: "%02d:%02d", ((totalDuration ?? 0)/60),((totalDuration ?? 0)%60))
             imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.backPicUrl ?? ""), completed: nil)
+            imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.backPicUrl ?? ""), completed: nil)
         }
     }
     
@@ -350,7 +373,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     lazy var progressView : UISlider = {
         let slider = UISlider()
         slider.mixedMinimumTrackTintColor = MixedColor(normal: kNightFFFFFF, night: kNightFFFFFF)
-        slider.mixedMaximumTrackTintColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#A187AB"), night: UIColor.yxs_hexToAdecimalColor(hex: "#A187AB"))
+        slider.mixedMaximumTrackTintColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF", alpha: 0.5), night: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF", alpha: 0.5))
         return slider
     }()
     
@@ -375,9 +398,16 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         let img = UIImageView()
         img.mixedImage = kImageDefualtMixedImage
         img.cornerRadius = (SCREEN_SCALE * 214.0)/2
-        img.borderColor = UIColor.yxs_hexToAdecimalColor(hex: "#90789E")
-        img.borderWidth = 10.0
         return img
+    }()
+    
+    lazy var customBorderView: UIView = {
+        let view = UIView()
+        view.cornerRadius = (SCREEN_SCALE * 214.0 + 20)/2
+        view.backgroundColor = kNightFFFFFF
+        view.alpha = 0.3
+        view.clipsToBounds = true
+        return view
     }()
     
     /// 水印喜马拉雅
@@ -392,21 +422,16 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         customNav.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
         customNav.titleLabel.textColor = UIColor.white
         customNav.backImageButton.addTarget(self, action: #selector(onBackClick(sender:)), for: .touchUpInside)
-//        customNav.addSubview(btnCollect)
-//        btnCollect.snp.makeConstraints { (make) in
-//            make.right.equalTo(-8.5)
-//            make.centerY.equalTo(customNav.backImageButton)
-//            make.size.equalTo(CGSize.init(width: 42, height: 42))
-//        }
         return customNav
     }()
     
-//    lazy var btnCollect: YXSButton = {
-//        let btn = YXSButton()
-//        btn.setImage(UIImage(named: "yxs_xmly_no_fav"), for: .normal)
-//        btn.setImage(UIImage(named: "yxs_xmly_has_fav"), for: .selected)
-//        return btn
-//    }()
+    /// 背景图
+    lazy var imgBgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
+        return imgView
+    }()
+    
     /*
     // MARK: - Navigation
 
