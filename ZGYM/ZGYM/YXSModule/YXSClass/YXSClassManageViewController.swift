@@ -84,12 +84,15 @@ class YXSClassManageViewController: YXSBaseTableViewController {
                     resultVC.title = className
                     weakSelf.completionHandler?(className, forbidJoin)
                     weakSelf.navigationController?.popViewController(animated: true)
+                    return
                 }
             })
             
             weakSelf.navigationController?.yxs_existViewController(existClass: YXSTeacherClassListViewController(), complete: { (isExist, resultVC) in
                 if isExist {
                     resultVC.yxs_refreshData()
+                    weakSelf.navigationController?.popViewController(animated: true)
+                    return
                 }
             })
         }
