@@ -17,11 +17,18 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     var programList: [Any] = []
     var radioSchedule: XMRadioSchedule?
     
-    
+    /// 播放列表菜单
+    var playListVC: YXSPlayListViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = self.track?.trackTitle
+//        title = self.track?.trackTitle
+        customNav.title = self.track?.trackTitle
+        view.addSubview(customNav)
+        customNav.snp.makeConstraints { (make) in
+            make.left.right.top.equalTo(0)
+        }
+        self.fd_prefersNavigationBarHidden = true
         
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
@@ -228,12 +235,20 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }
 
     @objc func menuClick(sender: YXSButton) {
-        let vc = YXSPlayListViewController(trackList: trackList as! [XMTrack])
-        navigationController?.present(vc, animated: true, completion: nil)
+        playListVC = YXSPlayListViewController(trackList: trackList as! [XMTrack]) { [weak self](index) in
+            guard let weakSelf = self else {return}
+            weakSelf.track = weakSelf.trackList[index] as! XMTrack
+            weakSelf.play()
+        }
+        navigationController?.present(playListVC!, animated: true, completion: nil)
     }
     
     @objc func collectClick(sennder: YXSButton) {
         
+    }
+    
+    @objc func onBackClick(sender: UIButton) {
+        navigationController?.popViewController()
     }
     
     // MARK: - Delegate
@@ -247,8 +262,13 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         SLLog("CacheProcess:\(percent)")
     }
     
+    func xmTrackPlayerWillPlaying() {
+        playListVC?.tableView.reloadData()
+    }
+    
     func xmTrackPlayerDidStart() {
-        title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
+//        title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
+        customNav.title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
         lbTotalDuration.text = stringWithDuration(duration: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0)
         imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: nil)
     }
@@ -263,15 +283,21 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         SLLog("CacheProcess:\(percent)")
     }
     
+
+    
     func xmLiveRadioPlayerDidStart() {
+        playListVC?.tableView.reloadData()
+        
         if radio != nil {
-            title = XMSDKPlayer.shared()?.currentPlayingRadio()?.radioName
+//            title = XMSDKPlayer.shared()?.currentPlayingRadio()?.radioName
+            customNav.title = XMSDKPlayer.shared()?.currentPlayingRadio()?.radioName
             let totalDuration = Int(XMSDKPlayer.shared()?.currentPlayingRadio()?.radioDesc ?? "0")
             lbTotalDuration.text = stringWithDuration(duration: totalDuration ?? 0)
             imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingRadio()?.coverUrlLarge ?? ""), completed: nil)
             
         } else {
-            title = XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.programName
+//            title = XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.programName
+            customNav.title = XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.programName
             let totalDuration = XMSDKPlayer.shared()?.currentPlayingProgram()?.totalPlayedTime
             lbTotalDuration.text = String.init(format: "%02d:%02d", ((totalDuration ?? 0)/60),((totalDuration ?? 0)%60))
             imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.backPicUrl ?? ""), completed: nil)
@@ -361,6 +387,26 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         return img
     }()
     
+    lazy var customNav: YXSCustomNav = {
+        let customNav = YXSCustomNav.init(.backAndTitle)
+        customNav.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
+        customNav.titleLabel.textColor = UIColor.white
+        customNav.backImageButton.addTarget(self, action: #selector(onBackClick(sender:)), for: .touchUpInside)
+//        customNav.addSubview(btnCollect)
+//        btnCollect.snp.makeConstraints { (make) in
+//            make.right.equalTo(-8.5)
+//            make.centerY.equalTo(customNav.backImageButton)
+//            make.size.equalTo(CGSize.init(width: 42, height: 42))
+//        }
+        return customNav
+    }()
+    
+//    lazy var btnCollect: YXSButton = {
+//        let btn = YXSButton()
+//        btn.setImage(UIImage(named: "yxs_xmly_no_fav"), for: .normal)
+//        btn.setImage(UIImage(named: "yxs_xmly_has_fav"), for: .selected)
+//        return btn
+//    }()
     /*
     // MARK: - Navigation
 
