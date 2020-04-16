@@ -119,28 +119,14 @@ class YXSVoiceView: UIView {
     // MARK: - Action
     @objc func indicatorClick(sender: UIControl) {
         if tapPlayer{
-            
-            SLLog(">>>>sourceUrl:\(YXSSSAudioPlayer.sharedInstance.sourceUrl?.absoluteString ?? "")")
-            SLLog(">>>>voiceUlr:\(self.model?.voiceUlr ?? "")")
-            if YXSSSAudioPlayer.sharedInstance.sourceUrl?.absoluteString != self.model?.voiceUlr {
-                if let url = URL(string: model?.voiceUlr ?? "") {
-                    YXSSSAudioPlayer.sharedInstance.play(url: url,cacheAudio: true){ [weak self] in
-                        guard let weakSelf = self else {return}
-                        weakSelf.stopVoiceAnimation()
-                    }
-                    startVoiceAnimation()
-                }
+
+            if YXSSSAudioPlayer.sharedInstance.isPause {
+                YXSSSAudioPlayer.sharedInstance.resumeVoice()
+                startVoiceAnimation()
                 
             } else {
-            
-                if YXSSSAudioPlayer.sharedInstance.isPause {
-                    YXSSSAudioPlayer.sharedInstance.resumeVoice()
-                    startVoiceAnimation()
-                    
-                } else {
-                    YXSSSAudioPlayer.sharedInstance.pauseVoice()
-                    stopVoiceAnimation()
-                }
+                YXSSSAudioPlayer.sharedInstance.pauseVoice()
+                stopVoiceAnimation()
             }
         }
         self.completionHandler?(model?.voiceUlr ?? "", model?.voiceDuration ?? 0)
