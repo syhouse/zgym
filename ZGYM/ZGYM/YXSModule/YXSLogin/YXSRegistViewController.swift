@@ -232,6 +232,11 @@ class YXSRegistViewController: YXSBaseViewController {
     
     @objc func yxs_registClick(sender: YXSButton) {
         self.view.endEditing(false)
+        if !(tfPassword?.text?.isPassword ?? false) {
+            MBProgressHUD.yxs_showMessage(message: "请输入6位以上数字字母密码")
+            return
+        }
+        
         MBProgressHUD.yxs_showLoading()
         YXSEducationUserRegisterRequest.init(account: self.tfAccount!.text!, smsCode: self.tfAuthCode!.text!, password: self.tfPassword!.text!, confirmPassword: self.tfPassword2!.text!).request({ [weak self](json) in
             guard let weakSelf = self else {return}

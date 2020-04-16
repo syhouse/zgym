@@ -160,4 +160,16 @@ extension String {
         }
         return false
     }
+    
+    var isPassword: Bool {
+         let pwd =  "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$"
+         let regextestpwd = NSPredicate(format: "SELF MATCHES %@",pwd)
+        
+         if (regextestpwd.evaluate(with: self) == true) {
+             return true
+
+         }else{
+             return false
+         }
+     }
 }
