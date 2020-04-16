@@ -16,6 +16,9 @@ class YXSContentHomeController: YXSBaseViewController{
     private var categoryLists: [YXSColumnModel] = [YXSColumnModel]()
     ///分类标题
     private var titles: [String] = [String]()
+    
+    private var hasLoadData = false
+    
     // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +27,7 @@ class YXSContentHomeController: YXSBaseViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        loadCategoryData()
     }
     
     // MARK: -UI
@@ -35,6 +39,9 @@ class YXSContentHomeController: YXSBaseViewController{
 //        }) { (msg, code) in
 //
 //        }
+        if hasLoadData{
+            return
+        }
         
         YXSEducationXMLYOperationColumnsRequest.init(page: 1).requestCollection({ (list:[YXSColumnModel], pageCount) in
             var titles = [String]()
@@ -65,6 +72,11 @@ class YXSContentHomeController: YXSBaseViewController{
     
     // MARK: - UI
     func congfigUI(){
+        if hasLoadData{
+            return
+        }
+        
+        hasLoadData = true
         listContainerView = JXCategoryListContainerView.init(type: .collectionView, delegate: self)
         
         self.view.addSubview(categoryView)

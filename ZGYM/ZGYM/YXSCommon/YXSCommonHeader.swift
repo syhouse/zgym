@@ -92,10 +92,10 @@ public let kNight2F354B = UIColor.yxs_hexToAdecimalColor(hex: "#2F354B")
 public let KIMAPPID = "8779ee49bf4d328a791594f887a45d11"
 public let KIMAPPSECRET = "3ef96693c787"
 public let KWXAPPID = "wx9f73387249e2b572"
-public let KWXUNIVERSAL_LINK = "https://edu-pro.ym698.com/open/"
-public let KQQ_LINK = "https://edu-pro.ym698.com/qq_conn/1110343963"
+public let KWXUNIVERSAL_LINK = "https://call.c989.cn/open/"
+public let KQQ_LINK = "https://call.c989.cn/qq_conn/1110343963"
 public let KQQAPPID = "1110343963"
-
+//call.c989.cn/.
 // MARK: -key
 public let kEventKey = "EventKey"
 public let kValueKey = "ValueKey"

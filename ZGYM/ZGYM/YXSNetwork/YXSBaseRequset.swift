@@ -21,7 +21,7 @@ public enum ServiceType: String {
     func getServiceUrl() -> String{
         switch self {
         case .ServiceProduct:
-            return "https://edu-pro.ym698.com:54321/"
+            return "https://pro.c989.cn:54321/"
         case .ServiceTest:
             return "http://test.zhixun5588.com/"
         case .ServiceLocal:
@@ -32,9 +32,9 @@ public enum ServiceType: String {
     func getH5Url() -> String{
         switch self {
         case .ServiceProduct:
-            return "https://edu-pro.ym698.com:50009/"
+            return "https://pro.c989.cn:50009/"
         case .ServiceTest://http://www.zhixun5588.com/
-            return "https://edu-pro.ym698.com:50009/"
+            return "https://pro.c989.cn:50009/"
         case .ServiceLocal:
             return "http://www.zhixun5588.com/"
         }

@@ -30,19 +30,22 @@ enum StageType: String {
     @objc static let sharePerson:YXSPersonDataModel = {
         let instance =  YXSPersonDataModel()
         // setup code
-//        instance.net?.startListening()
-//        instance.net?.listener = { status in
-//            if instance.net?.isReachable ?? false{
-//                switch status{
-//                case .notReachable,.unknown:
-//                    instance.isNetWorkingConnect = false
-//                case .reachable(.ethernetOrWiFi),.reachable(.wwan):
-//                    instance.isNetWorkingConnect = true
-//                }
-//            } else {
-//                instance.isNetWorkingConnect = false
-//            }
-//        }
+        instance.net?.startListening()
+        instance.net?.listener = { status in
+            if instance.net?.isReachable ?? false{
+                switch status{
+                case .notReachable,.unknown:
+                    break
+                case .reachable(.ethernetOrWiFi),.reachable(.wwan):
+                    if let vc = UIUtil.TopViewController() as? YXSContentHomeController{
+                        vc.loadCategoryData()
+                    }
+                    break
+                }
+            } else {
+                
+            }
+        }
         return instance
     }()
     
@@ -116,8 +119,8 @@ enum StageType: String {
         appdelegate?.showTabRoot()
     }
     
-    /// 当前是否有网络
-    public var isNetWorkingConnect: Bool = NetworkReachabilityManager()?.isReachable ?? true
+    /// 当前是否有网络  NetworkReachabilityManager()?.isReachable ?? true
+    public var isNetWorkingConnect: Bool = true
     
     public var OSSAuth: YXSOSSAuthModel!
 }

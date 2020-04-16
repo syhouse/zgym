@@ -20,7 +20,15 @@ class YXSSystemConfigController: YXSBaseViewController {
         
         if YXSPersonDataModel.sharePerson.isNetWorkingConnect{
             //请求版本信息
-            YXSVersionUpdateManager.sharedInstance.versionRequest { [weak self](model) in
+            //            YXSVersionUpdateManager.sharedInstance.versionRequest ( { [weak self](model) in
+            //                           guard let weakSelf = self else {return}
+            //                           weakSelf.yxs_showTabRoot()
+            //                       }),fa
+            YXSVersionUpdateManager.sharedInstance.versionRequest(completionHandler: { [weak self](model) in
+                guard let weakSelf = self else {return}
+                weakSelf.yxs_showTabRoot()
+            }) {
+                [weak self] in
                 guard let weakSelf = self else {return}
                 weakSelf.yxs_showTabRoot()
             }
