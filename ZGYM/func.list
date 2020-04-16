@@ -1,1 +1,21 @@
+detailModel
+homeModel
+messageModel
+deModel
+curruntIndexPath
 
+
+refreshData
+showComment
+showDelectComment
+loadCommentData
+loadDelectCommentData
+setHomeworkGoodEvent
+
+curruntIndexPath
+graffitiSection
+graffitiDetailModel
+graffitiImageIndex
+loadMore
+dataSource
+layout

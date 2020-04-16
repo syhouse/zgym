@@ -184,10 +184,12 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                 NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationModelKey: model])
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.notice])
                 UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
+                MBProgressHUD.yxs_hideHUD()
                 MBProgressHUD.yxs_showMessage(message: "提交成功", inView: self.navigationController?.view)
                 model.commitState = 2
                 self.yxs_reloadTableView(indexPath)
             }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController?.view)
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
             UIUtil.yxs_loadReadData(model,showLoading: false)
