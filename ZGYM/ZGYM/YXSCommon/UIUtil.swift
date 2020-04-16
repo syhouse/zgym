@@ -385,8 +385,19 @@ extension UIUtil{
     /// 阅读
     /// - Parameter model: YXSHomeListModel
     static func yxs_loadReadData(_ model: YXSHomeListModel,showLoading: Bool = true){
+        var isEnd: Bool = false
+        if let endTime = model.endTime{
+            let flag = endTime.compare(model.currentTime ?? "", options: NSString.CompareOptions.numeric)
+            if flag == .orderedAscending
+            {
+                isEnd = true
+            } else {
+                isEnd = false
+            }
+        }
+        
         UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER || model.isRead == 1{
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER || model.isRead == 1 || isEnd{
             return
         }
         model.isRead = 1
