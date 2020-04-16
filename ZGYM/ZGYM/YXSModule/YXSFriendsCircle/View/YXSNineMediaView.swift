@@ -136,7 +136,7 @@ class HMSingleMediaView: UIView {
             make.size.equalTo(CGSize.init(width: 55, height: 55))
         }
         graffitiBtn.snp.makeConstraints { (make) in
-            make.width.height.equalTo(40)
+            make.width.height.equalTo(50)
             make.right.equalTo(imageView.snp_right)
             make.bottom.equalTo(imageView.snp_bottom)
         }

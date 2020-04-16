@@ -35,8 +35,8 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
         super.viewDidLoad()
         self.title = "详情"
         self.view.addSubview(self.tableView)
-        tableView.register(YXSHomeworkCommentCell.self, forCellReuseIdentifier: "YXSHomeworkCommentCell")
-        tableView.register(YXSHomeworkCommentDetailCell.self, forHeaderFooterViewReuseIdentifier: "YXSHomeworkCommentDetailCell")
+        tableView.register(YXSHomeworkDetailCell.self, forCellReuseIdentifier: "YXSHomeworkDetailCell")
+        tableView.register(YXSHomeworkDetailSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: "YXSHomeworkDetailSectionHeaderView")
         tableView.register(YXSPunchCardDetialTableFooterView.self, forHeaderFooterViewReuseIdentifier: "YXSPunchCardDetialTableFooterView")
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalTo(0)
@@ -72,7 +72,7 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
         var pointInView = point
         if let curruntIndexPath = self.curruntIndexPath{
             let cell = self.tableView.cellForRow(at: curruntIndexPath)
-            if let listCell  = cell as? YXSHomeworkCommentCell{
+            if let listCell  = cell as? YXSHomeworkDetailCell{
                 let rc = listCell.convert(listCell.comentLabel.frame, to: UIUtil.curruntNav().view)
                 pointInView.y = rc.minY + 14.0
             }
@@ -175,7 +175,7 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeworkCommentCell") as! YXSHomeworkCommentCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeworkDetailCell") as! YXSHomeworkDetailCell
         cell.selectionStyle = .none
         let model = detailModel
         if let comments = model?.commentJsonList{
@@ -206,7 +206,7 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if self.detailModel != nil {
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkCommentDetailCell") as? YXSHomeworkCommentDetailCell
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkDetailSectionHeaderView") as? YXSHomeworkDetailSectionHeaderView
             if let headerView = headerView{
                 headerView.hmModel = self.deModel
                 headerView.model = self.detailModel
