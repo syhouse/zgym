@@ -143,6 +143,21 @@ class YXSGlobalJumpManager: NSObject {
             visibleVC?.navigationController?.pushViewController(vc)
             hasJumpEnd = true
             break
+            
+        case 101:
+            //家长的作业的评论回复
+            let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
+            let detailModel = YXSHomeworkDetailModel(JSON: ["":""])
+            let messageModel = YXSHomeworkMessageModel(JSON: ["":""])
+            messageModel?.childrenId = childrenId
+            let homeModel = YXSHomeListModel(JSON: ["":""])
+            homeModel?.createTime = createTime
+            homeModel?.serviceId = serviceId
+            let vc = YXSHomeworkMessageVC(deModel: detailModel!, model: homeModel!, messageModel: messageModel!)
+            visibleVC?.navigationController?.pushViewController(vc)
+            hasJumpEnd = true
+            break
+
         default:
             hasJumpEnd = true
             break

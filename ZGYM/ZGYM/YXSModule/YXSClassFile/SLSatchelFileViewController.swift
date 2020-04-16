@@ -110,6 +110,7 @@ class YXSSatchelFileViewController: SLClassFileViewController {
         }
     }
     
+    /// 批量删除
     @objc func batchDeleteRequest(listID:[Int], completionHandler:(()->Void)?) {
         YXSSatchelBatchDeleteRequest(folderIdList: listID, parentFolderId: parentFolderId).request({ [weak self](json) in
             guard let weakSelf = self else {return}
