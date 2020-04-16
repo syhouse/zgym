@@ -23,7 +23,18 @@ class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.view.addSubview(headerImageV)
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            headerImageV.snp.remakeConstraints { (make) in
+                make.top.left.right.equalTo(0)
+                make.height.equalTo(161)
+            }
+        } else {
+            headerImageV.snp.remakeConstraints { (make) in
+                make.top.left.right.equalTo(0)
+                make.height.equalTo(168)
+            }
+        }
         self.fd_prefersNavigationBarHidden = true
         self.view.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNightBackgroundColor)
         // Do any additional setup after loading the view.
@@ -188,7 +199,7 @@ class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController,
     
     /// 我的收藏
     @objc func myCollectClick() {
-        let vc = YXSMyCollectVC()
+        let vc = YXSMyCollectDetailsVC()
         self.navigationController?.pushViewController(vc)
     }
     
@@ -225,7 +236,7 @@ class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController,
             cell = tableView.dequeueReusableCell(withIdentifier: "YXSMineTableViewCell") as? YXSMineTableViewCell
             cell.bgView.cornerRadius = 5
             
-        } else if indexPath.section == 1 {
+        } else if indexPath.section == 2 {
             let swtCell: YXSMineSwitchTableViewCell = tableView.dequeueReusableCell(withIdentifier: "YXSMineSwitchTableViewCell") as! YXSMineSwitchTableViewCell
             swtCell.swt.isOn = NightNight.theme == .night ? true : false
             swtCell.bgView.cornerRadius = 5
@@ -250,7 +261,8 @@ class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController,
         
         cell.lbTitle.text = dic["title"]
         let imgName = dic["imgName"] ?? ""
-        cell.imgView.mixedImage = MixedImage(normal: UIImage(named: imgName+"_white")!, night: UIImage(named: imgName)!)
+        cell.imgView.image = UIImage(named: imgName)
+//        cell.imgView.mixedImage = MixedImage(normal: UIImage(named: imgName+"_white")!, night: UIImage(named: imgName)!)
         return cell
     }
     
@@ -321,20 +333,30 @@ class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController,
     lazy var dataSource: Array<Any> = {
         var arr: [[String: String]]!
 //        ["title":"系统通知", "imgName":"yxs_mine_notice", "action":"systemMessageClick"],
-        var section1 = [["title":"我的班级", "imgName":"yxs_mine_house", "action":"classListClick"]]
+        var section1 = [["title":"我的班级", "imgName":"yxs_mine_house_red", "action":"classListClick"]]
         
-        var section2 = [["title":"夜间模式", "imgName":"yxs_mine_theme", "action":""]]
+        var section2 = [["title":"我的收藏", "imgName":"yxs_mine_collect_red", "action":"myCollectClick"]]
         
-        #if DEBUG
-        var section3 = [["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"],["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"书包", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"我的收藏", "imgName":"yxs_mine_setting", "action":"myCollectClick"]]
-        #else
-        var section3 = [["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
-        #endif
+        var section3 = [["title":"夜间模式", "imgName":"yxs_mine_theme_red", "action":""]]
+        
+        var section4 = [["title":"常见问题", "imgName":"yxs_mine_question_red", "action":"questionClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
+        
+//        #if DEBUG
+//        var section3 = [["title":"常见问题", "imgName":"yxs_mine_question_red", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"],["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"书包", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"我的收藏", "imgName":"yxs_mine_collect_red", "action":"myCollectClick"]]
+//        #else
+//        var section3 = [["title":"常见问题", "imgName":"yxs_mine_question_red", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
+//        #endif
         
 //        arr = [["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"], ["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"],["title":"夜间模式", "imgName":"yxs_mine_theme", "action":""]]
 //        arr = [["title":"问题反馈", "imgName":"yxs_mine_feedback", "action":"feedbackClick"], ["title":"隐私政策", "imgName":"yxs_mine_privacy", "action":"privacyPolicyClick"], ["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
-        return [section1, section2, section3]
+        return [section1, section2, section3, section4]
         
+    }()
+    
+    lazy var headerImageV: UIImageView = {
+        let header = UIImageView()
+        header.image = UIImage.init(named: "yxs_mine_section_red")
+        return header
     }()
     
 //    lazy var headerView: YXSMineHeaderView = {

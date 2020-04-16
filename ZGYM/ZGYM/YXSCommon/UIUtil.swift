@@ -151,6 +151,34 @@ extension UIUtil{
         return yxs_getTextHeigh(textStr: textStr, attributes:  attributes, width: width, numberOfLines: nil)
     }
     
+    /// 获取文字宽高
+    /// - Parameter textStr: 文本
+    /// - Parameter font: 字体
+    /// - Parameter width: 宽度
+    public static func yxs_getTextSize(textStr : String?, attributes : [NSAttributedString.Key:Any]?, width : CGFloat) -> CGSize{
+        return yxs_getTextSize(textStr: textStr, attributes:  attributes, width: width, numberOfLines: nil)
+    }
+    
+    /// 获取文字宽高
+    /// - Parameters:
+    ///   - textStr: 文本
+    ///   - attributes: attributes
+    ///   - width: 宽度
+    ///   - numberOfLines: 高度限制几行
+    public static func yxs_getTextSize(textStr : String?, attributes : [NSAttributedString.Key:Any]?, width : CGFloat, numberOfLines: Int?) -> CGSize{
+        let lable = UILabel.init(frame: CGRect.init(x: 0, y: 0, width: width, height: 10))
+        if let numberOfLines = numberOfLines{
+            lable.numberOfLines = numberOfLines
+        }else{
+            lable.numberOfLines = 0
+        }
+        
+        lable.attributedText = NSMutableAttributedString.init(string: textStr ?? "", attributes: attributes)
+        lable.sizeToFit()
+        
+        return lable.size
+    }
+    
     /// 获取文字高度
     /// - Parameters:
     ///   - textStr: 文本

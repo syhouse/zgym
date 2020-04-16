@@ -94,6 +94,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
             showImages = nil
         }
     }
+    var relationship: String? 
     var memberCount : Int?
     var childrenName : String?
     var optionList : [String]?
@@ -285,19 +286,23 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
 
             }
             height += 10.0 + 26.0
-            if isRemark == 1 && (remarkVisible == 1 || isMySubmit) {
-                ///点评头部高度
-                height += 15 + 20 + 8 + 15 + 10 + 3
-
-                ///点评文字高度
-                if (remark ?? "").count > 0 {
-                    height += remarkFrameModel.contentIsShowAllHeight + 10
-                }
-                
-                if (remarkAudioUrl ?? "").count > 0{
-                    height += 36.0 + 10.0
-                }
+            height += remarkHeight
+            if remarkHeight > 0 {
+                height += 15
             }
+//            if isRemark == 1 && (remarkVisible == 1 || isMySubmit) {
+//                ///点评头部高度
+//                height += 15 + 20 + 8 + 15 + 10 + 3
+//
+//                ///点评文字高度
+//                if (remark ?? "").count > 0 {
+//                    height += remarkFrameModel.contentIsShowAllHeight + 10
+//                }
+//
+//                if (remarkAudioUrl ?? "").count > 0{
+//                    height += 36.0 + 10.0
+//                }
+//            }
             var favs = [String]()
             if let prises = praiseJsonList, prises.count > 0{
                 for (_,prise) in prises.enumerated(){
@@ -340,10 +345,6 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         let text: String = content ?? ""
         frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: text.removeSpace() , attributes: attributes,width: SCREEN_WIDTH - 30, numberOfLines: 3) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 4)  ? true : false
-        print("---------------contentHeight")
-        SLLog(frameModel.contentHeight)
-        print("---------------contentIsShowAllHeight")
-        SLLog(frameModel.contentIsShowAllHeight)
     }
 
     var remarkFrameModel:YXSFriendsCircleFrameModel!
@@ -359,6 +360,29 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         let text: String = remark ?? ""
         remarkFrameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: text.removeSpace() , attributes: attributes,width: SCREEN_WIDTH - 30, numberOfLines: 3) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 4)  ? true : false
+    }
+    
+    var remarkHeight: CGFloat {
+        get{
+            if remarkFrameModel == nil{
+                remarkConfingHeight()
+            }
+            var height:CGFloat = 0.0
+            if isRemark == 1 && (remarkVisible == 1 || isMySubmit) {
+                ///点评头部高度
+                height += 43 + 15
+
+                ///点评文字高度
+                if (remark ?? "").count > 0 {
+                    height += remarkFrameModel.contentIsShowAllHeight + 10
+                }
+                
+                if (remarkAudioUrl ?? "").count > 0{
+                    height += 36.0 + 10.0
+                }
+            }
+            return height
+        }
     }
 
     private override init(){}
@@ -411,6 +435,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         messageAvatar <- map["messageAvatar"]
         messageUserType <- map["messageUserType"]
         backImageUrl <- map["backImageUrl"]
+        relationship <- map["relationship"]
     }
 
     /**
@@ -464,6 +489,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         messageAvatar = aDecoder.decodeObject(forKey: "messageAvatar") as? String
         messageUserType = aDecoder.decodeObject(forKey: "messageUserType") as? String
         backImageUrl = aDecoder.decodeObject(forKey: "backImageUrl") as? String
+        relationship = aDecoder.decodeObject(forKey: "relationship") as? String
     }
 
     /**
@@ -606,6 +632,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         if backImageUrl != nil {
             aCoder.encode(backImageUrl, forKey: "backImageUrl")
+        }
+        if relationship != nil {
+            aCoder.encode(relationship, forKey: "relationship")
         }
     }
 }

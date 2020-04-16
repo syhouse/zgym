@@ -282,7 +282,9 @@ class YXSBaseRequset: NSObject {
         cleanCookies()
         addHeaders()
         RequsetParamManager.getSharedInstance().isLoadCache = isLoadCache
-        RequsetParamManager.getSharedInstance().urlParam = param
+        if param != nil {
+            RequsetParamManager.getSharedInstance().urlParam = param
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = timeoutInverval
         configuration.httpMaximumConnectionsPerHost = 10
