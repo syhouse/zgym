@@ -83,15 +83,20 @@ class YXSVersionUpdateManager: NSObject {
     }
     
     @objc func versionRequest(completionHandler:((_ model: YXSVersionUpdateModel)->())?) {
-        YXSEducationVersionManageLatestRequest().request({ [weak self](model:YXSVersionUpdateModel) in
-            guard let weakSelf = self else {return}
-            weakSelf.model = model
-            completionHandler?(model)
-            
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
-            completionHandler?(YXSVersionUpdateModel(JSON: ["":""])!)
-        }
+        versionRequest(completionHandler:completionHandler, faileHandler: nil)
     }
+    
+    @objc func versionRequest(completionHandler:((_ model: YXSVersionUpdateModel)->())?, faileHandler: (() ->())? = nil) {
+            YXSEducationVersionManageLatestRequest().request({ [weak self](model:YXSVersionUpdateModel) in
+                guard let weakSelf = self else {return}
+                weakSelf.model = model
+                completionHandler?(model)
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+    //            completionHandler?(YXSVersionUpdateModel(JSON: ["":""])!)
+                faileHandler?()
+            }
+        }
     
 }

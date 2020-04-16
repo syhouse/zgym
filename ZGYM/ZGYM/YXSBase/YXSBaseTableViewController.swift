@@ -59,11 +59,6 @@ class YXSBaseTableViewController: YXSBaseScrollViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(self.scrollView)
-        self.scrollView.snp.makeConstraints { (make) in
-            make.left.top.right.equalTo(0)
-            make.bottom.equalTo(-kSafeBottomHeight)
-        }
     }
     
 }
@@ -104,11 +99,6 @@ class YXSBaseCollectionViewController: YXSBaseScrollViewController {
     override func viewDidLoad() {
         self.scrollView = self.collectionView
         super.viewDidLoad()
-        self.view.addSubview(self.scrollView)
-        self.scrollView.snp.makeConstraints { (make) in
-            make.left.top.right.equalTo(0)
-            make.bottom.equalTo(-kSafeBottomHeight)
-        }
     }
 }
 
@@ -124,7 +114,10 @@ class YXSBaseScrollViewController: YXSBaseViewController, UITableViewDelegate, U
     /// 是否展示空白视图
     var showEmptyDataSource = false
     
-    var scrollView: UIScrollView!
+    lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView(frame: self.view.frame)
+        return scrollView
+    }()
 
     
     lazy var tableViewRefreshHeader: MJRefreshNormalHeader = MJRefreshNormalHeader.init(refreshingBlock:{ [weak self] in
@@ -141,6 +134,12 @@ class YXSBaseScrollViewController: YXSBaseViewController, UITableViewDelegate, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.addSubview(self.scrollView)
+        self.scrollView.snp.makeConstraints { (make) in
+            make.left.top.right.equalTo(0)
+            make.bottom.equalTo(-kSafeBottomHeight)
+        }
         
         self.scrollView.mj_header = hasRefreshHeader ? tableViewRefreshHeader : nil
         if showBegainRefresh{

@@ -74,10 +74,24 @@ class YXSContentDetialController: YXSBaseTableViewController {
             self.tableView.tableHeaderView = self.yxs_tableHeaderView
             self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#745683"), night: UIColor.yxs_hexToAdecimalColor(hex: "#745683"))
             self.tableView.reloadData()
+            self.requestJudge(albumId: result.albumId ?? 0)
+            
         }) { (msg, code) in
             
         }
     }
+    
+    @objc func requestJudge(albumId: Int) {
+        YXSEducationBabyAlbumCollectionJudgeRequest(albumId: albumId).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            let isCollect: Bool = json["collection"].boolValue
+            weakSelf.rightButton.isSelected = isCollect
+            
+        }) { (msg, code) in
+            
+        }
+    }
+    
     ///当前是否收藏专辑
     var isCollection: Bool = false
     ///请求是否收藏接口

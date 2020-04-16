@@ -57,7 +57,9 @@ class YXSProfileViewController: YXSBaseViewController, UITableViewDelegate, UITa
                 
             }
             
-        }) { (msg, code) in
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+            MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
