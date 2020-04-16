@@ -60,7 +60,7 @@ class YXSGlobalJumpManager: NSObject {
                 return
             }
             
-        } else {
+        } else if serviceType != 101 {
             if !checkClassIncludesChildren(childrenId: childrenId, classId: classId) {
                 hasJumpEnd = true
                 return

@@ -46,3 +46,42 @@ class YXSEducationBabyVoiceCollectionCancelRequest: YXSBaseRequset {
         param = ["voiceId": voiceId]
     }
 }
+
+
+
+let babyAlbumCollectionJudge = "/baby/album/collection/judge"
+/// 判定是否收藏宝宝听专辑
+class YXSEducationBabyAlbumCollectionJudgeRequest: YXSBaseRequset {
+    init(albumId: Int) {
+        super.init()
+        method = .post
+//        host = homeHost
+        path = babyAlbumCollectionJudge
+        param = ["albumId": albumId]
+    }
+}
+
+let babyAlbumCollectionSave = "/baby/album/collection/save"
+/// 收藏宝宝听专辑
+class YXSEducationBabyAlbumCollectionSaveRequest: YXSBaseRequset {
+    init(albumId: Int, albumCover: String, albumTitle: String, albumNum: Int) {
+        super.init()
+        method = .post
+//        host = homeHost
+        path = babyAlbumCollectionSave
+        param = ["albumId": albumId, "albumCover": albumCover, "albumTitle": albumTitle, "albumNum": albumNum]
+    }
+}
+
+let babyAlbumCollectionCancel = "/baby/album/collection/cancel"
+/// 取消收藏宝宝听专辑
+class YXSEducationBabyAlbumCollectionCancelRequest: YXSBaseRequset {
+    init(albumId: Int) {
+        super.init()
+        method = .post
+//        host = homeHost
+        path = babyAlbumCollectionCancel
+        param = ["albumId": albumId]
+    }
+}
+
