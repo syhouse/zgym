@@ -1,5 +1,5 @@
 //
-//  YXSHomeworkCommentDetailCell.swift
+//  YXSHomeworkDetailSectionHeaderView.swift
 //  ZGYM
 //
 //  Created by yanlong on 2020/3/30.
@@ -21,9 +21,8 @@ enum HomeworkCommentCellBlockType: Int {
     case recall
 }
 
-class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
+class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
 
-    var last: UIView!
     var curruntSection: Int!
     var hmModel : YXSHomeworkDetailModel?
     var goodClick:((_ model:YXSHomeworkDetailModel)->())?
@@ -134,7 +133,22 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
     }
 
     override func layoutSubviews() {
-        favView.y = last.tz_bottom + 12.5
+        super.layoutSubviews()
+        ///是否显示点评
+        var isShowRemark : Bool = false
+        if self.model?.isRemark == 1 {
+            if self.hmModel?.remarkVisible == 1 {
+                isShowRemark = true
+            } else {
+                isShowRemark = self.model?.isMySubmit ?? false
+            }
+        }
+        if isShowRemark {
+            favView.y = remarkView.tz_bottom + 12.5
+        } else {
+            favView.y = reviewControl.tz_bottom + 12.5
+        }
+        
     }
 //    override func didMoveToSuperview() {
 //        super.didMoveToSuperview()
@@ -217,7 +231,7 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
                     make.top.equalTo(imgAvatar.snp_bottom).offset(15)
                 })
             }
-            last = contentLabel
+            var last: UIView! = contentLabel
             var lastBottom = 10
             if self.model?.hasVoice ?? false {
                 voiceView.isHidden = false
@@ -532,7 +546,7 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
     }()
 }
 
-extension YXSHomeworkCommentDetailCell: YXSRouterEventProtocol{
+extension YXSHomeworkDetailSectionHeaderView: YXSRouterEventProtocol{
     func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
         switch eventName {
         case kHomeworkPictureGraffitiEvent:

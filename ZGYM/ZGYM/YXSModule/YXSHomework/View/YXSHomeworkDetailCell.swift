@@ -1,5 +1,5 @@
 //
-//  YXSHomeworkCommentCell.swift
+//  YXSHomeworkDetailCell.swift
 //  ZGYM
 //
 //  Created by yihao on 2020/4/7.
@@ -11,7 +11,7 @@ import UIKit
 import YYText
 import NightNight
 
-class YXSHomeworkCommentCell: YXSBaseCommentCell {
+class YXSHomeworkDetailCell: YXSBaseCommentCell {
     override var frame: CGRect{
         didSet{
             var newFrame = frame

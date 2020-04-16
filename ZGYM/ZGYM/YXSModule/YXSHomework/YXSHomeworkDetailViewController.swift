@@ -71,8 +71,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.bottomBtnView)
         tableView.tableHeaderView = tableHeaderView
-        tableView.register(YXSHomeworkCommentCell.self, forCellReuseIdentifier: "YXSHomeworkCommentCell")
-        tableView.register(YXSHomeworkCommentDetailCell.self, forHeaderFooterViewReuseIdentifier: "YXSHomeworkCommentDetailCell")
+        tableView.register(YXSHomeworkDetailCell.self, forCellReuseIdentifier: "YXSHomeworkDetailCell")
+        tableView.register(YXSHomeworkDetailSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: "YXSHomeworkDetailSectionHeaderView")
         tableView.register(YXSPunchCardDetialTableFooterView.self, forHeaderFooterViewReuseIdentifier: "SLPunchCardDetialTableFooterView")
         tableHeaderView.mediaView.voiceTouchedHandler = { [weak self](url, duration) in
             guard let weakSelf = self else {return}
@@ -555,7 +555,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         var pointInView = point
         if let curruntIndexPath = self.curruntIndexPath{
             let cell = self.tableView.cellForRow(at: curruntIndexPath)
-            if let listCell  = cell as? YXSHomeworkCommentCell{
+            if let listCell  = cell as? YXSHomeworkDetailCell{
                 let rc = listCell.convert(listCell.comentLabel.frame, to: UIUtil.curruntNav().view)
                 pointInView.y = rc.minY + 14.0
             }
@@ -730,7 +730,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         return dataSource.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeworkCommentCell") as! YXSHomeworkCommentCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeworkDetailCell") as! YXSHomeworkDetailCell
         cell.selectionStyle = .none
         let model = dataSource[indexPath.section]
         if let comments = model.commentJsonList{
@@ -765,7 +765,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let model = dataSource[section]
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkCommentDetailCell") as? YXSHomeworkCommentDetailCell
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkDetailSectionHeaderView") as? YXSHomeworkDetailSectionHeaderView
         if let headerView = headerView{
             headerView.curruntSection = section
             headerView.hmModel = self.model

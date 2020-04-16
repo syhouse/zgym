@@ -519,11 +519,11 @@
 		6F0705232445D8050090975B /* YXSHomeworkCommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701642445D7FF0090975B /* YXSHomeworkCommentModel.swift */; };
 		6F0705242445D8050090975B /* YXSHomeworkMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701652445D7FF0090975B /* YXSHomeworkMessageModel.swift */; };
 		6F0705252445D8050090975B /* YXSParentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701662445D7FF0090975B /* YXSParentModel.swift */; };
-		6F0705262445D8050090975B /* YXSHomeworkCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701682445D7FF0090975B /* YXSHomeworkCommentCell.swift */; };
+		6F0705262445D8050090975B /* YXSHomeworkDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701682445D7FF0090975B /* YXSHomeworkDetailCell.swift */; };
 		6F0705272445D8050090975B /* YXSHomeworkThumbnailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701692445D7FF0090975B /* YXSHomeworkThumbnailsView.swift */; };
 		6F0705282445D8050090975B /* YXSHomeworkListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07016A2445D7FF0090975B /* YXSHomeworkListCell.swift */; };
 		6F0705292445D8050090975B /* YXSCommonPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07016B2445D7FF0090975B /* YXSCommonPublishView.swift */; };
-		6F07052A2445D8050090975B /* YXSHomeworkCommentDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07016C2445D7FF0090975B /* YXSHomeworkCommentDetailCell.swift */; };
+		6F07052A2445D8050090975B /* YXSHomeworkDetailSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07016C2445D7FF0090975B /* YXSHomeworkDetailSectionHeaderView.swift */; };
 		6F07052B2445D8050090975B /* YXSPublishItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07016D2445D7FF0090975B /* YXSPublishItemView.swift */; };
 		6F07052C2445D8050090975B /* YXSHomeworkDetailCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07016E2445D7FF0090975B /* YXSHomeworkDetailCommentView.swift */; };
 		6F07052D2445D8050090975B /* YXSHomeworkReadListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07016F2445D7FF0090975B /* YXSHomeworkReadListHeaderView.swift */; };
@@ -1088,11 +1088,11 @@
 		6F0701642445D7FF0090975B /* YXSHomeworkCommentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkCommentModel.swift; sourceTree = "<group>"; };
 		6F0701652445D7FF0090975B /* YXSHomeworkMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkMessageModel.swift; sourceTree = "<group>"; };
 		6F0701662445D7FF0090975B /* YXSParentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSParentModel.swift; sourceTree = "<group>"; };
-		6F0701682445D7FF0090975B /* YXSHomeworkCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkCommentCell.swift; sourceTree = "<group>"; };
+		6F0701682445D7FF0090975B /* YXSHomeworkDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkDetailCell.swift; sourceTree = "<group>"; };
 		6F0701692445D7FF0090975B /* YXSHomeworkThumbnailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkThumbnailsView.swift; sourceTree = "<group>"; };
 		6F07016A2445D7FF0090975B /* YXSHomeworkListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkListCell.swift; sourceTree = "<group>"; };
 		6F07016B2445D7FF0090975B /* YXSCommonPublishView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSCommonPublishView.swift; sourceTree = "<group>"; };
-		6F07016C2445D7FF0090975B /* YXSHomeworkCommentDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkCommentDetailCell.swift; sourceTree = "<group>"; };
+		6F07016C2445D7FF0090975B /* YXSHomeworkDetailSectionHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkDetailSectionHeaderView.swift; sourceTree = "<group>"; };
 		6F07016D2445D7FF0090975B /* YXSPublishItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPublishItemView.swift; sourceTree = "<group>"; };
 		6F07016E2445D7FF0090975B /* YXSHomeworkDetailCommentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkDetailCommentView.swift; sourceTree = "<group>"; };
 		6F07016F2445D7FF0090975B /* YXSHomeworkReadListHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkReadListHeaderView.swift; sourceTree = "<group>"; };
@@ -2736,17 +2736,17 @@
 		6F0701672445D7FF0090975B /* View */ = {
 			isa = PBXGroup;
 			children = (
-				6F0701682445D7FF0090975B /* YXSHomeworkCommentCell.swift */,
+				6F07016C2445D7FF0090975B /* YXSHomeworkDetailSectionHeaderView.swift */,
+				6F0701722445D7FF0090975B /* YXSHomeWorkDetailTableHeaderView.swift */,
+				6F0701682445D7FF0090975B /* YXSHomeworkDetailCell.swift */,
 				6F0701692445D7FF0090975B /* YXSHomeworkThumbnailsView.swift */,
 				6F07016A2445D7FF0090975B /* YXSHomeworkListCell.swift */,
 				6F07016B2445D7FF0090975B /* YXSCommonPublishView.swift */,
-				6F07016C2445D7FF0090975B /* YXSHomeworkCommentDetailCell.swift */,
 				6F07016D2445D7FF0090975B /* YXSPublishItemView.swift */,
 				6F07016E2445D7FF0090975B /* YXSHomeworkDetailCommentView.swift */,
 				6F07016F2445D7FF0090975B /* YXSHomeworkReadListHeaderView.swift */,
 				6F0701702445D7FF0090975B /* YXSHomeworkInputLinkAlert.swift */,
 				6F0701712445D7FF0090975B /* YXSSetTopAlertView.swift */,
-				6F0701722445D7FF0090975B /* YXSHomeWorkDetailTableHeaderView.swift */,
 				6F0701732445D7FF0090975B /* YXSHomeworkUncommetListCell.swift */,
 				6F0701742445D7FF0090975B /* YXSLinkView.swift */,
 				6F0701752445D7FF0090975B /* YXSHomeworkReadListCell.swift */,
@@ -5277,7 +5277,7 @@
 				6F0703472445D8020090975B /* UIView+YXSCore.swift in Sources */,
 				6F0703E12445D8030090975B /* AFAutoPurgingImageCache.m in Sources */,
 				6F0704362445D8040090975B /* YXSInputViewController.swift in Sources */,
-				6F0705262445D8050090975B /* YXSHomeworkCommentCell.swift in Sources */,
+				6F0705262445D8050090975B /* YXSHomeworkDetailCell.swift in Sources */,
 				6F0703602445D8030090975B /* TCommonTextCell.m in Sources */,
 				6F07044B2445D8040090975B /* YXSDottedView.swift in Sources */,
 				6F0703362445D8020090975B /* UIView+YXSGradualBackground.swift in Sources */,
@@ -5625,7 +5625,7 @@
 				6F07044F2445D8040090975B /* YXSNoticeListCell.swift in Sources */,
 				6F0705482445D8050090975B /* YXSFriendsCircleFrameModel.swift in Sources */,
 				6F0705252445D8050090975B /* YXSParentModel.swift in Sources */,
-				6F07052A2445D8050090975B /* YXSHomeworkCommentDetailCell.swift in Sources */,
+				6F07052A2445D8050090975B /* YXSHomeworkDetailSectionHeaderView.swift in Sources */,
 				6F0703772445D8030090975B /* TCommonContactSelectCellData.m in Sources */,
 				6F0703622445D8030090975B /* TCommonSwitchCell.m in Sources */,
 				6F0705CE2445D8060090975B /* LFLayoutPickerController.m in Sources */,
