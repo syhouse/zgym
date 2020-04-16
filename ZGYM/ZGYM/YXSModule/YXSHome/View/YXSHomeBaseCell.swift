@@ -71,15 +71,15 @@ class YXSHomeBaseCell: UITableViewCell {
             stickView.isHidden = isTop ? false : true
             if isShowTag{
                 nameTimeLabel.snp.remakeConstraints { (make) in
-                    make.left.equalTo(tagLabel.snp_right).offset(11)
+                    make.left.equalTo(68)
                     make.centerY.equalTo(tagLabel)
-                    make.right.equalTo(stickView.isHidden ? -45 : -75)
+                    make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45 - (stickView.isHidden ? 45 : 75))
                 }
             }else{
                 nameTimeLabel.snp.makeConstraints { (make) in
                     make.left.equalTo(15)
                     make.top.equalTo(19)
-                    make.right.equalTo(-45)
+                    make.width.equalTo(SCREEN_WIDTH - 30 - 15)
                 }
             }
             
@@ -126,7 +126,7 @@ class YXSHomeBaseCell: UITableViewCell {
                 make.size.equalTo(CGSize.init(width: 30, height: 30))
             }
         }
-        tagLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+//        tagLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 
     /// 子类继承
