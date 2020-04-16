@@ -13,24 +13,40 @@ class YXSMyCollectModel: NSObject, Mappable {
     
     // MARK: - 声音相关字段
     /// 声音名称
-    var voiceName : String?
+    var voiceTitle : String?
     
-    /// 声音时长
-    var voiceTime : String?
+    /// 声音时长 秒
+    var voiceDuration : Int?
     
     /// 声音id
     var voiceId : Int?
     
+    var voiceTimeStr: String? {
+        get{
+            let minute: Int = (voiceDuration ?? 0)/60
+            let second: Int = (voiceDuration ?? 0)%60
+            var minuteStr = "\(minute)"
+            if minute < 10 {
+                minuteStr = "0\(minute)"
+            }
+            var secondStr = "\(second)"
+            if second < 10 {
+                secondStr = "0\(second)"
+            }
+            
+            return minuteStr + ":" + secondStr
+        }
+    }
     
     // MARK: - 专辑相关字段
     /// 专辑封面路径
-    var albumIconUrl : String?
+    var albumCover : String?
     
     /// 专辑名称
-    var albumName : String?
+    var albumTitle : String?
     
     /// 专辑内歌曲数量
-    var albumSongs : Int?
+    var albumNum : Int?
     
     /// 专辑id
     var albumId : Int?
@@ -40,12 +56,12 @@ class YXSMyCollectModel: NSObject, Mappable {
     
     func mapping(map: Map)
     {
-        voiceName <- map["voiceName"]
-        voiceTime <- map["voiceTime"]
+        voiceTitle <- map["voiceTitle"]
+        voiceDuration <- map["voiceDuration"]
         voiceId <- map["voiceId"]
-        albumIconUrl <- map["albumIconUrl"]
-        albumName <- map["albumName"]
-        albumSongs <- map["albumSongs"]
+        albumCover <- map["albumCover"]
+        albumTitle <- map["albumTitle"]
+        albumNum <- map["albumNum"]
         albumId <- map["albumId"]
     }
 }

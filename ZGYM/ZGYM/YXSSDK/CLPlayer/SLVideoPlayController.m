@@ -113,7 +113,7 @@
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     backButton.frame = CGRectMake(0, kStatusBarHeight, 50, 44);
     backButton.adjustsImageWhenHighlighted = NO;
-    [backButton setImage:[UIImage imageNamed:@"arrow_48-1"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"yxs_back_white"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(clickBackButton) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
 }

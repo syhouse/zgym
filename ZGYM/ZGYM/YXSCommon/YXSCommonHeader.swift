@@ -9,6 +9,9 @@
 import UIKit
 import NightNight
 
+///老UI
+public let isOldUI = true
+
 // MARK: - 尺寸
 public let IsiphoneX: Bool = UIApplication.shared.statusBarFrame.size.height > 20.0
 public let kSafeTopHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height - 20.0

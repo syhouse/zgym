@@ -54,6 +54,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var content : String?
     var createTime : String?
     var endTime : String?
+    var currentTime: String?
     var hasAv : Int?   //0无  1 音频 2 视频
     var hasLink : Int?
     /// 首页用的排序ID
@@ -418,6 +419,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         
         lastRecordTime <- map["lastRecordTime"]
         tsLast <- map["tsLast"]
+        currentTime <- map["currentTime"]
     }
     
     /**
@@ -467,6 +469,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         lastRecordId = aDecoder.decodeObject(forKey: "lastRecordId") as? Int
         lastRecordTime = aDecoder.decodeObject(forKey: "lastRecordTime") as? String
         tsLast = aDecoder.decodeObject(forKey: "tsLast") as? Int
+        currentTime = aDecoder.decodeObject(forKey: "currentTime") as? String
     }
 
     /**
@@ -595,6 +598,9 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         if tsLast != nil{
             aCoder.encode(tsLast, forKey: "tsLast")
         }
+        if currentTime != nil{
+             aCoder.encode(currentTime, forKey: "currentTime")
+         }
     }
 }
 

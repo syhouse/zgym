@@ -137,10 +137,10 @@ class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController,
         let vc = YXSBaseWebViewController()
         vc.title = "常见问题"
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER { 
-            vc.loadUrl = "http://www.ym698.com/lscj"
+            vc.loadUrl = sericeType.getH5Url() + "lscj"
         
         } else {
-            vc.loadUrl = "http://www.ym698.com/jzcj/"
+            vc.loadUrl = sericeType.getH5Url() + "jzcj/"
         }
         self.navigationController?.pushViewController(vc)
     }
@@ -178,7 +178,7 @@ class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController,
     }
     
     @objc func recommendClick() {
-        let strUrl = "https://edu-pro.ym698.com:50009/down/"
+        let strUrl = sericeType.getH5Url() + "down/"
         let title = "优教育，优成长"
         let dsc = "我正在使用“优学业”APP进行家校沟通，赶快一起参与进来吧~"
         let shareModel = YXSShareModel(title: title, descriptionText: dsc, link: strUrl)

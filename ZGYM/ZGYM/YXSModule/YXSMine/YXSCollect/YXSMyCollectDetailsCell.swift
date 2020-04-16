@@ -44,8 +44,8 @@ class YXSMyCollectDetailsCell: UITableViewCell {
     }
     
     func setModel(model:YXSMyCollectModel) {
-        nameLabel.text = model.voiceName
-        timeLabel.text = model.voiceTime
+        nameLabel.text = model.voiceTitle
+        timeLabel.text = model.voiceTimeStr
     }
     
     // MARK: -getter&setter

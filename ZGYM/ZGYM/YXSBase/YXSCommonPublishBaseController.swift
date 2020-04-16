@@ -111,7 +111,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     
     
     /// 子类可继承自己配置未保存model的参数
-     func initEmptyModel(){
+    func initEmptyModel(){
         self.publishModel = YXSPublishModel()
         publishModel.sourceDirectory = sourceDirectory
     }
@@ -177,9 +177,11 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     
     @objc func rightClick(){
         self.view.endEditing(true)
+        
         if !yxs_cheackCanSetUp(){
             return
         }
+        
         //音频  图片需要分开传 ？？ why
         var mediaInfos = [[String: Any]]()
         //需要上传
@@ -212,6 +214,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         }
         //有本地资源上传
         if localAudio.count != 0 || localMeidaInfos.count != 0{
+            self.uploadHud = getUploadHud()
             self.uploadHud.label.text = "上传中(0%)"
             uploadHud.show(animated: true)
         }
@@ -239,7 +242,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
             cheakLoadImageData(mediaInfos:mediaInfos,localMeidaInfos: localMeidaInfos, residueProgess: 1.0)
         }
     }
-
+    
     
     func yxs_remove(){
         try? FileManager.default.removeItem(atPath: NSUtil.yxs_cachePath(file: self.fileName, directory: "archive"))
@@ -258,7 +261,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
                 MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
                 mediaInfos.append(contentsOf: infos)
                 self.yxs_loadCommintData(mediaInfos: mediaInfos)
-            }) { (msg, code) in
+            }) { (msg, code) in 
                 MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
@@ -282,7 +285,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         vc.isSelectSingleClass = isSelectSingleClass
         navigationController?.pushViewController(vc)
     }
-
+    
     // MARK: -tool
     func yxs_cheackCanSetUp() -> Bool{
         //主题不能为空
@@ -297,7 +300,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         }
         return true
     }
-
+    
     // MARK: - getter&setter
     
     lazy var selectClassView : YXSSelectClassView = {
@@ -318,9 +321,11 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         return publishView
     }()
     ///上传进度
-    lazy var uploadHud: MBProgressHUD = {
+    var uploadHud: MBProgressHUD!
+    
+    func getUploadHud() -> MBProgressHUD{
         let hud = MBProgressHUD.showAdded(to: self.navigationController!.view, animated: true)
         hud.mode = .indeterminate
         return hud
-    }()
+    }
 }
