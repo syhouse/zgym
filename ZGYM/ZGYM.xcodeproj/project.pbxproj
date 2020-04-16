@@ -2299,11 +2299,11 @@
 			isa = PBXGroup;
 			children = (
 				6F0700952445D7FE0090975B /* PlayingViewController.h */,
+				6F0700992445D7FE0090975B /* PlayingViewController.m */,
+				6F07009A2445D7FE0090975B /* YXSContentDetialController.swift */,
 				6F0700962445D7FE0090975B /* YXSContentHomeController.swift */,
 				6F0700972445D7FE0090975B /* YXSContentListViewController.swift */,
 				6F0700982445D7FE0090975B /* YXSPlayingViewController.swift */,
-				6F0700992445D7FE0090975B /* PlayingViewController.m */,
-				6F07009A2445D7FE0090975B /* YXSContentDetialController.swift */,
 				6F07009B2445D7FE0090975B /* YXSPlayListViewController.swift */,
 			);
 			path = Controller;
