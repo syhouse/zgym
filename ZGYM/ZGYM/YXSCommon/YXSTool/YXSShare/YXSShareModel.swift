@@ -45,7 +45,7 @@ class YXSShareModel: NSObject {
         self.init(type:.link,way:way)
         self.image = image
         self.title = title
-        self.descriptionText = descriptionText.count > 200 ? descriptionText.mySubString(from: 200) : descriptionText
+        self.descriptionText = descriptionText.count > 200 ? descriptionText.mySubString(to: 200) : descriptionText
         self.link = link
     }
 }
