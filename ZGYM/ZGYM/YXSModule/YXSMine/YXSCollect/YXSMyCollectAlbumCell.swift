@@ -43,9 +43,9 @@ class YXSMyCollectAlbumCell: UITableViewCell {
     }
     
     func setModel(model:YXSMyCollectModel) {
-        headIcon.sd_setImage(with: URL(string: model.albumIconUrl ?? ""), placeholderImage: UIImage.init(named: "yxs_logo"))
-        nameLabel.text = model.albumName
-        countLabel.text = "共\(model.albumSongs ?? 0)首"
+        headIcon.sd_setImage(with: URL(string: model.albumCover ?? ""), placeholderImage: UIImage.init(named: "yxs_collect_albumIcon"))
+        nameLabel.text = model.albumTitle
+        countLabel.text = "共\(model.albumNum ?? 0)首"
     }
     
     // MARK: -getter&setter
@@ -58,7 +58,7 @@ class YXSMyCollectAlbumCell: UITableViewCell {
     
     lazy var headIcon: UIImageView = {
         let imgV = UIImageView()
-        imgV.image = UIImage.init(named: "yxs_logo")
+        imgV.image = UIImage.init(named: "yxs_collect_albumIcon")
         return imgV
     }()
     

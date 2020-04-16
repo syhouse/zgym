@@ -188,3 +188,14 @@ class YXSEducationXMLYSearchTracksV2Request: YXSXMLYRequest {
         param = ["id": id]
     }
 }
+
+///批量获取声音信息
+let tracksGetBatch = "/tracks/get_batch"
+class YXSEducationXMLYTracksGetBatchRequest: YXSXMLYRequest {
+    ///id 声音id
+    init(ids: String) {
+        super.init()
+        path = tracksGetBatch
+        param = ["ids": ids]
+    }
+}

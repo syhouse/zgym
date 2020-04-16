@@ -1101,37 +1101,39 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
     }
     func lf_PhotoEditingController(_ photoEditingVC: LFPhotoEditingController!, didFinish photoEdit: LFPhotoEdit!) {
         photoEditingVC.delegate = nil
-        self.uploadHud.label.text = "上传中(0%)"
-        uploadHud.show(animated: true)
-        let mediaModel = SLPublishMediaModel.init()
-        mediaModel.showImg = photoEdit.editPreviewImage
-        var localMeidaInfos = [[String: Any]]()
-        localMeidaInfos.append([typeKey: SourceNameType.image,modelKey: mediaModel])
-    
-        if localMeidaInfos.count > 0{
-            YXSUploadSourceHelper().uploadMedia(mediaInfos: localMeidaInfos, progress: {
-                (progress)in
-                DispatchQueue.main.async {
-                    self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int((1.0*progress + (1.0 - 1.0)) * 100)))%)"
+        if photoEdit != nil {
+            self.uploadHud.label.text = "上传中(0%)"
+            uploadHud.show(animated: true)
+            let mediaModel = SLPublishMediaModel.init()
+            mediaModel.showImg = photoEdit.editPreviewImage
+            var localMeidaInfos = [[String: Any]]()
+            localMeidaInfos.append([typeKey: SourceNameType.image,modelKey: mediaModel])
+        
+            if localMeidaInfos.count > 0{
+                YXSUploadSourceHelper().uploadMedia(mediaInfos: localMeidaInfos, progress: {
+                    (progress)in
+                    DispatchQueue.main.async {
+                        self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int((1.0*progress + (1.0 - 1.0)) * 100)))%)"
+                    }
+                }, sucess: { (infos) in
+                    SLLog(infos)
+                    print("123")
+                    MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+                    let urlStr = infos.first?["urlKey"] as! String
+                    self.graffitiRequest(urlStr: urlStr)
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                    self.clearGraffitiData()
                 }
-            }, sucess: { (infos) in
-                SLLog(infos)
-                print("123")
+            }
+            else{
                 MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-                let urlStr = infos.first?["urlKey"] as! String
-                self.graffitiRequest(urlStr: urlStr)
-            }) { (msg, code) in
-                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-                MBProgressHUD.yxs_showMessage(message: msg)
                 self.clearGraffitiData()
             }
         }
-        else{
-            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-            self.clearGraffitiData()
-        }
+        
         photoEditingVC.dismiss(animated: true, completion: nil)
-//        photoEditingVC.navigationController?.popViewController()
         SLLog("编辑完成")
     }
     

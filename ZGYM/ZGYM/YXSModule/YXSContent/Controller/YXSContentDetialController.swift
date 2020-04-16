@@ -11,6 +11,7 @@ import UIKit
 
 import UIKit
 import NightNight
+import SwiftyJSON
 
 class YXSContentDetialController: YXSBaseTableViewController {
     // MARK: - property
@@ -55,6 +56,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
         tableView.rowHeight = 62.5
         
         loadData()
+        loadIsCollectionData()
     }
     
     // MARK: -UI
@@ -81,11 +83,38 @@ class YXSContentDetialController: YXSBaseTableViewController {
     ///请求是否收藏接口
     func loadIsCollectionData(){
         rightButton.isSelected = isCollection
+        YXSEducationBabyAlbumCollectionJudgeRequest.init(albumId: id).request({ (json) in
+            let resultJson = JSON(json);
+            self.isCollection = resultJson["collection"].boolValue
+            self.rightButton.isSelected = self.isCollection
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     /// 收藏 取消收藏
-    @objc func loadCollectionData(){
-        
+    @objc func loadCollectionData(sender: UIButton){
+        if self.albumsModel != nil {
+            self.rightButton.isSelected = !self.rightButton.isSelected
+            if isCollection {
+                YXSEducationBabyAlbumCollectionCancelRequest.init(albumId: self.id).request({ (json) in
+                    self.isCollection = false
+                    MBProgressHUD.yxs_showMessage(message: "取消收藏成功")
+                }) { (msg, code) in
+                    self.rightButton.isSelected = true
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
+            } else {
+                YXSEducationBabyAlbumCollectionSaveRequest.init(albumId: self.albumsModel?.albumId ?? 0, albumCover: self.albumsModel?.coverUrl ?? "", albumTitle: self.albumsModel?.albumTitle ?? "", albumNum: self.albumsModel?.totalCount ?? 0).request({ (json) in
+                    self.isCollection = true
+                    MBProgressHUD.yxs_showMessage(message: "收藏成功")
+                }) { (msg, code) in
+                    self.rightButton.isSelected = false
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
+            }
+            
+        }
     }
     
     // MARK: -action
@@ -159,7 +188,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
         customNav.titleLabel.textColor = UIColor.white
         
         rightButton = UIButton()
-        rightButton.addTarget(self, action: #selector(loadCollectionData), for: .touchUpInside)
+        rightButton.addTarget(self, action: #selector(loadCollectionData(sender:)), for: .touchUpInside)
         rightButton.setImage(UIImage(named: "yxs_xmly_no_fav"), for: .normal)
         rightButton.setImage(UIImage(named: "yxs_xmly_has_fav"), for: .selected)
         customNav.addSubview(rightButton)

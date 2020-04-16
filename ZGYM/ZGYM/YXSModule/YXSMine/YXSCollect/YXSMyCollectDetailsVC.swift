@@ -8,13 +8,34 @@
 
 import Foundation
 import NightNight
-import JXCategoryView
+import ObjectMapper
+import SwiftyJSON
+import MJRefresh
+
+enum YXSCollectType {
+    /// 声音
+    case voice
+    /// 专辑
+    case album
+}
 
 class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableViewDataSource{
 
-    
+    var type: YXSCollectType = .voice
     var dataSource: [YXSMyCollectModel] = [YXSMyCollectModel]()
-
+    var currentIndex: Int = 0
+    var curruntPage: Int = 1
+    /// 是否下拉加载更多
+    var loadMore: Bool = false{
+        didSet{
+            if self.loadMore{
+                self.tableView.mj_footer = tableRefreshFooter
+            }else{
+                self.tableView.mj_footer = nil
+                self.tableView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
+            }
+        }
+    }
     override init(){
         super.init()
         
@@ -37,27 +58,40 @@ class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableV
     }
     
     func loadData() {
-        dataSource.removeAll()
-        if leftBtn.isSelected {
-            let model1 : YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["voiceName":"爷爷的话","voiceTime":"1:10"])!
-            let model2 : YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["voiceName":"妈妈的话","voiceTime":"1:20"])!
-            let model3 : YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["voiceName":"洗澡歌","voiceTime":"1:30"])!
-            let model4 : YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["voiceName":"小燕子","voiceTime":"1:40"])!
-            let model5 : YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["voiceName":"甩葱歌","voiceTime":"1:50"])!
-            dataSource.append(model1)
-            dataSource.append(model2)
-            dataSource.append(model3)
-            dataSource.append(model4)
-            dataSource.append(model5)
+        if type == .voice {
+            YXSEducationBabyVoiceCollectionPageRequest.init(current: self.curruntPage, size: 20).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                if weakSelf.curruntPage == 1 {
+                    weakSelf.dataSource.removeAll()
+                }
+                let joinList = Mapper<YXSMyCollectModel>().mapArray(JSONObject: json["records"].object) ?? [YXSMyCollectModel]()
+                if json["pages"].intValue > weakSelf.curruntPage {
+                    weakSelf.loadMore = true
+                } else {
+                    weakSelf.loadMore = false
+                }
+                weakSelf.dataSource += joinList
+                weakSelf.tableView.reloadData()
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
         } else {
-            let model1 : YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["albumName":"《三字儿歌》","albumSongs":20])!
-            let model2 : YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["albumName":"《儿童卡通金曲》","albumSongs":30])!
-            let model3 : YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["albumName":"《麦杰克儿歌》","albumSongs":16])!
-            let model4 : YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["albumName":"《猪迪克儿歌》","albumSongs":8])!
-            dataSource.append(model1)
-            dataSource.append(model2)
-            dataSource.append(model3)
-            dataSource.append(model4)
+            YXSEducationBabyAlbumCollectionPageRequset.init(current: self.curruntPage, size: 20).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                if weakSelf.curruntPage == 1 {
+                    weakSelf.dataSource.removeAll()
+                }
+                let joinList = Mapper<YXSMyCollectModel>().mapArray(JSONObject: json["records"].object) ?? [YXSMyCollectModel]()
+                if json["pages"].intValue > weakSelf.curruntPage {
+                    weakSelf.loadMore = true
+                } else {
+                    weakSelf.loadMore = false
+                }
+                weakSelf.dataSource += joinList
+                weakSelf.tableView.reloadData()
+            }, failureHandler: { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            })
         }
         self.tableView.reloadData()
     }
@@ -66,11 +100,13 @@ class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableV
     @objc func headerBtnClick(sender: UIButton) {
         switch sender.tag {
         case 2001:
+            type = .voice
             leftBtn.isSelected = true
             rightBtn.isSelected = false
             rightBtn.yxs_removeLine()
             leftBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), leftMargin: 40, rightMargin: 40, lineHeight: 2)
         case 2002:
+            type = .album
             rightBtn.isSelected = true
             leftBtn.isSelected = false
             leftBtn.yxs_removeLine()
@@ -79,6 +115,39 @@ class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableV
             print("")
         }
         self.loadData()
+    }
+    
+    
+    /// 取消收藏
+    /// - Parameter id: 收藏的声音id或者专辑id
+    func cancelCollect(id:Int, Type:YXSCollectType) {
+        if Type == .voice {
+            YXSEducationBabyVoiceCollectionCancelRequest.init(voiceId: id).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                MBProgressHUD.yxs_showMessage(message: "取消收藏成功")
+                weakSelf.dataSource.remove(at: weakSelf.currentIndex)
+                weakSelf.tableView.deleteRows(at: [IndexPath.init(row: weakSelf.currentIndex, section: 0)], with: .left)
+                if weakSelf.dataSource.count == 0 {
+                    weakSelf.tableView.reloadData()
+                }
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+                self.currentIndex = 0
+            }
+        } else {
+            YXSEducationBabyAlbumCollectionCancelRequest.init(albumId: id).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                MBProgressHUD.yxs_showMessage(message: "取消收藏成功")
+                weakSelf.dataSource.remove(at: weakSelf.currentIndex)
+                weakSelf.tableView.deleteRows(at: [IndexPath.init(row: weakSelf.currentIndex, section: 0)], with: .left)
+                if weakSelf.dataSource.count == 0 {
+                    weakSelf.tableView.reloadData()
+                }
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+                self.currentIndex = 0
+            }
+        }
     }
     
     // MARK: - UITableViewDataSource，UITableViewDelegate
@@ -126,6 +195,27 @@ class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableV
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let model = dataSource[indexPath.row]
+        if type == .voice {
+//            YXSEducationXMLYTracksGetBatchRequest
+            YXSEducationXMLYTracksGetBatchRequest.init(ids: "\(model.voiceId ?? 0)").request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let joinList = Mapper<YXSTrackModel>().mapArray(JSONObject: json["tracks"].object) ?? [YXSTrackModel]()
+                if joinList.count > 0 {
+                    let curruntTrack = joinList.first
+                    let vc = YXSPlayingViewController()
+                    let track = XMTrack.init(dictionary: curruntTrack?.toJSON())
+                    vc.track = track
+                    vc.trackList = [track!]
+                    weakSelf.navigationController?.pushViewController(vc)
+                }
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        } else {
+            let vc = YXSContentDetialController.init(id: model.albumId ?? 0)
+            self.navigationController?.pushViewController(vc)
+        }
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
@@ -135,12 +225,31 @@ class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableV
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
+            let model = dataSource[indexPath.row]
+            currentIndex = indexPath.row
+            if type == .voice {
+                self.cancelCollect(id: model.voiceId ?? 0, Type: .voice)
+            } else {
+                self.cancelCollect(id: model.albumId ?? 0, Type: .album)
+            }
         }
     }
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
         return "取消收藏"
     }
+    
+    // MARK: -列表为空
+    override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
+        return true
+    }
+    
+    override func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView) -> Bool {
+        return true
+    }
+    
+//    override func verticalOffset(forEmptyDataSet scrollView: UIScrollView) -> CGFloat {
+//        return 140
+//    }
     
     // MARK: - LazyLoad
     lazy var tabHeaderView: UIView = {
@@ -206,11 +315,15 @@ class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableV
         tableView.estimatedSectionHeaderHeight = 0
         //去除group空白
         tableView.estimatedSectionFooterHeight = 0.0
-        tableView.fd_debugLogEnabled = true
         tableView.estimatedRowHeight = 50
-        tableView.rowHeight = UITableView.automaticDimension
         tableView.register(YXSMyCollectDetailsCell.self, forCellReuseIdentifier: "YXSMyCollectDetailsCell")
         tableView.register(YXSMyCollectAlbumCell.self, forCellReuseIdentifier: "YXSMyCollectAlbumCell")
         return tableView
     }()
+    
+    lazy var tableRefreshFooter = MJRefreshBackStateFooter.init(refreshingBlock: {[weak self] in
+        guard let strongSelf = self else { return }
+        strongSelf.curruntPage += 1
+        strongSelf.loadData()
+    })
 }

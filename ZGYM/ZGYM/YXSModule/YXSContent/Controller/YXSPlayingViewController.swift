@@ -285,18 +285,18 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             /// 取消
             YXSEducationBabyVoiceCollectionCancelRequest(voiceId: track?.trackId ?? 0).request({ (json) in
                 sender.isSelected = !sender.isSelected
-                
+                MBProgressHUD.yxs_showMessage(message: "取消收藏成功")
             }) { (msg, code) in
-                
+                MBProgressHUD.yxs_showMessage(message: msg)
             }
             
         } else {
             /// 收藏
             YXSEducationBabyVoiceCollectionSaveRequest(voiceId: track?.trackId ?? 0, voiceTitle: track?.trackTitle ?? "", voiceDuration: track?.duration ?? 0).request({ (json) in
                 sender.isSelected = !sender.isSelected
-                
+                MBProgressHUD.yxs_showMessage(message: "收藏成功")
             }) { (msg, code) in
-                
+                MBProgressHUD.yxs_showMessage(message: msg)
             }
         }
     }
