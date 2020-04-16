@@ -23,6 +23,7 @@ enum HomeworkCommentCellBlockType: Int {
 
 class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
 
+    var last: UIView!
     var curruntSection: Int!
     var hmModel : YXSHomeworkDetailModel?
     var goodClick:((_ model:YXSHomeworkDetailModel)->())?
@@ -122,9 +123,9 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
         }
 
         remarkView.snp.makeConstraints { (make) in
-            make.top.equalTo(praiseButton.snp_bottom).offset(20)
-            make.left.equalTo(15)
-            make.right.equalTo(-15)
+            make.top.equalTo(reviewControl.snp_bottom).offset(15)
+            make.left.equalTo(imgAvatar)
+            make.width.equalTo(SCREEN_WIDTH - 30)
         }
 //        bottomLine.snp.makeConstraints { (make) in
 //            make.left.right.bottom.equalTo(0)
@@ -132,6 +133,17 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
 //        }
     }
 
+    override func layoutSubviews() {
+        favView.y = last.tz_bottom + 12.5
+    }
+//    override func didMoveToSuperview() {
+//        super.didMoveToSuperview()
+//        if superview != nil {
+//            favView.y = last.tz_bottom + 12.5
+////            favView.frame = CGRect.init(x: 15, y: last.tz_bottom + 12.5, width: SCREEN_WIDTH - 30, height: size.height + 8 + 7.5 + 8)
+//        }
+//    }
+    
     // MARK: - Setter
     var model: YXSHomeworkDetailModel? {
         didSet {
@@ -174,7 +186,14 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
 //            }
             
             imgAvatar.sd_setImage(with: URL(string: self.model?.childHeadPortrait ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
-            lbName.text = self.model?.childrenName
+            var text = self.model?.childrenName
+            for model in Relationships{
+                if model.paramsKey == self.model?.relationship{
+                    text! += model.text
+                    break
+                }
+            }
+            lbName.text = text
             lbTime.text = self.model?.createTime?.yxs_Time()
             UIUtil.yxs_setLabelParagraphText(contentLabel, text: self.model?.content)
             let paragraphStye = NSMutableParagraphStyle()
@@ -198,7 +217,7 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
                     make.top.equalTo(imgAvatar.snp_bottom).offset(15)
                 })
             }
-            var last: UIView = contentLabel
+            last = contentLabel
             var lastBottom = 10
             if self.model?.hasVoice ?? false {
                 voiceView.isHidden = false
@@ -210,7 +229,7 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
                 voiceView.snp.remakeConstraints { (make) in
                     make.top.equalTo(last.snp_bottom).offset(10)
                     make.left.equalTo(contentLabel)
-                    make.right.equalTo(-15.5)
+                    make.width.equalTo(SCREEN_WIDTH - 30)
                     make.height.equalTo(36)
                 }
                 last = voiceView
@@ -279,11 +298,12 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
                 remarkView.hmModel = self.hmModel
                 remarkView.model = self.model
                 remarkView.layoutIfNeeded()
-                let height = remarkView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+//                let height = remarkView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+                let height = self.model?.remarkHeight ?? 0
                 remarkView.snp.remakeConstraints { (make) in
                     make.top.equalTo(reviewControl.snp_bottom).offset(15)
-                    make.left.equalTo(15)
-                    make.right.equalTo(-15)
+                    make.left.equalTo(imgAvatar)
+                    make.width.equalTo(SCREEN_WIDTH - 30)
                     make.height.equalTo(height)
                 }
                 last = remarkView
@@ -297,14 +317,26 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
                 for (_,prise) in prises.enumerated(){
                     favs.append(prise.userName ?? "")
                 }
-                favView.snp.remakeConstraints { (make) in
-                    make.top.equalTo(last.snp_bottom).offset(12.5)
-                    make.left.equalTo(imgAvatar)
-                    make.width.equalTo(SCREEN_WIDTH - 30)
-                }
-
                 favView.isHidden = false
+                
+//                favView.favLabel
                 UIUtil.yxs_setLabelParagraphText(favView.favLabel, text: favs.joined(separator: ","), font: UIFont.systemFont(ofSize: 14), lineSpacing: 6)
+                let newText = favs.joined(separator: ",")
+                let paragraphStye = NSMutableParagraphStyle()
+                //调整行间距
+                paragraphStye.lineSpacing = 6
+                paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
+                let dic = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.paragraphStyle:paragraphStye]
+                let size = UIUtil.yxs_getTextSize(textStr: newText, attributes: dic, width: SCREEN_WIDTH - 30 - 46)
+
+                favView.frame = CGRect.init(x: 15, y: last.tz_bottom + 12.5, width: SCREEN_WIDTH - 30, height: size.height + 8 + 7.5 + 8)
+//                favView.snp.remakeConstraints { (make) in
+//                    make.top.equalTo(last.snp_bottom).offset(12.5)
+//                    make.left.equalTo(imgAvatar)
+//                    make.width.equalTo(SCREEN_WIDTH - 30)
+//                }
+
+                
                 if (model?.commentJsonList?.count ?? 0) != 0{
                     favView.favBgView.yxs_addRoundedCorners(corners: [.topLeft,.topRight], radii: CGSize.init(width: 2.5, height: 2.5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height: 800))
                 }else{
@@ -538,37 +570,45 @@ class SLHomeworkCommentDetailRemarkView: UIView {
     }
 
     func layout() {
-        remarkNameLbl.snp.makeConstraints { (make) in
-            make.left.equalTo(0)
-            make.top.equalTo(15)
-            make.height.equalTo(20)
-        }
-
-        remarkStatusLbl.snp.makeConstraints { (make) in
-            make.top.equalTo(15)
-            make.left.equalTo(remarkNameLbl.snp_right).offset(5)
-            make.height.equalTo(20)
-            make.width.equalTo(65)
-        }
-
-        remarkTimeLbl.snp.makeConstraints { (make) in
-            make.top.equalTo(remarkNameLbl.snp_bottom).offset(8)
-            make.left.equalTo(0)
-            make.right.equalTo(-30)
-            make.height.equalTo(15)
-        }
-
-        remarkChangeButton.snp.makeConstraints { (make) in
-            make.top.equalTo(15)
-            make.right.equalTo(0)
-            make.width.equalTo(30)
-            make.height.equalTo(16)
-        }
-        remarkContentLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(0)
-            make.width.equalTo(SCREEN_WIDTH - 30)
-            make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-        }
+        remarkNameLbl.frame = CGRect.init(x: 0, y: 15, width: 100, height: 20)
+//        remarkNameLbl.sizeToFit()
+        remarkStatusLbl.frame = CGRect.init(x: remarkNameLbl.tz_right + 5, y: 15, width: 65, height: 20)
+        remarkTimeLbl.frame = CGRect.init(x: 0, y: 43, width: SCREEN_WIDTH - 30 - 30, height: 15)
+        remarkChangeButton.frame = CGRect.init(x: SCREEN_WIDTH - 30 - 30, y: 15, width: 30, height: 16)
+        remarkContentLabel.frame = CGRect.init(x: 0, y: remarkTimeLbl.tz_bottom + 10, width: SCREEN_WIDTH - 30, height: 20)
+        remarkVoiceView.frame = CGRect.init(x: 0, y: remarkContentLabel.tz_bottom + 10, width: SCREEN_WIDTH - 30, height: 36)
+//        remarkNameLbl.snp.makeConstraints { (make) in
+//            make.left.equalTo(0)
+//            make.top.equalTo(15)
+//            make.height.equalTo(20)
+//        }
+        
+        
+//        remarkStatusLbl.snp.makeConstraints { (make) in
+//            make.top.equalTo(15)
+//            make.left.equalTo(remarkNameLbl.snp_right).offset(5)
+//            make.height.equalTo(20)
+//            make.width.equalTo(65)
+//        }
+//
+//        remarkTimeLbl.snp.makeConstraints { (make) in
+//            make.top.equalTo(remarkNameLbl.snp_bottom).offset(8)
+//            make.left.equalTo(0)
+//            make.right.equalTo(-30)
+//            make.height.equalTo(15)
+//        }
+//
+//        remarkChangeButton.snp.makeConstraints { (make) in
+//            make.top.equalTo(15)
+//            make.right.equalTo(0)
+//            make.width.equalTo(30)
+//            make.height.equalTo(16)
+//        }
+//        remarkContentLabel.snp.makeConstraints { (make) in
+//            make.left.equalTo(0)
+//            make.width.equalTo(SCREEN_WIDTH - 30)
+//            make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
+//        }
 //        remarkVoiceView.snp.makeConstraints { (make) in
 //            make.left.equalTo(15)
 //            make.right.equalTo(-15.5)
@@ -577,24 +617,44 @@ class SLHomeworkCommentDetailRemarkView: UIView {
 //        }
     }
 
+    func updateUI() {
+        remarkNameLbl.sizeToFit()
+        remarkStatusLbl.x = remarkNameLbl.tz_right + 5
+        let paragraphStye = NSMutableParagraphStyle()
+        paragraphStye.lineSpacing = kMainContentLineHeight
+        paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
+        let dic = [NSAttributedString.Key.font: kTextMainBodyFont, NSAttributedString.Key.paragraphStyle:paragraphStye]
+        let size = UIUtil.yxs_getTextSize(textStr: self.model?.remark, attributes: dic, width: SCREEN_WIDTH - 30)
+        if size.height < 20 {
+            remarkContentLabel.frame = CGRect.init(x: 0, y: remarkTimeLbl.tz_bottom + 10, width: size.width, height: size.height)
+        }
+        else {
+            remarkContentLabel.frame = CGRect.init(x: 0, y: remarkTimeLbl.tz_bottom + 10, width: SCREEN_WIDTH - 30, height: size.height)
+        }
+        if remarkVoiceView.isHidden {
+            remarkVoiceView.frame = CGRect.init(x: 0, y: 0, width: 0, height: 0)
+        } else {
+            remarkVoiceView.frame = CGRect.init(x: 0, y: remarkContentLabel.tz_bottom + 10, width: SCREEN_WIDTH - 30, height: 36)
+        }
+        
+    }
+    
     var model: YXSHomeworkDetailModel? {
         didSet {
             remarkVoiceView.isHidden = true
             remarkContentLabel.isHidden = true
             remarkNameLbl.text = self.hmModel?.teacherName
             remarkTimeLbl.text = self.model?.remarkTime
-            var last = remarkTimeLbl
+//            var last = remarkTimeLbl
             if (self.model?.remark ?? "").count > 0 {
-                last = remarkContentLabel
+//                last = remarkContentLabel
                 remarkContentLabel.isHidden = false
+                
+//                remarkContentLabel.text = self.model?.remark
                 UIUtil.yxs_setLabelParagraphText(remarkContentLabel, text: self.model?.remark)
             }
             remarkChangeButton.isHidden = !(self.hmModel?.isMyPublish ?? false)
-            let paragraphStye = NSMutableParagraphStyle()
-            paragraphStye.lineSpacing = kMainContentLineHeight
-            paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
-            let dic = [NSAttributedString.Key.font: kTextMainBodyFont, NSAttributedString.Key.paragraphStyle:paragraphStye]
-            let height = UIUtil.yxs_getTextHeigh(textStr: self.model?.remark, attributes: dic , width: SCREEN_WIDTH - 30)
+            
             
             
             if (self.model?.remarkAudioUrl ?? "").count > 0 {
@@ -604,54 +664,55 @@ class SLHomeworkCommentDetailRemarkView: UIView {
                 voiceModel.voiceDuration = self.model?.remarkAudioDuration
                 voiceModel.voiceUlr = self.model?.remarkAudioUrl
                 remarkVoiceView.model = voiceModel
-                if !remarkContentLabel.isHidden {
-                    if height < 20 {
-                        remarkContentLabel.snp.remakeConstraints { (make) in
-                            make.left.equalTo(0)
-                            make.height.equalTo(height)
-                            make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-                        }
-                        remarkContentLabel.sizeToFit()
-                    }
-                    else {
-                        remarkContentLabel.snp.remakeConstraints({ (make) in
-                            make.left.equalTo(0)
-                            make.width.equalTo(SCREEN_WIDTH - 30)
-                            make.height.equalTo(height)
-                            make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-                        })
-                    }
-                    
-                }
-                remarkVoiceView.snp.remakeConstraints { (make) in
-                    make.top.equalTo(last.snp_bottom).offset(10)
-                    make.left.equalTo(remarkContentLabel)
-                    make.right.equalTo(0)
-                    make.bottom.equalTo(0)
-                    make.height.equalTo(36)
-                }
+//                if !remarkContentLabel.isHidden {
+//                    if height < 20 {
+//                        remarkContentLabel.snp.remakeConstraints { (make) in
+//                            make.left.equalTo(0)
+//                            make.height.equalTo(height)
+//                            make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
+//                        }
+//                        remarkContentLabel.sizeToFit()
+//                    }
+//                    else {
+//                        remarkContentLabel.snp.remakeConstraints({ (make) in
+//                            make.left.equalTo(0)
+//                            make.width.equalTo(SCREEN_WIDTH - 30)
+//                            make.height.equalTo(height)
+//                            make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
+//                        })
+//                    }
+//
+//                }
+//                remarkVoiceView.snp.remakeConstraints { (make) in
+//                    make.top.equalTo(last.snp_bottom).offset(10)
+//                    make.left.equalTo(remarkContentLabel)
+//                    make.right.equalTo(0)
+//                    make.bottom.equalTo(0)
+//                    make.height.equalTo(36)
+//                }
                 
                 
             } else {
-                if height < 20 {
-                    remarkContentLabel.snp.remakeConstraints { (make) in
-                        make.left.equalTo(0)
-                        make.bottom.equalTo(0)
-                        make.height.equalTo(height)
-                        make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-                    }
-                    remarkContentLabel.sizeToFit()
-                }
-                else {
-                    remarkContentLabel.snp.remakeConstraints({ (make) in
-                        make.left.equalTo(0)
-                        make.width.equalTo(SCREEN_WIDTH - 30)
-                        make.bottom.equalTo(0)
-                        make.height.equalTo(height)
-                        make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-                    })
-                }
+//                if height < 20 {
+//                    remarkContentLabel.snp.remakeConstraints { (make) in
+//                        make.left.equalTo(0)
+//                        make.bottom.equalTo(0)
+//                        make.height.equalTo(height)
+//                        make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
+//                    }
+//                    remarkContentLabel.sizeToFit()
+//                }
+//                else {
+//                    remarkContentLabel.snp.remakeConstraints({ (make) in
+//                        make.left.equalTo(0)
+//                        make.width.equalTo(SCREEN_WIDTH - 30)
+//                        make.bottom.equalTo(0)
+//                        make.height.equalTo(height)
+//                        make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
+//                    })
+//                }
             }
+            self.updateUI()
         }
     }
 
@@ -663,8 +724,8 @@ class SLHomeworkCommentDetailRemarkView: UIView {
         let lb = YXSLabel()
         lb.mixedTextColor = MixedColor(normal: k575A60Color, night: kNight898F9A)
         lb.font = UIFont.systemFont(ofSize: 16)
-        lb.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
-        lb.setContentHuggingPriority(.required, for: .horizontal)
+//        lb.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
+//        lb.setContentHuggingPriority(.required, for: .horizontal)
         return lb
     }()
 

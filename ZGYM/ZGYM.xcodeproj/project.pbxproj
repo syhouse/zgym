@@ -753,6 +753,7 @@
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
 		E583FBE52446B5D1005C8F72 /* confuse.sh in Resources */ = {isa = PBXBuildFile; fileRef = E583FBE32446B5D0005C8F72 /* confuse.sh */; };
 		E583FBE62446B5D1005C8F72 /* func.list in Resources */ = {isa = PBXBuildFile; fileRef = E583FBE42446B5D1005C8F72 /* func.list */; };
+		E583FBE82446F69A005C8F72 /* YXSCollectRequset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E583FBE72446F69A005C8F72 /* YXSCollectRequset.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1915,6 +1916,7 @@
 		E583FBE12446B54E005C8F72 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E583FBE32446B5D0005C8F72 /* confuse.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = confuse.sh; sourceTree = SOURCE_ROOT; };
 		E583FBE42446B5D1005C8F72 /* func.list */ = {isa = PBXFileReference; lastKnownFileType = text; path = func.list; sourceTree = SOURCE_ROOT; };
+		E583FBE72446F69A005C8F72 /* YXSCollectRequset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectRequset.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4666,6 +4668,7 @@
 			isa = PBXGroup;
 			children = (
 				6F07FFDB2445D7FC0090975B /* YXSHomeworkCommentRequset.swift */,
+				E583FBE72446F69A005C8F72 /* YXSCollectRequset.swift */,
 				6F07FFDC2445D7FC0090975B /* YXSFriendCircleRequset.swift */,
 				6F07FFDD2445D7FC0090975B /* YXSSolitaireRequest.swift */,
 				6F07FFDE2445D7FC0090975B /* YXSAlbumRequest.swift */,
@@ -5217,6 +5220,7 @@
 				6F0704902445D8040090975B /* YXSClassQueryListController.swift in Sources */,
 				6F0703EC2445D8030090975B /* YXSFriendCircleRequset.swift in Sources */,
 				6F0705BD2445D8060090975B /* LFClipToolbar.m in Sources */,
+				E583FBE82446F69A005C8F72 /* YXSCollectRequset.swift in Sources */,
 				6F0705642445D8050090975B /* YXSLBXScanNetAnimation.swift in Sources */,
 				6F0703AB2445D8030090975B /* TUIGroupMemberController.m in Sources */,
 				6F0703A72445D8030090975B /* TUIGroupInfoController.m in Sources */,
@@ -5997,6 +6001,7 @@
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "ZGYM-Swift.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}";
 			};
 			name = Debug;
 		};
@@ -6041,6 +6046,7 @@
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "ZGYM-Swift.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}";
 			};
 			name = Release;
 		};

@@ -290,6 +290,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
             YXSPunchCardShareView.showAlert(shareModel: shareModel) {(image) in
                 YXSShareTool.showCommonShare(shareModel: YXSShareModel.init(image: image))
             }
+            strongSelf.punchCardFooter.isCurruntCalendarVC = true
             strongSelf.loadData()
         }
     }
@@ -442,7 +443,6 @@ extension YXSPunchCardDetialController: YXSRouterEventProtocol{
                 [weak self] in
                 guard let strongSelf = self else { return }
                 strongSelf.headerView.setHeaderModel(strongSelf.punchModel, messageModel: strongSelf.messageModel)
-                strongSelf.punchCardFooter.isCurruntCalendarVC = true
             }
             self.navigationController?.pushViewController(vc)
         default:
