@@ -68,7 +68,7 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
             }
         }
         
-        tagLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+//        tagLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         nameTimeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
     

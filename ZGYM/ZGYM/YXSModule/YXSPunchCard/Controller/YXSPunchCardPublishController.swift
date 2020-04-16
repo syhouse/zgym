@@ -469,7 +469,9 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     }
     
     func loadChildInfoData(){
+        MBProgressHUD.yxs_showLoading(inView: self.navigationController!.view)
         YXSEducationClockInStatisticsTodayChildrenRequest.init(childrenId: punchCardModel?.childrenId ?? 0, clockInId: punchCardModel?.clockInId ?? 0).request({ (result) in
+            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_hideHUD()
 
             if self.patchCardTime == nil{//不是补卡 发送打卡成功通知
@@ -482,6 +484,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
             self.punchCardComplete?(HMRequestShareModel.init(clockInId: self.punchCardModel?.clockInId ?? 0, childrenId: self.punchCardModel?.childrenId ?? 0)
                 ,YXSPunchCardShareModel.init(downLoadUrl: result["appDownloadUrl"].stringValue, name: self.yxs_user.curruntChild?.realName ?? "", avar: self.yxs_user.curruntChild?.avatar ?? "", title: self.punchCardModel?.title ?? "", clockInDayCount: result["clockInDayCount"].intValue, percentOver: result["percentOver"].stringValue, bgUrl: result["bgUrl"].stringValue))
         }) { (msg, code) in
+            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }

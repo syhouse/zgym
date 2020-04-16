@@ -69,7 +69,7 @@ class YXSShareTool: NSObject{
     /// - Parameter shareModel: 分享model
     public static func showCommonShare(shareModel: YXSShareModel){
         var items = [YXSShareItemType]()
-        if WXApi.isWXAppInstalled(){
+        if WXApi.isWXAppInstalled() && !isOldUI{
             items.append(.YXSShareWechatFriend)
             items.append(.YXSShareWechatMoment)
         }

@@ -153,7 +153,6 @@ class YXSHomeController: YXSHomeBaseController {
                 }
                 self.tableHeaderView.setHeaderModel(self.yxs_weathModel,agendaCount: self.yxs_agendaCount)
                 self.yxs_endingRefresh()
-                
             }
         }
     }
@@ -198,12 +197,13 @@ class YXSHomeController: YXSHomeBaseController {
                  self.yxs_removeAll()
                 
                 if list.count == 0{///没有更新 取缓存数据
-                    self.loadMore = result["hasNext"].boolValue
+                    self.loadMore = true
                     list = self.firstPageCacheSource
                 }else{
                     self.firstPageCacheSource = list
                 }
             }else{
+                self.loadMore = result["hasNext"].boolValue
                 self.tsLast = nil
             }
             
@@ -347,7 +347,9 @@ extension YXSHomeController: YXSRouterEventProtocol{
              lastRecordId = 0
              lastRecordTime = Date().toString(format: DateFormatType.custom(kCommonDateFormatString))
              tsLast = nil
-            
+             self.yxs_removeAll()
+             self.tableView.reloadData()
+             
             yxs_refreshData()
         case kYXSHomeTableHeaderViewReloadLocationEvent:
             yxs_cheakLocationAlert()

@@ -202,10 +202,12 @@ extension YXSBaseScrollViewController{
             vc.singlePublishClassId = classId
             vc.complete = {(requestModel,shareModel) in
                 self.yxs_refreshData()
-                YXSPublishHomeworkSucessView.showAlert {
-                    UIUtil.yxs_shareLink(requestModel: requestModel, shareModel: shareModel){
-                        shareModel.way = YXSShareWayType.WXSession
-                        YXSShareTool.share(model: shareModel)
+                if !isOldUI{
+                    YXSPublishHomeworkSucessView.showAlert {
+                        UIUtil.yxs_shareLink(requestModel: requestModel, shareModel: shareModel){
+                            shareModel.way = YXSShareWayType.WXSession
+                            YXSShareTool.share(model: shareModel)
+                        }
                     }
                 }
             }

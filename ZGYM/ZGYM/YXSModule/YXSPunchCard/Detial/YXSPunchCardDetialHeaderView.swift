@@ -246,6 +246,10 @@ class SLPunchCardTeacherView: UIView{
             make.width.equalTo(85)
             make.height.equalTo(31)
         })
+        
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            btnChat.isHidden = true
+        }
     }
     
     required init?(coder: NSCoder) {

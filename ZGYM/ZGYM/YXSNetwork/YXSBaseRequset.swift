@@ -28,15 +28,16 @@ public enum ServiceType: String {
             return "http://edu.zhixun5588.com/"
         }
     }
+//    http://www.ym698.com/lscj
     
     func getH5Url() -> String{
         switch self {
         case .ServiceProduct:
             return "https://pro.c989.cn:50009/"
-        case .ServiceTest://http://www.zhixun5588.com/
+        case .ServiceTest:
             return "https://pro.c989.cn:50009/"
         case .ServiceLocal:
-            return "http://www.zhixun5588.com/"
+            return "https://pro.c989.cn:50009/"
         }
     }
 }
@@ -44,8 +45,6 @@ public enum ServiceType: String {
 
 //接口环境
 public let sericeType:ServiceType = .ServiceTest
-
-//edu-pro.ym698.com            47.113.98.226
 
 let defaultBaseTimeOutInterval: TimeInterval = 10
 //host 首页相关业务
