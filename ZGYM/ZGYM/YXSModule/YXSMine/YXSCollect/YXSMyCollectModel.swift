@@ -23,8 +23,8 @@ class YXSMyCollectModel: NSObject, Mappable {
     
     var voiceTimeStr: String? {
         get{
-            let minute: Int = voiceDuration!/60
-            let second: Int = voiceDuration!%60
+            let minute: Int = (voiceDuration ?? 0)/60
+            let second: Int = (voiceDuration ?? 0)%60
             var minuteStr = "\(minute)"
             if minute < 10 {
                 minuteStr = "0\(minute)"
