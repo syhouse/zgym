@@ -32,9 +32,9 @@ class YXSNoticeListCell: YXSHomeBaseCell {
         initCommonUI()
         if isShowTag{
             nameTimeLabel.snp.makeConstraints { (make) in
-                make.left.equalTo(tagLabel.snp_right).offset(11)
+                make.left.equalTo(68)
                 make.centerY.equalTo(tagLabel)
-                make.right.equalTo(-45)
+                make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45 - 40)
             }
             
             sourceView.snp.makeConstraints { (make) in
@@ -52,7 +52,7 @@ class YXSNoticeListCell: YXSHomeBaseCell {
             nameTimeLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
                 make.top.equalTo(19)
-                make.right.equalTo(-45)
+                make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45)
             }
             
             sourceView.snp.makeConstraints { (make) in
@@ -68,8 +68,8 @@ class YXSNoticeListCell: YXSHomeBaseCell {
             }
         }
         
-        tagLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        nameTimeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+//        tagLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+//        nameTimeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
     
     required init?(coder: NSCoder) {
