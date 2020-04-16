@@ -339,7 +339,8 @@ class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController,
         
         var section3 = [["title":"夜间模式", "imgName":"yxs_mine_theme_red", "action":""]]
         
-        var section4 = [["title":"常见问题", "imgName":"yxs_mine_question_red", "action":"questionClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
+        var section4 = [["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
+//        var section4 = [["title":"常见问题", "imgName":"yxs_mine_question_red", "action":"questionClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
         
 //        #if DEBUG
 //        var section3 = [["title":"常见问题", "imgName":"yxs_mine_question_red", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"],["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"书包", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"我的收藏", "imgName":"yxs_mine_collect_red", "action":"myCollectClick"]]
