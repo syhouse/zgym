@@ -138,10 +138,10 @@ extension UIViewController{
 
 
 extension UIViewController{
-    func yxs_loadPublishClassListData(_ isFriendSelectClass: Bool,compelect:((_ classs:[SLClassModel]) -> ())?){
+    func yxs_loadPublishClassListData(_ isFriendSelectClass: Bool,compelect:((_ classs:[YXSClassModel]) -> ())?){
         MBProgressHUD.showAdded(to: self.view, animated: true)
         let requset = YXSEducationClassOptionalGradeListRequest()
-        requset.requestCollection({ (classs:[SLClassModel]) in
+        requset.requestCollection({ (classs:[YXSClassModel]) in
             compelect?(classs)
             MBProgressHUD.hide(for: self.view, animated: true)
         }) { (msg, code) in

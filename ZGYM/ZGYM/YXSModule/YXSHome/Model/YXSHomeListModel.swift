@@ -103,9 +103,9 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             
             if let dataJson = dataJson{
                 if type == .classstart{
-                    classStarModel = SLClassStarPartentModel.init(JSONString: dataJson)
+                    classStarModel = YXSClassStarPartentModel.init(JSONString: dataJson)
                 }else if type == .friendCicle{
-                    friendCircleModel = SLFriendCircleModel.init(JSONString: dataJson)
+                    friendCircleModel = YXSFriendCircleModel.init(JSONString: dataJson)
                 }
             }
         }
@@ -367,9 +367,9 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     }
     
     /// 班级之星数据 使用该model
-    var classStarModel: SLClassStarPartentModel?
+    var classStarModel: YXSClassStarPartentModel?
     /// 朋友圈数据 使用该model
-    var friendCircleModel: SLFriendCircleModel?
+    var friendCircleModel: YXSFriendCircleModel?
     
     
     ///缓存高度
@@ -455,8 +455,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         periodList = aDecoder.decodeObject(forKey: "periodList") as? [Int]
         state = aDecoder.decodeObject(forKey: "state") as? Int
         surplusClockInDayCount = aDecoder.decodeObject(forKey: "surplusClockInDayCount") as? Int
-        classStarModel = aDecoder.decodeObject(forKey: "classStarModel") as? SLClassStarPartentModel
-        friendCircleModel = aDecoder.decodeObject(forKey: "friendCircleModel") as? SLFriendCircleModel
+        classStarModel = aDecoder.decodeObject(forKey: "classStarModel") as? YXSClassStarPartentModel
+        friendCircleModel = aDecoder.decodeObject(forKey: "friendCircleModel") as? YXSFriendCircleModel
         commitUpperLimit = aDecoder.decodeObject(forKey: "commitUpperLimit") as? Int
         childrenRealName = aDecoder.decodeObject(forKey: "childrenRealName") as? String
         startTime = aDecoder.decodeObject(forKey: "startTime") as? String

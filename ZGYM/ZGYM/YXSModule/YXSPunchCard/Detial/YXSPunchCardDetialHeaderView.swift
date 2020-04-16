@@ -188,8 +188,8 @@ class YXSPunchCardDetialHeaderView: UIView {
         return label
     }()
     
-    lazy var messageView: SLFriendsCircleMessageView = {
-        let messageView = SLFriendsCircleMessageView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 42.5))
+    lazy var messageView: YXSFriendsCircleMessageView = {
+        let messageView = YXSFriendsCircleMessageView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 42.5))
         return messageView
     }()
     

@@ -13,19 +13,7 @@ import NightNight
 class YXSContentHomeController: YXSBaseViewController{
     private var listContainerView: JXCategoryListContainerView!
     ///分类model列表
-    private var categoryLists: [YXSColumnModel] = [YXSColumnModel](){
-        didSet{
-            var titles = [String]()
-            for (index,model) in categoryLists.enumerated(){
-                if index == 0{
-                    titles.append("推荐")
-                }else{
-                    titles.append(model.title ?? "")
-                }
-            }
-            self.titles = titles
-        }
-    }
+    private var categoryLists: [YXSColumnModel] = [YXSColumnModel]()
     ///分类标题
     private var titles: [String] = [String]()
     // MARK: -leftCycle
@@ -49,7 +37,20 @@ class YXSContentHomeController: YXSBaseViewController{
 //        }
         
         YXSEducationXMLYOperationColumnsRequest.init(page: 1).requestCollection({ (list:[YXSColumnModel], pageCount) in
-            self.categoryLists = list
+            var titles = [String]()
+            var newModels = [YXSColumnModel]()
+            for model in list{
+                if model.id == 6680{//小优推荐
+                    titles.insert("推荐", at: 0)
+                    newModels.insert(model, at: 0)
+                }else{
+                    titles.append(model.title ?? "")
+                    newModels.append(model)
+                }
+            }
+            self.titles = titles
+            self.categoryLists = newModels
+            
             self.congfigUI()
         }) { (msg, code) in
             
@@ -73,8 +74,9 @@ class YXSContentHomeController: YXSBaseViewController{
             make.height.equalTo(50)
         }
         listContainerView.snp.makeConstraints { (make) in
-            make.left.bottom.right.equalTo(0)
+            make.left.right.equalTo(0)
             make.top.equalTo(categoryView.snp_bottom)
+            make.bottom.equalTo(-kTabBottomHeight)
         }
         
         categoryView.contentScrollView = listContainerView.scrollView

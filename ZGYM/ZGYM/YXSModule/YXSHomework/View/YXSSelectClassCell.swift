@@ -40,11 +40,11 @@ class YXSSelectClassCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var model:SLClassModel!
+    var model:YXSClassModel!
     
     var isFriendSelectClass: Bool = false
     
-    func yxs_setCellModel(_ model: SLClassModel){
+    func yxs_setCellModel(_ model: YXSClassModel){
         self.model = model
         nameLabel.text = model.name
         

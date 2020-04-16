@@ -92,7 +92,7 @@ extension NSObject{
         return newList
     }
     
-    func yxs_dealList(list:[SLSolitaireModel],childId: Int?, isAgenda: Bool) -> [SLSolitaireModel]{
+    func yxs_dealList(list:[YXSSolitaireModel],childId: Int?, isAgenda: Bool) -> [YXSSolitaireModel]{
         if isAgenda{
             for model in list{
                 if model.state == nil{
@@ -104,7 +104,7 @@ extension NSObject{
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             return list
         }
-        var newList = [SLSolitaireModel]()
+        var newList = [YXSSolitaireModel]()
         for model in list{
             model.childrenId = childId
             newList.append(model)

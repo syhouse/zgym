@@ -39,8 +39,9 @@ private let kMaxCount = 8
 class YXSHomeTableHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#EFF1F7"), night: kNightBackgroundColor)
+//        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#EFF1F7"), night: kNightBackgroundColor)
         addSubview(yxs_bgImageView)
+        addSubview(yxs_bgNewImageView)
         addSubview(yxs_titleLabel)
         addSubview(yxs_dayLabel)
         addSubview(yxs_classButton)
@@ -59,6 +60,13 @@ class YXSHomeTableHeaderView: UIView {
             make.height.equalTo(15)
         }
 
+        
+        yxs_bgNewImageView.snp.makeConstraints { (make) in
+                        make.left.right.equalTo(0)
+                        make.top.equalTo(0)
+            make.height.equalTo(181.5)
+        //                make.height.equalTo(273)
+                    }
         
         yxs_classButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(yxs_titleLabel)
@@ -173,21 +181,21 @@ class YXSHomeTableHeaderView: UIView {
     lazy var yxs_titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 23)
-        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        label.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
         return label
     }()
     
     lazy var yxs_dayLabel: YXSButton = {
         let label = YXSButton()
         label.titleLabel?.font = kTextMainBodyFont
-        label.setMixedTitleColor(MixedColor(normal: kTextMainBodyColor, night: UIColor.white), forState: .normal)
+        label.setMixedTitleColor(MixedColor(normal: UIColor.white, night: UIColor.white), forState: .normal)
         label.addTarget(self, action: #selector(reloadLocation), for: .touchUpInside)
         return label
     }()
 
     lazy var yxs_classButton: YXSButton = {
         let button = YXSButton.init()
-        button.setMixedImage(MixedImage(normal: "class_list_icon", night: "yxs_classlist_night"), forState: .normal)
+        button.setMixedImage(MixedImage(normal: "yxs_classlist_night", night: "yxs_classlist_night"), forState: .normal)
         button.addTarget(self, action: #selector(yxs_classButtonCick), for: .touchUpInside)
         return button
     }()
@@ -200,9 +208,14 @@ class YXSHomeTableHeaderView: UIView {
     lazy var yxs_bgImageView: UIImageView = {
         let imageView = UIImageView()
 //        imageView.mixedImage = YXSPersonDataModel.sharePerson.personRole == .TEACHER ? MixedImage(normal: "bg_teacher", night: "bg_teacher_night") : MixedImage(normal: "bg_parent", night: "bg_parent_night")
-        imageView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9"), night: kNightForegroundColor)
+//        imageView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9"), night: kNightForegroundColor)
         return imageView
     }()
+        lazy var yxs_bgNewImageView: UIImageView = {
+            let imageView = UIImageView()
+//            imageView.mixedImage = MixedImage(normal: "yxs_home_new_bg", night: "bg_teacher_night")
+            return imageView
+        }()
     
     //    lazy var yxs_itemBgView: UIView = {
     //        let itemBgView = UIView()

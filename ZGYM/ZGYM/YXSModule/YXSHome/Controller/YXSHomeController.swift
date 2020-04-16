@@ -42,8 +42,10 @@ class YXSHomeController: YXSHomeBaseController {
     
     // MARK: - leftCycle
     override func viewDidLoad() {
+        self.view.addSubview(bgImageView)
         super.viewDidLoad()
-        self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F4F5FC"), night: kNightBackgroundColor)
+//        self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F4F5FC"), night: kNightBackgroundColor)
+        self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: kNightBackgroundColor)
         self.fd_prefersNavigationBarHidden = true
         self.tableView.snp.remakeConstraints { (make) in
             make.top.equalTo(kSafeTopHeight)
@@ -63,6 +65,8 @@ class YXSHomeController: YXSHomeBaseController {
         
         //引导
         ysx_showGuide()
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -295,6 +299,13 @@ class YXSHomeController: YXSHomeBaseController {
         topAgendaView.isHidden = true
         topAgendaView.addTaget(target: self, selctor: #selector(yxs_lookAgendaDetial))
         return topAgendaView
+    }()
+    
+    lazy var bgImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.frame = self.view.frame
+        imageView.mixedImage = MixedImage(normal: UIImage.init(named: "yxs_home_new_bg")!, night: UIImage.yxs_image(with: kNightForegroundColor)!)
+        return imageView
     }()
 }
 // MARK: - scrollViewDidScroll

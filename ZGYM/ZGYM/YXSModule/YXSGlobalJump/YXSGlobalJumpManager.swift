@@ -76,7 +76,7 @@ class YXSGlobalJumpManager: NSObject {
             model?.classId = classId
             model?.childrenId = childrenId
             model?.serviceType = serviceType
-            let vc = SLNoticeDetailViewController.init(model: model!)
+            let vc = YXSNoticeDetailViewController.init(model: model!)
             let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
             visibleVC?.navigationController?.pushViewController(vc)
             hasJumpEnd = true
@@ -99,7 +99,7 @@ class YXSGlobalJumpManager: NSObject {
             break
         case 3:
             /// 接龙
-            let vc = SLSolitaireDetailController(censusId: serviceId, childrenId: childrenId, classId: classId, serviceCreateTime: createTime)
+            let vc = YXSSolitaireDetailController(censusId: serviceId, childrenId: childrenId, classId: classId, serviceCreateTime: createTime)
             let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
             visibleVC?.navigationController?.pushViewController(vc)
             hasJumpEnd = true
@@ -112,16 +112,16 @@ class YXSGlobalJumpManager: NSObject {
             break
         case 6:
             /// 班级之星
-            let model = SLClassStartClassModel(JSON: ["":""])
+            let model = YXSClassStartClassModel(JSON: ["":""])
             model?.classId = classId
             var vc: UIViewController
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                vc = SLClassStarSignleClassStudentDetialController.init(childreId: childrenId, classId: classId,stage: StageType.init(rawValue: model?.stage ?? "") ?? StageType.KINDERGARTEN)
+                vc = YXSClassStarSignleClassStudentDetialController.init(childreId: childrenId, classId: classId,stage: StageType.init(rawValue: model?.stage ?? "") ?? StageType.KINDERGARTEN)
                 
             }else{
                 let chilrModel = getChildModel(classId: classId, childId: childrenId)
                 if let chilrModel = chilrModel{
-                    vc = SLClassStarPartentDetialController.init(childrenModel: chilrModel)
+                    vc = YXSClassStarPartentDetialController.init(childrenModel: chilrModel)
                 }else{
                     MBProgressHUD.yxs_showMessage(message: "当前孩子已不在班级")
                     return

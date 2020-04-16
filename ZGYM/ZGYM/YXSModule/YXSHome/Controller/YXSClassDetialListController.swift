@@ -13,7 +13,7 @@ import NightNight
 class YXSClassDetialListController: YXSHomeBaseController {
     // MARK: - property
     /// 当前班级model
-    private var classModel: SLClassModel
+    private var classModel: YXSClassModel
     ///当前班级学段
     private var stage: StageType = .KINDERGARTEN
     ///班级详细信息
@@ -32,7 +32,7 @@ class YXSClassDetialListController: YXSHomeBaseController {
     }
     
     // MARK: - init
-    init(classModel: SLClassModel) {
+    init(classModel: YXSClassModel) {
         self.classModel = classModel
         super.init()
         tableViewIsGroup = true

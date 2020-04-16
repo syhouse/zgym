@@ -92,7 +92,7 @@ class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController,
             selectedIndex = 2
         }
         
-        let alert = SLSolitaireSelectReasonView(items: ["幼儿园","小学","中学"], selectedIndex: selectedIndex, inTarget: self.view) { (view, index) in
+        let alert = YXSSolitaireSelectReasonView(items: ["幼儿园","小学","中学"], selectedIndex: selectedIndex, inTarget: self.view) { (view, index) in
             if selectedIndex == index {
                 view.cancelClick(sender: YXSButton())
                 return

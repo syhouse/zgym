@@ -121,7 +121,7 @@ class YXSClassMembersViewController: YXSBaseTableViewController {
             model = self.studentList[indexPath.row]
             userType = PersonRole.PARENT.rawValue
         }
-        let vc = SLFriendsCircleInfoController.init(userId: model.userId ?? 0, childId: model.childrenId, type: userType)
+        let vc = YXSFriendsCircleInfoController.init(userId: model.userId ?? 0, childId: model.childrenId, type: userType)
         navigationController?.pushViewController(vc)
     }
     

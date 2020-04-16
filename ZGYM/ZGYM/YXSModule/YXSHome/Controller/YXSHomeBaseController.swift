@@ -263,15 +263,15 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             let vc = YXSPunchCardDetialController.init(clockInId: model.serviceId ?? 0, childId: childModel?.id,classId: model.classId ?? 0)
             navigationController?.pushViewController(vc)
         case .solitaire:
-            let vc = SLSolitaireDetailController.init(censusId: model.serviceId ?? 0, childrenId: childId ?? 0, classId: model.classId ?? 0)
+            let vc = YXSSolitaireDetailController.init(censusId: model.serviceId ?? 0, childrenId: childId ?? 0, classId: model.classId ?? 0)
             navigationController?.pushViewController(vc)
         case .notice:
-            let vc = SLNoticeDetailViewController.init(model: model)
+            let vc = YXSNoticeDetailViewController.init(model: model)
             navigationController?.pushViewController(vc)
         case .classstart:
             if let childModel = childModel{
                 UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: childModel.id ?? 0)
-                UIUtil.curruntNav().pushViewController(SLClassStarPartentDetialController.init(childrenModel: childModel, startTime: model.startTime,endTime: model.endTime))
+                UIUtil.curruntNav().pushViewController(YXSClassStarPartentDetialController.init(childrenModel: childModel, startTime: model.startTime,endTime: model.endTime))
             }
         case .friendCicle:
             yxs_showComment(indexPath)
@@ -308,18 +308,18 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     // MARK: - 优成长Event
     ///点赞
     private func yxs_changePrise(_ indexPath: IndexPath){
-        let SLFriendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
-        if let SLFriendCircleModel = SLFriendCircleModel{
-            UIUtil.yxs_changeFriendCirclePrise(SLFriendCircleModel,positon:.home) {
+        let YXSFriendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
+        if let YXSFriendCircleModel = YXSFriendCircleModel{
+            UIUtil.yxs_changeFriendCirclePrise(YXSFriendCircleModel,positon:.home) {
                 self.yxs_reloadTableView(indexPath)
             }
         }
     }
     ///点评
     private func yxs_showComment(_ indexPath: IndexPath){
-        let SLFriendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
-        if let model = SLFriendCircleModel{
-            let vc = SLFriendsCircleController.init(classCircleId: model.classCircleId)
+        let YXSFriendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
+        if let model = YXSFriendCircleModel{
+            let vc = YXSFriendsCircleController.init(classCircleId: model.classCircleId)
             navigationController?.pushViewController(vc)
         }
     }
@@ -328,7 +328,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         let friendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
         UIUtil.yxs_reduceHomeRed(serviceId: friendCircleModel?.classCircleId ?? 0, childId: friendCircleModel?.childrenId ?? 0)
         if let model = friendCircleModel{
-            let vc = SLFriendsCircleInfoController.init(userId:  model.userIdPublisher ?? 0, childId: model.childrenId ?? 0, type: model.typePublisher ?? "")
+            let vc = YXSFriendsCircleInfoController.init(userId:  model.userIdPublisher ?? 0, childId: model.childrenId ?? 0, type: model.typePublisher ?? "")
             self.navigationController?.pushViewController(vc)
         }
     }
@@ -372,8 +372,8 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                     case .goToUserInfo:
                         strongSelf.yxs_goToUserInfoController(indexPath)
                     case .share:
-                        let SLFriendCircleModel = strongSelf.yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
-                        UIUtil.yxs_shareLink(requestModel: HMRequestShareModel.init(classCircleId: SLFriendCircleModel?.classCircleId ?? 0,classCircleType: SLFriendCircleModel?.circleType ?? HMClassCircleType.CIRCLE), shareModel: YXSShareModel(way: YXSShareWayType.QQSession, title: "\(SLFriendCircleModel?.namePublisher ?? "")分享了一条优成长", descriptionText: SLFriendCircleModel?.shareText ?? "", link: ""))
+                        let YXSFriendCircleModel = strongSelf.yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
+                        UIUtil.yxs_shareLink(requestModel: HMRequestShareModel.init(classCircleId: YXSFriendCircleModel?.classCircleId ?? 0,classCircleType: YXSFriendCircleModel?.circleType ?? HMClassCircleType.CIRCLE), shareModel: YXSShareModel(way: YXSShareWayType.QQSession, title: "\(YXSFriendCircleModel?.namePublisher ?? "")分享了一条优成长", descriptionText: YXSFriendCircleModel?.shareText ?? "", link: ""))
                     }
                 }
             }
@@ -528,14 +528,14 @@ extension YXSHomeBaseController{
         if let isCancel = userInfo?[kNotificationIsCancelKey] as? Bool,let praiseModel = userInfo?[kNotificationModelKey] as? YXSFriendsPraiseModel,let classCircleId = userInfo?[kNotificationIdKey] as? Int{
             for (section,sectionModel) in yxs_dataSource.enumerated(){
                 for (row,model) in sectionModel.items.enumerated(){
-                    if let SLFriendCircleModel = model.friendCircleModel{
-                        if SLFriendCircleModel.classCircleId == classCircleId{
+                    if let YXSFriendCircleModel = model.friendCircleModel{
+                        if YXSFriendCircleModel.classCircleId == classCircleId{
                             if isCancel{
-                                if var praiseList = SLFriendCircleModel.praises{
+                                if var praiseList = YXSFriendCircleModel.praises{
                                     for praise in praiseList{
                                         if praiseModel.userId == praise.userId && praiseModel.userType == praise.userType{
                                             praiseList.remove(at: praiseList.firstIndex(of: praise) ?? 0)
-                                            SLFriendCircleModel.praises = praiseList
+                                            YXSFriendCircleModel.praises = praiseList
                                             yxs_reloadTableView(IndexPath.init(row: row, section: section))
                                             break
                                         }
@@ -544,11 +544,11 @@ extension YXSHomeBaseController{
                                 
                                 
                             }else{
-                                if var praises = SLFriendCircleModel.praises{
+                                if var praises = YXSFriendCircleModel.praises{
                                     praises.append(praiseModel)
-                                    SLFriendCircleModel.praises = praises
+                                    YXSFriendCircleModel.praises = praises
                                 }else{
-                                    SLFriendCircleModel.praises = [praiseModel]
+                                    YXSFriendCircleModel.praises = [praiseModel]
                                 }
                                 yxs_reloadTableView(IndexPath.init(row: row, section: section))
                             }

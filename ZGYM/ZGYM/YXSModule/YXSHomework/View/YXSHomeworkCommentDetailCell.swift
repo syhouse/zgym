@@ -442,8 +442,8 @@ class YXSHomeworkCommentDetailCell: UITableViewHeaderFooterView {
         return label
     }()
     
-    lazy var nineMediaView: SLNineMediaView = {
-        let nineMediaView = SLNineMediaView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 0))
+    lazy var nineMediaView: YXSNineMediaView = {
+        let nineMediaView = YXSNineMediaView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 0))
         nineMediaView.edges = UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 15)
         return nineMediaView
     }()

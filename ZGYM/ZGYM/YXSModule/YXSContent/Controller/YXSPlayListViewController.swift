@@ -12,9 +12,11 @@ import NightNight
 class YXSPlayListViewController: YXSBaseTableViewController {
 
     var trackList:[XMTrack] = [XMTrack]()
+    var completionHandler: ((_ selectedIndex:Int)->())?
     
-    init(trackList:[XMTrack] = [XMTrack](),completionHandler:(()->())? = nil) {
+    init(trackList:[XMTrack] = [XMTrack](),completionHandler:((_ selectedIndex:Int)->())? = nil) {
         super.init()
+        self.completionHandler = completionHandler
         self.trackList = trackList
     }
     
@@ -31,12 +33,22 @@ class YXSPlayListViewController: YXSBaseTableViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        headerView.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 50.0)
+        view.addSubview(headerView)
+        headerView.snp.makeConstraints({ (make) in
+            make.top.equalTo(0)
+            make.left.equalTo(0)
+            make.right.equalTo(0)
+            make.height.equalTo(50.0)
+        })
         headerView.btnClose.addTarget(self, action: #selector(closeClick(sender:)), for: .touchUpInside)
-        tableView.tableHeaderView = headerView
         
         tableView.register(YXSPlayListCell.classForCoder(), forCellReuseIdentifier: "YXSPlayListCell")
-
+        tableView.snp.remakeConstraints({ (make) in
+            make.top.equalTo(headerView.snp_bottom)
+            make.left.equalTo(0)
+            make.right.equalTo(0)
+            make.bottom.equalTo(0)
+        })
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -51,7 +63,17 @@ class YXSPlayListViewController: YXSBaseTableViewController {
         let model = trackList[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "YXSPlayListCell") as! YXSPlayListCell
         cell.yxs_setCellModel(model, row: indexPath.row)
+        /// 设置选中颜色
+        if XMSDKPlayer.shared()?.currentTrack() == model {
+            cell.yxs_nameLabel.textColor = kNight5E88F7
+        } else {
+            cell.yxs_nameLabel.textColor = kTextMainBodyColor
+        }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        completionHandler?(indexPath.row)
     }
     
     // MARK: - Action
@@ -93,6 +115,8 @@ class YXSPlayListHeaderView: UIView {
             make.right.equalTo(-15)
             make.width.height.equalTo(15)
         })
+        
+        yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#EDEAED"), night: UIColor.yxs_hexToAdecimalColor(hex: "#EDEAED")), lineHeight: 0.5)
     }
     
     required init?(coder: NSCoder) {

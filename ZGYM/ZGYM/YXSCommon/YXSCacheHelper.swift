@@ -44,15 +44,15 @@ class YXSCacheHelper: NSObject {
     
     /// 缓存优成长列表数据
     /// - Parameter dataSource: 优成长列表
-    public static func yxs_cacheFriendsList(dataSource: [SLFriendCircleModel]){
+    public static func yxs_cacheFriendsList(dataSource: [YXSFriendCircleModel]){
         DispatchQueue.global().async {
             NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "friendsList\(YXSPersonDataModel.sharePerson.personRole.rawValue)"))
         }
     }
     
     /// 获取优成长列表的缓存数据
-    public static func yxs_getCacheFriendsList() -> [SLFriendCircleModel]{
-        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "friendsList\(YXSPersonDataModel.sharePerson.personRole.rawValue)")) as? [SLFriendCircleModel] ?? [SLFriendCircleModel]()
+    public static func yxs_getCacheFriendsList() -> [YXSFriendCircleModel]{
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "friendsList\(YXSPersonDataModel.sharePerson.personRole.rawValue)")) as? [YXSFriendCircleModel] ?? [YXSFriendCircleModel]()
         return items
     }
     
@@ -100,15 +100,15 @@ class YXSCacheHelper: NSObject {
     
     /// 缓存接龙列表数据
     /// - Parameter dataSource: 接龙列表
-    public static func yxs_cacheSolitaireList(dataSource: [SLSolitaireModel], childrenId: Int?, isAgent: Bool){
+    public static func yxs_cacheSolitaireList(dataSource: [YXSSolitaireModel], childrenId: Int?, isAgent: Bool){
         DispatchQueue.global().async {
             NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SolitaireList\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(childrenId ?? 0)\(isAgent)"))
         }
     }
     
     /// 获取接龙列表的缓存数据
-    public static func yxs_getCacheSolitaireList(childrenId: Int?, isAgent: Bool) -> [SLSolitaireModel]{
-        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SolitaireList\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(childrenId ?? 0)\(isAgent)")) as? [SLSolitaireModel] ?? [SLSolitaireModel]()
+    public static func yxs_getCacheSolitaireList(childrenId: Int?, isAgent: Bool) -> [YXSSolitaireModel]{
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SolitaireList\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(childrenId ?? 0)\(isAgent)")) as? [YXSSolitaireModel] ?? [YXSSolitaireModel]()
         return items
     }
 

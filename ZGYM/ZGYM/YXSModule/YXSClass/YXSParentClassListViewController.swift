@@ -12,7 +12,7 @@ import ObjectMapper
 
 class YXSParentClassListViewController: YXSBaseTableViewController {
 
-    var dataSource: [SLClassModel] = [SLClassModel]()
+    var dataSource: [YXSClassModel] = [YXSClassModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +39,7 @@ class YXSParentClassListViewController: YXSBaseTableViewController {
     // MARK: - Request
     func loadData() {
         YXSEducationGradeListRequest().request({ (json) in
-            self.dataSource = Mapper<SLClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [SLClassModel]()
+            self.dataSource = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
             
             self.tableView.reloadData()
             self.yxs_endingRefresh()
@@ -78,7 +78,7 @@ class YXSParentClassListViewController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let model: SLClassModel = self.dataSource[indexPath.row]
+        let model: YXSClassModel = self.dataSource[indexPath.row]
 //        let vc = YXSClassDetialListController.init(classModel: model)
 //        vc.navRightBarButtonTitle = "班级信息"
 //        navigationController?.pushViewController(vc)

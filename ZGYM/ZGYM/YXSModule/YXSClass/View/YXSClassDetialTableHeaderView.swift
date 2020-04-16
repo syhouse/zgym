@@ -15,9 +15,9 @@ let kYXSClassDetialTableHeaderViewLookChildDetialEvent = "SLClassDetialTableHead
 let kYXSClassDetialTableHeaderViewUpDateListEvent = "SLClassDetialTableHeaderViewUpDateListEvent"
 
 class YXSClassDetialTableHeaderView: UIView {
-    var classModel: SLClassModel
+    var classModel: YXSClassModel
     var childModel: YXSChildrenModel?
-    init(frame: CGRect, classModel: SLClassModel) {
+    init(frame: CGRect, classModel: YXSClassModel) {
         self.classModel = classModel
         super.init(frame: frame)
         addSubview(teacherView)
@@ -269,7 +269,7 @@ class ClassDetialParentView: UIControl{
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func setViewModel(_ model: YXSClassDetailModel?, classModel: SLClassModel){
+    func setViewModel(_ model: YXSClassDetailModel?, classModel: YXSClassModel){
         nameLabel.isHidden = true
         
         imageView.sd_setImage(with: URL.init(string: model?.getCurruntChild(classModel: classModel)?.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage, completed: nil)

@@ -51,7 +51,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
         self.fd_prefersNavigationBarHidden = true
         
         tableView.register(YXSContentDetialCell.self, forCellReuseIdentifier: "YXSContentDetialCell")
-        tableView.yxs_addRoundedCorners(corners: [UIRectCorner.topLeft,.topRight], radii: CGSize.init(width: 15, height: 15), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT))
+        tableView.yxs_addRoundedCorners(corners: [UIRectCorner.topLeft,.topRight], radii: CGSize.init(width: 15, height: 15), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT*8))
         tableView.rowHeight = 62.5
         
         loadData()
@@ -60,15 +60,15 @@ class YXSContentDetialController: YXSBaseTableViewController {
     // MARK: -UI
     
     // MARK: -loadData
-    
+    var headerHeight: CGFloat = 0
     func loadData(){
         YXSEducationXMLYAlbumsBrowseDetialRequest.init(album_id: id).request({ (result: YXSAlbumsBrowseModel) in
             self.albumsModel = result
             self.customNav.title = result.albumTitle
             self.yxs_tableHeaderView.yxs_setHeaderModel(result)
             self.yxs_tableHeaderView.layoutIfNeeded()
-            let height = self.yxs_tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-            self.yxs_tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: height > (241 + kSafeTopHeight) ? height : 241 + kSafeTopHeight )
+            self.headerHeight = self.yxs_tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            self.yxs_tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: self.headerHeight > (241 + kSafeTopHeight) ? self.headerHeight : 241 + kSafeTopHeight )
             self.tableView.tableHeaderView = self.yxs_tableHeaderView
             self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#745683"), night: UIColor.yxs_hexToAdecimalColor(hex: "#745683"))
             self.tableView.reloadData()
@@ -118,6 +118,20 @@ class YXSContentDetialController: YXSBaseTableViewController {
         }
         vc.trackList = trackList
         navigationController?.pushViewController(vc)
+        
+//        YXSEducationXMLYSearchTracksV2Request.init(id: curruntTrack.id ?? 0).request({ (result: YXSAlbumsBrowseModel) in
+//            self.albumsModel = result
+//            self.customNav.title = result.albumTitle
+//            self.yxs_tableHeaderView.yxs_setHeaderModel(result)
+//            self.yxs_tableHeaderView.layoutIfNeeded()
+//            self.headerHeight = self.yxs_tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+//            self.yxs_tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: self.headerHeight > (241 + kSafeTopHeight) ? self.headerHeight : 241 + kSafeTopHeight )
+//            self.tableView.tableHeaderView = self.yxs_tableHeaderView
+//            self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#745683"), night: UIColor.yxs_hexToAdecimalColor(hex: "#745683"))
+//            self.tableView.reloadData()
+//        }) { (msg, code) in
+//
+//        }
 
 //
 //        let curruntTrack = listSource[indexPath.row]
@@ -158,7 +172,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
     }()
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > 64 + kSafeTopHeight{
+        if scrollView.contentOffset.y > headerHeight - (64 + kSafeTopHeight) {//64 + kSafeTopHeight{
             customNav.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
         }else{
             customNav.backgroundColor = UIColor.clear
@@ -254,9 +268,25 @@ class YXSContentDetialCell: UITableViewCell {
 class YXSContentDetialHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        /// 背景图
+        addSubview(imgBgView)
+        imgBgView.snp.makeConstraints({ (make) in
+            make.edges.equalTo(0)
+        })
+        
+        /// 毛玻璃
+        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        self.insertSubview(blurEffectView, aboveSubview: imgBgView)
+        blurEffectView.snp.makeConstraints({ (make) in
+            make.edges.equalTo(0)
+        })
+        
         addSubview(imageView)
         addSubview(xmlyImageView)
         addSubview(titleLabel)
+        
         
         self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#745683"), night: UIColor.yxs_hexToAdecimalColor(hex: "#745683"))
         titleLabel.snp.makeConstraints { (make) in
@@ -291,6 +321,7 @@ class YXSContentDetialHeaderView: UIView {
             titleLabel.text = model.albumIntro
         }
         imageView.sd_setImage(with: URL.init(string: model.coverUrlMiddle ?? ""), placeholderImage: kImageDefualtImage)
+        imgBgView.sd_setImage(with: URL.init(string: model.coverUrlMiddle ?? ""), placeholderImage: kImageDefualtImage)
     }
     // MARK: -getter&setter
     lazy var imageView: UIImageView = {
@@ -309,5 +340,12 @@ class YXSContentDetialHeaderView: UIView {
     lazy var xmlyImageView: UIImageView = {
         let timeIcon = UIImageView.init(image: UIImage.init(named: "yxs_xmly_logo"))
         return timeIcon
+    }()
+    
+    /// 背景图
+    lazy var imgBgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
+        return imgView
     }()
 }
