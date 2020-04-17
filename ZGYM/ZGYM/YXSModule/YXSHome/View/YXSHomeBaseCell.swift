@@ -70,16 +70,14 @@ class YXSHomeBaseCell: UITableViewCell {
         didSet{
             stickView.isHidden = isTop ? false : true
             if isShowTag{
-                nameTimeLabel.snp.remakeConstraints { (make) in
-                    make.left.equalTo(68)
+                topTimeLabel.snp.remakeConstraints { (make) in
+                    make.left.equalTo(69)
                     make.centerY.equalTo(tagLabel)
-                    make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45 - (stickView.isHidden ? 45 : 75))
                 }
             }else{
-                nameTimeLabel.snp.makeConstraints { (make) in
+                topTimeLabel.snp.makeConstraints { (make) in
                     make.left.equalTo(15)
                     make.top.equalTo(19)
-                    make.width.equalTo(SCREEN_WIDTH - 30 - 15)
                 }
             }
             
@@ -296,6 +294,13 @@ class YXSHomeBaseCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
         label.font = UIFont.systemFont(ofSize: 13)
+        return label
+    }()
+    
+    lazy var topTimeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = kTextMainBodyColor
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }()
     

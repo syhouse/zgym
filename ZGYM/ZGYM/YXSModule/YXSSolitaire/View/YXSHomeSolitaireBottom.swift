@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NightNight
 
 let kSolitaireBottomGoEvnet = "SolitaireBottomGoEvnet"
 
@@ -21,6 +22,7 @@ class YXSHomeSolitaireBottom: UIView {
         addSubview(deadlineLabel)
         addSubview(statusLabel)
         addSubview(statusButton)
+        addSubview(nameTimeLabel)
         
         countLabel.snp.makeConstraints { (make) in
             make.left.top.equalTo(0)
@@ -31,10 +33,23 @@ class YXSHomeSolitaireBottom: UIView {
             make.width.equalTo(70)
             make.height.equalTo(19)
         }
-        classLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(0)
-            make.right.equalTo(-90)
-            make.top.equalTo(countLabel.snp_bottom).offset(10.5)
+        if isHome{
+            classLabel.snp.makeConstraints { (make) in
+                make.left.equalTo(0)
+                make.right.equalTo(-90)
+                make.top.equalTo(nameTimeLabel.snp_bottom).offset(10.5)
+            }
+            nameTimeLabel.snp.makeConstraints { (make) in
+                make.left.equalTo(0)
+                make.right.equalTo(-90)
+                make.top.equalTo(countLabel.snp_bottom).offset(10.5)
+            }
+        }else{
+            classLabel.snp.makeConstraints { (make) in
+                make.left.equalTo(0)
+                make.right.equalTo(-90)
+                make.top.equalTo(countLabel.snp_bottom).offset(10.5)
+            }
         }
         deadlineLabel.snp.makeConstraints { (make) in
             make.left.equalTo(0)
@@ -46,6 +61,7 @@ class YXSHomeSolitaireBottom: UIView {
             make.top.equalTo(statusLabel.snp_top).offset(2)
             make.size.equalTo(CGSize.init(width: 79, height: 31))
         }
+        
         
         statusButton.isHidden = true
     }
@@ -75,6 +91,7 @@ class YXSHomeSolitaireBottom: UIView {
         UIUtil.yxs_setLabelAttributed(countLabel, text: ["\(model.commitCount)", "个人已经参与接龙"], colors: [kRedMainColor, UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")])
         classLabel.text = "接收班级：\(model.className ?? "")"
         deadlineLabel.text = "截止日期：\((model.endTime ?? "").dateTime?.toString(format: DateFormatType.custom("yyyy/MM/dd HH:mm")) ?? "")"
+        UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(model.teacherName ?? "")", "  |  \(model.createTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
         
         var name: String = model.teacherName ?? ""
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER && model.teacherId == yxs_user.id{
@@ -148,6 +165,7 @@ class YXSHomeSolitaireBottom: UIView {
         UIUtil.yxs_setLabelAttributed(countLabel, text: ["\(model.committedSum ?? 0)", "个人已经参与接龙"], colors: [kRedMainColor, UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")])
         classLabel.text = "接收班级：\(model.className ?? "")"
         deadlineLabel.text = "截止日期：\((model.endTime ?? "").dateTime?.toString(format: DateFormatType.custom("yyyy/MM/dd HH:mm")) ?? "")"
+        UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(model.teacherName ?? "")", "  |  \(model.createTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
     }
     
     
@@ -174,31 +192,38 @@ class YXSHomeSolitaireBottom: UIView {
     
     lazy var countLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = UIFont.systemFont(ofSize: YXSHomeListModel.smallFontSize)
         return label
     }()
     
     lazy var classLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
     lazy var deadlineLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
-        label.font = UIFont.systemFont(ofSize: 13)
+        label.font = UIFont.systemFont(ofSize: YXSHomeListModel.smallFontSize)
         return label
     }()
     
     
     lazy var statusLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13)
+        label.font = UIFont.systemFont(ofSize: YXSHomeListModel.smallFontSize)
         label.cornerRadius = 9.5
         label.textAlignment = .center
         label.clipsToBounds = true
+        return label
+    }()
+    
+    lazy var nameTimeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
+        label.font = UIFont.systemFont(ofSize: YXSHomeListModel.smallFontSize)
         return label
     }()
 }

@@ -12,16 +12,18 @@ import UIKit
 class YXSCacheHelper: NSObject {
     /// 缓存首页列表数据
     /// - Parameter dataSource: 首页列表
-    public static func yxs_cacheHomeList(dataSource: [YXSHomeSectionModel]){
+    public static func yxs_cacheHomeList(dataSource: [YXSHomeSectionModel], childrenId: Int?){
         DispatchQueue.global().async {
-            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "HomeList\(YXSPersonDataModel.sharePerson.personRole.rawValue)"))
+            let personModel = YXSPersonDataModel.sharePerson
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "HomeList\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)"))
         }
     }
     
     /// 获取首页列表的缓存数据
-    public static func yxs_getCacheHomeList() -> [YXSHomeSectionModel]{
+    public static func yxs_getCacheHomeList(childrenId: Int?) -> [YXSHomeSectionModel]{
         var dataSource:[YXSHomeSectionModel] = [YXSHomeSectionModel]()
-        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "HomeList\(YXSPersonDataModel.sharePerson.personRole.rawValue)")) as? [YXSHomeSectionModel]
+        let personModel = YXSPersonDataModel.sharePerson
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "HomeList\(personModel.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)")) as? [YXSHomeSectionModel]
         if let items = items{
             dataSource = items
         }else{

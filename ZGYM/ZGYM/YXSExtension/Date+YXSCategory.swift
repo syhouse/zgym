@@ -105,4 +105,30 @@ extension Date {
             return "晚上好"
         }
     }
+    ///返回日期格式“03月23日 星期一“
+    func yxs_homeTimeWeek() -> String{
+        let first = self.toString(format: DateFormatType.custom("MM月dd日"))
+        let week: Int = Calendar.current.component(Calendar.Component.weekday, from: self)
+        var last = " "
+        switch week {
+        case 1:
+            last += "星期天"
+        case 2:
+        last += "星期一"
+        case 3:
+        last += "星期二"
+        case 4:
+        last += "星期三"
+        case 5:
+        last += "星期四"
+        case 6:
+        last += "星期五"
+        case 7:
+        last += "星期六"
+        default:
+            break
+        }
+        return first + last
+    }
+    
 }

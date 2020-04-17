@@ -30,6 +30,21 @@ class YXSHomeController: YXSHomeBaseController {
             self.tableHeaderView.setHeaderModel(yxs_weathModel, agendaCount: self.yxs_agendaCount)
         }
     }
+    
+    /// 更新时间
+    var tsLastSets: [Int: Int?] = [Int: Int?]()
+    
+    var firstPageCacheSource: [String: [YXSHomeListModel]] = [String: [YXSHomeListModel]]()
+    var lastRecordId: Int = 0
+    var lastRecordTime: String? = Date().toString(format: DateFormatType.custom(kCommonDateFormatString))
+    ///最近更新时间
+    var tsLast: Int?{
+        get{
+            return tsLastSets[self.yxs_user.curruntChild?.id ?? 0] ?? nil
+        }
+    }
+    
+    
     // MARK: - init
     override init() {
         super.init()
@@ -61,7 +76,7 @@ class YXSHomeController: YXSHomeBaseController {
             self.yxs_showBadgeOnItem(index: 0, count: 0)
         }
         
-        self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList()
+        self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList(childrenId: yxs_user.curruntChild?.id)
         
         //引导
         ysx_showGuide()
@@ -153,23 +168,11 @@ class YXSHomeController: YXSHomeBaseController {
                 }
                 self.tableHeaderView.setHeaderModel(self.yxs_weathModel,agendaCount: self.yxs_agendaCount)
                 self.yxs_endingRefresh()
+                SLLog("yxs_endingRefresh")
             }
         }
     }
-    
-    var lastRecordId: Int = 0
-    var lastRecordTime: String? = Date().toString(format: DateFormatType.custom(kCommonDateFormatString))
-    ///最近更新时间
-    var tsLast: Int?
-    var firstPageCacheSource: [YXSHomeListModel] = [YXSHomeListModel]()
     func yxs_loadListData(){
-        //无网络
-        if !YXSPersonDataModel.sharePerson.isNetWorkingConnect{
-            self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList()
-            self.group.leave()
-            return
-        }
-        
         let isParent = YXSPersonDataModel.sharePerson.personRole == .PARENT
         
         //无数据
@@ -188,23 +191,24 @@ class YXSHomeController: YXSHomeBaseController {
             classIdList = yxs_user.gradeIds ?? []
             stage = yxs_user.stage ?? ""
         }
+        SLLog("YXSEducationwaterfallPageQueryV2Request_start")
         YXSEducationwaterfallPageQueryV2Request.init(currentPage: curruntPage,classIdList: classIdList,stage: stage,userType: yxs_user.type ?? "", childrenId: yxs_user.curruntChild?.id, lastRecordId: lastRecordId,lastRecordTime: lastRecordTime, tsLast: tsLast).request({ (result) in
             
             var list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["waterfallList"].object) ?? [YXSHomeListModel]()
             self.loadMore = result["hasNext"].boolValue
             if self.curruntPage == 1{
-                 self.tsLast = result["tsLast"].intValue
+                self.tsLastSets[self.yxs_user.curruntChild?.id ?? 0] = result["tsLast"].intValue
                  self.yxs_removeAll()
                 
                 if list.count == 0{///没有更新 取缓存数据
-                    self.loadMore = true
-                    list = self.firstPageCacheSource
+                    list = self.firstPageCacheSource["\(self.yxs_user.curruntChild?.id ?? 0)"] ?? [YXSHomeListModel]()
+                    self.loadMore = list.count == kPageSize ? true : false
                 }else{
-                    self.firstPageCacheSource = list
+                    self.firstPageCacheSource["\(self.yxs_user.curruntChild?.id ?? 0)"] = list
                 }
             }else{
                 self.loadMore = result["hasNext"].boolValue
-                self.tsLast = nil
+                self.tsLastSets[self.yxs_user.curruntChild?.id ?? 0] = nil
             }
             
             self.lastRecordId = list.last?.id ?? 0
@@ -227,7 +231,8 @@ class YXSHomeController: YXSHomeBaseController {
                 //更早
                 self.yxs_dataSource[2].items.append(model)
             }
-            YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource)
+            YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource, childrenId: self.yxs_user.curruntChild?.id)
+            SLLog("YXSEducationwaterfallPageQueryV2Request_end")
             self.group.leave()
         }) { (msg, code) in
             self.group.leave()
@@ -242,8 +247,10 @@ class YXSHomeController: YXSHomeBaseController {
         }else{
             request = YXSEducationTodoChildrenRedPointRequest.init(childrenClassList: yxs_childrenClassList)
         }
+        SLLog("YXSEducationTodo_start")
         request.request({ (result) in
             self.yxs_agendaCount = result["count"].intValue
+            SLLog("YXSEducationTodo_end")
             self.group.leave()
         }) { (msg, code) in
             self.group.leave()
@@ -346,8 +353,7 @@ extension YXSHomeController: YXSRouterEventProtocol{
             ///先清除缓存记录
              lastRecordId = 0
              lastRecordTime = Date().toString(format: DateFormatType.custom(kCommonDateFormatString))
-             tsLast = nil
-             self.yxs_removeAll()
+             self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList(childrenId: yxs_user.curruntChild?.id)
              self.tableView.reloadData()
              
             yxs_refreshData()
