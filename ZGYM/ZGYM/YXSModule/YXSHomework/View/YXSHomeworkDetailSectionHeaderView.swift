@@ -63,8 +63,8 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         
         finishView.snp.makeConstraints { (make) in
             make.size.equalTo(CGSize.init(width: 50.5, height: 45))
-            make.right.equalTo(-118.5)
-            make.top.equalTo(imgAvatar)
+            make.left.equalTo(150)
+            make.top.equalTo(imgAvatar).offset(-2)
         }
 
         goodControl.snp.makeConstraints { (make) in
@@ -76,7 +76,8 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
 
         lbName.snp.makeConstraints { (make) in
             make.left.equalTo(imgAvatar.snp_right).offset(15)
-            make.width.equalTo(SCREEN_WIDTH - 150)
+            make.right.equalTo(goodControl.snp_left).offset(-10)
+//            make.width.equalTo(SCREEN_WIDTH - 150)
             make.top.equalTo(imgAvatar.snp_top)
             make.height.equalTo(20)
         }
@@ -85,7 +86,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             make.bottom.equalTo(imgAvatar.snp_bottom)
             make.height.equalTo(20)
             make.left.equalTo(lbName)
-            make.width.equalTo(SCREEN_WIDTH - 150)
+            make.right.equalTo(goodControl.snp_left).offset(-10)
         })
 
         homeWorkChangeButton.snp.makeConstraints { (make) in
@@ -386,6 +387,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
     @objc func goodControlClick() {
         goodControl.isSelected = !goodControl.isSelected
         goodClick?(self.model!)
+        finishView.isHidden = !goodControl.isSelected
     }
 
     /// 评论
@@ -658,7 +660,7 @@ class SLHomeworkCommentDetailRemarkView: UIView {
             remarkVoiceView.isHidden = true
             remarkContentLabel.isHidden = true
             remarkNameLbl.text = self.hmModel?.teacherName
-            remarkTimeLbl.text = self.model?.remarkTime
+            remarkTimeLbl.text = self.model?.remarkTime?.yxs_Time()
 //            var last = remarkTimeLbl
             if (self.model?.remark ?? "").count > 0 {
 //                last = remarkContentLabel

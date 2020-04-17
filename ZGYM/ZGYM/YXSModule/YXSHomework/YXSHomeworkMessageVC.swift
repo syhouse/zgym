@@ -166,7 +166,11 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
     // MARK: - tableViewDelegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let comments = detailModel?.commentJsonList {
-            return comments.count
+            var commentsCount = comments.count
+            if detailModel?.isNeeedShowCommentAllButton ?? false && !(detailModel?.isShowCommentAll ?? false){
+                commentsCount = 3
+            }
+            return  commentsCount
         }
         return 0
     }

@@ -11,6 +11,10 @@ import NightNight
 
 class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate, UITableViewDataSource{
     
+    var isChangeRemark: Bool = false
+    var isModify: Bool = false
+    var remarkContent: String = ""
+    var remarkAudioModel: SLAudioModel = SLAudioModel()
     /// 修改点评model
     var myReviewModel: YXSHomeworkDetailModel?
     var homeModel:YXSHomeListModel?
@@ -19,6 +23,12 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     public func initChangeReview(myReviewModel: YXSHomeworkDetailModel?, model:YXSHomeListModel) {
         self.homeModel = model
         self.myReviewModel = myReviewModel
+        remarkContent = myReviewModel!.remark!
+        let audioModel = SLAudioModel()
+        audioModel.servicePath = myReviewModel?.remarkAudioUrl
+        audioModel.time = myReviewModel?.remarkAudioDuration ?? 0
+        remarkAudioModel = audioModel
+        isChangeRemark = true
     }
     
     override func viewDidLoad() {
@@ -116,6 +126,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
             btnVoice.snp.remakeConstraints({ (make) in
                 make.top.equalTo(textView.snp_bottom).offset(5)
                 make.left.equalTo(15)
+                make.height.width.equalTo(29)
             })
             contentView.snp.remakeConstraints({ (make) in
                 make.top.equalTo(10)
@@ -124,11 +135,16 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
                 make.height.equalTo(440)
             })
         }else {
+            let vModel = YXSVoiceViewModel()
+            vModel.voiceDuration = self.audioModel.time ?? 0
+            vModel.voiceUlr = self.audioModel.path
+            voiceView.model = vModel
             voiceView.isHidden = false
             btnVoice.isEnabled = false
             btnVoice.snp.remakeConstraints({ (make) in
                 make.top.equalTo(voiceView.snp_bottom).offset(5)
                 make.left.equalTo(15)
+                make.height.width.equalTo(29)
             })
             contentView.snp.remakeConstraints({ (make) in
                 make.top.equalTo(10)
@@ -150,6 +166,9 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     func showAudio(_ model:SLAudioModel? = nil){
         let audioView = YXSRecordAudioView.showRecord(audio: model) { [weak self](audio) in
             guard let strongSelf = self else { return }
+            if strongSelf.remarkAudioModel.servicePath != audio.servicePath {
+                strongSelf.isModify = true
+            }
             strongSelf.audioModel = audio
             strongSelf.updateUI()
         }
@@ -160,8 +179,12 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         if self.textView.text.count < 1 {
             return
         }
+        if isChangeRemark && !isModify{
+            self.navigationController?.popViewController()
+            return
+        }
         MBProgressHUD.yxs_showLoading()
-        if self.audioModel != nil {
+        if self.audioModel != nil && self.audioModel.servicePath?.count ?? 0 <= 0{
             YXSUploadSourceHelper().uploadAudio(mediaModel: audioModel, sucess: { (url) in
                 MBProgressHUD.yxs_hideHUD()
                 self.remarkAudioDuration = self.audioModel.time
@@ -256,6 +279,9 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let title = self.dataSource[indexPath.row]
+        if title != remarkContent {
+            self.isModify = true
+        }
         self.textView.text = title
     }
     
@@ -289,6 +315,11 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         tv.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNightFFFFFF)
         tv.placeholderColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
         tv.placeholder = "请输入评语或添加语音"
+        tv.textDidChangeBlock = { (str)in
+            if str != self.remarkContent {
+                self.isModify = true
+            }
+        }
         tv.font = UIFont.systemFont(ofSize: 15)
         return tv
     }()
@@ -320,6 +351,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
                 [weak self] in
                 guard let strongSelf = self else { return }
                 strongSelf.removeAudio()
+                strongSelf.isModify = true
             }, showDelect: true)
         voiceView.minWidth = 120
         voiceView.tapPlayer = false

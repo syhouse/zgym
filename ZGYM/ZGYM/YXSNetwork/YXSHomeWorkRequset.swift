@@ -82,7 +82,7 @@ class YXSEducationHomeworkChildrenPageQueryRequest: YXSBaseRequset {
         "homeworkId":homeworkId,
         "pageSize": pageSize]
         if isGood != -1 {
-            //查询所有作业
+            //查询优秀作业
             param = ["currentPage":currentPage,
             "homeworkCreateTime": homeworkCreateTime,
             "homeworkId":homeworkId,

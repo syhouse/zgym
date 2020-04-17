@@ -189,9 +189,12 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {
 @property (nonatomic, strong) UIImage *editImage;
 
 /**
-  是否显示清楚还原按钮
+  是否显示清除还原按钮
  */
 @property (nonatomic, assign) BOOL isShowClearReductionBtn;
+
+/// 设置标题
+@property (nonatomic, copy) NSString *titleStr;
 
 @property (nonatomic, copy) void(^clearReductionBlock)(void);
 /**
