@@ -4848,10 +4848,7 @@
 				3A6F959F91D86A232965ED3C /* [CP] Embed Pods Frameworks */,
 				0D4E5DACA1C7BC1392BF2228 /* [CP] Copy Pods Resources */,
 				6FA0FA9E242B500200E2E035 /* Embed Frameworks */,
-<<<<<<< HEAD
 				E583FBE22446B58E005C8F72 /* ShellScript */,
-=======
->>>>>>> refs/remotes/origin/master
 			);
 			buildRules = (
 			);
