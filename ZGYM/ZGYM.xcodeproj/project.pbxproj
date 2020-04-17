@@ -194,7 +194,6 @@
 		6F0703DD2445D8030090975B /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FF892445D7FB0090975B /* UIImageView+AFNetworking.m */; };
 		6F0703DE2445D8030090975B /* UIButton+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FF8C2445D7FB0090975B /* UIButton+AFNetworking.m */; };
 		6F0703DF2445D8030090975B /* UIActivityIndicatorView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FF8D2445D7FB0090975B /* UIActivityIndicatorView+AFNetworking.m */; };
-		6F0703E02445D8030090975B /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FF8E2445D7FB0090975B /* UIWebView+AFNetworking.m */; };
 		6F0703E12445D8030090975B /* AFAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FF8F2445D7FB0090975B /* AFAutoPurgingImageCache.m */; };
 		6F0703E22445D8030090975B /* AFImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FF912445D7FB0090975B /* AFImageDownloader.m */; };
 		6F0703E32445D8030090975B /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FF972445D7FB0090975B /* AFURLResponseSerialization.m */; };
@@ -745,14 +744,13 @@
 		6F07FE0C2445D7C70090975B /* YXSCommonPublishBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FDFF2445D7C70090975B /* YXSCommonPublishBaseController.swift */; };
 		6F07FE0E2445D7E80090975B /* YXSBaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE0D2445D7E80090975B /* YXSBaseTabBarController.swift */; };
 		6F4918FE242B591A00DCA713 /* ZGYMREADME.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */; };
+		6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */ = {isa = PBXBuildFile; fileRef = 6F5720BE24493CAC00E1F301 /* 打包注意 */; };
 		6F6511D42445DC820024A5DA /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; };
 		6F6511D52445DC820024A5DA /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FA0F331242B451800E2E035 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F32F242B451800E2E035 /* Main.storyboard */; };
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
-		E583FBE52446B5D1005C8F72 /* confuse.sh in Resources */ = {isa = PBXBuildFile; fileRef = E583FBE32446B5D0005C8F72 /* confuse.sh */; };
-		E583FBE62446B5D1005C8F72 /* func.list in Resources */ = {isa = PBXBuildFile; fileRef = E583FBE42446B5D1005C8F72 /* func.list */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1792,7 +1790,6 @@
 		6F07FF822445D7FB0090975B /* AFImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFImageDownloader.h; sourceTree = "<group>"; };
 		6F07FF832445D7FB0090975B /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
 		6F07FF842445D7FB0090975B /* AFAutoPurgingImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFAutoPurgingImageCache.h; sourceTree = "<group>"; };
-		6F07FF852445D7FB0090975B /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		6F07FF862445D7FB0090975B /* UIActivityIndicatorView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActivityIndicatorView+AFNetworking.h"; sourceTree = "<group>"; };
 		6F07FF872445D7FB0090975B /* UIImage+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AFNetworking.h"; sourceTree = "<group>"; };
 		6F07FF882445D7FB0090975B /* UIProgressView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIProgressView+AFNetworking.h"; sourceTree = "<group>"; };
@@ -1801,7 +1798,6 @@
 		6F07FF8B2445D7FB0090975B /* UIRefreshControl+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIRefreshControl+AFNetworking.h"; sourceTree = "<group>"; };
 		6F07FF8C2445D7FB0090975B /* UIButton+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+AFNetworking.m"; sourceTree = "<group>"; };
 		6F07FF8D2445D7FB0090975B /* UIActivityIndicatorView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActivityIndicatorView+AFNetworking.m"; sourceTree = "<group>"; };
-		6F07FF8E2445D7FB0090975B /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
 		6F07FF8F2445D7FB0090975B /* AFAutoPurgingImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFAutoPurgingImageCache.m; sourceTree = "<group>"; };
 		6F07FF902445D7FB0090975B /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
 		6F07FF912445D7FB0090975B /* AFImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageDownloader.m; sourceTree = "<group>"; };
@@ -1900,6 +1896,7 @@
 		6F07FFFD2445D7FD0090975B /* YXSShareModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSShareModel.swift; sourceTree = "<group>"; };
 		6F07FFFE2445D7FD0090975B /* YXSShareTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSShareTool.swift; sourceTree = "<group>"; };
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
+		6F5720BE24493CAC00E1F301 /* 打包注意 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "打包注意"; sourceTree = "<group>"; };
 		6F6511D62446937D0024A5DA /* 优学业.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "优学业.entitlements"; sourceTree = "<group>"; };
 		6FA0F326242B451800E2E035 /* 优学业.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "优学业.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FA0F330242B451800E2E035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -1912,9 +1909,6 @@
 		6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZGYMUITests.swift; sourceTree = "<group>"; };
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
-		E583FBE12446B54E005C8F72 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		E583FBE32446B5D0005C8F72 /* confuse.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = confuse.sh; sourceTree = SOURCE_ROOT; };
-		E583FBE42446B5D1005C8F72 /* func.list */ = {isa = PBXFileReference; lastKnownFileType = text; path = func.list; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4505,7 +4499,6 @@
 				6F07FF822445D7FB0090975B /* AFImageDownloader.h */,
 				6F07FF832445D7FB0090975B /* AFNetworkActivityIndicatorManager.m */,
 				6F07FF842445D7FB0090975B /* AFAutoPurgingImageCache.h */,
-				6F07FF852445D7FB0090975B /* UIWebView+AFNetworking.h */,
 				6F07FF862445D7FB0090975B /* UIActivityIndicatorView+AFNetworking.h */,
 				6F07FF872445D7FB0090975B /* UIImage+AFNetworking.h */,
 				6F07FF882445D7FB0090975B /* UIProgressView+AFNetworking.h */,
@@ -4514,7 +4507,6 @@
 				6F07FF8B2445D7FB0090975B /* UIRefreshControl+AFNetworking.h */,
 				6F07FF8C2445D7FB0090975B /* UIButton+AFNetworking.m */,
 				6F07FF8D2445D7FB0090975B /* UIActivityIndicatorView+AFNetworking.m */,
-				6F07FF8E2445D7FB0090975B /* UIWebView+AFNetworking.m */,
 				6F07FF8F2445D7FB0090975B /* AFAutoPurgingImageCache.m */,
 				6F07FF902445D7FB0090975B /* AFNetworkActivityIndicatorManager.h */,
 				6F07FF912445D7FB0090975B /* AFImageDownloader.m */,
@@ -4793,8 +4785,6 @@
 		6FA0F328242B451800E2E035 /* ZGYM */ = {
 			isa = PBXGroup;
 			children = (
-				E583FBE32446B5D0005C8F72 /* confuse.sh */,
-				E583FBE42446B5D1005C8F72 /* func.list */,
 				6F6511D62446937D0024A5DA /* 优学业.entitlements */,
 				6F07FE0D2445D7E80090975B /* YXSBaseTabBarController.swift */,
 				6F07FFEA2445D7FD0090975B /* YXSCommon */,
@@ -4812,7 +4802,7 @@
 				6F07FDE82445D7290090975B /* Assets.xcassets */,
 				6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */,
 				6FA0F337242B451E00E2E035 /* Info.plist */,
-				E583FBE12446B54E005C8F72 /* PrefixHeader.pch */,
+				6F5720BE24493CAC00E1F301 /* 打包注意 */,
 			);
 			path = ZGYM;
 			sourceTree = "<group>";
@@ -4858,8 +4848,6 @@
 				3A6F959F91D86A232965ED3C /* [CP] Embed Pods Frameworks */,
 				0D4E5DACA1C7BC1392BF2228 /* [CP] Copy Pods Resources */,
 				6FA0FA9E242B500200E2E035 /* Embed Frameworks */,
-				E583FBE22446B58E005C8F72 /* ShellScript */,
-				560B20AF244859DA003D8A19 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -4958,9 +4946,9 @@
 				6F0704142445D8030090975B /* address in Resources */,
 				6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */,
 				6F0705902445D8060090975B /* LFMediaEditingController.bundle in Resources */,
-				E583FBE52446B5D1005C8F72 /* confuse.sh in Resources */,
 				6F07057C2445D8060090975B /* LFMediaDisplayView.bundle in Resources */,
 				6F07FDE92445D7290090975B /* Assets.xcassets in Resources */,
+				6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */,
 				6F0703EA2445D8030090975B /* XMResource.bundle in Resources */,
 				6F07058C2445D8060090975B /* README.md in Resources */,
 				6FA0F331242B451800E2E035 /* Main.storyboard in Resources */,
@@ -4969,7 +4957,6 @@
 				6F0703C72445D8030090975B /* TUIKitResource.bundle in Resources */,
 				6F0703C82445D8030090975B /* TUIKitFace.bundle in Resources */,
 				6F0703D32445D8030090975B /* CLPlayer.bundle in Resources */,
-				E583FBE62446B5D1005C8F72 /* func.list in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5024,23 +5011,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZGYM/Pods-ZGYM-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		560B20AF244859DA003D8A19 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nAPP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\n# This script loops through the frameworks embedded in the application and\n# removes unused architectures.\nfind \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK\ndo\nFRAMEWORK_EXECUTABLE_NAME=$(defaults read \"$FRAMEWORK/Info.plist\" CFBundleExecutable)\nFRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\necho \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\n\nEXTRACTED_ARCHS=()\n\nfor ARCH in $ARCHS\ndo\necho \"Extracting $ARCH from $FRAMEWORK_EXECUTABLE_NAME\"\nlipo -extract \"$ARCH\" \"$FRAMEWORK_EXECUTABLE_PATH\" -o \"$FRAMEWORK_EXECUTABLE_PATH-$ARCH\"\nEXTRACTED_ARCHS+=(\"$FRAMEWORK_EXECUTABLE_PATH-$ARCH\")\ndone\n\necho \"Merging extracted architectures: ${ARCHS}\"\nlipo -o \"$FRAMEWORK_EXECUTABLE_PATH-merged\" -create \"${EXTRACTED_ARCHS[@]}\"\nrm \"${EXTRACTED_ARCHS[@]}\"\n\necho \"Replacing original executable with thinned version\"\nrm \"$FRAMEWORK_EXECUTABLE_PATH\"\nmv \"$FRAMEWORK_EXECUTABLE_PATH-merged\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n\ndone\n";
-		};
 		89004E7B5EDD9263D6A6A862 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -5062,23 +5032,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		E583FBE22446B58E005C8F72 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "$PROJECT_DIR/confuse.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -5298,7 +5251,6 @@
 				6F07038B2445D8030090975B /* TUIGroupPendencyCellData.m in Sources */,
 				6F0704602445D8040090975B /* SLFileManagerHelper.swift in Sources */,
 				6F0704952445D8040090975B /* YXSClassAddInfoController.swift in Sources */,
-				6F0703E02445D8030090975B /* UIWebView+AFNetworking.m in Sources */,
 				6F0705112445D8050090975B /* YXSClassStartPartentDetailStudentHeaderView.swift in Sources */,
 				6F0704172445D8030090975B /* YXSPlaceholderTextView.swift in Sources */,
 				6F07040B2445D8030090975B /* YXSMediaModel.swift in Sources */,
@@ -5981,7 +5933,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6027,7 +5979,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
