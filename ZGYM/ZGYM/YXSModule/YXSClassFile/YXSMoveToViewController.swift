@@ -1,5 +1,5 @@
 //
-//  SLMoveToViewController.swift
+//  YXSMoveToViewController.swift
 //  ZGYM
 //
 //  Created by Liu Jie on 2020/4/10.
@@ -10,11 +10,11 @@ import UIKit
 import NightNight
 import ObjectMapper
 
-class SLMoveToViewController: YXSBaseTableViewController {
+class YXSMoveToViewController: YXSBaseTableViewController {
 
     var oldParentFolderId: Int = -1
     var parentFolderId: Int = -1
-    var folderList: [SLFolderModel] = [SLFolderModel]()
+    var folderList: [YXSFolderModel] = [YXSFolderModel]()
     
     var selectedFolderList: [Int] = [Int]()
     var selectedFileIdList: [Int] = [Int]()
@@ -46,8 +46,8 @@ class SLMoveToViewController: YXSBaseTableViewController {
         view.mixedBackgroundColor = MixedColor(normal: kNightFFFFFF, night: kNightBackgroundColor)
         tableView.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
         
-        tableView.register(SLFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
-        tableView.register(SLFileCell.classForCoder(), forCellReuseIdentifier: "SLFileCell")
+        tableView.register(YXSFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
+        tableView.register(YXSFileCell.classForCoder(), forCellReuseIdentifier: "SLFileCell")
         
         tableView.snp.remakeConstraints({ (make) in
             make.top.equalTo(0)
@@ -74,7 +74,7 @@ class SLMoveToViewController: YXSBaseTableViewController {
             guard let weakSelf = self else {return}
             let hasNext = json["hasNext"]
             
-            weakSelf.folderList = Mapper<SLFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [SLFolderModel]()
+            weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
             weakSelf.tableView.reloadData()
             
         }) { (msg, code) in
@@ -89,7 +89,7 @@ class SLMoveToViewController: YXSBaseTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = folderList[indexPath.row]
-        let cell: SLFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! SLFileGroupCell
+        let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
         cell.model = item
         cell.lbTitle.text = item.folderName//"作业"
         return cell
@@ -117,9 +117,9 @@ class SLMoveToViewController: YXSBaseTableViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = folderList[indexPath.row]
         
-        let vc = SLMoveToViewController(folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: item.id ?? 0, completionHandler: completionHandler)
+        let vc = YXSMoveToViewController(folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: item.id ?? 0, completionHandler: completionHandler)
         
-//        let vc = SLMoveToViewController(folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: item.id ?? 0) { [weak self](oldParentFolderId, parentFolderId) in
+//        let vc = YXSMoveToViewController(folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: item.id ?? 0) { [weak self](oldParentFolderId, parentFolderId) in
 //            guard let weakSelf = self else {return}
 //            /// code do something
 //

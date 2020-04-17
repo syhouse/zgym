@@ -1,5 +1,5 @@
 //
-//  SLBaseFileCell.swift
+//  YXSBaseFileCell.swift
 //  ZGYM
 //
 //  Created by Liu Jie on 2020/4/1.
@@ -9,7 +9,7 @@
 import UIKit
 import NightNight
 
-class SLBaseFileCell: YXSBaseTableViewCell {
+class YXSBaseFileCell: YXSBaseTableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -46,7 +46,7 @@ class SLBaseFileCell: YXSBaseTableViewCell {
         }
     }
     
-    var model: SLBaseFileModel? {
+    var model: YXSBaseFileModel? {
         didSet {
             
         }

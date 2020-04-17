@@ -40,14 +40,14 @@ class YXSSatchelBatchMoveRequest: YXSBaseRequset {
 let satchelBatchDelete = "/satchel/batch-delete"
 /// 批量删除书包文件夹、文件
 class YXSSatchelBatchDeleteRequest: YXSBaseRequset {
-    init(obj:[String: Any], parentFolderId: Int){
-        super.init()
-        method = .post
-        host = fileHost
-        path = satchelBatchDelete
-        param = obj
-        param = ["parentFolderId":parentFolderId]
-    }
+//    init(obj:[String: Any], parentFolderId: Int){
+//        super.init()
+//        method = .post
+//        host = fileHost
+//        path = satchelBatchDelete
+//        param = obj
+//        param = ["parentFolderId":parentFolderId]
+//    }
     
     init(fileIdList:[Int] = [Int](), folderIdList:[Int] = [Int](), parentFolderId: Int) {
         super.init()

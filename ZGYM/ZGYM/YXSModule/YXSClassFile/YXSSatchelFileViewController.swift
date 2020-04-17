@@ -13,7 +13,7 @@ import Photos
 import YBImageBrowser
 
 /// 老师-书包
-class YXSSatchelFileViewController: SLClassFileViewController {
+class YXSSatchelFileViewController: YXSClassFileViewController {
 
 
 //    var fileList
@@ -77,7 +77,7 @@ class YXSSatchelFileViewController: SLClassFileViewController {
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
-                weakSelf.folderList = Mapper<SLFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [SLFolderModel]()
+                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
                 workingGroup.leave()
                 
             }) { (msg, code) in
@@ -93,7 +93,7 @@ class YXSSatchelFileViewController: SLClassFileViewController {
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
-                weakSelf.fileList = Mapper<SLFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [SLFileModel]()
+                weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
                 workingGroup.leave()
                 
             }) { (msg, code) in
@@ -111,8 +111,8 @@ class YXSSatchelFileViewController: SLClassFileViewController {
     }
     
     /// 批量删除
-    @objc func batchDeleteRequest(listID:[Int], completionHandler:(()->Void)?) {
-        YXSSatchelBatchDeleteRequest(folderIdList: listID, parentFolderId: parentFolderId).request({ [weak self](json) in
+    @objc func batchDeleteRequest(fileIdList:[Int] = [Int](), folderIdList:[Int] = [Int](), completionHandler:(()->Void)?) {
+        YXSSatchelBatchDeleteRequest(fileIdList: fileIdList, folderIdList: folderIdList, parentFolderId: parentFolderId).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             completionHandler?()
             
@@ -232,7 +232,7 @@ class YXSSatchelFileViewController: SLClassFileViewController {
             }
         }
         
-        let vc = SLMoveToViewController(folderIdList: selectedFolderList, fileIdList: selectedFileList, oldParentFolderId: -1, parentFolderId: -1) { [weak self](oldParentFolderId, parentFolderId) in
+        let vc = YXSMoveToViewController(folderIdList: selectedFolderList, fileIdList: selectedFileList, oldParentFolderId: -1, parentFolderId: -1) { [weak self](oldParentFolderId, parentFolderId) in
             guard let weakSelf = self else {return}
             /// 移动成功
             /// 取消编辑
@@ -251,21 +251,22 @@ class YXSSatchelFileViewController: SLClassFileViewController {
         let tmpFolderList = getSelectedFolerList()
         let tmpFileList = getSelectedFileList()
         
-        if tmpFolderList.count > 1 || tmpFileList.count > 1 {
+        if tmpFolderList.count > 0 || tmpFileList.count > 0 {
             let alert = YXSConfirmationAlertView.showIn(target: self.view) { [weak self](sender, view) in
             guard let weakSelf = self else {return}
                 if sender.titleLabel?.text == "删除" {
                     
-                    var tmpArr = [Int]()
+                    var tmpFolderIdArr = [Int]()
+                    var tmpFileIdIdArr = [Int]()
                     for (index, value) in tmpFolderList.enumerated() {
-                        tmpArr.append(value.id ?? 0)
+                        tmpFolderIdArr.append(value.id ?? 0)
                     }
                     
                     for (index, value) in tmpFileList.enumerated() {
-                        tmpArr.append(value.id ?? 0)
+                        tmpFileIdIdArr.append(value.id ?? 0)
                     }
                     
-                    weakSelf.batchDeleteRequest(listID: tmpArr) { [weak self] in
+                    weakSelf.batchDeleteRequest(fileIdList: tmpFileIdIdArr, folderIdList: tmpFolderIdArr) { [weak self] in
                         guard let weakSelf = self else {return}
                         weakSelf.folderList = weakSelf.getUnselectedFolerList()
                         weakSelf.fileList = weakSelf.getUnselectedFileList()
@@ -293,7 +294,7 @@ class YXSSatchelFileViewController: SLClassFileViewController {
     /// 选中图片资源
     override func didSelectSourceAssets(assets: [YXSMediaModel]) {
         
-        var tmpArr: [SLFileModel] = [SLFileModel]()
+        var tmpArr: [YXSFileModel] = [YXSFileModel]()
         var tmpImageAssets: [YXSMediaModel] = [YXSMediaModel]()
         var tmpVideoAssets: [YXSMediaModel] = [YXSMediaModel]()
         
@@ -315,7 +316,7 @@ class YXSSatchelFileViewController: SLClassFileViewController {
             var dicArr = [[String : Any]]()
             for sub in list {
                 let url = URL(string: sub)
-                let item = SLFileManagerHelper.sharedInstance.getFileItem(fileUrl: url!)
+                let item = YXSFileManagerHelper.sharedInstance.getFileItem(fileUrl: url!)
                 
                 var dic = ["fileType": url?.pathExtension, "fileName": item.fileName, "fileUrl": sub, "bgUrl": "https://www.image.com/a.jpg", "fileDuration": 10, "fileSize": 10] as [String : Any]
                 dicArr.append(dic)
@@ -337,7 +338,7 @@ class YXSSatchelFileViewController: SLClassFileViewController {
 //            guard let weakSelf = self else {return}
 //            SLLog(">>>>>>>result:\(result)")
 //            let url = URL(string: result)
-//            let item = SLFileManagerHelper.sharedInstance.getFileItem(fileUrl: url!)
+//            let item = YXSFileManagerHelper.sharedInstance.getFileItem(fileUrl: url!)
 //
 //            var dic = ["fileType": url?.pathExtension, "fileName": item.fileName, "fileUrl": result, "bgUrl": "https://www.image.com/a.jpg", "fileDuration": 10, "fileSize": 10] as [String : Any]
 //
@@ -386,14 +387,14 @@ class YXSSatchelFileViewController: SLClassFileViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let item = folderList[indexPath.row]
-            let cell: SLFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! SLFileGroupCell
+            let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
             cell.model = item
             cell.lbTitle.text = item.folderName//"作业"
             return cell
             
         } else {
             let item = fileList[indexPath.row]
-            let cell: SLFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! SLFileCell
+            let cell: YXSFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! YXSFileCell
             cell.lbTitle.text = item.fileName
             cell.lbSubTitle.text = "\(item.fileSize ?? 0)KB | \(item.createTime?.yxs_DayTime() ?? "")" ///"老师名 | 2020-8-16"
             cell.imgIcon.sd_setImage(with: URL(string: item.fileUrl ?? ""), placeholderImage: kImageDefualtImage)
@@ -459,24 +460,29 @@ class YXSSatchelFileViewController: SLClassFileViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 
         if editingStyle == UITableViewCell.EditingStyle.delete {
+            
             if indexPath.section == 0 {
-                
                 let tmp = folderList[indexPath.row].id
-                batchDeleteRequest(listID: [tmp!]) { [weak self] in
+                batchDeleteRequest(folderIdList: [tmp!]) { [weak self] in
                     guard let weakSelf = self else {return}
                     weakSelf.folderList.remove(at: indexPath.row)
                     weakSelf.tableView.reloadData()
                 }
                 
             } else {
-                
+                let tmp = fileList[indexPath.row].id
+                batchDeleteRequest(fileIdList: [tmp!]) { [weak self] in
+                    guard let weakSelf = self else {return}
+                    weakSelf.fileList.remove(at: indexPath.row)
+                    weakSelf.tableView.reloadData()
+                }
             }
         }
     }
     
     // MARK: - Other
     /// 预览文件
-    @objc func previewFile(fileModel: SLFileModel) {
+    @objc func previewFile(fileModel: YXSFileModel) {
 //        if fileModel.fileType {
 //            <#code#>
 //        }

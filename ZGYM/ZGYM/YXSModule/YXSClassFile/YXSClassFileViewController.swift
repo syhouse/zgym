@@ -1,5 +1,5 @@
 //
-//  SLClassFileViewController.swift
+//  YXSClassFileViewController.swift
 //  ZGYM
 //
 //  Created by Liu Jie on 2020/4/1.
@@ -13,15 +13,15 @@ import Photos
 import YBImageBrowser
 
 /// 班级文件
-class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelperDelegate {
+class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelperDelegate {
 
     /// 页面是否在编辑状态
     var isTbViewEditing: Bool = false
     var parentFolderId: Int = -1
     /// 文件夹列表
-    var folderList: [SLFolderModel] = [SLFolderModel]()
+    var folderList: [YXSFolderModel] = [YXSFolderModel]()
     /// 文件列表
-    var fileList: [SLFileModel] = [SLFileModel]()
+    var fileList: [YXSFileModel] = [YXSFileModel]()
     
     var currentImg: UIImage?
     var currentVideoUrl: URL?
@@ -37,8 +37,8 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
         view.mixedBackgroundColor = MixedColor(normal: kNightFFFFFF, night: kNightBackgroundColor)
         tableView.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
         
-        tableView.register(SLFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
-        tableView.register(SLFileCell.classForCoder(), forCellReuseIdentifier: "SLFileCell")
+        tableView.register(YXSFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
+        tableView.register(YXSFileCell.classForCoder(), forCellReuseIdentifier: "SLFileCell")
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
             setupRightBarButtonItem()
@@ -109,7 +109,7 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
     
     @objc func selectedFromBagClick() {
 //        let vc = SLFileBagViewController()
-        let vc = SLChoseFileViewController()
+        let vc = YXSChoseFileViewController()
         navigationController?.pushViewController(vc)
     }
     
@@ -137,7 +137,7 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
     
     // MARK: -重命名、移动、删除
     @objc func renameBtnClick(sender: YXSButton) {
-
+        
     }
     
     @objc func moveBtnClick(sender: YXSButton) {
@@ -164,7 +164,7 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
                     if sub.fileType == "JPG" {
                         
                         let data = result.sd_imageData(as: .JPEG)
-                        let fullPath = SLFileManagerHelper.sharedInstance.getDocumentFullPathURL(lastPathComponent: imgName)
+                        let fullPath = YXSFileManagerHelper.sharedInstance.getDocumentFullPathURL(lastPathComponent: imgName)
                         try! data?.write(to: fullPath)
                      
                         DispatchQueue.main.async {
@@ -181,7 +181,7 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
                 PHCachingImageManager().requestAVAsset(forVideo: sub.asset, options:nil, resultHandler: { (asset, audioMix, info)in
                     if let avAsset = asset as? AVURLAsset {
                         let session = AVAssetExportSession(asset: avAsset, presetName: AVAssetExportPresetHighestQuality)
-                        let fullPath = SLFileManagerHelper.sharedInstance.getDocumentFullPathURL(lastPathComponent: videoName)
+                        let fullPath = YXSFileManagerHelper.sharedInstance.getDocumentFullPathURL(lastPathComponent: videoName)
                         session?.outputURL = fullPath
                         session?.outputFileType = .mp4
                         session?.exportAsynchronously {
@@ -274,8 +274,8 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
     }
     
     // MARK: -Tool
-    @objc func getSelectedFolerList() -> [SLFolderModel] {
-        var tmpArr = [SLFolderModel]()
+    @objc func getSelectedFolerList() -> [YXSFolderModel] {
+        var tmpArr = [YXSFolderModel]()
         for sub in folderList {
             if sub.isSelected ?? false {
                 tmpArr.append(sub)
@@ -284,8 +284,8 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
         return tmpArr
     }
     
-    @objc func getSelectedFileList() -> [SLFileModel] {
-        var tmpArr = [SLFileModel]()
+    @objc func getSelectedFileList() -> [YXSFileModel] {
+        var tmpArr = [YXSFileModel]()
         for sub in fileList {
             if sub.isSelected ?? false {
                 tmpArr.append(sub)
@@ -296,8 +296,8 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
     
     
     
-    @objc func getUnselectedFolerList() -> [SLFolderModel] {
-        var tmpArr = [SLFolderModel]()
+    @objc func getUnselectedFolerList() -> [YXSFolderModel] {
+        var tmpArr = [YXSFolderModel]()
         for sub in folderList {
             if !(sub.isSelected ?? false) {
                 tmpArr.append(sub)
@@ -306,8 +306,8 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
         return tmpArr
     }
     
-    @objc func getUnselectedFileList() -> [SLFileModel] {
-        var tmpArr = [SLFileModel]()
+    @objc func getUnselectedFileList() -> [YXSFileModel] {
+        var tmpArr = [YXSFileModel]()
         for sub in fileList {
             if !(sub.isSelected ?? false) {
                 tmpArr.append(sub)
@@ -331,12 +331,12 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell: SLFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! SLFileGroupCell
+            let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
             cell.lbTitle.text = "作业"
             return cell
             
         } else {
-            let cell: SLFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! SLFileCell
+            let cell: YXSFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! YXSFileCell
             cell.lbTitle.text = "十万个为什么.pdf"
             cell.lbSubTitle.text = "老师名 | 2020-8-16"
             switch indexPath.row {
@@ -364,7 +364,7 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            navigationController?.pushViewController(SLClassFileViewController())
+            navigationController?.pushViewController(YXSClassFileViewController())
             
         } else {
             // 视频
@@ -402,8 +402,8 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
     }
     
     // MARK: - LazyLoad
-    lazy var bottomView: SLClassFileBottomView = {
-        let view = SLClassFileBottomView()
+    lazy var bottomView: YXSClassFileBottomView = {
+        let view = YXSClassFileBottomView()
 //        view.backgroundColor = UIColor.red
         view.isHidden = true
         view.btnFirst.addTarget(self, action: #selector(renameBtnClick(sender:)), for: .touchUpInside)
@@ -425,7 +425,7 @@ class SLClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelpe
 }
 
 
-class SLClassFileBottomView: UIView {
+class YXSClassFileBottomView: UIView {
     
     init() {
         super.init(frame: CGRect.zero)

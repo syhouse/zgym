@@ -1,5 +1,5 @@
 //
-//  SLFileItemModel.swift
+//  YXSFileItemModel.swift
 //  ZGYM
 //
 //  Created by Liu Jie on 2020/3/25.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public enum SLFileExtension: String  {
+public enum YXSFileExtension: String  {
     case pptx
     case docx
     case xlsx
@@ -26,11 +26,11 @@ public enum SLFileExtension: String  {
 }
 
 
-class SLFileItemModel: NSObject {
+class YXSFileItemModel: NSObject {
     
     var fileName: String?
     var data: Data?
-    var exteonsion: SLFileExtension?
+    var exteonsion: YXSFileExtension?
     /// MB
     var fileSize: CGFloat?
     var date: String?

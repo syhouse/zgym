@@ -1,5 +1,5 @@
 //
-//  SLFileManagerHelper.swift
+//  YXSFileManagerHelper.swift
 //  ZGYM
 //
 //  Created by Liu Jie on 2020/3/21.
@@ -13,10 +13,10 @@ public let suitName = "group.youxuesheng.UMEducation"
 /// ShareExtenstion URL Schemes
 public let shareExtensionSchemes = "YMSHAREEXTENSION"
 
-class SLFileManagerHelper: NSObject {
+class YXSFileManagerHelper: NSObject {
     
-    static let sharedInstance: SLFileManagerHelper = {
-        let instance = SLFileManagerHelper()
+    static let sharedInstance: YXSFileManagerHelper = {
+        let instance = YXSFileManagerHelper()
         // setup code
         return instance
     }()
@@ -24,11 +24,11 @@ class SLFileManagerHelper: NSObject {
     
     // MARK: - Tool
     /// 根据文件路径返回文件对象
-    @objc func getFileItem(fileUrl: URL) -> SLFileItemModel {
-        let model = SLFileItemModel()
+    @objc func getFileItem(fileUrl: URL) -> YXSFileItemModel {
+        let model = YXSFileItemModel()
         model.fileName = fileUrl.lastPathComponent
         model.data = fileUrl2Data(fileUrl: fileUrl)
-        model.exteonsion = SLFileExtension(rawValue: fileUrl.pathExtension)
+        model.exteonsion = YXSFileExtension(rawValue: fileUrl.pathExtension)
         model.fileSize = sizeOfDataSrouce(fileUrl: fileUrl)
         return model
     }
