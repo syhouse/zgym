@@ -114,6 +114,10 @@ enum StageType: String {
         self.userModel = YXSEducationUserModel.init(JSON: ["": ""])
         YXSChatHelper.sharedInstance.logout()
         YXSLocalMessageHelper.shareHelper.yxs_removeAll()
+        /// 播放器停止播放
+        XMSDKPlayer.shared()?.stopTrackPlay()
+        XMSDKPlayer.shared()?.stopLivePlay()
+        
         try? FileManager.default.removeItem(atPath: YXSPersonDataModel.personDataPath)
         let appdelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
         appdelegate?.showTabRoot()

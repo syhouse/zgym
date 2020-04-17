@@ -10,7 +10,7 @@ import UIKit
 import NightNight
 
 /// 从书包选择文件
-class SLChoseFileViewController: YXSBaseTableViewController {
+class YXSChoseFileViewController: YXSBaseTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,8 +18,8 @@ class SLChoseFileViewController: YXSBaseTableViewController {
         
         // Do any additional setup after loading the view.
         tableView.backgroundColor = kTableViewBackgroundColor
-        tableView.register(SLFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
-        tableView.register(SLFileAbleSlectedCell.classForCoder(), forCellReuseIdentifier: "SLFileAbleSlectedCell")
+        tableView.register(YXSFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
+        tableView.register(YXSFileAbleSlectedCell.classForCoder(), forCellReuseIdentifier: "SLFileAbleSlectedCell")
         
         tableView.snp.remakeConstraints { (make) in
             make.left.top.right.equalTo(0)
@@ -55,12 +55,12 @@ class SLChoseFileViewController: YXSBaseTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell: SLFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! SLFileGroupCell
+            let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
             cell.lbTitle.text = "文件夹"
             return cell
             
         } else {
-            let cell: SLFileAbleSlectedCell = tableView.dequeueReusableCell(withIdentifier: "SLFileAbleSlectedCell") as! SLFileAbleSlectedCell
+            let cell: YXSFileAbleSlectedCell = tableView.dequeueReusableCell(withIdentifier: "SLFileAbleSlectedCell") as! YXSFileAbleSlectedCell
             cell.lbTitle.text = "十万个为什么.pdf"
             cell.lbSubTitle.text = "56M"
             cell.lbThirdTitle.text = "05/02"
@@ -89,10 +89,10 @@ class SLChoseFileViewController: YXSBaseTableViewController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            navigationController?.pushViewController(SLChoseFileViewController())
+            navigationController?.pushViewController(YXSChoseFileViewController())
             
         } else {
-            let cell: SLFileAbleSlectedCell = tableView.cellForRow(at: indexPath) as! SLFileAbleSlectedCell
+            let cell: YXSFileAbleSlectedCell = tableView.cellForRow(at: indexPath) as! YXSFileAbleSlectedCell
             cell.btnSelect.isSelected = !cell.btnSelect.isSelected
         }
     }

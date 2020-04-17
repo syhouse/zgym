@@ -31,7 +31,7 @@ class YXSPunchCardListCell: YXSHomeBaseCell {
         layout()
         initCommonUI()
         if isShowTag{
-            nameTimeLabel.snp.makeConstraints { (make) in
+            topTimeLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(68)
                 make.centerY.equalTo(tagLabel)
                 make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45)
@@ -48,11 +48,7 @@ class YXSPunchCardListCell: YXSHomeBaseCell {
                 make.size.equalTo(CGSize.init(width: 38, height: 38))
             }
         }
-        
-        tagLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        nameTimeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
-    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -107,6 +103,7 @@ class YXSPunchCardListCell: YXSHomeBaseCell {
         
         bgContainView.addSubview(contentLabel)
         bgContainView.addSubview(nameTimeLabel)
+        bgContainView.addSubview(topTimeLabel)
         bgContainView.addSubview(punchStatusLabel)
         bgContainView.addSubview(commonStatusButton)
         bgContainView.addSubview(punchTaskLabel)
@@ -119,10 +116,23 @@ class YXSPunchCardListCell: YXSHomeBaseCell {
             make.right.equalTo(-15)
             make.bottom.equalTo(0).priorityHigh()
         }
-        contentLabel.snp.remakeConstraints { (make) in
-            make.left.equalTo(15)
-            make.top.equalTo( nameTimeLabel.snp_bottom).offset(14)
-            make.right.equalTo(-15)
+        if isShowTag{
+            nameTimeLabel.snp.makeConstraints { (make) in
+                make.left.equalTo(classLabel)
+                make.bottom.equalTo(classLabel.snp_top).offset(-10)
+                make.right.equalTo(classLabel)
+            }
+            contentLabel.snp.makeConstraints { (make) in
+                make.left.equalTo(15)
+                make.top.equalTo(topTimeLabel.snp_bottom).offset(YXSHomeListModel.midMagin)
+                make.right.equalTo(-15)
+            }
+        }else{
+            contentLabel.snp.makeConstraints { (make) in
+                make.left.equalTo(15)
+                make.top.equalTo( nameTimeLabel.snp_bottom).offset(YXSHomeListModel.midMagin)
+                make.right.equalTo(-15)
+            }
         }
         
         punchTaskLabel.snp.makeConstraints { (make) in
@@ -255,7 +265,7 @@ extension YXSPunchCardListCell{
         contentLabel.text = content
         UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(teacherName ?? "")", "  |  \(createTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54"), night: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
         classLabel.text = className
-        
+        topTimeLabel.text = createTime?.date(withFormat: kCommonDateFormatString)?.yxs_homeTimeWeek()
         
 
         punchTaskLabel.text = "剩余:\(surplusClockInDayCount ?? 0)天  \(self.yxs_weakText(periodList: periodList))"
@@ -353,14 +363,14 @@ extension YXSPunchCardListCell{
         }
         
         classLabel.snp.remakeConstraints { (make) in
-            make.top.equalTo(contentLabel.snp_bottom).offset(14)
-            make.left.equalTo(contentLabel)
-            make.right.equalTo(-80)
-            if YXSPersonDataModel.sharePerson.personRole == .TEACHER || hasPunch || !hasNeedPunch{
-                make.bottom.equalTo(-75)
-            }else{
-                make.bottom.equalTo(-50)
-            }
+             make.top.equalTo(contentLabel.snp_bottom).offset(37)
+                       make.left.equalTo(contentLabel)
+                       make.right.equalTo(-80)
+//            if YXSPersonDataModel.sharePerson.personRole == .TEACHER || hasPunch || !hasNeedPunch{
+//                make.bottom.equalTo(-75)
+//            }else{
+//                make.bottom.equalTo(-50)
+//            }
         }
     }
 }

@@ -156,9 +156,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     ///   - cellType: 点击类型
     ///   - indexPath: 当前indexPath
     private func yxs_dealCellEvent(_ cellType: YXSHomeCellEvent, indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         let model = yxs_dataSource[indexPath.section].items[indexPath.row]
         switch cellType {
         case .showAll:
@@ -290,9 +287,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     /// 展示置顶视图
     /// - Parameter indexPath: 操作当前indexPath
     private func yxs_showTopAlert(indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         
         let listModel = yxs_dataSource[indexPath.section].items[indexPath.row]
         YXSCommonBottomAlerView.showIn(topButtonTitle: ((listModel.isTop ?? 0)  == 1) ? "取消置顶" : "置顶") { [weak self] in
@@ -317,9 +311,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     // MARK: - 优成长Event
     ///点赞
     private func yxs_changePrise(_ indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         let YXSFriendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
         if let YXSFriendCircleModel = YXSFriendCircleModel{
             UIUtil.yxs_changeFriendCirclePrise(YXSFriendCircleModel,positon:.home) {
@@ -329,9 +320,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     }
     ///点评
     private func yxs_showComment(_ indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         let YXSFriendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
         if let model = YXSFriendCircleModel{
             let vc = YXSFriendsCircleController.init(classCircleId: model.classCircleId)
@@ -340,9 +328,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     }
     ///点击头像去个人详情
     private func yxs_goToUserInfoController(_ indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         let friendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
         UIUtil.yxs_reduceHomeRed(serviceId: friendCircleModel?.classCircleId ?? 0, childId: friendCircleModel?.childrenId ?? 0)
         if let model = friendCircleModel{
@@ -357,7 +342,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         return yxs_dataSource.count
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        SLLog("numberOfRowsInSection_count=\(yxs_dataSource[section].items.count)")
         return yxs_dataSource[section].items.count
     }
     
@@ -370,13 +354,12 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        SLLog("cellForRowAt_count=\(yxs_dataSource[indexPath.section].items.count)")
-        //莫名其妙
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return (tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell)!
-        }
         
         let model = yxs_dataSource[indexPath.section].items[indexPath.row]
+        //为什么第一次先进 cellForRowAt 后进heightForRowAt
+        if model.frameModel == nil{
+            model.confingHeight()
+        }
         var cell: YXSHomeBaseCell!
         if model.type == .classstart{
             cell = tableView.dequeueReusableCell(withIdentifier: "SLHomeClassStartCell") as? YXSHomeBaseCell
@@ -435,41 +418,10 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //莫名其妙
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return 0
-        }
         
         let model = yxs_dataSource[indexPath.section].items[indexPath.row]
-        let cache = self.getCacheKey(model: model)
-        
-        if model.isShowAll{
-            if let cacheShowAllHeight = model.cacheShowAllHeight{
-                return cacheShowAllHeight
-            }else{
-                let height = self.tableView.fd_heightForCell(withIdentifier: cache.1, cacheByKey: cache.0 as NSCopying) { (cell) in
-                    if let cell = cell as? YXSHomeBaseCell{
-                        cell.yxs_setCellModel(model)
-                    }
-                }
-                model.cacheShowAllHeight = height
-                YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource)
-                return height
-            }
-        }else{
-            if let cacheNormaHeight = model.cacheNormaHeight{
-                return cacheNormaHeight
-            }else{
-                let height = self.tableView.fd_heightForCell(withIdentifier: cache.1, cacheByKey: cache.0 as NSCopying) { (cell) in
-                    if let cell = cell as? YXSHomeBaseCell{
-                        cell.yxs_setCellModel(model)
-                    }
-                }
-                model.cacheNormaHeight = height
-                YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource)
-                return height
-            }
-        }
+        model.isShowTag = true
+        return model.height
     }
     
     func getCacheKey(model: YXSHomeListModel) -> (String, String){
@@ -644,9 +596,7 @@ extension YXSHomeBaseController{
                                 model.state = 100
                             }
                         }else if model.type == .punchCard{//打卡更新剩余人数
-                            self.tableView.fd_keyedHeightCache.invalidateHeight(forKey: self.getCacheKey(model: model).0 as NSCopying)
-                            model.cacheNormaHeight = nil
-                            model.cacheShowAllHeight = nil
+//                            self.tableView.fd_keyedHeightCache.invalidateHeight(forKey: self.getCacheKey(model: model).0 as NSCopying)
                         }
                         
                         yxs_reloadTableView(IndexPath.init(row: row, section: section))

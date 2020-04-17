@@ -33,11 +33,6 @@ class YXSSolitaireListCell: YXSHomeBaseCell {
         layout()
         initCommonUI()
         if isShowTag{
-            nameTimeLabel.snp.makeConstraints { (make) in
-                make.left.equalTo(tagLabel.snp_right).offset(11)
-                make.centerY.equalTo(tagLabel)
-                make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45)
-            }
         }else{
             nameTimeLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
@@ -50,9 +45,6 @@ class YXSSolitaireListCell: YXSHomeBaseCell {
                 make.bottom.equalTo(-8.5)
             }
         }
-        
-        tagLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        nameTimeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
     
     
@@ -113,6 +105,7 @@ class YXSSolitaireListCell: YXSHomeBaseCell {
         bgContainView.addSubview(showAllControl)
         bgContainView.addSubview(solitaireView)
         bgContainView.addSubview(nameTimeLabel)
+        bgContainView.addSubview(topTimeLabel)
         bgContainView.addSubview(recallView)
     }
     private func layout(){
@@ -125,7 +118,7 @@ class YXSSolitaireListCell: YXSHomeBaseCell {
         
         contentLabel.snp.remakeConstraints { (make) in
             make.left.equalTo(15)
-            make.top.equalTo(nameTimeLabel.snp_bottom).offset(14)
+            make.top.equalTo(topTimeLabel.snp_bottom).offset(YXSHomeListModel.midMagin)
             make.right.equalTo(-18)
         }
         
@@ -194,28 +187,18 @@ extension YXSSolitaireListCell{
             redView.isHidden = false
         }
         
-//                createTime.text = "\((model.myPublish ?? false) ? "我" : "\(model.teacherName ?? "")")  ｜  \((model.createTime ?? "").yxs_Time())"
         UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(teacherName ?? "")", "  |  \(createTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54"), night: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
-        
-        let dic = [NSAttributedString.Key.font: kTextMainBodyFont]
-        
-        
+        topTimeLabel.text = model.createTime?.date(withFormat: kCommonDateFormatString)?.yxs_homeTimeWeek()
         showAllControl.isSelected = isShowAll
         contentLabel.numberOfLines = isShowAll ? 0 : 2
+        UIUtil.yxs_setLabelParagraphText(contentLabel, text: content,removeSpace:  !isShowAll && model.needShowAllButton)
         
-        let height = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: dic , width: SCREEN_WIDTH - 30 - 30)
-        //需要展示多行
-        let needShowMore = height > 45
-        
-        UIUtil.yxs_setLabelParagraphText(contentLabel, text: content,removeSpace:  !isShowAll && needShowMore)
-        contentLabel.preferredMaxLayoutWidth = SCREEN_WIDTH - 15 - 20 - 30
-        if needShowMore{
+        if model.needShowAllButton{
             showAllControl.isHidden = false
             showAllControl.snp.remakeConstraints { (make) in
                 make.left.equalTo(contentLabel)
-                make.top.equalTo(solitaireView.snp_bottom)
+                make.top.equalTo(solitaireView.snp_bottom).offset(9)
                 make.height.equalTo(26)
-                make.bottom.equalTo(-10)
             }
             solitaireView.snp.remakeConstraints{ (make) in
                 make.left.equalTo(15)
@@ -229,7 +212,6 @@ extension YXSSolitaireListCell{
                 make.left.equalTo(15)
                 make.right.equalTo(-15)
                 make.top.equalTo(contentLabel.snp_bottom).offset(12)
-                make.bottom.equalTo(-19).priorityHigh()
             }
         }
         

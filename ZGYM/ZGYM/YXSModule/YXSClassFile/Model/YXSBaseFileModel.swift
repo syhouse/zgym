@@ -1,5 +1,5 @@
 //
-//  SLBaseFileModel.swift
+//  YXSBaseFileModel.swift
 //  ZGYM
 //
 //  Created by Liu Jie on 2020/4/8.
@@ -9,7 +9,7 @@ import Foundation
 import ObjectMapper
 
 
-class SLBaseFileModel : NSObject, NSCoding, Mappable{
+class YXSBaseFileModel : NSObject, NSCoding, Mappable{
 
     var isEditing : Bool? = false
     var isSelected : Bool? = false

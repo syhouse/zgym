@@ -10,7 +10,9 @@ import UIKit
 import NightNight
 
 class YXSFriendsCircleFrameModel: NSObject, NSCoding {
+    ///叠起内容
     var contentHeight: CGFloat!
+    ///全部展开内容
     var contentIsShowAllHeight: CGFloat!
     
     override init() {

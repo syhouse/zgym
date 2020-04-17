@@ -1,5 +1,5 @@
 //
-//  SLFileGroupCell.swift
+//  YXSFileGroupCell.swift
 //  ZGYM
 //
 //  Created by Liu Jie on 2020/4/1.
@@ -10,7 +10,7 @@ import UIKit
 import NightNight
 
 /// 文件夹
-class SLFileGroupCell: SLBaseFileCell {
+class YXSFileGroupCell: YXSBaseFileCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

@@ -64,6 +64,7 @@ class YXSHomeFriendCell: YXSHomeBaseCell {
     
     lazy var yxs_friendsContentView: YXSFriendsCircleContentView = {
         let yxs_friendsContentView = YXSFriendsCircleContentView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 0))
+        yxs_friendsContentView.isAutoCalculateHeight = false
         yxs_friendsContentView.headerBlock = {
             [weak self] (type)in
             guard let strongSelf = self else { return }

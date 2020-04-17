@@ -1,5 +1,5 @@
 //
-//  SLFolderModel.swift
+//  YXSFolderModel.swift
 //  ZGYM
 //
 //  Created by Liu Jie on 2020/4/8.
@@ -9,7 +9,7 @@
 import Foundation
 import ObjectMapper
 
-class SLFolderModel : SLBaseFileModel {
+class YXSFolderModel : YXSBaseFileModel {
 
     var createTime : String?
     var folderName : String?

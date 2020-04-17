@@ -92,11 +92,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 //            LifetimeTracker.setup(onUpdate: LifetimeTrackerDashboardIntegration(visibility: .alwaysVisible, style: .bar).refreshUI)
 //        #endif
         
-        //每次安装新版本清除归档数据(避免改类名影响)
-        if !UserDefaults.standard.bool(forKey: "\(NSUtil.BundleShortVersion())\(NSUtil.BundleVersion())"){
-            UserDefaults.standard.set(true, forKey: "\(NSUtil.BundleShortVersion())\(NSUtil.BundleVersion())")
-            YXSCacheHelper.removeAllCacheArchiverFile()
-        }
         
         // MARK: - xmly
         registerXMLY()

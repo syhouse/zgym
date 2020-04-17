@@ -41,6 +41,12 @@ class YXSHomeSectionModel: NSObject,NSCoding{
 }
 
 class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
+    static var smallFontSize:CGFloat = 13
+    static var bottomPadding:CGFloat = 19
+    static var smallMagin:CGFloat = 10
+    static var midMagin:CGFloat = 14
+    
+    
     func copy(with zone: NSZone? = nil) -> Any {
         let theCopyObj = YXSHomeListModel.init(JSON: self.toJSON())!
         return theCopyObj
@@ -233,10 +239,17 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             return (self.committedList?.contains(self.childrenId ?? 0) ?? false) ? 2 : 1
         }
     }
-    //当前展示全部
+    ///当前是否展示全部
     var isShowAll: Bool = false
-    //是否展示折叠按钮
+    ///是否展示折叠按钮
     var shouldShowMore: Bool = false
+    
+    ///(是否需要展示展开按钮)首页列表使用
+    var needShowAllButton: Bool = false{
+        didSet{
+//            SLLog("needShowAllButton=\(needShowAllButton) content=\(content ?? "")")
+        }
+    }
     
     /// 业务类型  通过 serviceId 获取的枚举
     var type: YXSHomeType{
@@ -372,11 +385,98 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     /// 朋友圈数据 使用该model
     var friendCircleModel: YXSFriendCircleModel?
     
+    ///是否是首页需要显示标签
+    var isShowTag: Bool = false
     
+    // MARK: - 高度缓存
     ///缓存高度
-    var cacheShowAllHeight: CGFloat?
+    var height: CGFloat{
+        get{
+            //班级圈
+            if serviceType == 6{
+                if let classstartModel = classStarModel,classstartModel.showRemindTeacher{
+                    return 14.0 + 512.0
+                }
+                return 14.0 + 458.0
+            }
+            //朋友圈
+            if serviceType == 5{
+                if let friendsModel = friendCircleModel{
+                    friendsModel.contentAdjustWidth = 30
+                    return friendsModel.friendHeight + 30
+                }
+                return 0
+            }
+            
+            if frameModel == nil{
+                confingHeight()
+            }
+            
+            let isTeacher = YXSPersonDataModel.sharePerson.personRole == .TEACHER
+            //bg容器顶部高度
+            var height: CGFloat = 14
+            if isShowTag{
+                height += 52.0
+            }else{
+                height += 48.5
+            }
+
+            if needShowAllButton{
+                height += 25 + 9
+            }else{
+                //有资源补偿高度  单行的时候高度不够
+                if hasSource{
+                    var totalHeight:CGFloat = frameModel.contentHeight
+                    if serviceType == 0{
+                        totalHeight = isTeacher ? 45.0 : 55.0
+                    }else if serviceType == 1 && !isTeacher{
+                        totalHeight = 55.0
+                    }
+                    height  +=  totalHeight - frameModel.contentHeight
+                }
+            }
+            
+            
+            if self.isShowAll{
+                height += frameModel.contentIsShowAllHeight
+                
+            }else{
+                height += frameModel.contentHeight
+            }
+            
+            
+            ///底部高度
+            switch serviceType ?? 0 {
+            case 0:
+                height += 67.5
+            case 1:
+                height += isTeacher ? 90.5 : 67.5
+            case 2:
+                if isShowTag{
+                    height += (isTeacher || hasPunch) ? 117.5 : 95.0
+                }else{
+                   height += (isTeacher || hasPunch) ? 95.0 : 68.0
+                }
+            case 3:
+            if isShowTag{
+                height += 120.0
+            }else{
+                height += 90.5
+            }
+            default:
+                height += 67.5
+                break
+            }
+            return height
+        }
+    }
     
-    var cacheNormaHeight: CGFloat?
+    /// frameModel
+    var frameModel:YXSFriendsCircleFrameModel!
+
+    var contentLabelWidth : CGFloat{
+        return SCREEN_WIDTH - 30 - (hasSource ? (15 + 107) : (15 + 18))
+    }
     
     required init?(map: Map){}
     private override init(){}
@@ -415,10 +515,6 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         commitUpperLimit <- map["commitUpperLimit"]
         startTime <- map["startTime"]
         
-        lastRecordId <- map["lastRecordId"]
-        
-        lastRecordTime <- map["lastRecordTime"]
-        tsLast <- map["tsLast"]
         currentTime <- map["currentTime"]
     }
     
@@ -463,12 +559,9 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         childrenRealName = aDecoder.decodeObject(forKey: "childrenRealName") as? String
         startTime = aDecoder.decodeObject(forKey: "startTime") as? String
         
-        cacheShowAllHeight = aDecoder.decodeObject(forKey: "cacheShowAllHeight") as? CGFloat
-        cacheNormaHeight = aDecoder.decodeObject(forKey: "cacheNormaHeight") as? CGFloat
-        
-        lastRecordId = aDecoder.decodeObject(forKey: "lastRecordId") as? Int
-        lastRecordTime = aDecoder.decodeObject(forKey: "lastRecordTime") as? String
-        tsLast = aDecoder.decodeObject(forKey: "tsLast") as? Int
+        frameModel = aDecoder.decodeObject(forKey: "frameModel") as? YXSFriendsCircleFrameModel
+        needShowAllButton = aDecoder.decodeBool(forKey: "needShowAllButton")
+    
         currentTime = aDecoder.decodeObject(forKey: "currentTime") as? String
     }
 
@@ -581,26 +674,30 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             aCoder.encode(startTime, forKey: "startTime")
         }
         
-        if cacheShowAllHeight != nil{
-            aCoder.encode(cacheShowAllHeight, forKey: "cacheShowAllHeight")
-        }
-        if cacheNormaHeight != nil{
-            aCoder.encode(cacheNormaHeight, forKey: "cacheNormaHeight")
+        if frameModel != nil{
+            aCoder.encode(frameModel, forKey: "frameModel")
         }
         
-        if lastRecordId != nil{
-            aCoder.encode(lastRecordId, forKey: "lastRecordId")
-        }
+        aCoder.encode(needShowAllButton, forKey: "needShowAllButton")
         
-        if lastRecordTime != nil{
-            aCoder.encode(lastRecordTime, forKey: "lastRecordTime")
-        }
-        if tsLast != nil{
-            aCoder.encode(tsLast, forKey: "tsLast")
-        }
         if currentTime != nil{
              aCoder.encode(currentTime, forKey: "currentTime")
          }
     }
 }
 
+
+extension YXSHomeListModel{
+    func confingHeight(){
+
+        frameModel = YXSFriendsCircleFrameModel()
+        let paragraphStye = NSMutableParagraphStyle()
+        //调整行间距
+        paragraphStye.lineSpacing = kMainContentLineHeight
+        paragraphStye.lineBreakMode = .byWordWrapping
+        let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
+        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: attributes , width: contentLabelWidth)
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: (content ?? "").removeSpace() , attributes: attributes,width: contentLabelWidth, numberOfLines: 2) + 1
+        needShowAllButton = frameModel.contentIsShowAllHeight > 50  ? true : false
+    }
+}
