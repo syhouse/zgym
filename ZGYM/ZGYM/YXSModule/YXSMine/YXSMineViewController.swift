@@ -10,7 +10,7 @@ import UIKit
 import NightNight
 //import MBProgressHUD
 
-class YXSMineViewController: YXSBaseTableViewController{//YXSBaseViewController, UITableViewDelegate, UITableViewDataSource {
+class YXSMineViewController: YXSBaseTableViewController{
     override init() {
         super.init()
         tableViewIsGroup = true
