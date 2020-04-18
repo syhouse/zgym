@@ -211,8 +211,9 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             messagemodel?.commentsUserInfo?.userType = self.model?.messageUserType
             self.messageModel = messagemodel
             filterBtnView.model = self.model
-//            topHeaderView.strGrade = self.model?.className
-            dateView.title = "截止日期：\(self.model?.endTime ?? "")"
+
+            let endDateStr = self.model?.endTime?.yxs_Date().toString(format: .custom("yyyy-MM-dd HH:mm"))
+            dateView.title = "截止日期：\(endDateStr ?? "")"
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
                 var teacherName = "我"
                 if self.model?.teacherName != YXSPersonDataModel.sharePerson.userModel.name {

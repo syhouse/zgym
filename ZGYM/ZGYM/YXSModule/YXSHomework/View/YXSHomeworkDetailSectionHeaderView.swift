@@ -438,7 +438,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         let goodControl = YXSCustomImageControl.init(imageSize: CGSize.init(width: 16, height: 19), position: YXSImagePositionType.left, padding: 5)
         goodControl.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#696C73"), for: .normal)
         goodControl.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#C92B1E"), for: .selected)
-        goodControl.setTitle("优秀作业", for: .normal)
+        goodControl.setTitle("设为优秀", for: .normal)
         goodControl.setTitle("取消优秀", for: .selected)
         goodControl.font = UIFont.systemFont(ofSize: 15)
         goodControl.setImage(UIImage.init(named: "yxs_punch_good_gray"), for: .normal)

@@ -139,6 +139,8 @@ public let kChatCallRefreshNotification = "ChatCallRefreshNotification"
 public let kChatCallRefreshFriendsCircleNotification = "ChatCallRefreshFriendsCircleNotification"
 /// 收到spy用户推过来的IM通知 更新朋友圈消息
 public let kChatCallRefreshPunchCardNotification = "ChatCallRefreshPunchCardNotification"
+/// 收到spy用户推过来的IM作业互动通知 更新作业互动消息数量
+public let kChatCallRefreshHomeworkNotification = "ChatCallRefreshHomeworkNotification"
 
 // MARK: -置顶通知
 /// 单个班级首页操作置顶

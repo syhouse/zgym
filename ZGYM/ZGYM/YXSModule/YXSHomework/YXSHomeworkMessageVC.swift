@@ -227,7 +227,8 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
                 headerView.reviewControlBlock = { [weak self](model)in
                     guard let weakSelf = self else {return}
                     let vc = YXSHomeworkCommentController()
-                    vc.homeModel = weakSelf.homeModel
+                    vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
+//                    vc.homeModel = weakSelf.homeModel
                     vc.childrenIdList = [(model.childrenId ?? 0)]
                     vc.isPop = true
                     //点评成功后 刷新数据
@@ -246,6 +247,7 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
                         if selectType == .change {
                             //修改
                             let vc = YXSHomeworkCommentController()
+                            vc.isChangeRemark = true
                             vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
                             vc.childrenIdList = [(model.childrenId ?? 0)]
     //                        vc.isPop = true

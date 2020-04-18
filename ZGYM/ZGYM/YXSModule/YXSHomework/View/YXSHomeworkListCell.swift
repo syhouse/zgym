@@ -297,17 +297,34 @@ extension YXSHomeworkListCell{
                     commentButton.isHidden = false
                     commentButton.isSelected = model.isRemark
                 }else{
-                    commonStatusButton.isHidden = false
-                    commonStatusButton.layer.borderWidth = 1
-                    commonStatusButton.layer.borderColor = kRedMainColor.cgColor
-                    commonStatusButton.setTitleColor(kRedMainColor, for: .normal)
-                    commonStatusButton.backgroundColor = UIColor.clear
-                    commonStatusButton.setTitle("去完成", for: .normal)
-                    commonStatusButton.snp.remakeConstraints { (make) in
-                        make.right.equalTo(-15)
-                        make.size.equalTo(CGSize.init(width: 79, height: 32))
-                        make.bottom.equalTo(-13.5)
+                    if model.isExpired {
+                        commonStatusButton.layer.borderColor = UIColor.clear.cgColor
+                        commonStatusButton.setTitleColor(UIColor.white, for: .normal)
+                        commonStatusButton.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
+                        commonStatusButton.setTitle("已过期", for: .normal)
+                        commonStatusButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+                        commonStatusButton.cornerRadius = 9.5
+                        commonStatusButton.snp.remakeConstraints { (make) in
+                            make.right.equalTo(-15)
+                            make.size.equalTo(CGSize.init(width: 70, height: 19))
+                            make.bottom.equalTo(-13.5)
+                        }
+                    } else {
+                        commonStatusButton.layer.borderWidth = 1
+                        commonStatusButton.layer.borderColor = kRedMainColor.cgColor
+                        commonStatusButton.setTitleColor(kRedMainColor, for: .normal)
+                        commonStatusButton.backgroundColor = UIColor.clear
+                        commonStatusButton.setTitle("去完成", for: .normal)
+                        commonStatusButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+                        commonStatusButton.layer.cornerRadius = 15
+                        commonStatusButton.snp.remakeConstraints { (make) in
+                            make.right.equalTo(-15)
+                            make.size.equalTo(CGSize.init(width: 79, height: 32))
+                            make.bottom.equalTo(-13.5)
+                        }
                     }
+                    commonStatusButton.isHidden = false
+                    
                 }
                 
             }

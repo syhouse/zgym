@@ -118,6 +118,23 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         }
     }
     
+    /// 当前作业是否已过期
+    var isExpired: Bool {
+        get {
+            if endTime != nil {
+                if endTime!.count > 0 {
+                    let endDate = Date.init(fromString: endTime!, format: .custom("yyyy-MM-dd HH:mm:ss"))
+                    if endDate?.compare(Date()) == .orderedAscending {
+                        return true
+                    }
+                }
+            }
+            
+            return false
+        }
+        
+    }
+    
     /// 已阅读孩子id列表
     var readList : [Int]?
     /// 已提交孩子id列表

@@ -55,7 +55,6 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -141,6 +140,9 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             default:
                 break
             }
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+                weakSelf.footerRemindBtn.isHidden = true
+            }
             weakSelf.refreshHomeworkData(index: weakSelf.isGood)
 //            weakSelf.refreshData()
         }
@@ -167,6 +169,9 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     weakSelf.footerContentLbl.text = "暂无作业提交"
                     weakSelf.footerRemindBtn.isHidden = false
                 }
+                if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+                    weakSelf.footerRemindBtn.isHidden = true
+                }
                 weakSelf.refreshData()
             }
         }
@@ -176,6 +181,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         
         NotificationCenter.default.addObserver(self, selector: #selector(homeworkCommitSuccess(obj:)), name: NSNotification.Name(rawValue: kParentSubmitSucessNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(homeworkUndoSuccess(obj:)), name: NSNotification.Name.init(rawValue: kOperationStudentWorkNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshUnreadMessage), name: NSNotification.Name.init(rawValue: kChatCallRefreshHomeworkNotification), object: nil)
     }
     
     deinit {
@@ -261,15 +267,6 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     func refreshSelectModel() {
         self.selectModels = [YXSSelectModel.init(text: "全部", isSelect: true, paramsKey: SLCommonScreenSelectType.all.rawValue),YXSSelectModel.init(text: "待点评", isSelect: false, paramsKey: SLCommonScreenSelectType.toReview.rawValue),YXSSelectModel.init(text: "已点评", isSelect: false, paramsKey: SLCommonScreenSelectType.haveComments.rawValue)]
         self.isRemark = -1
-//        if self.isGood == 1 {
-//            self.footerContentLbl.text = "暂无优秀作业"
-//            self.footerRemindBtn.isHidden = true
-//        } else if self.isGood == -1 {
-//            self.footerContentLbl.text = "暂无作业提交"
-//            self.footerRemindBtn.isHidden = false
-//        }
-        
-        
     }
     
     @objc func refreshHomeworkData(index:Int) {
@@ -375,6 +372,36 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         default:
             break
         }
+    }
+    
+    @objc func refreshUnreadMessage() {
+        YXSEducationHomeworkQueryHomeworkByIdRequest(childrenId: homeModel.childrenId ?? 0, homeworkCreateTime: homeModel.createTime ?? "", homeworkId: homeModel.serviceId ?? 0).request({ [weak self](model: YXSHomeworkDetailModel) in
+            guard let weakSelf = self else {return}
+            weakSelf.model = model
+            
+            weakSelf.tableHeaderView.model = model
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+//        YXSEducationHomeworkMessageRequest(homeworkId: homeModel.serviceId ?? 0).requestCollection({ [weak self](list: [YXSHomeworkMessageModel]) in
+//            guard let weakSelf = self else {return}
+//            if list.count > 0 {
+//                var messagemodel:YXSPunchCardMessageTipsModel? = YXSPunchCardMessageTipsModel.init(JSONString: "{\"count\":0}")
+//                weakSelf.model?.messageCount = list.count
+//                weakSelf.model?.messageAvatar = list.last?.operatorAvatar
+//                weakSelf.model?.messageUserType = list.last?.operatorType
+//            } else {
+//                weakSelf.model?.messageCount = 0
+//                weakSelf.model?.messageAvatar = ""
+//                weakSelf.model?.messageUserType = ""
+//
+//            }
+//            weakSelf.tableHeaderView.model = weakSelf.model
+//        }) { (msg, code) in
+//            MBProgressHUD.hide(for: self.view, animated: true)
+//            //            self.endingRefresh()
+//            MBProgressHUD.yxs_showMessage(message: msg)
+//        }
     }
     
     // MARK: - Request
@@ -832,7 +859,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             headerView.reviewControlBlock = { [weak self](model)in
                 guard let weakSelf = self else {return}
                 let vc = YXSHomeworkCommentController()
-                vc.homeModel = weakSelf.homeModel
+                vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
+//                vc.homeModel = weakSelf.homeModel
                 vc.childrenIdList = [(model.childrenId ?? 0)]
                 vc.isPop = true
                 //点评成功后 刷新数据
@@ -851,6 +879,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     if selectType == .change {
                         //修改
                         let vc = YXSHomeworkCommentController()
+                        vc.isChangeRemark = true
                         vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
                         vc.childrenIdList = [(model.childrenId ?? 0)]
 //                        vc.isPop = true
