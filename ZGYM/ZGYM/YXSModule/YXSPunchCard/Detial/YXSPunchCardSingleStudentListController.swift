@@ -66,12 +66,12 @@ class YXSPunchCardSingleStudentListController: YXSPunchCardSingleStudentBaseList
             let userInfo = notification?.userInfo
             let canScroll = userInfo?["canScroll"] as? String
             if (canScroll == "1") {
-                self.canScroll = true // 如果滑动到了顶部TableView就能滑动了
+                self.canScroll = true
                 tableView.showsVerticalScrollIndicator = true
             }
         } else if (notificationName == kHomeHeaderInScreenNotification) {
             //        self.tableView.contentOffset = CGPointZero;
-            self.canScroll = false // 如果没有滑动到了顶部TableView就不能滑动了
+            self.canScroll = false
             tableView.showsVerticalScrollIndicator = false
         }
     }
@@ -95,7 +95,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     var calendarModel: YXSCalendarModel?
     
     /// 是否可以滚动
-    var canScroll = false
+    var canScroll = true
     
     var dataSource: [YXSPunchCardCommintListModel] = [YXSPunchCardCommintListModel]()
     
@@ -170,30 +170,31 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         
         addNotification()
         
-//        self.dataSource = YXSCacheHelper.yxs_getCachePunchCardTaskStudentCommintList(clockInId: clockInId , childrenId:childrenId, type: type)
+        self.dataSource = YXSCacheHelper.yxs_getCachePunchCardTaskStudentCommintList(clockInId: clockInId, childrenId:childrenId, type: type)
     }
     
-    // MARK: -UI
+    // MARK: - UI
     override func yxs_onBackClick() {
         super.yxs_onBackClick()
-        YXSSSAudioPlayer.sharedInstance.stopVoice()
+        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
     }
     
+    // MARK: -更新日历的头部视图
+    ///更新日历的头部视图
     public func updateHeader(punchCardModel: YXSPunchCardModel){
         headerView.setHeaderModel(punchCardModel)
         
-        //选中之前的cell
-        for model in self.headerView.punchCalendarView.showCalendars{
-            if model.endTime == self.calendarModel?.endTime{
-                model.isSelect = true
-            }else{
-                model.isSelect = false
+        //选中之前的日历cell
+        if let calendarModel = calendarModel{
+            for model in self.headerView.punchCalendarView.showCalendars{
+                if model.endTime == calendarModel.endTime{
+                    model.isSelect = true
+                }else{
+                    model.isSelect = false
+                }
             }
-
+            self.headerView.punchCalendarView.reloadData()
         }
-        self.headerView.punchCalendarView.reloadData()
-        
-//        calendarModel = nil
     }
     
     // MARK: -loadData
@@ -291,10 +292,11 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     }
     
     // MARK: - public
-    
+    // MARK:刷新  打卡或者修改打卡
     /// 刷新  打卡或者修改打卡
     public var refreshBlock: ((_ changePunchCardModel: YXSPunchCardCommintListModel?,_ curruntType: YXSSingleStudentListType)->())?
     
+    // MARK:修改打卡刷新当前列表数据
     ///修改打卡刷新当前列表数据
     public func refreshData(changePunchCardModel: YXSPunchCardCommintListModel){
         for (index, model) in self.dataSource.enumerated(){
@@ -356,16 +358,25 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var cellHeight: CGFloat = 0
+        
+        //是否是最后一行 需要补偿高度
+        var isLastRow = false
+        
         let model = dataSource[indexPath.section]
         if let comments = model.comments{
             var commentsCount = comments.count
             if model.isNeeedShowCommentAllButton && !model.isShowCommentAll{
                 commentsCount = 3
+                isLastRow = true
             }
             if indexPath.row < commentsCount{
                 let commetModel = comments[indexPath.row]
                 cellHeight = commetModel.cellHeight
                 if indexPath.row == comments.count - 1{
+                    isLastRow = true
+                }
+                
+                if isLastRow{
                     cellHeight += 8.0
                 }
             }
@@ -380,6 +391,9 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let model = dataSource[section]
+        if section == dataSource.count - 1{
+            SLLog("sectionHeight = \(model.headerHeight) ---->>>>>")
+        }
         return model.headerHeight
     }
     
@@ -387,7 +401,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         let model = dataSource[section]
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SLPunchCardDetialTableHeaderView") as! YXSPunchCardDetialTableHeaderView
         model.isShowLookStudentAllButton = !(type == .myPunchCard || type == .studentPunchCardList)
-        headerView.setModel(model)
+        headerView.setModel(model, type: self.type)
         headerView.headerBlock = {[weak self](type) in
             guard let strongSelf = self else { return }
             switch type {
@@ -585,10 +599,10 @@ extension YXSPunchCardSingleStudentBaseListController{
             }
         }else{
             if let commentModel = commentModel{
-                requset = YXSEducationClockInParentReplyCommentsRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: childrenId ?? 0, clockInCommentsId:  commentModel.id ?? 0)
+                requset = YXSEducationClockInParentReplyCommentsRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: self.yxs_user.curruntChild?.id ?? 0, clockInCommentsId:  commentModel.id ?? 0)
                 
             }else{
-                requset = YXSEducationClockInParentReplyClockContentRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: childrenId ?? 0)
+                requset = YXSEducationClockInParentReplyClockContentRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: self.yxs_user.curruntChild?.id ?? 0)
             }
         }
         requset.request({ (model:YXSPunchCardCommentModel) in
@@ -658,7 +672,7 @@ extension YXSPunchCardSingleStudentBaseListController{
         vc.title = model.realName
         UIUtil.curruntNav().pushViewController(vc)
     }
-    
+    // MARK: - 点赞
     func changePrise(_ section: Int){
         
         let model = dataSource[section]
@@ -703,7 +717,7 @@ extension YXSPunchCardSingleStudentBaseListController{
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             requset = YXSEducationClockInTeacherPraiseCommentsRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0)
         }else{
-            requset = YXSEducationClockInParentPraiseCommentsRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0, childrenId: childrenId ?? 0)
+            requset = YXSEducationClockInParentPraiseCommentsRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0, childrenId: self.yxs_user.curruntChild?.id ?? 0)
         }
         
         requset.request({ (result:YXSFriendsPraiseModel) in
@@ -714,6 +728,7 @@ extension YXSPunchCardSingleStudentBaseListController{
         }
     }
     
+    // MARK: -底层刷新UI
     //    _ section: Int
     func reloadTableView(section: Int? = nil, scroll: Bool = false){
         YXSCacheHelper.yxs_cachePunchCardTaskStudentCommintList(dataSource: self.dataSource, clockInId: clockInId, childrenId: childrenId, type: type)
@@ -722,11 +737,11 @@ extension YXSPunchCardSingleStudentBaseListController{
             if let section = section{
                 let offset = tableView.contentOffset
                 tableView.reloadSections(IndexSet.init(arrayLiteral: section), with: UITableView.RowAnimation.none)
-                if !scroll{//为什会会跳动 why
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) {
-                        self.tableView.setContentOffset(offset, animated: false)
-                    }
-                }
+//                if !scroll{//为什会会跳动 why
+//                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) {
+//                        self.tableView.setContentOffset(offset, animated: false)
+//                    }
+//                }
             }else{
                 tableView.reloadData()
             }
@@ -737,7 +752,7 @@ extension YXSPunchCardSingleStudentBaseListController{
         }
     }
     
-    
+    // MARK: -点评滚动居中
     /// 点评滚动居中
     /// - Parameter section: section
     func reloadTableViewToScrollComment(section: Int){
@@ -755,6 +770,7 @@ extension YXSPunchCardSingleStudentBaseListController{
         
     }
     
+    // MARK: -点击展开刷新
     /// 点击展开刷新
     /// - Parameters:
     ///   - section: section

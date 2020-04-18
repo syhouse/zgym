@@ -37,7 +37,7 @@ class YXSBaseTableViewController: YXSBaseScrollViewController {
                 self.scrollView.mj_footer = tableRefreshFooter
             }else{
                 self.scrollView.mj_footer = nil
-                self.scrollView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
+//                self.scrollView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
             }
         }
     }
@@ -71,7 +71,7 @@ class YXSBaseCollectionViewController: YXSBaseScrollViewController {
                 self.scrollView.mj_footer = tableRefreshFooter
             }else{
                 self.scrollView.mj_footer = nil
-                self.scrollView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
+//                self.scrollView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
             }
         }
     }

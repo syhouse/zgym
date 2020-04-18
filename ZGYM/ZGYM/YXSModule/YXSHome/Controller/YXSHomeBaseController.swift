@@ -601,7 +601,6 @@ extension YXSHomeBaseController{
                                 model.state = 100
                             }
                         }else if model.type == .punchCard{//打卡更新剩余人数
-//                            self.tableView.fd_keyedHeightCache.invalidateHeight(forKey: self.getCacheKey(model: model).0 as NSCopying)
                         }
                         
                         yxs_reloadTableView(IndexPath.init(row: row, section: section))

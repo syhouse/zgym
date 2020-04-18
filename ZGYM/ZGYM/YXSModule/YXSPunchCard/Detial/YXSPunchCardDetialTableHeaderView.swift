@@ -136,7 +136,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
 
     
     public var headerBlock: ((YXSPunchCardHeaderBlockType) -> ())?
-    func setModel(_ model: YXSPunchCardCommintListModel){
+    func setModel(_ model: YXSPunchCardCommintListModel, type: YXSSingleStudentListType){
         self.model = model
         
         showAllButton.isHidden = true
@@ -212,6 +212,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         }
 
         if model.hasVoice{
+            voiceView.id = "\(type.rawValue)\(model.clockInCommitId ?? 0)"
             voiceView.isHidden = false
             if model.hasVoice{
                 voiceView.isHidden = false
@@ -432,8 +433,8 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
     
 
     
-    lazy var voiceView: YXSVoiceView = {
-        let voiceView = YXSVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
+    lazy var voiceView: YXSListVoiceView = {
+        let voiceView = YXSListVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
             [weak self] (url, duration)in
             guard let strongSelf = self else { return }
         })
