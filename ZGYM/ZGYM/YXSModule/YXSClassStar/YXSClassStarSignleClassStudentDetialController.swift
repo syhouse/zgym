@@ -83,7 +83,10 @@ class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassCom
         if reloadChildrenInfo{
             group.enter()
             queue.async {
-                self.loadClassChildrensData()
+                DispatchQueue.main.async {
+                    self.loadClassChildrensData()
+                }
+                
             }
         }
         
@@ -91,7 +94,9 @@ class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassCom
         if curruntPage == 1{
         }
         queue.async {
-            self.loadListData()
+            DispatchQueue.main.async {
+                self.loadListData()
+            }
         }
         
         group.notify(queue: queue) {

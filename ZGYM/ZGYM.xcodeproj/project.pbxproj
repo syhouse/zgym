@@ -752,6 +752,7 @@
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
+		6FF7735C244AB09900D3461E /* YXSListVoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF7735B244AB09900D3461E /* YXSListVoiceView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1911,6 +1912,7 @@
 		6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZGYMUITests.swift; sourceTree = "<group>"; };
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
+		6FF7735B244AB09900D3461E /* YXSListVoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSListVoiceView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4686,6 +4688,7 @@
 				6F07FFEB2445D7FD0090975B /* YXSAvatarView.swift */,
 				6F07FFEC2445D7FD0090975B /* YXSRouterEventProtocol.swift */,
 				6F07FFED2445D7FD0090975B /* YXSVoiceView.swift */,
+				6FF7735B244AB09900D3461E /* YXSListVoiceView.swift */,
 				6F07FFEE2445D7FD0090975B /* YXSCommonBottomAlerView.swift */,
 				6F07FFEF2445D7FD0090975B /* YXSGuideTool */,
 				6F07FFF22445D7FD0090975B /* NSUtil.swift */,
@@ -5301,6 +5304,7 @@
 				6F0704572445D8040090975B /* YXSBaseFileModel.swift in Sources */,
 				6F0705782445D8060090975B /* LFImageUtil.m in Sources */,
 				6F0704C82445D8040090975B /* YXSPunchCardSingleStudentListCell.swift in Sources */,
+				6FF7735C244AB09900D3461E /* YXSListVoiceView.swift in Sources */,
 				6F0705732445D8060090975B /* SPDropMenu.m in Sources */,
 				6F0704DB2445D8050090975B /* YXSSearchViewController.swift in Sources */,
 				6F0703EF2445D8030090975B /* YXSClassStarRequest.swift in Sources */,

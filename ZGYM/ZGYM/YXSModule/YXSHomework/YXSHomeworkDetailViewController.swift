@@ -942,16 +942,23 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var cellHeight: CGFloat = 0
+        //是否是最后一行 最后一行需要补偿高度
+        var isLastRow = false
         let model = dataSource[indexPath.section]
         if let comments = model.commentJsonList{
             var commentsCount = comments.count
             if model.isNeeedShowCommentAllButton && !model.isShowCommentAll{
                 commentsCount = 3
+                isLastRow = true
             }
             if indexPath.row < commentsCount{
                 let commetModel = comments[indexPath.row]
                 cellHeight = commetModel.cellHeight
                 if indexPath.row == comments.count - 1{
+                    isLastRow = true
+                }
+                
+                if isLastRow{
                     cellHeight += 8.0
                 }
             }

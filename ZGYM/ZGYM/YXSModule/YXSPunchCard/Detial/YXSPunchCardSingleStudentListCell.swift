@@ -20,6 +20,7 @@ class YXSPunchCardSingleStudentListCell: YXSBaseCommentCell {
             super.frame = newFrame
         }
     }
+    
     ///是否是我评论
     var isMyComment: Bool = false{
         didSet{

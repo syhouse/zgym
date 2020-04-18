@@ -44,6 +44,10 @@ class YXSHomeController: YXSHomeBaseController {
         }
     }
     
+    ///当前是首次启动vc
+    var isFirstLuanchHomeVc: Bool = true
+    ///收否x收到IM消息 需要刷新接口
+    var isNeedReloadDataForIMMessage: Bool = false
     
     // MARK: - init
     override init() {
@@ -81,7 +85,13 @@ class YXSHomeController: YXSHomeBaseController {
         //引导
         ysx_showGuide()
         
-        
+        ///首次启动可能收到大量IM消息推送过来  接收几秒钟后统一刷新一次接口
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+            self.isFirstLuanchHomeVc = false
+            if self.isNeedReloadDataForIMMessage{
+                self.reloadMessageData()
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -138,13 +148,17 @@ class YXSHomeController: YXSHomeBaseController {
             
             self.group.enter()
             queue.async {
-                self.yxs_loadAegentCountData()
+                DispatchQueue.main.async {
+                    self.yxs_loadAegentCountData()
+                }
             }
         }
         
         self.group.enter()
-        queue.async {
-            self.yxs_loadListData()
+        queue.async { //在异步线程里面做网络请求有时会有延迟几秒发出请求?
+            DispatchQueue.main.async {
+                self.yxs_loadListData()
+            }
         }
         
         
@@ -493,7 +507,11 @@ extension YXSHomeController{
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.init(rawValue: model.serviceType ?? 0) ?? .homework])
             }
         }
-        yxs_loadData()
+        ///b不是首次启动
+        if !isFirstLuanchHomeVc{
+            yxs_loadData()
+        }
+        
     }
     
     @objc func updateListForReduceHomeCellRed(_ notification:Notification){

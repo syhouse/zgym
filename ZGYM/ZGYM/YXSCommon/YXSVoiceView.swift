@@ -9,9 +9,30 @@
 import UIKit
 import NightNight
 
-class YXSVoiceView: UIView {
+class YXSVoiceView: YXSVoiceBaseView {
+    var model: YXSVoiceViewModel? {
+        didSet {
+            voiceDuration = model?.voiceDuration
+            voiceUlr = model?.voiceUlr
+            lbSecond.text = "\(voiceDuration ?? 0)\""
+            
+            /// 装载音频
+            if let url = URL(string: model?.voiceUlr ?? "") {
+                YXSSSAudioPlayer.sharedInstance.play(url: url, cacheAudio: true){
+                    self.stopVoiceAnimation()
+                }
+                YXSSSAudioPlayer.sharedInstance.pauseVoice()
+            }
+            
+            updateLayout()
+        }
+    }
+}
 
-    
+class YXSVoiceBaseView: UIView {
+
+    var voiceUlr: String?
+    var voiceDuration: Int?
 //    var minWidth: CGFloat! = 0
     
     var completionHandler:((_ voiceUlr: String, _ voiceDuration: Int)->())?
@@ -89,23 +110,8 @@ class YXSVoiceView: UIView {
         }
     }
     
-    var model: YXSVoiceViewModel? {
-        didSet {
-            lbSecond.text = "\(self.model?.voiceDuration ?? 0)\""
-            /// 装载音频
-            if let url = URL(string: model?.voiceUlr ?? "") {
-                YXSSSAudioPlayer.sharedInstance.play(url: url, cacheAudio: true){
-                    self.stopVoiceAnimation()
-                }
-                YXSSSAudioPlayer.sharedInstance.pauseVoice()
-            }
-            
-            updateLayout()
-        }
-    }
-    
     @objc func updateLayout() {
-        let percentage: CGFloat = CGFloat(self.model?.voiceDuration ?? 0) / 60.0
+        let percentage: CGFloat = CGFloat(voiceDuration ?? 0) / 60.0
         let width:CGFloat! = self.frame.width * percentage > minWidth ? self.frame.width * percentage : minWidth
         indicatorView.snp_remakeConstraints { (make) in
             make.top.equalTo(0)
@@ -129,7 +135,7 @@ class YXSVoiceView: UIView {
                 stopVoiceAnimation()
             }
         }
-        self.completionHandler?(model?.voiceUlr ?? "", model?.voiceDuration ?? 0)
+        self.completionHandler?(voiceUlr ?? "", voiceDuration ?? 0)
     }
     
     func startVoiceAnimation(){

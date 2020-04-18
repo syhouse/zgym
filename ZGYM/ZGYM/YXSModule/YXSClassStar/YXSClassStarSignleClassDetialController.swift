@@ -148,13 +148,17 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
         if curruntPage == 1{
             group.enter()
             queue.async {
-                self.loadBestData()
+                DispatchQueue.main.async {
+                    self.loadBestData()
+                }
             }
         }
         
         group.enter()
         queue.async {
-            self.loadListData()
+            DispatchQueue.main.async {
+                self.loadListData()
+            }
         }
         group.notify(queue: queue) {
             DispatchQueue.main.async {

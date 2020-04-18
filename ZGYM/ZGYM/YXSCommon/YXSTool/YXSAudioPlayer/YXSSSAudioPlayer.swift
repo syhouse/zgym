@@ -86,11 +86,11 @@ class YXSSSAudioPlayer: NSObject {
     
     /// 停止播放
     public func stopVoice(){
-        if let player = player{
-            player.pause()
-            isPause = true
-        }
+        player?.pause()
+        player = nil
+        isFinish = true
     }
+    
     
     /// 暂停播放
     public func pauseVoice(){
