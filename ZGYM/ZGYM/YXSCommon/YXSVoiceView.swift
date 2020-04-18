@@ -101,6 +101,9 @@ class YXSVoiceBaseView: UIView {
         
         
         self.lbSecond.text = "12\""
+        
+        //初始化最大宽度
+        maxWidth =  self.frame.width*2/3
     }
     
     // MARK: - Setter
@@ -110,9 +113,21 @@ class YXSVoiceBaseView: UIView {
         }
     }
     
+    ///最大宽度
+    var maxWidth: CGFloat? {
+        didSet {
+            updateLayout()
+        }
+    }
+    
     @objc func updateLayout() {
         let percentage: CGFloat = CGFloat(voiceDuration ?? 0) / 60.0
-        let width:CGFloat! = self.frame.width * percentage > minWidth ? self.frame.width * percentage : minWidth
+        //伸缩宽度
+        var flexibleWidth = self.frame.width - minWidth
+        if let maxWidth = maxWidth{
+            flexibleWidth = maxWidth - minWidth
+        }
+        let width:CGFloat = minWidth + flexibleWidth * percentage
         indicatorView.snp_remakeConstraints { (make) in
             make.top.equalTo(0)
             make.left.equalTo(0)
