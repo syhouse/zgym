@@ -30,20 +30,19 @@ enum StageType: String {
     @objc static let sharePerson:YXSPersonDataModel = {
         let instance =  YXSPersonDataModel()
         // setup code
-        instance.net?.startListening()
-        instance.net?.listener = { status in
-            if instance.net?.isReachable ?? false{
-                switch status{
-                case .notReachable,.unknown:
-                    break
-                case .reachable(.ethernetOrWiFi),.reachable(.wwan):
-                    if let vc = UIUtil.TopViewController() as? YXSContentHomeController{
-                        vc.loadCategoryData()
-                    }
-                    break
+        instance.net.startMonitoring()
+        instance.net.setReachabilityStatusChange { (status) in
+            switch status {
+            case .notReachable,.unknown:
+                instance.isNetWorkingConnect = false
+                break
+            case .reachableViaWiFi,.reachableViaWWAN:
+                instance.isNetWorkingConnect = true
+                if let vc = UIUtil.TopViewController() as? YXSContentHomeController{
+                    vc.loadCategoryData()
                 }
-            } else {
-                
+            default:
+                break
             }
         }
         return instance
@@ -55,7 +54,8 @@ enum StageType: String {
     }
     
     private static let personDataPath = NSUtil.yxs_cachePath(file: "PersonData")
-    private let net = NetworkReachabilityManager()
+//    private let net = NetworkReachabilityManager()
+    private let net = AFNetworkReachabilityManager.shared()
     @objc var userModel:YXSEducationUserModel! {
         didSet{
             if let model = userModel{
