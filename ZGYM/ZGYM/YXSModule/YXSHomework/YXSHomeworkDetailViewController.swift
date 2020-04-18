@@ -59,7 +59,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        YXSSSAudioPlayer.sharedInstance.stopVoice()
+        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
+//        YXSSSAudioPlayer.sharedInstance.stopVoice()
     }
     
     override func viewDidLoad() {
@@ -112,6 +113,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
 
         tableHeaderView.filterBtnView.jobTypeChankBlock = { [weak self](tag) in
             guard let weakSelf = self else {return}
+            YXSSSAudioListPlayer.sharedInstance.stopPlayer()
             switch tag {
             case 10001:
                 //全部作业
@@ -153,6 +155,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             let offsetY = fabsf(Float(point!.y))
             YXSHomeListSelectView.showAlert(offset: CGPoint(x: 15, y: CGFloat(offsetY) + 50), selects: weakSelf.selectModels) { [weak self](selectModel,selectModels) in
                 guard let strongSelf = self else { return }
+                YXSSSAudioListPlayer.sharedInstance.stopPlayer()
                 let selectType = SLCommonScreenSelectType.init(rawValue: selectModel.paramsKey) ?? .all
                 if selectType == .toReview {
                     //待点评

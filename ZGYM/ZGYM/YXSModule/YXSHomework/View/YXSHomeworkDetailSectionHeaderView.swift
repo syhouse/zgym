@@ -236,6 +236,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             var lastBottom = 10
             if self.model?.hasVoice ?? false {
                 voiceView.isHidden = false
+                voiceView.id = "\(self.model?.id ?? 0)"
                 let voiceModel = YXSVoiceViewModel()
                 voiceView.width = SCREEN_WIDTH - 30 - 41
                 voiceModel.voiceDuration = self.model?.audioDuration
@@ -464,8 +465,8 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         return nineMediaView
     }()
     
-    lazy var voiceView: YXSVoiceView = {
-        let voiceView = YXSVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
+    lazy var voiceView: YXSListVoiceView = {
+        let voiceView = YXSListVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
             [weak self] (url, duration)in
             guard let strongSelf = self else { return }
         })
@@ -674,6 +675,7 @@ class SLHomeworkCommentDetailRemarkView: UIView {
             
             
             if (self.model?.remarkAudioUrl ?? "").count > 0 {
+                remarkVoiceView.id = "remark\(self.model?.id ?? 0)"
                 remarkVoiceView.isHidden = false
                 let voiceModel = YXSVoiceViewModel()
                 remarkVoiceView.width = SCREEN_WIDTH - 30 - 41
@@ -782,8 +784,8 @@ class SLHomeworkCommentDetailRemarkView: UIView {
     }()
     
     
-    lazy var remarkVoiceView: YXSVoiceView = {
-        let voiceView = YXSVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
+    lazy var remarkVoiceView: YXSListVoiceView = {
+        let voiceView = YXSListVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
             [weak self] (url, duration)in
             guard let strongSelf = self else { return }
         })
