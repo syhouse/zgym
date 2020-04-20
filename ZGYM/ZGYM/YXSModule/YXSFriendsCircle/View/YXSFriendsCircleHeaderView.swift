@@ -371,32 +371,16 @@ class YXSFriendsCircleContentView: UIView{
         }
         
         contentLabel.numberOfLines = model.isShowAll ? 0 : 3
-        let width = contentWidth - YXSFriendsConfigHelper.helper.contentLeftMargin - 28
-        let contentHeight = UIUtil.yxs_getTextHeigh(textStr: contentLabel.text, font: kTextMainBodyFont, width: width)
-        if contentHeight < 20 {
-            if isAutoCalculateHeight{
-                contentLabel.snp.remakeConstraints { (make) in
-                    make.left.equalTo(nameLabel)
-                    make.top.equalTo(nameLabel.snp_bottom).offset(YXSFriendsConfigHelper.helper.contentTopToNameLPadding)
-                }
-            }else{
+        if isAutoCalculateHeight{
+            contentLabel.snp.remakeConstraints { (make) in
+                make.left.equalTo(nameLabel)
+                make.top.equalTo(nameLabel.snp_bottom).offset(YXSFriendsConfigHelper.helper.contentTopToNameLPadding)
+                make.right.equalTo(-28)
+            }
+        }else{
+            if model.frameModel != nil{
                 let helper = YXSFriendsConfigHelper.helper
                 contentLabel.frame = CGRect.init(x: helper.contentLeftMargin, y: helper.nameLabelTopPadding + 16 + helper.contentTopToNameLPadding, width: helper.contentWidth, height:model.isShowAll ? model.frameModel.contentIsShowAllHeight : model.frameModel.contentHeight)
-            }
-            contentLabel.width = width
-        }
-        else {
-            if isAutoCalculateHeight{
-                contentLabel.snp.remakeConstraints { (make) in
-                    make.left.equalTo(nameLabel)
-                    make.top.equalTo(nameLabel.snp_bottom).offset(YXSFriendsConfigHelper.helper.contentTopToNameLPadding)
-                    make.right.equalTo(-28)
-                }
-            }else{
-                if model.frameModel != nil{
-                    let helper = YXSFriendsConfigHelper.helper
-                    contentLabel.frame = CGRect.init(x: helper.contentLeftMargin, y: helper.nameLabelTopPadding + 16 + helper.contentTopToNameLPadding, width: helper.contentWidth, height:model.isShowAll ? model.frameModel.contentIsShowAllHeight : model.frameModel.contentHeight)
-                }
             }
         }
         

@@ -35,10 +35,61 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
     var commitUpperLimit : Int?
     var isShowAll: Bool = false
     
-    ///缓存高度
-    var cacheShowAllHeight: CGFloat?
+    var needShowAllButton: Bool = false
+    // MARK: - 高度缓存
+     ///缓存高度
+     var height: CGFloat{
+         get{
+             if frameModel == nil{
+                 confingHeight()
+             }
+             
+             //bg容器顶部高度
+            var height: CGFloat = 14
+             
+            height += 45.5
+
+
+             if needShowAllButton{
+                 height += 25 + 9
+             }
+  
+             if self.isShowAll{
+                 height += frameModel.contentIsShowAllHeight
+                 
+             }else{
+                 height += frameModel.contentHeight
+             }
+             
+             
+             ///底部高度
+             height += 90.5
+            
+            //?
+             height += 14
+             return height
+         }
+     }
+     
+     /// frameModel
+     var frameModel:YXSFriendsCircleFrameModel!
+
+     var contentLabelWidth : CGFloat{
+         return SCREEN_WIDTH - 30 - (15 + 18)
+     }
     
-    var cacheNormaHeight: CGFloat?
+    func confingHeight(){
+
+        frameModel = YXSFriendsCircleFrameModel()
+        let paragraphStye = NSMutableParagraphStyle()
+        //调整行间距
+        paragraphStye.lineSpacing = kMainContentLineHeight
+        paragraphStye.lineBreakMode = .byWordWrapping
+        let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
+        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: attributes , width: contentLabelWidth)
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: (content ?? "").removeSpace() , attributes: attributes,width: contentLabelWidth, numberOfLines: 2) + 1
+        needShowAllButton = frameModel.contentIsShowAllHeight > 50  ? true : false
+    }
     
     required init?(map: Map){}
     private override init(){}
@@ -60,6 +111,8 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
         commitUpperLimit <- map["commitUpperLimit"]
         createTime <- map["createTime"]
         
+        confingHeight()
+        
     }
     
     @objc required init(coder aDecoder: NSCoder)
@@ -77,8 +130,7 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
         teacherId = aDecoder.decodeObject(forKey: "teacherId") as? Int
         teacherName = aDecoder.decodeObject(forKey: "teacherName") as? String
         commitUpperLimit = aDecoder.decodeObject(forKey: "commitUpperLimit") as? Int
-        cacheShowAllHeight = aDecoder.decodeObject(forKey: "cacheShowAllHeight") as? CGFloat
-        cacheNormaHeight = aDecoder.decodeObject(forKey: "cacheNormaHeight") as? CGFloat
+        frameModel = aDecoder.decodeObject(forKey: "frameModel") as? YXSFriendsCircleFrameModel
     }
     
     /**
@@ -126,11 +178,8 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
         if commitUpperLimit != nil{
             aCoder.encode(commitUpperLimit, forKey: "commitUpperLimit")
         }
-        if cacheShowAllHeight != nil{
-            aCoder.encode(cacheShowAllHeight, forKey: "cacheShowAllHeight")
-        }
-        if cacheNormaHeight != nil{
-            aCoder.encode(cacheNormaHeight, forKey: "cacheNormaHeight")
+        if frameModel != nil{
+            aCoder.encode(frameModel, forKey: "frameModel")
         }
 
     }

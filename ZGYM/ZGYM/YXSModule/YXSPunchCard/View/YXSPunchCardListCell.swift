@@ -47,6 +47,7 @@ class YXSPunchCardListCell: YXSHomeBaseCell {
                 make.bottom.equalTo(commonStatusButton.snp_top).offset(-8.5)
                 make.size.equalTo(CGSize.init(width: 38, height: 38))
             }
+            topTimeLabel.isHidden = true
         }
     }
     
@@ -130,7 +131,7 @@ class YXSPunchCardListCell: YXSHomeBaseCell {
         }else{
             contentLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
-                make.top.equalTo( nameTimeLabel.snp_bottom).offset(YXSHomeListModel.midMagin)
+                make.top.equalTo(nameTimeLabel.snp_bottom).offset(YXSHomeListModel.midMagin)
                 make.right.equalTo(-15)
             }
         }
@@ -363,9 +364,9 @@ extension YXSPunchCardListCell{
         }
         
         classLabel.snp.remakeConstraints { (make) in
-             make.top.equalTo(contentLabel.snp_bottom).offset(37)
-                       make.left.equalTo(contentLabel)
-                       make.right.equalTo(-80)
+            make.top.equalTo(contentLabel.snp_bottom).offset(isShowTag ? 37 : 14)
+             make.left.equalTo(contentLabel)
+             make.right.equalTo(-80)
 //            if YXSPersonDataModel.sharePerson.personRole == .TEACHER || hasPunch || !hasNeedPunch{
 //                make.bottom.equalTo(-75)
 //            }else{

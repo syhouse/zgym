@@ -445,8 +445,14 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                 if hasSource{
                     var totalHeight:CGFloat = frameModel.contentHeight
                     if serviceType == 0{
-                        totalHeight = isTeacher ? 45.0 : 55.0
-                    }else if serviceType == 1 && !isTeacher{
+                        if isShowTag{
+                            totalHeight = isTeacher ? 45.0 : 55.0
+                        }else{
+                            if isTeacher {
+                                totalHeight = 45.0
+                            }
+                        }
+                    }else if serviceType == 1 && !isTeacher || (isTeacher && onlineCommit == 0){
                         totalHeight = 55.0
                     }
                     height  +=  totalHeight - frameModel.contentHeight
@@ -467,7 +473,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             case 0:
                 height += 67.5
             case 1:
-                height += isTeacher ? 90.5 : 67.5
+                height += (isTeacher && onlineCommit == 1) ? 90.5 : 67.5
             case 2:
                 if isShowTag{
                     height += (isTeacher || hasPunch) ? 117.5 : 95.0
@@ -533,6 +539,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         startTime <- map["startTime"]
         
         currentTime <- map["currentTime"]
+        
+        confingHeight()
     }
     
     /**

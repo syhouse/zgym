@@ -33,6 +33,11 @@ class YXSSolitaireListCell: YXSHomeBaseCell {
         layout()
         initCommonUI()
         if isShowTag{
+            topTimeLabel.snp.makeConstraints { (make) in
+                make.left.equalTo(68)
+                make.centerY.equalTo(tagLabel)
+                make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45)
+            }
         }else{
             nameTimeLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
@@ -44,6 +49,7 @@ class YXSSolitaireListCell: YXSHomeBaseCell {
                 make.size.equalTo(CGSize.init(width: 38, height: 38))
                 make.bottom.equalTo(-8.5)
             }
+            topTimeLabel.isHidden = true
         }
     }
     
@@ -159,6 +165,7 @@ extension YXSSolitaireListCell{
         var serviceId: Int?
         var childrenId: Int?
         var isTop: Int?
+        var needShowAllButton: Bool = false
         if solitaireModel == nil{
             content = model.content ?? ""
             isShowAll = model.isShowAll
@@ -169,6 +176,7 @@ extension YXSSolitaireListCell{
             childrenId = model.childrenId
             isTop = model.isTop
             solitaireView.setHomeModel(model)
+            needShowAllButton = model.needShowAllButton
         }else{
             content = solitaireModel.content ?? ""
             isShowAll = solitaireModel.isShowAll
@@ -179,6 +187,8 @@ extension YXSSolitaireListCell{
             childrenId = solitaireModel.childrenId
             isTop = solitaireModel.isTop
             solitaireView.setSolitaireModel(solitaireModel)
+            
+            needShowAllButton = solitaireModel.needShowAllButton
         }
         
         self.isTop = isTop == 1
@@ -188,31 +198,28 @@ extension YXSSolitaireListCell{
         }
         
         UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(teacherName ?? "")", "  |  \(createTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54"), night: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
-        topTimeLabel.text = model.createTime?.date(withFormat: kCommonDateFormatString)?.yxs_homeTimeWeek()
+        topTimeLabel.text = createTime?.date(withFormat: kCommonDateFormatString)?.yxs_homeTimeWeek()
         showAllControl.isSelected = isShowAll
         contentLabel.numberOfLines = isShowAll ? 0 : 2
-        UIUtil.yxs_setLabelParagraphText(contentLabel, text: content,removeSpace:  !isShowAll && model.needShowAllButton)
+        UIUtil.yxs_setLabelParagraphText(contentLabel, text: content,removeSpace:  !isShowAll && needShowAllButton)
         
-        if model.needShowAllButton{
+        if needShowAllButton{
             showAllControl.isHidden = false
             showAllControl.snp.remakeConstraints { (make) in
                 make.left.equalTo(contentLabel)
                 make.top.equalTo(solitaireView.snp_bottom).offset(9)
                 make.height.equalTo(26)
             }
-            solitaireView.snp.remakeConstraints{ (make) in
-                make.left.equalTo(15)
-                make.right.equalTo(-15)
-                make.top.equalTo(contentLabel.snp_bottom).offset(14)
-            }
         }else{
             showAllControl.isHidden = true
             showAllControl.snp.removeConstraints()
-            solitaireView.snp.remakeConstraints{ (make) in
-                make.left.equalTo(15)
-                make.right.equalTo(-15)
-                make.top.equalTo(contentLabel.snp_bottom).offset(12)
-            }
+            
+        }
+        
+        solitaireView.snp.remakeConstraints{ (make) in
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.top.equalTo(contentLabel.snp_bottom).offset(14)
         }
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER && self.yxs_user.id == teacherId{

@@ -126,6 +126,41 @@ class YXSPunchCardModel : NSObject, NSCopying, NSCoding, Mappable{
     //当前展示全部
     var isShowAll: Bool = false
     
+    // MARK: - 高度缓存
+    ///缓存高度
+    var height: CGFloat{
+        get{
+            if frameModel == nil{
+                confingHeight()
+            }
+            
+            let isTeacher = YXSPersonDataModel.sharePerson.personRole == .TEACHER
+            //bg容器顶部高度
+            var height: CGFloat = 14
+            
+            height += 45.5
+            
+            height += frameModel.contentHeight
+            
+            height += (isTeacher || hasPunch) ? 95.0 : 68.0
+            return height
+        }
+    }
+    
+    /// frameModel
+    var frameModel:YXSFriendsCircleFrameModel!
+    
+    func confingHeight(){
+
+        frameModel = YXSFriendsCircleFrameModel()
+        let paragraphStye = NSMutableParagraphStyle()
+        //调整行间距
+        paragraphStye.lineSpacing = kMainContentLineHeight
+        paragraphStye.lineBreakMode = .byWordWrapping
+        let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: title ?? "" , attributes: attributes,width: SCREEN_WIDTH - 30 - (15 + 18), numberOfLines: 2) + 1
+    }
+    
     required init?(map: Map){}
     private override init(){}
     
@@ -158,6 +193,8 @@ class YXSPunchCardModel : NSObject, NSCopying, NSCoding, Mappable{
         promulgator <- map["promulgator"]
         teacherImId <- map["teacherImId"]
         isPatchCard <- map["isPatchCard"]
+        
+        confingHeight()
     }
     
     @objc required init(coder aDecoder: NSCoder)
@@ -190,6 +227,7 @@ class YXSPunchCardModel : NSObject, NSCopying, NSCoding, Mappable{
         promulgator = aDecoder.decodeObject(forKey: "promulgator") as? Bool
         teacherImId = aDecoder.decodeObject(forKey: "teacherImId") as? String
         isPatchCard = aDecoder.decodeObject(forKey: "isPatchCard") as? Int
+        frameModel = aDecoder.decodeObject(forKey: "frameModel") as? YXSFriendsCircleFrameModel
     }
     
     /**
@@ -281,6 +319,9 @@ class YXSPunchCardModel : NSObject, NSCopying, NSCoding, Mappable{
         }
         if isPatchCard != nil{
               aCoder.encode(isPatchCard, forKey: "isPatchCard")
+        }
+        if frameModel != nil{
+              aCoder.encode(frameModel, forKey: "frameModel")
         }
     }
     

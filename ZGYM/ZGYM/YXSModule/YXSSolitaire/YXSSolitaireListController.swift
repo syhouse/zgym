@@ -53,21 +53,9 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
         tableView.register(YXSSolitaireListCell.self, forCellReuseIdentifier: "YXSSolitaireListCell")
         
         ///后期优化主线程时间 1.高度计算  2.截止日期 时间  ....
-        let list = YXSCacheHelper.yxs_getCacheSolitaireList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
-        for (index, model) in list.enumerated(){
-            if index < 5{
-               self.solitaireLists.append(model)
-            }
-        }
-        SLLog("viewDidLoad")
+        self.solitaireLists = YXSCacheHelper.yxs_getCacheSolitaireList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        SLLog("viewDidAppear")
-        self.solitaireLists = YXSCacheHelper.yxs_getCacheSolitaireList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
-        self.tableView.reloadData()
-    }
     
     // MARK: -UI
     override func showTopAlert(indexPath: IndexPath){
@@ -187,7 +175,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let model = self.solitaireLists[indexPath.row]
-        return 0
+        return model.height
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -54,14 +54,13 @@ class YXSNoticeListCell: YXSHomeBaseCell {
             
             sourceView.snp.makeConstraints { (make) in
                 make.size.equalTo(CGSize.init(width: 65, height: 65))
-                make.top.equalTo(19)
+                make.top.equalTo(contentLabel)
                 make.right.equalTo(-15)
             }
             
             recallView.snp.remakeConstraints { (make) in
                 make.right.equalTo(-8.5)
-                make.size.equalTo(CGSize.init(width: 38, height: 38))
-                make.bottom.equalTo(-8.5)
+                make.centerY.equalTo(topTimeLabel)
             }
         }
         
@@ -208,26 +207,18 @@ extension YXSNoticeListCell{
                 UIUtil.yxs_setLabelAttributed(visibleView.textLabel, text: ["\(model.readCount)", "/\(model.memberCount ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), kTextLightColor])
             }
             
-            if isShowTag{
-                visibleView.snp.remakeConstraints { (make) in
-                    make.height.equalTo(18)
-                    make.right.equalTo(-15)
-                    if model.isShowAll{
-                        //                make.top.equalTo(fromLabel.snp_bottom).offset(7.5)
-                        make.centerY.equalTo(classLabel)
+            visibleView.snp.remakeConstraints { (make) in
+                make.height.equalTo(18)
+                make.right.equalTo(-15)
+                if model.isShowAll{
+                    //                make.top.equalTo(fromLabel.snp_bottom).offset(7.5)
+                    make.centerY.equalTo(classLabel)
+                }else{
+                    if model.hasSource{
+                        make.top.equalTo(sourceView.snp_bottom).offset(12.5)
                     }else{
-                        if model.hasSource{
-                            make.top.equalTo(sourceView.snp_bottom).offset(12.5)
-                        }else{
-                            make.centerY.equalTo(classLabel)
-                        }
+                        make.centerY.equalTo(classLabel)
                     }
-                }
-            }else{
-                visibleView.snp.remakeConstraints { (make) in
-                    make.height.equalTo(22)
-                    make.top.equalTo(classLabel.snp_bottom).offset(12)
-                    make.left.equalTo(classLabel)
                 }
             }
 

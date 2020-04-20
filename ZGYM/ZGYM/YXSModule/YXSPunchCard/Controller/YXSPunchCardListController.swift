@@ -43,7 +43,6 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
             make.left.right.equalTo(0)
             make.bottom.equalTo(-kSafeBottomHeight)
         }
-        tableView.estimatedRowHeight = 177
         
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
             selectModels = [YXSSelectModel.init(text: "全部", isSelect: true, paramsKey: SLCommonScreenSelectType.all.rawValue),YXSSelectModel.init(text: "进行中", isSelect: false, paramsKey: SLCommonScreenSelectType.underway.rawValue),YXSSelectModel.init(text: "已结束", isSelect: false, paramsKey: SLCommonScreenSelectType.finish.rawValue)]
@@ -170,6 +169,11 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
     // MARK: -tableViewDelegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return yxs_punchCardDataSource.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let model = yxs_punchCardDataSource[indexPath.row]
+        return model.height
     }
     
     

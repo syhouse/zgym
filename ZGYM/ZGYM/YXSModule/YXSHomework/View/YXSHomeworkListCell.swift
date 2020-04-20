@@ -54,14 +54,13 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
             
             sourceView.snp.makeConstraints { (make) in
                 make.size.equalTo(CGSize.init(width: 65, height: 65))
-                make.top.equalTo(19)
+                make.top.equalTo(contentLabel)
                 make.right.equalTo(-15)
             }
             
             recallView.snp.remakeConstraints { (make) in
                 make.right.equalTo(-8.5)
-                make.size.equalTo(CGSize.init(width: 38, height: 38))
-                make.bottom.equalTo(-8.5)
+                make.centerY.equalTo(topTimeLabel)
             }
         }
         

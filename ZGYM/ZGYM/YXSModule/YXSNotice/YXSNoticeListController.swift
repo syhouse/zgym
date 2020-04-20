@@ -50,20 +50,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             rightButton.isHidden = true
         }
         
-        let list = YXSCacheHelper.yxs_getCacheNoticeList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
-        for (index, model) in list.enumerated(){
-            if index < 7{
-               self.dataSource.append(model)
-            }
-        }
-        SLLog("viewDidLoad")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        SLLog("viewDidAppear")
         self.dataSource = YXSCacheHelper.yxs_getCacheNoticeList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
-        self.tableView.reloadData()
     }
     
     // MARK: -UI

@@ -357,10 +357,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         if yxs_dataSource.count > indexPath.section {
             if yxs_dataSource[indexPath.section].items.count > indexPath.row {
                 let model = yxs_dataSource[indexPath.section].items[indexPath.row]
-                //为什么第一次先进 cellForRowAt 后进heightForRowAt
-                if model.frameModel == nil{
-                    model.confingHeight()
-                }
                 var cell: YXSHomeBaseCell!
                 if model.type == .classstart{
                     cell = tableView.dequeueReusableCell(withIdentifier: "SLHomeClassStartCell") as? YXSHomeBaseCell
