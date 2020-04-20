@@ -86,7 +86,7 @@ class YXSHomeworkDetailCommentView: UIView {
             if self.model?.audioModel?.voiceUlr?.count ?? 0 > 0 {
                 commetAudioView.model = self.model?.audioModel
                 commetAudioView.isHidden = false
-                
+                commetAudioView.id = self.model?.audioModel?.voiceUlr ?? ""
                 lbCommentTime.snp.remakeConstraints({ (make) in
                     make.top.equalTo(commetAudioView.snp_bottom).offset(10)
                     make.left.equalTo(17.5)
@@ -142,8 +142,8 @@ class YXSHomeworkDetailCommentView: UIView {
         return lb
     }()
     
-    lazy var commetAudioView: YXSVoiceView = {
-        let voiceView = YXSVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 , height: 36), complete: {
+    lazy var commetAudioView: YXSListVoiceView = {
+        let voiceView = YXSListVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 , height: 36), complete: {
             [weak self] (url, duration) in
             guard let weakSelf = self else { return }
 

@@ -25,8 +25,8 @@ class YXSBaseTabBarController: UITabBarController {
         self.view.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         
         self.addChildVC(childVC: YXSHomeController(), titleName: "首页", imageName: "yxs_home_normal", imageSelectName: "yxs_home_select")
-
-        self.addChildVC(childVC: YXSContentHomeController(), titleName: "优教育", imageName: "yxs_education_normal", imageSelectName: "yxs_education_select")
+//        YXSExcellentEducationVC YXSContentHomeController
+        self.addChildVC(childVC: YXSExcellentEducationVC(), titleName: "优教育", imageName: "yxs_education_normal", imageSelectName: "yxs_education_select")
 //        self.addChildVC(childVC: YXSFriendsCircleController(), titleName: "优成长", imageName: "yxs_friend_normal", imageSelectName: "yxs_friend_select")
 
         

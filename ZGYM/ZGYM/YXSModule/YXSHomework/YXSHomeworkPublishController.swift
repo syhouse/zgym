@@ -26,7 +26,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
         super.init(serviceId)
         saveDirectory = "homework"
         sourceDirectory = .HomeWork
-        audioMaxCount = 5
+        audioMaxCount = 1
     }
     
     /// 家长提交作业
