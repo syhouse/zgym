@@ -18,6 +18,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
 
 //    var fileList
     
+    
     init(parentFolderId: Int = -1) {
         super.init()
         self.parentFolderId = parentFolderId
@@ -294,81 +295,30 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     /// 选中图片资源
     override func didSelectSourceAssets(assets: [YXSMediaModel]) {
         
-        var tmpArr: [YXSFileModel] = [YXSFileModel]()
-        var tmpImageAssets: [YXSMediaModel] = [YXSMediaModel]()
-        var tmpVideoAssets: [YXSMediaModel] = [YXSMediaModel]()
+        var tmpArr: [PHAsset] = [PHAsset]()
+        for sub in assets {
+            tmpArr.append(sub.asset)
+        }
         
-//        for sub in assets {
-//            if sub.type == .image {
-//                tmpImageAssets.append(sub)
-//
-//            } else if sub.type == .video {
-//                tmpVideoAssets.append(sub)
-//            }
-//        }
-        
-        
-        YXSUploadSourceHelper().uploadMedias(mediaModels: assets, progress: { (progress) in
+        uploadHelper.uploadMedias(mediaAssets: tmpArr, progress: { (progress) in
             
         }, sucess: { [weak self](list) in
             guard let weakSelf = self else {return}
             
-            var dicArr = [[String : Any]]()
+            var dicArr = [[String: Any]]()
             for sub in list {
-                let url = URL(string: sub)
-                let item = YXSFileManagerHelper.sharedInstance.getFileItem(fileUrl: url!)
-                
-                var dic = ["fileType": url?.pathExtension, "fileName": item.fileName, "fileUrl": sub, "bgUrl": "https://www.image.com/a.jpg", "fileDuration": 10, "fileSize": 10] as [String : Any]
-                dicArr.append(dic)
+                dicArr.append(sub.toJSON())
             }
-
             YXSSatchelUploadFileRequest(parentFolderId: weakSelf.parentFolderId, satchelFileList: dicArr).request({ (json) in
                 weakSelf.loadData()
-                
-            }) { (msg, code) in
 
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
             }
             
         }) { (msg, code) in
-            
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
-        
-        
-//        YXSUploadSourceHelper().uploadImage(mediaModel: assets.first!, sucess: { [weak self](result) in
-//            guard let weakSelf = self else {return}
-//            SLLog(">>>>>>>result:\(result)")
-//            let url = URL(string: result)
-//            let item = YXSFileManagerHelper.sharedInstance.getFileItem(fileUrl: url!)
-//
-//            var dic = ["fileType": url?.pathExtension, "fileName": item.fileName, "fileUrl": result, "bgUrl": "https://www.image.com/a.jpg", "fileDuration": 10, "fileSize": 10] as [String : Any]
-//
-//            YXSSatchelUploadFileRequest(parentFolderId: weakSelf.parentFolderId, satchelFileList: [dic]).request({ (json) in
-//
-//            }) { (msg, code) in
-//
-//            }
-//
-//        }) { (msg, code) in
-//            SLLog(">>>>>>>msg:\(msg)")
-//        }
-        
-        
-//        for sub in assets {
-//            YXSUploadSourceHelper().uploadImages(mediaModels: assets, sourceNameType: .image, progress: { (progress) in
-//                SLLog(">>>>>>>progress:\(progress)")
-//            }, sucess: { (list) in
-//
-//            }) { (msg, code) in
-//
-//            }
-////                YXSUploadSourceHelper().uploadMedia(mediaInfos: mediaInfos, sucess: { (infos) in
-////                    SLLog(infos)
-////                    self.loadUploadAlbumRequest(mediaInfos: infos)
-////                }) { (msg, code) in
-////                    MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-////                    MBProgressHUD.yxs_showMessage(message: msg)
-////                }
-//        }
     }
 
     // MARK: - Delegate
@@ -520,6 +470,11 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: -25)
         btn.addTarget(self, action: #selector(addFileFromComputerClick), for: .touchUpInside)
         return btn
+    }()
+    
+    lazy var uploadHelper: YXSFileUploadHelper = {
+        let helper = YXSFileUploadHelper()
+        return helper
     }()
     
     /*
