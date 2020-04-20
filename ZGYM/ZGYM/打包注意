@@ -1,6 +1,7 @@
 1.查看YXSBaseRequset接口环境ServiceType  是否为.ServiceProduct
 2.注释掉AppDelegate里面的FLEXManager  和Bridging-Header 里面的<FLEX/FLEXManager.h> (带UIwebview)
 
+/*  第三部现在暂时不需要
 3.build phases 查看打包删除IM.sdk的debug脚本工具是否存在  (真机调试的时候需要删除该脚本 不然会报错)
 脚本内容
 # Type a script or drag a script f ile from your workspace to insert its path.
@@ -32,5 +33,5 @@ rm "$FRAMEWORK_EXECUTABLE_PATH"
 mv "$FRAMEWORK_EXECUTABLE_PATH-merged" "$FRAMEWORK_EXECUTABLE_PATH"
 
 done
-
+*/
 

@@ -48,8 +48,8 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
             }
         }else{
             topTimeLabel.snp.remakeConstraints { (make) in
-                make.left.equalTo(69)
-                make.centerY.equalTo(tagLabel)
+                make.left.equalTo(15)
+                make.top.equalTo(19)
             }
             
             sourceView.snp.makeConstraints { (make) in

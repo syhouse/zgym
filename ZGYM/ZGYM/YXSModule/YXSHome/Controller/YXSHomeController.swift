@@ -63,8 +63,12 @@ class YXSHomeController: YXSHomeBaseController {
     override func viewDidLoad() {
         self.view.addSubview(bgImageView)
         super.viewDidLoad()
-//        self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F4F5FC"), night: kNightBackgroundColor)
-        self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: kNightBackgroundColor)
+        if isOldUI{
+            self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: kNightBackgroundColor)
+        }else{
+            self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F4F5FC"), night: kNightBackgroundColor)
+        }
+        
         self.fd_prefersNavigationBarHidden = true
         self.tableView.snp.remakeConstraints { (make) in
             make.top.equalTo(kSafeTopHeight)
@@ -325,7 +329,9 @@ class YXSHomeController: YXSHomeBaseController {
     lazy var bgImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.frame = self.view.frame
-        imageView.mixedImage = MixedImage(normal: UIImage.init(named: "yxs_home_new_bg")!, night: UIImage.yxs_image(with: kNightForegroundColor)!)
+        if isOldUI{
+            imageView.mixedImage = MixedImage(normal: UIImage.init(named: "yxs_home_new_bg")!, night: UIImage.yxs_image(with: kNightForegroundColor)!)
+        }
         return imageView
     }()
 }
@@ -338,11 +344,14 @@ extension YXSHomeController{
             yxs_homeNavView.isHidden = true
         }
         
-//        if scrollView.contentOffset.y > tableHeaderView.yxs_agendaView.y - 64{
-//            yxs_topAgendaView.isHidden = false
-//        }else{
-//            yxs_topAgendaView.isHidden = true
-//        }
+        if !isOldUI{
+            if scrollView.contentOffset.y > tableHeaderView.yxs_agendaView.y - 64{
+                yxs_topAgendaView.isHidden = false
+            }else{
+                yxs_topAgendaView.isHidden = true
+            }
+        }
+        
         
     }
 }
@@ -538,18 +547,18 @@ extension YXSHomeController{
     
     /// 更新待办
     @objc func updateAgenda(){
-//        var request: YXSBaseRequset!
-//        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-//            request = YXSEducationTodoTeacherRedPointRequest()
-//        }else{
-//            request = YXSEducationTodoChildrenRedPointRequest.init(childrenClassList: yxs_childrenClassList)
-//        }
-//        request.request({ (result) in
-//            self.yxs_agendaCount = result["count"].intValue
-//            self.yxs_topAgendaView.count = self.yxs_agendaCount
-//            self.tableHeaderView.setHeaderModel(self.yxs_weathModel, agendaCount: self.yxs_agendaCount)
-//        }) { (msg, code) in
-//        }
+        var request: YXSBaseRequset!
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            request = YXSEducationTodoTeacherRedPointRequest()
+        }else{
+            request = YXSEducationTodoChildrenRedPointRequest.init(childrenClassList: yxs_childrenClassList)
+        }
+        request.request({ (result) in
+            self.yxs_agendaCount = result["count"].intValue
+            self.yxs_topAgendaView.count = self.yxs_agendaCount
+            self.tableHeaderView.setHeaderModel(self.yxs_weathModel, agendaCount: self.yxs_agendaCount)
+        }) { (msg, code) in
+        }
     }
     
     /// 刷新消息
@@ -567,8 +576,7 @@ extension YXSHomeController{
         //        isShowTeacherHomeGuide = false
         if !isShowTeacherHomeGuide || !isShowPartentHomeGuide{
             self.view.layoutIfNeeded()
-//            let agendaFrame = self.tableHeaderView.convert(self.tableHeaderView.yxs_agendaView.frame, to: self.tabBarController!.view)
-//            let agendaModel = YXSGuideModel.init(type: SLGuideType.mask, maskFrame: CGRect.init(x: agendaFrame.minX + 15, y: agendaFrame.minY , width: agendaFrame.width - 30, height: agendaFrame.height), maskCornerRadius: 15, imageFrame: CGRect.init(x: (SCREEN_WIDTH - 197)/2, y: agendaFrame.maxY, width: 197, height: 135.5), imageName: "yxs_guide_teacher_3")
+
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER && !isShowTeacherHomeGuide{
                 yxs_isShowGuide = true
                 let publishFrame = self.view.convert(self.publishButton.frame, to: self.tabBarController!.view)
@@ -576,8 +584,11 @@ extension YXSHomeController{
                 let height = UIUtil.yxs_getTextHeigh(textStr: topTeacherView.desLabel.text!, font: topTeacherView.desLabel.font, width: SCREEN_WIDTH - 31 - 17 - 103)
                 let topTeacherModel = YXSGuideModel.init(type: SLGuideType.view, view: topTeacherView, viewFrame: CGRect.init(x: 15.5, y: 173 + kSafeTopHeight, width: SCREEN_WIDTH - 31, height: height + 68),imageFrame: CGRect.init(x: (SCREEN_WIDTH - 160.5)/2, y: height + 68 + 173 + kSafeTopHeight, width: 160.5, height: 135),imageName: "yxs_guide_teacher_1")
                 let publishiModel = YXSGuideModel.init(type: SLGuideType.mask, maskFrame: CGRect.init(x: publishFrame.minX - 10, y: publishFrame.minY - 10, width: publishFrame.width + 20, height: publishFrame.width + 20), maskCornerRadius: (publishFrame.width + 20)/2, imageFrame: CGRect.init(x: SCREEN_WIDTH - 11 - 161, y: publishFrame.maxY - (publishFrame.width + 10) - 135, width: 160.5, height: 135), imageName: "yxs_guide_teacher_2")
-//                topTeacherModel,publishiModel,agendaModel
-                YXSGuideViewWindow.showGuideViewWindow(items: [topTeacherModel,publishiModel]){
+                
+                let agendaFrame = self.tableHeaderView.convert(self.tableHeaderView.yxs_agendaView.frame, to: self.tabBarController!.view)
+                let agendaModel = YXSGuideModel.init(type: SLGuideType.mask, maskFrame: CGRect.init(x: agendaFrame.minX + 15, y: agendaFrame.minY , width: agendaFrame.width - 30, height: agendaFrame.height), maskCornerRadius: 15, imageFrame: CGRect.init(x: (SCREEN_WIDTH - 197)/2, y: agendaFrame.maxY, width: 197, height: 135.5), imageName: "yxs_guide_teacher_3")
+                
+                YXSGuideViewWindow.showGuideViewWindow(items: isOldUI ? [topTeacherModel,publishiModel] : [topTeacherModel,publishiModel,agendaModel]){
                     [weak self] in
                     guard let strongSelf = self else { return }
                     strongSelf.yxs_isShowGuide = false
@@ -602,14 +613,13 @@ extension YXSHomeController{
                 let topPartentView = YXSGuideView.init(title: "您好~欢迎加入优学业！", desTitle: "在这里您将即时收到老师的发布作业、通知、班级之星等消息。")
                 let height = UIUtil.yxs_getTextHeigh(textStr: topPartentView.desLabel.text!, font: topPartentView.desLabel.font, width: SCREEN_WIDTH - 31 - 17 - 103)
                 let topPartentModel = YXSGuideModel.init(type: SLGuideType.view, view: topPartentView, viewFrame: CGRect.init(x: 15.5, y: 173 + kSafeTopHeight, width: SCREEN_WIDTH - 31, height: height + 68),imageFrame: CGRect.init(x: (SCREEN_WIDTH - 107.5)/2, y: height + 68 + 173 + kSafeTopHeight, width: 107.5, height: 95),imageName: "yxs_guide_partent_1")
-//                let agendaFrame = self.tableHeaderView.convert(self.tableHeaderView.yxs_agendaView.frame, to: self.tabBarController!.view)
-//                let agendaModel = YXSGuideModel.init(type: SLGuideType.mask, maskFrame: CGRect.init(x: agendaFrame.minX + 15, y: agendaFrame.minY , width: agendaFrame.width - 30, height: agendaFrame.height), maskCornerRadius: 15, imageFrame: CGRect.init(x: (SCREEN_WIDTH - 197)/2, y: agendaFrame.minY - 134.5, width: 197, height: 134.5), imageName: "yxs_guide_partent_5")
+                let agendaFrame = self.tableHeaderView.convert(self.tableHeaderView.yxs_agendaView.frame, to: self.tabBarController!.view)
+                let agendaModel = YXSGuideModel.init(type: SLGuideType.mask, maskFrame: CGRect.init(x: agendaFrame.minX + 15, y: agendaFrame.minY , width: agendaFrame.width - 30, height: agendaFrame.height), maskCornerRadius: 15, imageFrame: CGRect.init(x: (SCREEN_WIDTH - 197)/2, y: agendaFrame.minY - 134.5, width: 197, height: 134.5), imageName: "yxs_guide_partent_5")
                 
-                //                let childViewFrame = self.tableHeaderView.convert(self.tableHeaderView.childView.frame, to: self.tabBarController!.view)
                 let childViewFrame = CGRect.init(x: 0, y: 120 + kSafeTopHeight, width: 212, height: 41)
                 let childModel = YXSGuideModel.init(type: SLGuideType.mask, maskFrame: CGRect.init(x: childViewFrame.minX + 4, y: childViewFrame.minY - 10 , width: childViewFrame.width , height: childViewFrame.height + 20), maskCornerRadius: 15, imageFrame: CGRect.init(x: 16.5, y: childViewFrame.maxY + 10, width: 251.5, height: 135.5), imageName: "yxs_guide_partent_2")
-//                topPartentModel,agendaModel,childModel
-                YXSGuideViewWindow.showGuideViewWindow(items: [topPartentModel,childModel]){
+                
+                YXSGuideViewWindow.showGuideViewWindow(items: isOldUI ? [topPartentModel,childModel] : [topPartentModel,agendaModel,childModel]){
                     [weak self] in
                     guard let strongSelf = self else { return }
                     strongSelf.tableHeaderView.setHeaderModel(strongSelf.yxs_weathModel, agendaCount: strongSelf.yxs_agendaCount)

@@ -42,7 +42,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             make.bottom.equalTo(-kSafeBottomHeight)
         }
         tableView.register(YXSNoticeListCell.self, forCellReuseIdentifier: "YXSNoticeListCell")
-        tableView.fd_debugLogEnabled = true
+
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER && !isAgenda{
             rightButton.isHidden = false
@@ -164,7 +164,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let model = self.dataSource[indexPath.row]
-        return 0
+        return model.height
     }
     
     

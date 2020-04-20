@@ -9,7 +9,7 @@
 import UIKit
 import NightNight
 
-///老UI
+///*提*包*UI 默认为 true
 public let isOldUI = true
 
 // MARK: - 尺寸

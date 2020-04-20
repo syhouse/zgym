@@ -79,12 +79,16 @@ class YXSParentClassListViewController: YXSBaseTableViewController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model: YXSClassModel = self.dataSource[indexPath.row]
-//        let vc = YXSClassDetialListController.init(classModel: model)
-//        vc.navRightBarButtonTitle = "班级信息"
-//        navigationController?.pushViewController(vc)
+        if isOldUI{
+            let vc = YXSClassInfoViewController.init(classModel: model)
+            self.navigationController?.pushViewController(vc)
+        }else{
+            let vc = YXSClassDetialListController.init(classModel: model)
+            vc.navRightBarButtonTitle = "班级信息"
+            navigationController?.pushViewController(vc)
+        }
         
-        let vc = YXSClassInfoViewController.init(classModel: model)
-        self.navigationController?.pushViewController(vc)
+        
     }
     
     /*

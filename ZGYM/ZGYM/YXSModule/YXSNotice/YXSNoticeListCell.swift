@@ -49,7 +49,7 @@ class YXSNoticeListCell: YXSHomeBaseCell {
         }else{
             topTimeLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
-                make.top.equalTo(22.5)
+                make.top.equalTo(19)
             }
             
             sourceView.snp.makeConstraints { (make) in
