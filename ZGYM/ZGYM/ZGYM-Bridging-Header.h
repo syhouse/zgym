@@ -43,6 +43,7 @@
 #import "CLPlayerView.h"
 #import "SLVideoPlayController.h"
 #import <FLEX/FLEXManager.h>
+#import "AFNetworking.h"
 
 #import "YXSConvertAudioFile.h"
 

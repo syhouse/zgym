@@ -23,6 +23,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     var graffitiSection: Int!
     var graffitiDetailModel: YXSHomeworkDetailModel!
     var graffitiImageIndex: Int!
+
     
     /// 是否下拉加载更多
     var loadMore: Bool = false{
@@ -54,12 +55,12 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        YXSSSAudioPlayer.sharedInstance.stopVoice()
+        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
+//        YXSSSAudioPlayer.sharedInstance.stopVoice()
     }
     
     override func viewDidLoad() {
@@ -67,7 +68,9 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         self.title = "作业详情"
         // Do any additional setup after loading the view.
         setupRightBarButtonItem()
-
+        if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+            footerRemindBtn.isHidden = true
+        }
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.bottomBtnView)
         tableView.tableHeaderView = tableHeaderView
@@ -110,21 +113,37 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
 
         tableHeaderView.filterBtnView.jobTypeChankBlock = { [weak self](tag) in
             guard let weakSelf = self else {return}
+            YXSSSAudioListPlayer.sharedInstance.stopPlayer()
             switch tag {
             case 10001:
                 //全部作业
                 weakSelf.isGood = -1
-                break
+                
+                if weakSelf.isRemark == -1 {
+                    weakSelf.footerContentLbl.text = "暂无作业提交"
+                    weakSelf.footerRemindBtn.isHidden = false
+                } else if weakSelf.isRemark == 0 {
+                    weakSelf.footerContentLbl.text = "暂无待点评"
+                    weakSelf.footerRemindBtn.isHidden = true
+                } else {
+                    weakSelf.footerContentLbl.text = "暂无已点评"
+                    weakSelf.footerRemindBtn.isHidden = true
+                }
             case 10002:
                 //优秀作业
                 weakSelf.isGood = 1
-                break
+                weakSelf.footerRemindBtn.isHidden = true
+                weakSelf.footerContentLbl.text = "暂无优秀作业"
             case 10003:
                 //我的作业
                 weakSelf.isGood = 0
-                break
+                weakSelf.footerRemindBtn.isHidden = true
+                weakSelf.footerContentLbl.text = "暂无作业提交"
             default:
                 break
+            }
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+                weakSelf.footerRemindBtn.isHidden = true
             }
             weakSelf.refreshHomeworkData(index: weakSelf.isGood)
 //            weakSelf.refreshData()
@@ -136,15 +155,25 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             let offsetY = fabsf(Float(point!.y))
             YXSHomeListSelectView.showAlert(offset: CGPoint(x: 15, y: CGFloat(offsetY) + 50), selects: weakSelf.selectModels) { [weak self](selectModel,selectModels) in
                 guard let strongSelf = self else { return }
+                YXSSSAudioListPlayer.sharedInstance.stopPlayer()
                 let selectType = SLCommonScreenSelectType.init(rawValue: selectModel.paramsKey) ?? .all
                 if selectType == .toReview {
                     //待点评
                     strongSelf.isRemark = 0
+                    weakSelf.footerContentLbl.text = "暂无待点评作业"
+                    weakSelf.footerRemindBtn.isHidden = true
                 } else if selectType == .haveComments {
                     //已点评
                     strongSelf.isRemark = 1
+                    weakSelf.footerContentLbl.text = "暂无已点评作业"
+                    weakSelf.footerRemindBtn.isHidden = true
                 } else {
                     strongSelf.isRemark = -1
+                    weakSelf.footerContentLbl.text = "暂无作业提交"
+                    weakSelf.footerRemindBtn.isHidden = false
+                }
+                if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+                    weakSelf.footerRemindBtn.isHidden = true
                 }
                 weakSelf.refreshData()
             }
@@ -155,6 +184,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         
         NotificationCenter.default.addObserver(self, selector: #selector(homeworkCommitSuccess(obj:)), name: NSNotification.Name(rawValue: kParentSubmitSucessNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(homeworkUndoSuccess(obj:)), name: NSNotification.Name.init(rawValue: kOperationStudentWorkNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshUnreadMessage), name: NSNotification.Name.init(rawValue: kChatCallRefreshHomeworkNotification), object: nil)
     }
     
     deinit {
@@ -211,26 +241,35 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 self.bottomBtnView.btnCommit.setTitle("当前作业已过期", for: .normal)
                 self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.white, endColor: UIColor.white, cornerRadius: 21)
                 bottomBtnView.isHidden = false
+                bottomBtnView.isUserInteractionEnabled = false
             } else {
                 if self.model?.onlineCommit == 1 {
                     if homeModel.commitState == 1 {
                         self.bottomBtnView.btnCommit.setTitle("提交作业", for: .normal)
                         self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 21)
                         self.bottomBtnView.btnCommit.setMixedTitleColor(MixedColor(normal: kNightFFFFFF, night: kNightFFFFFF), forState: .normal)
+                        bottomBtnView.isUserInteractionEnabled = true
                     } else {
                         self.bottomBtnView.btnCommit.setTitle("已提交", for: .normal)
                         self.bottomBtnView.btnCommit.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), night: kNightFFFFFF), forState: .normal)
                         self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.white, endColor: UIColor.white, cornerRadius: 21)
+                        bottomBtnView.isUserInteractionEnabled = false
                     }
                 } else {
                     self.bottomBtnView.btnCommit.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), night: kNightFFFFFF), forState: .normal)
                     self.bottomBtnView.btnCommit.setTitle("当前作业无需提交", for: .normal)
                     self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.white, endColor: UIColor.white, cornerRadius: 21)
+                    bottomBtnView.isUserInteractionEnabled = false
                     bottomBtnView.isHidden = false
                 }
             }
             
         }
+    }
+    
+    func refreshSelectModel() {
+        self.selectModels = [YXSSelectModel.init(text: "全部", isSelect: true, paramsKey: SLCommonScreenSelectType.all.rawValue),YXSSelectModel.init(text: "待点评", isSelect: false, paramsKey: SLCommonScreenSelectType.toReview.rawValue),YXSSelectModel.init(text: "已点评", isSelect: false, paramsKey: SLCommonScreenSelectType.haveComments.rawValue)]
+        self.isRemark = -1
     }
     
     @objc func refreshHomeworkData(index:Int) {
@@ -269,7 +308,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             })
             break
         case 1: //优秀作业
-            YXSEducationHomeworkChildrenPageQueryRequest(currentPage: self.curruntPage, homeworkCreateTime: self.homeModel.createTime ?? "", homeworkId: self.homeModel.serviceId ?? 0, pageSize: 20, isGood: self.isGood, isRemark: self.isRemark).request({ [weak self](json) in
+            self.refreshSelectModel()
+            YXSEducationHomeworkChildrenPageQueryRequest(currentPage: self.curruntPage, homeworkCreateTime: self.homeModel.createTime ?? "", homeworkId: self.homeModel.serviceId ?? 0, pageSize: 20, isGood: self.isGood).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let joinList = Mapper<YXSHomeworkDetailModel>().mapArray(JSONObject: json["homeworkCommitList"].object) ?? [YXSHomeworkDetailModel]()
 //                    for (index,model) in buttons.enumerated() {
@@ -302,6 +342,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             break
         case 0: //我的作业
             //查询我的作业
+            self.refreshSelectModel()
             YXSEducationHomeworkQueryHomeworkCommitByIdRequest(childrenId: self.yxs_user.curruntChild?.id ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", homeworkId: self.homeModel.serviceId ?? 0).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 if json.rawString() == "null" {
@@ -334,6 +375,36 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         default:
             break
         }
+    }
+    
+    @objc func refreshUnreadMessage() {
+        YXSEducationHomeworkQueryHomeworkByIdRequest(childrenId: homeModel.childrenId ?? 0, homeworkCreateTime: homeModel.createTime ?? "", homeworkId: homeModel.serviceId ?? 0).request({ [weak self](model: YXSHomeworkDetailModel) in
+            guard let weakSelf = self else {return}
+            weakSelf.model = model
+            
+            weakSelf.tableHeaderView.model = model
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+//        YXSEducationHomeworkMessageRequest(homeworkId: homeModel.serviceId ?? 0).requestCollection({ [weak self](list: [YXSHomeworkMessageModel]) in
+//            guard let weakSelf = self else {return}
+//            if list.count > 0 {
+//                var messagemodel:YXSPunchCardMessageTipsModel? = YXSPunchCardMessageTipsModel.init(JSONString: "{\"count\":0}")
+//                weakSelf.model?.messageCount = list.count
+//                weakSelf.model?.messageAvatar = list.last?.operatorAvatar
+//                weakSelf.model?.messageUserType = list.last?.operatorType
+//            } else {
+//                weakSelf.model?.messageCount = 0
+//                weakSelf.model?.messageAvatar = ""
+//                weakSelf.model?.messageUserType = ""
+//
+//            }
+//            weakSelf.tableHeaderView.model = weakSelf.model
+//        }) { (msg, code) in
+//            MBProgressHUD.hide(for: self.view, animated: true)
+//            //            self.endingRefresh()
+//            MBProgressHUD.yxs_showMessage(message: msg)
+//        }
     }
     
     // MARK: - Request
@@ -657,15 +728,23 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     func setHomeworkGoodEvent(_ section: Int,isGood: Int){
         let model = dataSource[section]
         YXSEducationHomeworkInTeacherChangeGoodRequest.init(childrenId: model.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, homeworkId: self.homeModel.serviceId ?? 0, isGood: isGood).request({ (result) in
-            self.dataSource.remove(at: section)
-            if self.dataSource.count == 0 {
-                self.tableView.tableFooterView = self.tableFooterView
+            if isGood == 1{
+                //设置优秀作业不刷新页面
+                model.isGood = 1
             } else {
-                self.tableView.tableFooterView = nil
+                self.dataSource.remove(at: section)
+                if self.dataSource.count == 0 {
+                    self.tableView.tableFooterView = self.tableFooterView
+                } else {
+                    self.tableView.tableFooterView = nil
+                }
+                self.refreshHomeworkData(index: self.isGood)
             }
             
+            
+            
 //            self.reloadTableView()
-            self.refreshHomeworkData(index: self.isGood)
+            
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
@@ -783,7 +862,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             headerView.reviewControlBlock = { [weak self](model)in
                 guard let weakSelf = self else {return}
                 let vc = YXSHomeworkCommentController()
-                vc.homeModel = weakSelf.homeModel
+                vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
+//                vc.homeModel = weakSelf.homeModel
                 vc.childrenIdList = [(model.childrenId ?? 0)]
                 vc.isPop = true
                 //点评成功后 刷新数据
@@ -802,6 +882,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     if selectType == .change {
                         //修改
                         let vc = YXSHomeworkCommentController()
+                        vc.isChangeRemark = true
                         vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
                         vc.childrenIdList = [(model.childrenId ?? 0)]
 //                        vc.isPop = true
@@ -893,16 +974,23 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var cellHeight: CGFloat = 0
+        //是否是最后一行 最后一行需要补偿高度
+        var isLastRow = false
         let model = dataSource[indexPath.section]
         if let comments = model.commentJsonList{
             var commentsCount = comments.count
             if model.isNeeedShowCommentAllButton && !model.isShowCommentAll{
                 commentsCount = 3
+                isLastRow = true
             }
             if indexPath.row < commentsCount{
                 let commetModel = comments[indexPath.row]
                 cellHeight = commetModel.cellHeight
                 if indexPath.row == comments.count - 1{
+                    isLastRow = true
+                }
+                
+                if isLastRow{
                     cellHeight += 8.0
                 }
             }
@@ -964,7 +1052,6 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         tableView.estimatedSectionHeaderHeight = 0
         //去除group空白
         tableView.estimatedSectionFooterHeight = 0.0
-        tableView.fd_debugLogEnabled = true
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
@@ -997,27 +1084,31 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         imageView.mixedImage = MixedImage(normal: "yxs_homework_defultImage_nodata", night: "yxs_defultImage_nodata_night")
         imageView.contentMode = .scaleAspectFit
         footer.addSubview(imageView)
-
-        let lbl = UILabel.init(frame: CGRect(x: 0, y: 228, width: 100, height: 20))
+        footer.addSubview(footerContentLbl)
+        footer.addSubview(footerRemindBtn)
+        
+        return footer
+    }()
+    
+    lazy var footerContentLbl: UILabel = {
+        let lbl = UILabel.init(frame: CGRect(x: 0, y: 228, width: SCREEN_WIDTH, height: 20))
         lbl.text = "暂无作业提交"
-        lbl.yxs_centerX = SCREEN_WIDTH * 0.5
+        lbl.textAlignment = .center
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
         lbl.font = UIFont.systemFont(ofSize: 15)
-        footer.addSubview(lbl)
-
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            let btn = UIButton.init(frame: CGRect(x: 0, y: 268, width: 105, height: 30))
-            btn.setTitle("一键提醒", for: .normal)
-            btn.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), for: .normal)
-            btn.layer.borderWidth = 1.0
-            btn.yxs_centerX = SCREEN_WIDTH * 0.5
-            btn.layer.cornerRadius = 15
-            btn.layer.borderColor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7").cgColor
-            btn.addTarget(self, action: #selector(remindClick), for: .touchUpInside)
-            footer.addSubview(btn)
-        }
-
-        return footer
+        return lbl
+    }()
+    
+    lazy var footerRemindBtn: UIButton = {
+        let btn = UIButton.init(frame: CGRect(x: 0, y: 268, width: 105, height: 30))
+        btn.setTitle("一键提醒", for: .normal)
+        btn.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), for: .normal)
+        btn.layer.borderWidth = 1.0
+        btn.yxs_centerX = SCREEN_WIDTH * 0.5
+        btn.layer.cornerRadius = 15
+        btn.layer.borderColor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7").cgColor
+        btn.addTarget(self, action: #selector(remindClick), for: .touchUpInside)
+        return btn
     }()
     
     lazy var tableRefreshFooter = MJRefreshBackStateFooter.init(refreshingBlock: {[weak self] in
@@ -1065,7 +1156,10 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
                     }
                     
                     let vc = LFPhotoEditingController.init()
+                    vc.modalPresentationStyle = .fullScreen
+                    vc.titleStr = self.graffitiDetailModel.childrenName ?? ""
                     let nav = UINavigationController.init(rootViewController: vc)
+                    nav.modalPresentationStyle = .fullScreen
                     vc.isShowClearReductionBtn = false
                     if originalImgModel != nil {
                         vc.isShowClearReductionBtn = !((originalImgModel?.url ?? "") == imgModel.url)

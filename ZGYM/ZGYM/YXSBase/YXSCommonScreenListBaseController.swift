@@ -175,13 +175,19 @@ class YXSCommonScreenListBaseController: YXSBaseTableViewController{
         
         self.group.enter()
         queue.async {
-            self.yxs_loadListData()
+            DispatchQueue.main.async {
+                self.yxs_loadListData()
+            }
+            
         }
+        
         
         if curruntPage == 1 {
             self.group.enter()
             queue.async {
-                self.loadClassListData()
+                DispatchQueue.main.async {
+                    self.loadClassListData()
+                }
             }
         }
         

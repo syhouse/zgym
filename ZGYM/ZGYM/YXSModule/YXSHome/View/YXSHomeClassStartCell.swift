@@ -136,13 +136,11 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
         yxs_midBgView.isHidden = true
         
         if let classStarModel = classStarModel{
-            
             /// 服务端需要返回
             let stage = YXSPersonDataModel.sharePerson.personStage
             yxs_firstRankView.setViewModel(classStarModel.mapTop3?.first, classStarModel.currentChildren, index: 1, stage: stage)
             yxs_secendRankView.setViewModel(classStarModel.mapTop3?.secend, classStarModel.currentChildren, index: 2, stage: stage)
             yxs_thridRankView.setViewModel(classStarModel.mapTop3?.thrid, classStarModel.currentChildren, index: 3, stage: stage)
-            
             
             if YXSPersonDataModel.sharePerson.personRole == .PARENT,YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: model.serviceId ?? 1001, childId: model.childrenId ?? 0){
                 redView.isHidden = false
@@ -168,7 +166,6 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
                 }
                 yxs_goRemindButton.snp.remakeConstraints { (make) in
                     make.top.equalTo(yxs_tipsLabel.snp_bottom).offset(27.5)
-                    make.bottom.equalTo(-33)
                     make.centerX.equalTo(self)
                     make.size.equalTo(CGSize.init(width: 192, height: 49))
                 }
@@ -211,7 +208,6 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
                         make.top.equalTo(yxs_midBgView.snp_bottom).offset(10)
                         make.left.equalTo(15)
                         make.height.equalTo(23.5)
-                        make.bottom.equalTo(-14.5)
                     }
                 }else{
                     UIUtil.yxs_setLabelAttributed(yxs_title, text: ["\((model.childrenRealName ?? self.yxs_user.curruntChild?.realName) ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
@@ -219,7 +215,6 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
                         make.top.equalTo(yxs_title.snp_bottom).offset(10)
                         make.left.equalTo(15)
                         make.height.equalTo(23.5)
-                        make.bottom.equalTo(-14.5)
                     }
                     yxs_midBgView.isHidden = true
                 }

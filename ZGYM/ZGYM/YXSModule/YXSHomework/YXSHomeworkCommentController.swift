@@ -11,6 +11,11 @@ import NightNight
 
 class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate, UITableViewDataSource{
     
+    var isChangeRemark: Bool = false
+    var isModify: Bool = false
+    var remarkContent: String = ""
+    var remarkAudioModel: SLAudioModel = SLAudioModel()
+    var remarkGood: Int = 0
     /// 修改点评model
     var myReviewModel: YXSHomeworkDetailModel?
     var homeModel:YXSHomeListModel?
@@ -19,6 +24,12 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     public func initChangeReview(myReviewModel: YXSHomeworkDetailModel?, model:YXSHomeListModel) {
         self.homeModel = model
         self.myReviewModel = myReviewModel
+        remarkContent = myReviewModel!.remark!
+        let audioModel = SLAudioModel()
+        audioModel.servicePath = myReviewModel?.remarkAudioUrl
+        audioModel.time = myReviewModel?.remarkAudioDuration ?? 0
+        remarkAudioModel = audioModel
+        remarkGood = myReviewModel?.isGood ?? 0
     }
     
     override func viewDidLoad() {
@@ -34,6 +45,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         
         contentView.addSubview(voiceView)
         voiceView.isHidden = true
+        contentView.addSubview(goodControl)
         contentView.addSubview(btnVoice)
         contentView.addSubview(lbNote)
         contentView.addSubview(lbLine)
@@ -65,6 +77,13 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
             make.height.width.equalTo(29)
         })
         
+        goodControl.snp.makeConstraints { (make) in
+            make.left.equalTo(btnVoice.snp_right).offset(15)
+            make.centerY.equalTo(btnVoice)
+            make.width.equalTo(100)
+            make.height.equalTo(20)
+        }
+        
         lbNote.snp.makeConstraints({ (make) in
             make.top.equalTo(btnVoice.snp_top)
             make.right.equalTo(-15)
@@ -85,12 +104,12 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
             make.right.equalTo(0)
             make.height.equalTo(180)
         })
-        
+        goodControl.isSelected = (remarkGood == 1 ? true : false)
         initPublish()
     }
     
     func initPublish() {
-        if myReviewModel !=  nil {
+        if isChangeRemark {
             textView.text = myReviewModel?.remark
             if let audioUrl = myReviewModel?.remarkAudioUrl, audioUrl.count != 0{
                 let audioModel = SLAudioModel()
@@ -110,12 +129,14 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     }
     
     func updateUI() {
+        goodControl.isSelected = (remarkGood == 1 ? true : false)
         if self.audioModel == nil {
             voiceView.isHidden = true
             btnVoice.isEnabled = true
             btnVoice.snp.remakeConstraints({ (make) in
                 make.top.equalTo(textView.snp_bottom).offset(5)
                 make.left.equalTo(15)
+                make.height.width.equalTo(29)
             })
             contentView.snp.remakeConstraints({ (make) in
                 make.top.equalTo(10)
@@ -124,11 +145,16 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
                 make.height.equalTo(440)
             })
         }else {
+            let vModel = YXSVoiceViewModel()
+            vModel.voiceDuration = self.audioModel.time ?? 0
+            vModel.voiceUlr = self.audioModel.path
+            voiceView.model = vModel
             voiceView.isHidden = false
             btnVoice.isEnabled = false
             btnVoice.snp.remakeConstraints({ (make) in
                 make.top.equalTo(voiceView.snp_bottom).offset(5)
                 make.left.equalTo(15)
+                make.height.width.equalTo(29)
             })
             contentView.snp.remakeConstraints({ (make) in
                 make.top.equalTo(10)
@@ -150,28 +176,64 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     func showAudio(_ model:SLAudioModel? = nil){
         let audioView = YXSRecordAudioView.showRecord(audio: model) { [weak self](audio) in
             guard let strongSelf = self else { return }
+            if strongSelf.remarkAudioModel.servicePath != audio.servicePath {
+                strongSelf.isModify = true
+            }
             strongSelf.audioModel = audio
             strongSelf.updateUI()
         }
         audioView.sourceDirectory = self.sourceDirectory
     }
     
+    @objc func goodControlClick() {
+        goodControl.isSelected = !goodControl.isSelected
+        remarkGood = goodControl.isSelected ? 1 : 0
+//        goodClick?(self.model!)
+//        finishView.isHidden = !goodControl.isSelected
+    }
+    
     @objc func sendClick(sender: YXSButton) {//发送点评
+        sender.isEnabled = false
         if self.textView.text.count < 1 {
+            sender.isEnabled = true
             return
         }
+        if isChangeRemark {
+            if !isModify {
+                if myReviewModel?.isGood != remarkGood {
+                    YXSEducationHomeworkInTeacherChangeGoodRequest.init(childrenId: self.myReviewModel?.childrenId ?? 0, homeworkCreateTime: self.homeModel?.createTime ?? "", homeworkId: self.homeModel?.serviceId ?? 0, isGood: remarkGood).request({ (result) in
+                        if (self.commetCallBack != nil) {
+                            self.commetCallBack!()
+                        }
+                        
+                    }) { (msg, code) in
+                        MBProgressHUD.yxs_showMessage(message: msg)
+                        sender.isEnabled = true
+                    }
+                }
+                self.navigationController?.popViewController()
+                return
+            }
+        }
+//        if isChangeRemark && !isModify{
+//            self.navigationController?.popViewController()
+//            return
+//        }
         MBProgressHUD.yxs_showLoading()
-        if self.audioModel != nil {
+        if self.audioModel != nil && self.audioModel.servicePath?.count ?? 0 <= 0{
             YXSUploadSourceHelper().uploadAudio(mediaModel: audioModel, sucess: { (url) in
                 MBProgressHUD.yxs_hideHUD()
                 self.remarkAudioDuration = self.audioModel.time
                 self.remarkAudioUrl = url;
+                sender.isEnabled = true
                 self.commitCommet()
             }) { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)
+                sender.isEnabled = true
             }
                     
         }else {
+            sender.isEnabled = true
             commitCommet()
         }
         
@@ -186,9 +248,9 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     
     func commitCommet(){
         MBProgressHUD.yxs_showLoading()
-        if myReviewModel != nil {
+        if isChangeRemark {
             //修改点评
-            YXSEducationHomeworkRemarkUpdate(homeworkId: self.homeModel?.serviceId ?? 0, remark: self.textView.text, childrenId: self.myReviewModel?.childrenId ?? 0, remarkAudioUrl: self.remarkAudioUrl ?? "", remarkAudioDuration: self.remarkAudioDuration ?? 0, homeworkCreateTime: self.homeModel?.createTime ?? "").request({ (json) in
+            YXSEducationHomeworkRemarkUpdate(homeworkId: self.homeModel?.serviceId ?? 0, remark: self.textView.text, childrenId: self.myReviewModel?.childrenId ?? 0, remarkAudioUrl: self.remarkAudioUrl ?? "", remarkAudioDuration: self.remarkAudioDuration ?? 0, homeworkCreateTime: self.homeModel?.createTime ?? "",isGood: self.remarkGood).request({ (json) in
                 MBProgressHUD.yxs_hideHUD()
                 MBProgressHUD.yxs_showMessage(message: "修改点评成功")
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
@@ -202,39 +264,41 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
                     }
                 }
             }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUD()
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
         } else {
-            YXSEducationHomeworkBatchRemark(homeworkId: self.homeModel?.serviceId ?? 0, remark: self.textView.text, childrenIdList: self.childrenIdList, remarkAudioUrl: self.remarkAudioUrl ?? "", remarkAudioDuration: self.remarkAudioDuration ?? 0, homeworkCreateTime: self.homeModel?.createTime ?? "").request({ (json) in
-                        MBProgressHUD.yxs_hideHUD()
-                        MBProgressHUD.yxs_showMessage(message: "点评成功")
-                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
-                            if (self.commetCallBack != nil) {
-                                self.commetCallBack!()
+            YXSEducationHomeworkBatchRemark(homeworkId: self.homeModel?.serviceId ?? 0, remark: self.textView.text, childrenIdList: self.childrenIdList, remarkAudioUrl: self.remarkAudioUrl ?? "", remarkAudioDuration: self.remarkAudioDuration ?? 0, homeworkCreateTime: self.homeModel?.createTime ?? "",isGood: self.remarkGood).request({ (json) in
+                MBProgressHUD.yxs_hideHUD()
+                MBProgressHUD.yxs_showMessage(message: "点评成功")
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
+                    if (self.commetCallBack != nil) {
+                        self.commetCallBack!()
+                    }
+                    if self.isPop == true {
+                        self.navigationController?.popViewController()
+                    }else {
+    //                    let vc  = YXSHomeworkCommitListViewController()
+    //                    self.navigationController?.popToViewController(vc, animated: true)
+                        for  vc in self.navigationController!.viewControllers{
+                            if vc is YXSHomeworkDetailViewController{
+                                let popVc = vc as! YXSHomeworkDetailViewController
+                                popVc.refreshData()
+                                self.navigationController?.popToViewController(popVc, animated: true)
+                                return
+                            }else{
+                                 self.navigationController?.popViewController()
                             }
-                            if self.isPop == true {
-                                self.navigationController?.popViewController()
-                            }else {
-            //                    let vc  = YXSHomeworkCommitListViewController()
-            //                    self.navigationController?.popToViewController(vc, animated: true)
-                                for  vc in self.navigationController!.viewControllers{
-                                    if vc is YXSHomeworkDetailViewController{
-                                        let popVc = vc as! YXSHomeworkDetailViewController
-                                        popVc.refreshData()
-                                        self.navigationController?.popToViewController(popVc, animated: true)
-                                        return
-                                    }else{
-                                         self.navigationController?.popViewController()
-                                    }
-                                }
-                                
-                            }
-                            
                         }
                         
-                    }, failureHandler: { (msg, code) in
-                        MBProgressHUD.yxs_showMessage(message: msg)
-                    })
+                    }
+                    
+                }
+            
+            }, failureHandler: { (msg, code) in
+                MBProgressHUD.yxs_hideHUD()
+                MBProgressHUD.yxs_showMessage(message: msg)
+            })
         }
         
     }
@@ -256,6 +320,9 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let title = self.dataSource[indexPath.row]
+        if title != remarkContent {
+            self.isModify = true
+        }
         self.textView.text = title
     }
     
@@ -272,7 +339,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         let navSendItem = UIBarButtonItem(customView: btnSend)
         self.navigationItem.rightBarButtonItem = navSendItem
             
-        }
+    }
     
     lazy var contentView: UIView = {
         let view = UIView()
@@ -289,6 +356,11 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         tv.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNightFFFFFF)
         tv.placeholderColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
         tv.placeholder = "请输入评语或添加语音"
+        tv.textDidChangeBlock = { (str)in
+            if str != self.remarkContent {
+                self.isModify = true
+            }
+        }
         tv.font = UIFont.systemFont(ofSize: 15)
         return tv
     }()
@@ -320,12 +392,27 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
                 [weak self] in
                 guard let strongSelf = self else { return }
                 strongSelf.removeAudio()
+                strongSelf.isModify = true
             }, showDelect: true)
         voiceView.minWidth = 120
         voiceView.tapPlayer = false
         return voiceView
     }()
 
+    lazy var goodControl: YXSCustomImageControl = {
+        let goodControl = YXSCustomImageControl.init(imageSize: CGSize.init(width: 16, height: 19), position: YXSImagePositionType.left, padding: 5)
+        goodControl.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#696C73"), for: .normal)
+        goodControl.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#C92B1E"), for: .selected)
+        goodControl.setTitle("设为优秀", for: .normal)
+        goodControl.setTitle("取消优秀", for: .selected)
+        goodControl.font = UIFont.systemFont(ofSize: 15)
+        goodControl.setImage(UIImage.init(named: "yxs_punch_good_gray"), for: .normal)
+        goodControl.setImage(UIImage.init(named: "yxs_punch_good_select"), for: .selected)
+        goodControl.isSelected = false
+        goodControl.addTarget(self, action: #selector(goodControlClick), for: .touchUpInside)
+        return goodControl
+    }()
+    
     lazy var lbLine: YXSLabel = {
         let lb = YXSLabel()
         lb.mixedBackgroundColor = MixedColor(normal: 0xE6EAF3, night: 0x20232F)

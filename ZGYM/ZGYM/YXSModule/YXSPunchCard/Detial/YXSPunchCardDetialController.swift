@@ -93,7 +93,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        YXSSSAudioPlayer.sharedInstance.stopVoice()
+        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
     }
     
     deinit {
@@ -219,13 +219,16 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
     @objc func loadData(){
         group.enter()
         queue.async {
-            self.yxs_loadTaskData()
+            DispatchQueue.main.async {
+                  self.yxs_loadTaskData()
+              }
+            
         }
         
         
         if loadMessageRequest{
             group.enter()
-            queue.async {
+            DispatchQueue.main.async {
                 self.yxs_loadMessageData()
             }
         }
@@ -290,7 +293,11 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
             YXSPunchCardShareView.showAlert(shareModel: shareModel) {(image) in
                 YXSShareTool.showCommonShare(shareModel: YXSShareModel.init(image: image))
             }
-            strongSelf.punchCardFooter.isCurruntCalendarVC = true
+            //从日历跳转过去的打卡
+            if patchTime != nil{
+                strongSelf.punchCardFooter.isCurruntCalendarVC = true
+            }
+            
             strongSelf.loadData()
         }
     }

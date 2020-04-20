@@ -171,6 +171,9 @@ class YXSFriendCircleModel : NSObject, NSCoding, Mappable{
     /// 正在点赞请求
     var isOnRequsetPraise: Bool = false
     
+    ///内容调整宽度(首页有背景 内容宽度缩小)
+    var contentAdjustWidth: CGFloat = 0
+    
     // MARK: - func
     /// 计算朋友圈model值
     func confingHeight(){
@@ -181,7 +184,7 @@ class YXSFriendCircleModel : NSObject, NSCoding, Mappable{
         paragraphStye.lineSpacing = kMainContentLineHeight
         paragraphStye.lineBreakMode = .byWordWrapping
         let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
-        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: attributes, width: helper.contentWidth) + 1
+        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: attributes, width: helper.contentWidth - contentAdjustWidth) + 1
         let text: String = content ?? ""
         frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: text.removeSpace() , attributes: attributes,width: helper.contentWidth, numberOfLines: 3) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 2)  ? true : false

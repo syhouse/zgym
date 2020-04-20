@@ -42,7 +42,11 @@ class HomeworkReadCommitListHeaderView: UIView {
     var model: HomeworkReadCommitListHeaderViewModel? {
         didSet {
             if self.model?.percent != nil {
-                self.lbPercent.text = "\(Int((self.model?.percent ?? 0)*100))%"
+                var perInt = Int((self.model?.percent ?? 0)*100)
+                if self.model?.percent ?? 0.0 > 0.0 && perInt < 1{
+                    perInt = 1
+                }
+                self.lbPercent.text = "\(perInt)%"
                 progressView.progress = self.model?.percent ?? 0.0
             }
             self.lbType.text = self.model?.title ?? ""

@@ -157,7 +157,7 @@ class YXSHomeChildView: UIControl {
     lazy var nameLabel: YXSLabel = {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+        label.mixedTextColor = MixedColor(normal: isOldUI ? UIColor.white : kTextMainBodyColor, night: UIColor.white)
         return label
     }()
     

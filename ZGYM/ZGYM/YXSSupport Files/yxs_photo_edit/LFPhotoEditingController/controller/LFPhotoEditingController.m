@@ -312,7 +312,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     [naviBar addSubview:_edit_finishButton];
     
     if (self.isShowClearReductionBtn) {
-        UIButton *_clear_reductionButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - editOkWidth-margin - 110, 0, 100, naviHeight)];
+        UIButton *_clear_reductionButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - editOkWidth-margin - editOkWidth, 0, editOkWidth, naviHeight)];
         _clear_reductionButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [_clear_reductionButton setTitle:@"清除" forState:UIControlStateNormal];
         _clear_reductionButton.titleLabel.font = font;
@@ -320,6 +320,16 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         [_clear_reductionButton addTarget:self action:@selector(reductionButtonClick) forControlEvents:UIControlEventTouchUpInside];
         [naviBar addSubview:_clear_reductionButton];
     }
+    
+    UILabel *titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 90, naviHeight)];
+    titleLbl.text = self.titleStr;
+    titleLbl.textAlignment = NSTextAlignmentCenter;
+    titleLbl.centerX = self.view.width * 0.5;
+    titleLbl.numberOfLines = 1;
+    titleLbl.lineBreakMode = NSLineBreakByTruncatingTail;
+    titleLbl.textColor = [UIColor whiteColor];
+    titleLbl.font = [UIFont boldSystemFontOfSize:16];
+    [naviBar addSubview:titleLbl];
     
     [self.view addSubview:_edit_naviBar];
 }

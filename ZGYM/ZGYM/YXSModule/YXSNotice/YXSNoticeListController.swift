@@ -42,7 +42,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             make.bottom.equalTo(-kSafeBottomHeight)
         }
         tableView.register(YXSNoticeListCell.self, forCellReuseIdentifier: "YXSNoticeListCell")
-        tableView.fd_debugLogEnabled = true
+
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER && !isAgenda{
             rightButton.isHidden = false
@@ -50,20 +50,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             rightButton.isHidden = true
         }
         
-        let list = YXSCacheHelper.yxs_getCacheNoticeList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
-        for (index, model) in list.enumerated(){
-            if index < 7{
-               self.dataSource.append(model)
-            }
-        }
-        SLLog("viewDidLoad")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        SLLog("viewDidAppear")
         self.dataSource = YXSCacheHelper.yxs_getCacheNoticeList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
-        self.tableView.reloadData()
     }
     
     // MARK: -UI
@@ -164,34 +151,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let model = self.dataSource[indexPath.row]
-        let key = "\(model.serviceId ?? 0)\(model.isShowAll)\(YXSPersonDataModel.sharePerson.personRole.rawValue)"
-        if model.isShowAll{
-            if let cacheShowAllHeight = model.cacheShowAllHeight{
-                return cacheShowAllHeight
-            }else{
-                let height = self.tableView.fd_heightForCell(withIdentifier: "YXSNoticeListCell", cacheByKey: key as NSCopying) { (cell) in
-                    if let cell = cell as? YXSNoticeListCell{
-                        cell.yxs_setCellModel(model)
-                    }
-                }
-                model.cacheShowAllHeight = height
-                YXSCacheHelper.yxs_cacheNoticeList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
-                return height
-            }
-        }else{
-            if let cacheNormaHeight = model.cacheNormaHeight{
-                return cacheNormaHeight
-            }else{
-                let height = self.tableView.fd_heightForCell(withIdentifier: "YXSNoticeListCell", cacheByKey: key as NSCopying) { (cell) in
-                    if let cell = cell as? YXSNoticeListCell{
-                        cell.yxs_setCellModel(model)
-                    }
-                }
-                model.cacheNormaHeight = height
-                YXSCacheHelper.yxs_cacheNoticeList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
-                return height
-            }
-        }
+        return model.height
     }
     
     

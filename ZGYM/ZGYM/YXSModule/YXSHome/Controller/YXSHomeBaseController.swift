@@ -156,9 +156,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     ///   - cellType: 点击类型
     ///   - indexPath: 当前indexPath
     private func yxs_dealCellEvent(_ cellType: YXSHomeCellEvent, indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         let model = yxs_dataSource[indexPath.section].items[indexPath.row]
         switch cellType {
         case .showAll:
@@ -290,9 +287,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     /// 展示置顶视图
     /// - Parameter indexPath: 操作当前indexPath
     private func yxs_showTopAlert(indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         
         let listModel = yxs_dataSource[indexPath.section].items[indexPath.row]
         YXSCommonBottomAlerView.showIn(topButtonTitle: ((listModel.isTop ?? 0)  == 1) ? "取消置顶" : "置顶") { [weak self] in
@@ -317,9 +311,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     // MARK: - 优成长Event
     ///点赞
     private func yxs_changePrise(_ indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         let YXSFriendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
         if let YXSFriendCircleModel = YXSFriendCircleModel{
             UIUtil.yxs_changeFriendCirclePrise(YXSFriendCircleModel,positon:.home) {
@@ -329,9 +320,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     }
     ///点评
     private func yxs_showComment(_ indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         let YXSFriendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
         if let model = YXSFriendCircleModel{
             let vc = YXSFriendsCircleController.init(classCircleId: model.classCircleId)
@@ -340,9 +328,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     }
     ///点击头像去个人详情
     private func yxs_goToUserInfoController(_ indexPath: IndexPath){
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return
-        }
         let friendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
         UIUtil.yxs_reduceHomeRed(serviceId: friendCircleModel?.classCircleId ?? 0, childId: friendCircleModel?.childrenId ?? 0)
         if let model = friendCircleModel{
@@ -357,7 +342,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         return yxs_dataSource.count
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        SLLog("numberOfRowsInSection_count=\(yxs_dataSource[section].items.count)")
         return yxs_dataSource[section].items.count
     }
     
@@ -370,62 +354,62 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        SLLog("cellForRowAt_count=\(yxs_dataSource[indexPath.section].items.count)")
-        //莫名其妙
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return (tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell)!
+        if yxs_dataSource.count > indexPath.section {
+            if yxs_dataSource[indexPath.section].items.count > indexPath.row {
+                let model = yxs_dataSource[indexPath.section].items[indexPath.row]
+                var cell: YXSHomeBaseCell!
+                if model.type == .classstart{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "SLHomeClassStartCell") as? YXSHomeBaseCell
+                }else if  model.type == .friendCicle{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "SLHomeFriendCell") as? YXSHomeBaseCell
+                    if let friendCell = cell as? YXSHomeFriendCell{
+                        friendCell.headerBlock = {[weak self](type) in
+                            guard let strongSelf = self else { return }
+                            switch type {
+                            case .comment:
+                                strongSelf.yxs_showComment(indexPath)
+                            case .praise:
+                                strongSelf.yxs_changePrise(indexPath)
+                            case .recall:
+                                strongSelf.yxs_dealCellEvent(.recall, indexPath: indexPath)
+                            case .showAll:
+                                strongSelf.yxs_reloadTableView(indexPath,isScroll: !model.isShowAll)
+                            case .goToUserInfo:
+                                strongSelf.yxs_goToUserInfoController(indexPath)
+                            case .share:
+                                let YXSFriendCircleModel = strongSelf.yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
+                                UIUtil.yxs_shareLink(requestModel: HMRequestShareModel.init(classCircleId: YXSFriendCircleModel?.classCircleId ?? 0,classCircleType: YXSFriendCircleModel?.circleType ?? HMClassCircleType.CIRCLE), shareModel: YXSShareModel(way: YXSShareWayType.QQSession, title: "\(YXSFriendCircleModel?.namePublisher ?? "")分享了一条优成长", descriptionText: YXSFriendCircleModel?.shareText ?? "", link: ""))
+                            }
+                        }
+                    }
+                    
+                }else if model.type == .notice{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "SLNoticeListHomeCell") as? YXSHomeBaseCell
+                }
+                else if model.type == .homework{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "SLHomeworkListHomeCell") as? YXSHomeBaseCell
+                }else if model.type == .punchCard{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "SLPunchCardListHomeCell") as? YXSHomeBaseCell
+                }else if model.type == .solitaire{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "SLSolitaireListHomeCell") as? YXSHomeBaseCell
+                }else{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell
+                }
+                cell.isSingleHome = isSingleHome
+                cell.yxs_setCellModel(model)
+                cell.cellLongTapEvent = {[weak self]  in
+                    guard let strongSelf = self else { return }
+                    strongSelf.yxs_showTopAlert(indexPath: indexPath)
+                }
+                cell.cellBlock = {[weak self] (type: YXSHomeCellEvent) in
+                    guard let strongSelf = self else { return }
+                    strongSelf.yxs_dealCellEvent(type, indexPath: indexPath)
+                }
+                return cell
+            }
         }
         
-        let model = yxs_dataSource[indexPath.section].items[indexPath.row]
-        var cell: YXSHomeBaseCell!
-        if model.type == .classstart{
-            cell = tableView.dequeueReusableCell(withIdentifier: "SLHomeClassStartCell") as? YXSHomeBaseCell
-        }else if  model.type == .friendCicle{
-            cell = tableView.dequeueReusableCell(withIdentifier: "SLHomeFriendCell") as? YXSHomeBaseCell
-            if let friendCell = cell as? YXSHomeFriendCell{
-                friendCell.headerBlock = {[weak self](type) in
-                    guard let strongSelf = self else { return }
-                    switch type {
-                    case .comment:
-                        strongSelf.yxs_showComment(indexPath)
-                    case .praise:
-                        strongSelf.yxs_changePrise(indexPath)
-                    case .recall:
-                        strongSelf.yxs_dealCellEvent(.recall, indexPath: indexPath)
-                    case .showAll:
-                        strongSelf.yxs_reloadTableView(indexPath,isScroll: !model.isShowAll)
-                    case .goToUserInfo:
-                        strongSelf.yxs_goToUserInfoController(indexPath)
-                    case .share:
-                        let YXSFriendCircleModel = strongSelf.yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
-                        UIUtil.yxs_shareLink(requestModel: HMRequestShareModel.init(classCircleId: YXSFriendCircleModel?.classCircleId ?? 0,classCircleType: YXSFriendCircleModel?.circleType ?? HMClassCircleType.CIRCLE), shareModel: YXSShareModel(way: YXSShareWayType.QQSession, title: "\(YXSFriendCircleModel?.namePublisher ?? "")分享了一条优成长", descriptionText: YXSFriendCircleModel?.shareText ?? "", link: ""))
-                    }
-                }
-            }
-            
-        }else if model.type == .notice{
-            cell = tableView.dequeueReusableCell(withIdentifier: "SLNoticeListHomeCell") as? YXSHomeBaseCell
-        }
-        else if model.type == .homework{
-            cell = tableView.dequeueReusableCell(withIdentifier: "SLHomeworkListHomeCell") as? YXSHomeBaseCell
-        }else if model.type == .punchCard{
-            cell = tableView.dequeueReusableCell(withIdentifier: "SLPunchCardListHomeCell") as? YXSHomeBaseCell
-        }else if model.type == .solitaire{
-            cell = tableView.dequeueReusableCell(withIdentifier: "SLSolitaireListHomeCell") as? YXSHomeBaseCell
-        }else{
-            cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell
-        }
-        cell.isSingleHome = isSingleHome
-        cell.yxs_setCellModel(model)
-        cell.cellLongTapEvent = {[weak self]  in
-            guard let strongSelf = self else { return }
-            strongSelf.yxs_showTopAlert(indexPath: indexPath)
-        }
-        cell.cellBlock = {[weak self] (type: YXSHomeCellEvent) in
-            guard let strongSelf = self else { return }
-            strongSelf.yxs_dealCellEvent(type, indexPath: indexPath)
-        }
-        return cell
+        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -435,41 +419,10 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //莫名其妙
-        if yxs_dataSource[indexPath.section].items.count - 1 < indexPath.row{
-            return 0
-        }
         
         let model = yxs_dataSource[indexPath.section].items[indexPath.row]
-        let cache = self.getCacheKey(model: model)
-        
-        if model.isShowAll{
-            if let cacheShowAllHeight = model.cacheShowAllHeight{
-                return cacheShowAllHeight
-            }else{
-                let height = self.tableView.fd_heightForCell(withIdentifier: cache.1, cacheByKey: cache.0 as NSCopying) { (cell) in
-                    if let cell = cell as? YXSHomeBaseCell{
-                        cell.yxs_setCellModel(model)
-                    }
-                }
-                model.cacheShowAllHeight = height
-                YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource)
-                return height
-            }
-        }else{
-            if let cacheNormaHeight = model.cacheNormaHeight{
-                return cacheNormaHeight
-            }else{
-                let height = self.tableView.fd_heightForCell(withIdentifier: cache.1, cacheByKey: cache.0 as NSCopying) { (cell) in
-                    if let cell = cell as? YXSHomeBaseCell{
-                        cell.yxs_setCellModel(model)
-                    }
-                }
-                model.cacheNormaHeight = height
-                YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource)
-                return height
-            }
-        }
+        model.isShowTag = true
+        return model.height
     }
     
     func getCacheKey(model: YXSHomeListModel) -> (String, String){
@@ -644,9 +597,6 @@ extension YXSHomeBaseController{
                                 model.state = 100
                             }
                         }else if model.type == .punchCard{//打卡更新剩余人数
-                            self.tableView.fd_keyedHeightCache.invalidateHeight(forKey: self.getCacheKey(model: model).0 as NSCopying)
-                            model.cacheNormaHeight = nil
-                            model.cacheShowAllHeight = nil
                         }
                         
                         yxs_reloadTableView(IndexPath.init(row: row, section: section))

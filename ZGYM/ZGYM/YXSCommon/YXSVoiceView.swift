@@ -9,9 +9,30 @@
 import UIKit
 import NightNight
 
-class YXSVoiceView: UIView {
+class YXSVoiceView: YXSVoiceBaseView {
+    var model: YXSVoiceViewModel? {
+        didSet {
+            voiceDuration = model?.voiceDuration
+            voiceUlr = model?.voiceUlr
+            lbSecond.text = "\(voiceDuration ?? 0)\""
+            
+            /// 装载音频
+            if let url = URL(string: model?.voiceUlr ?? "") {
+                YXSSSAudioPlayer.sharedInstance.play(url: url, cacheAudio: true){
+                    self.stopVoiceAnimation()
+                }
+                YXSSSAudioPlayer.sharedInstance.pauseVoice()
+            }
+            
+            updateLayout()
+        }
+    }
+}
 
-    
+class YXSVoiceBaseView: UIView {
+
+    var voiceUlr: String?
+    var voiceDuration: Int?
 //    var minWidth: CGFloat! = 0
     
     var completionHandler:((_ voiceUlr: String, _ voiceDuration: Int)->())?
@@ -80,6 +101,9 @@ class YXSVoiceView: UIView {
         
         
         self.lbSecond.text = "12\""
+        
+        //初始化最大宽度
+        maxWidth =  self.frame.width*2/3
     }
     
     // MARK: - Setter
@@ -89,24 +113,21 @@ class YXSVoiceView: UIView {
         }
     }
     
-    var model: YXSVoiceViewModel? {
+    ///最大宽度
+    var maxWidth: CGFloat? {
         didSet {
-            lbSecond.text = "\(self.model?.voiceDuration ?? 0)\""
-            /// 装载音频
-            if let url = URL(string: model?.voiceUlr ?? "") {
-                YXSSSAudioPlayer.sharedInstance.play(url: url, cacheAudio: true){
-                    self.stopVoiceAnimation()
-                }
-                YXSSSAudioPlayer.sharedInstance.pauseVoice()
-            }
-            
             updateLayout()
         }
     }
     
     @objc func updateLayout() {
-        let percentage: CGFloat = CGFloat(self.model?.voiceDuration ?? 0) / 60.0
-        let width:CGFloat! = self.frame.width * percentage > minWidth ? self.frame.width * percentage : minWidth
+        let percentage: CGFloat = CGFloat(voiceDuration ?? 0) / 60.0
+        //伸缩宽度
+        var flexibleWidth = self.frame.width - minWidth
+        if let maxWidth = maxWidth{
+            flexibleWidth = maxWidth - minWidth
+        }
+        let width:CGFloat = minWidth + flexibleWidth * percentage
         indicatorView.snp_remakeConstraints { (make) in
             make.top.equalTo(0)
             make.left.equalTo(0)
@@ -129,7 +150,7 @@ class YXSVoiceView: UIView {
                 stopVoiceAnimation()
             }
         }
-        self.completionHandler?(model?.voiceUlr ?? "", model?.voiceDuration ?? 0)
+        self.completionHandler?(voiceUlr ?? "", voiceDuration ?? 0)
     }
     
     func startVoiceAnimation(){

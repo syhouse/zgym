@@ -211,8 +211,9 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             messagemodel?.commentsUserInfo?.userType = self.model?.messageUserType
             self.messageModel = messagemodel
             filterBtnView.model = self.model
-//            topHeaderView.strGrade = self.model?.className
-            dateView.title = "截止日期：\(self.model?.endTime ?? "")"
+
+            let endDateStr = self.model?.endTime?.yxs_Date().toString(format: .custom("yyyy-MM-dd HH:mm"))
+            dateView.title = "截止日期：\(endDateStr ?? "")"
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
                 var teacherName = "我"
                 if self.model?.teacherName != YXSPersonDataModel.sharePerson.userModel.name {
@@ -481,7 +482,7 @@ class HomeworkDetailFilterBtnView : UIView {
     @objc func jobTypeClick(sender: UIButton) {
         switch sender.tag {
         case 10001:
-            allBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), leftMargin: 20, rightMargin: 20, lineHeight: 2)
+            allBtn.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), night: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6")), leftMargin: 20, rightMargin: 20, lineHeight: 2)
             goodBtn.yxs_removeLine()
             myBtn.yxs_removeLine()
             goodBtn.isSelected = false
@@ -489,7 +490,7 @@ class HomeworkDetailFilterBtnView : UIView {
             filterBtn.isHidden = false
             break
         case 10002:
-            goodBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), leftMargin: 20, rightMargin: 20, lineHeight: 2)
+            goodBtn.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), night: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6")), leftMargin: 20, rightMargin: 20, lineHeight: 2)
             allBtn.yxs_removeLine()
             myBtn.yxs_removeLine()
             allBtn.isSelected = false
@@ -497,7 +498,7 @@ class HomeworkDetailFilterBtnView : UIView {
             filterBtn.isHidden = true
             break
         case 10003:
-            myBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), leftMargin: 20, rightMargin: 20, lineHeight: 2)
+            myBtn.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), night: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6")), leftMargin: 20, rightMargin: 20, lineHeight: 2)
             allBtn.yxs_removeLine()
             goodBtn.yxs_removeLine()
             allBtn.isSelected = false
@@ -520,10 +521,10 @@ class HomeworkDetailFilterBtnView : UIView {
     /// 全部作业按钮
     lazy private var allBtn: UIButton = {
         let button = UIButton.init()
-        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#979799"), night: UIColor.yxs_hexToAdecimalColor(hex: "#979799")), forState: .normal)
-        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#565656"), night: UIColor.yxs_hexToAdecimalColor(hex: "#565656")), forState: .selected)
+        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#979799"), night: UIColor.yxs_hexToAdecimalColor(hex: "#565656")), forState: .normal)
+        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#565656"), night: UIColor.white), forState: .selected)
         button.isSelected = true
-        button.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), leftMargin: 20, rightMargin: 20, lineHeight: 2)
+        button.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), night: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6")), leftMargin: 20, rightMargin: 20, lineHeight: 2)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.setTitle("全部作业", for: .normal)
         button.tag = 10001
@@ -536,8 +537,8 @@ class HomeworkDetailFilterBtnView : UIView {
     lazy private var goodBtn: UIButton = {
         let button = UIButton.init()
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#979799"), night: UIColor.yxs_hexToAdecimalColor(hex: "#979799")), forState: .normal)
-        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#565656"), night: UIColor.yxs_hexToAdecimalColor(hex: "#565656")), forState: .selected)
+        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#979799"), night: UIColor.yxs_hexToAdecimalColor(hex: "#565656")), forState: .normal)
+        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#565656"), night: UIColor.white), forState: .selected)
         button.setTitle("优秀作业", for: .normal)
         button.tag = 10002
         button.addTarget(self, action: #selector(jobTypeClick(sender:)), for: .touchUpInside)
@@ -549,8 +550,8 @@ class HomeworkDetailFilterBtnView : UIView {
     lazy private var myBtn: UIButton = {
         let button = UIButton.init()
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#979799"), night: UIColor.yxs_hexToAdecimalColor(hex: "#979799")), forState: .normal)
-        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#565656"), night: UIColor.yxs_hexToAdecimalColor(hex: "#565656")), forState: .selected)
+        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#979799"), night: UIColor.yxs_hexToAdecimalColor(hex: "#565656")), forState: .normal)
+        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#565656"), night: UIColor.white), forState: .selected)
 //        button.setBackgroundImage(UIImage.yxs_image(with: UIColor.yxs_hexToAdecimalColor(hex: "#219BD5")), for: .selected)
 //        button.setBackgroundImage(UIImage.yxs_image(with: UIColor.yxs_hexToAdecimalColor(hex: "#CCCCCC")), for: .normal)
         button.setTitle("我的作业", for: .normal)

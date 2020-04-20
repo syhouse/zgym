@@ -63,8 +63,8 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         
         finishView.snp.makeConstraints { (make) in
             make.size.equalTo(CGSize.init(width: 50.5, height: 45))
-            make.right.equalTo(-118.5)
-            make.top.equalTo(imgAvatar)
+            make.left.equalTo(150)
+            make.top.equalTo(imgAvatar).offset(-2)
         }
 
         goodControl.snp.makeConstraints { (make) in
@@ -76,7 +76,8 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
 
         lbName.snp.makeConstraints { (make) in
             make.left.equalTo(imgAvatar.snp_right).offset(15)
-            make.width.equalTo(SCREEN_WIDTH - 150)
+            make.right.equalTo(goodControl.snp_left).offset(-10)
+//            make.width.equalTo(SCREEN_WIDTH - 150)
             make.top.equalTo(imgAvatar.snp_top)
             make.height.equalTo(20)
         }
@@ -85,7 +86,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             make.bottom.equalTo(imgAvatar.snp_bottom)
             make.height.equalTo(20)
             make.left.equalTo(lbName)
-            make.width.equalTo(SCREEN_WIDTH - 150)
+            make.right.equalTo(goodControl.snp_left).offset(-10)
         })
 
         homeWorkChangeButton.snp.makeConstraints { (make) in
@@ -235,6 +236,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             var lastBottom = 10
             if self.model?.hasVoice ?? false {
                 voiceView.isHidden = false
+                voiceView.id = "\(self.model?.id ?? 0)"
                 let voiceModel = YXSVoiceViewModel()
                 voiceView.width = SCREEN_WIDTH - 30 - 41
                 voiceModel.voiceDuration = self.model?.audioDuration
@@ -386,6 +388,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
     @objc func goodControlClick() {
         goodControl.isSelected = !goodControl.isSelected
         goodClick?(self.model!)
+        finishView.isHidden = !goodControl.isSelected
     }
 
     /// 评论
@@ -436,7 +439,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         let goodControl = YXSCustomImageControl.init(imageSize: CGSize.init(width: 16, height: 19), position: YXSImagePositionType.left, padding: 5)
         goodControl.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#696C73"), for: .normal)
         goodControl.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#C92B1E"), for: .selected)
-        goodControl.setTitle("优秀作业", for: .normal)
+        goodControl.setTitle("设为优秀", for: .normal)
         goodControl.setTitle("取消优秀", for: .selected)
         goodControl.font = UIFont.systemFont(ofSize: 15)
         goodControl.setImage(UIImage.init(named: "yxs_punch_good_gray"), for: .normal)
@@ -462,8 +465,8 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         return nineMediaView
     }()
     
-    lazy var voiceView: YXSVoiceView = {
-        let voiceView = YXSVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
+    lazy var voiceView: YXSListVoiceView = {
+        let voiceView = YXSListVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
             [weak self] (url, duration)in
             guard let strongSelf = self else { return }
         })
@@ -658,7 +661,7 @@ class SLHomeworkCommentDetailRemarkView: UIView {
             remarkVoiceView.isHidden = true
             remarkContentLabel.isHidden = true
             remarkNameLbl.text = self.hmModel?.teacherName
-            remarkTimeLbl.text = self.model?.remarkTime
+            remarkTimeLbl.text = self.model?.remarkTime?.yxs_Time()
 //            var last = remarkTimeLbl
             if (self.model?.remark ?? "").count > 0 {
 //                last = remarkContentLabel
@@ -672,6 +675,7 @@ class SLHomeworkCommentDetailRemarkView: UIView {
             
             
             if (self.model?.remarkAudioUrl ?? "").count > 0 {
+                remarkVoiceView.id = "remark\(self.model?.id ?? 0)"
                 remarkVoiceView.isHidden = false
                 let voiceModel = YXSVoiceViewModel()
                 remarkVoiceView.width = SCREEN_WIDTH - 30 - 41
@@ -780,8 +784,8 @@ class SLHomeworkCommentDetailRemarkView: UIView {
     }()
     
     
-    lazy var remarkVoiceView: YXSVoiceView = {
-        let voiceView = YXSVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
+    lazy var remarkVoiceView: YXSListVoiceView = {
+        let voiceView = YXSListVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
             [weak self] (url, duration)in
             guard let strongSelf = self else { return }
         })

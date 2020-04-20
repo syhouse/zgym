@@ -203,11 +203,10 @@ class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableV
                 let joinList = Mapper<YXSTrackModel>().mapArray(JSONObject: json["tracks"].object) ?? [YXSTrackModel]()
                 if joinList.count > 0 {
                     let curruntTrack = joinList.first
-                    let vc = YXSPlayingViewController()
-                    let track = XMTrack.init(dictionary: curruntTrack?.toJSON())
-                    vc.track = track
-                    vc.trackList = [track!]
-                    weakSelf.navigationController?.pushViewController(vc)
+                    if let  track = XMTrack.init(dictionary: curruntTrack?.toJSON()){
+                        let vc = YXSPlayingViewController.init(track: track, trackList: [track])
+                        weakSelf.navigationController?.pushViewController(vc)
+                    }
                 }
             }) { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)

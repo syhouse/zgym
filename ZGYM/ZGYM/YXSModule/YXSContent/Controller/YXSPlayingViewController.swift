@@ -11,14 +11,44 @@ import NightNight
 
 class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XMLivePlayerDelegate {
 
-    var track: XMTrack?
-    var trackList: [Any] = []
-    var radio: XMRadio?
-    var programList: [Any] = []
-    var radioSchedule: XMRadioSchedule?
+    private var track: XMTrack?
+    private var trackList: [Any] = []
+    private var radio: XMRadio?
+    private var programList: [Any] = []
+    private var radioSchedule: XMRadioSchedule?
     
     /// 播放列表菜单
     var playListVC: YXSPlayListViewController?
+    
+    // MARK: - init
+    
+    
+    /// 展示当前喜马拉雅专辑播放UI
+    override init() {
+        super.init()
+    }
+    
+    
+    /// 播放新的专辑
+    /// - Parameters:
+    ///   - track: 当前声音
+    ///   - trackList: 声音列表
+    convenience init(track: XMTrack, trackList: [Any] = []){
+        self.init()
+        self.track = track
+        self.trackList = trackList
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    // MARK: - leftCycle
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        YXSMusicPlayerWindowView.hidePlayerWindow()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,8 +107,15 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         btnMenu.addTarget(self, action: #selector(menuClick(sender:)), for: .touchUpInside)
         btnCollect.addTarget(self, action: #selector(collectClick(sender:)), for: .touchUpInside)
         
-        stop()
-        play()
+        if let _ = track{//操作喜马拉雅播放器  设置播放列表
+            stop()
+            play()
+        }else{//根据喜马拉雅当前播放器设置播放UI
+            track = XMSDKPlayer.shared()?.currentTrack()
+            trackList = XMSDKPlayer.shared()?.playList() ?? [Any]()
+            xmTrackPlayerDidStart()
+            btnPlayPause.isSelected = !(XMSDKPlayer.shared()?.isPaused() ?? false)
+        }
     }
     
     @objc func layout() {
@@ -303,6 +340,8 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     @objc func onBackClick(sender: UIButton) {
         navigationController?.popViewController()
+        
+        YXSMusicPlayerWindowView.showPlayerWindow()
     }
     
     // MARK: - Delegate
@@ -344,7 +383,14 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     func xmLiveRadioPlayerDidStart() {
         playListVC?.tableView.reloadData()
+        setPlayerDidStartUI()
         
+    }
+    
+    // MARK: -Tool
+    /// 秒 转(分：秒)
+    
+    func setPlayerDidStartUI(){
         if radio != nil {
             customNav.title = XMSDKPlayer.shared()?.currentPlayingRadio()?.radioName
             let totalDuration = Int(XMSDKPlayer.shared()?.currentPlayingRadio()?.radioDesc ?? "0")
@@ -353,7 +399,6 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingRadio()?.coverUrlLarge ?? ""), completed: nil)
             
         } else {
-
             customNav.title = XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.programName
             let totalDuration = XMSDKPlayer.shared()?.currentPlayingProgram()?.totalPlayedTime
             lbTotalDuration.text = String.init(format: "%02d:%02d", ((totalDuration ?? 0)/60),((totalDuration ?? 0)%60))
@@ -362,8 +407,6 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         }
     }
     
-    // MARK: -Tool
-    /// 秒 转(分：秒)
     @objc func stringWithDuration(duration: Int) -> String {
         return String.init(format: "%02d:%02d", (duration/60),(duration%60))
     }

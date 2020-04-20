@@ -82,7 +82,7 @@ class YXSEducationHomeworkChildrenPageQueryRequest: YXSBaseRequset {
         "homeworkId":homeworkId,
         "pageSize": pageSize]
         if isGood != -1 {
-            //查询所有作业
+            //查询优秀作业
             param = ["currentPage":currentPage,
             "homeworkCreateTime": homeworkCreateTime,
             "homeworkId":homeworkId,
@@ -278,7 +278,7 @@ class YXSEducationHomeworkPageQueryChildrenTodoRequest: YXSBaseRequset {
 // MARK: -老师批量点评
 let homeworkBatchRemark = "/homework/batch-remark"
 class YXSEducationHomeworkBatchRemark:YXSBaseRequset {
-    init(homeworkId: Int, remark: String , childrenIdList: [Int] , remarkAudioUrl: String ,remarkAudioDuration: Int ,homeworkCreateTime: String) {
+    init(homeworkId: Int, remark: String , childrenIdList: [Int] , remarkAudioUrl: String ,remarkAudioDuration: Int ,homeworkCreateTime: String, isGood: Int = 0) {
         super.init()
         host = homeHost
         method = .post
@@ -288,7 +288,8 @@ class YXSEducationHomeworkBatchRemark:YXSBaseRequset {
                  "childrenIdList": childrenIdList,
                  "remarkAudioUrl":remarkAudioUrl,
                  "remarkAudioDuration":remarkAudioDuration,
-                 "homeworkCreateTime":homeworkCreateTime ]
+                 "homeworkCreateTime":homeworkCreateTime,
+                 "isGood":isGood]
     }
 }
 
@@ -305,7 +306,8 @@ class YXSEducationHomeworkRemarkUpdate:YXSBaseRequset {
         "childrenId": childrenId,
         "remarkAudioUrl":remarkAudioUrl,
         "remarkAudioDuration":remarkAudioDuration,
-        "homeworkCreateTime":homeworkCreateTime]
+        "homeworkCreateTime":homeworkCreateTime,
+        "isGood":isGood]
     }
 }
 

@@ -37,10 +37,19 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
         initCommonUI()
         
         if isShowTag{
-            nameTimeLabel.snp.makeConstraints { (make) in
-                make.left.equalTo(68)
+            topTimeLabel.snp.remakeConstraints { (make) in
+                make.left.equalTo(69)
                 make.centerY.equalTo(tagLabel)
-                make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45 - 40)
+            }
+            sourceView.snp.makeConstraints { (make) in
+                make.size.equalTo(CGSize.init(width: 65, height: 65))
+                make.top.equalTo(contentLabel)
+                make.right.equalTo(-15)
+            }
+        }else{
+            topTimeLabel.snp.remakeConstraints { (make) in
+                make.left.equalTo(15)
+                make.top.equalTo(19)
             }
             
             sourceView.snp.makeConstraints { (make) in
@@ -48,28 +57,18 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
                 make.top.equalTo(contentLabel)
                 make.right.equalTo(-15)
             }
-        }else{
-            nameTimeLabel.snp.makeConstraints { (make) in
-                make.left.equalTo(15)
-                make.top.equalTo(19)
-                make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45)
-            }
-            
-            sourceView.snp.makeConstraints { (make) in
-                make.size.equalTo(CGSize.init(width: 65, height: 65))
-                make.top.equalTo(19)
-                make.right.equalTo(-15)
-            }
             
             recallView.snp.remakeConstraints { (make) in
                 make.right.equalTo(-8.5)
-                make.size.equalTo(CGSize.init(width: 38, height: 38))
-                make.bottom.equalTo(-8.5)
+                make.centerY.equalTo(topTimeLabel)
             }
         }
         
-//        tagLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        nameTimeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        nameTimeLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(classLabel)
+            make.bottom.equalTo(classLabel.snp_top).offset(-10)
+            make.right.equalTo(classLabel)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -81,7 +80,7 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
         self.model = model
         setHomeWorkUI()
     }
-
+    
     override func showAllClick(){
         model.isShowAll = !model.isShowAll
         showAllControl.isSelected = model.isShowAll
@@ -105,6 +104,7 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
         
         bgContainView.addSubview(contentLabel)
         bgContainView.addSubview(nameTimeLabel)
+        bgContainView.addSubview(topTimeLabel)
         bgContainView.addSubview(showAllControl)
         bgContainView.addSubview(sourceView)
         bgContainView.addSubview(visibleView)
@@ -144,7 +144,7 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
         label.numberOfLines = 2
         return label
     }()
-
+    
     lazy var visibleView: YXSCustomImageControl = {
         let visibleView = YXSCustomImageControl.init(imageSize: CGSize.init(width: 18, height: 18), position: YXSImagePositionType.left, padding: 7)
         visibleView.font = UIFont.systemFont(ofSize: 13)
@@ -163,7 +163,7 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
     lazy var setUpLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont.systemFont(ofSize: YXSHomeListModel.smallFontSize)
         return label
     }()
     
@@ -220,43 +220,28 @@ extension YXSHomeworkListCell{
         
         UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(model.teacherName ?? "")", "  |  \(model.createTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54"), night: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
         classLabel.text = model.className
-        
+        topTimeLabel.text = model.createTime?.date(withFormat: kCommonDateFormatString)?.yxs_homeTimeWeek()
         setSourceViewData()
         
         UIUtil.yxs_setLabelAttributed(visibleView.textLabel, text: ["\(model.readCount)", "/\(model.memberCount ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), kTextLightColor])
         showAllControl.isSelected = model.isShowAll
-        contentLabel.numberOfLines = model.isShowAll ? 0 : 2
         
+        sourceView.isHidden = !model.hasSource
+        contentLabel.numberOfLines = model.isShowAll ? 0 : 2
+        contentLabel.snp.remakeConstraints { (make) in
+            make.left.equalTo(15)
+            make.top.equalTo(topTimeLabel.snp_bottom).offset(YXSHomeListModel.midMagin)
+            make.width.equalTo(model.contentLabelWidth)
+        }
+        UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowAll && model.needShowAllButton)
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             UIUtil.yxs_setLabelAttributed(setUpLabel, text: ["提交情况  ", "\(model.commitCount)","/\(model.memberCount ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),kRedMainColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")])
         }
-        let dic = [NSAttributedString.Key.font: kTextMainBodyFont]
-        let height = UIUtil.yxs_getTextHeigh(textStr: (model.content ?? ""), attributes: dic , width: SCREEN_WIDTH - 30 - (model.hasSource ? 106.5 : 30))
-        if model.hasSource{
-            contentLabel.snp.remakeConstraints { (make) in
-                make.left.equalTo(15)
-                make.top.equalTo(nameTimeLabel.snp_bottom).offset(14)
-                make.right.equalTo(sourceView.snp_left).offset(-20)
-            }
-            sourceView.isHidden = false
-        }else{
-            contentLabel.snp.remakeConstraints { (make) in
-                make.left.equalTo(15)
-                make.top.equalTo(nameTimeLabel.snp_bottom).offset(14)
-                make.right.equalTo(-15)
-            }
-            sourceView.isHidden = true
-        }
-        //需要展示多行
-        let needShowMore = height > 45
-        
-        UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowAll && needShowMore)
-        contentLabel.preferredMaxLayoutWidth = SCREEN_WIDTH - 15 - 20 - (model.hasSource ? 106.5 : 30)
         
         let isTeacher: Bool = YXSPersonDataModel.sharePerson.personRole == .TEACHER
         
-        if needShowMore{
+        if model.needShowAllButton{
             showAllControl.isHidden = false
             showAllControl.snp.remakeConstraints { (make) in
                 make.left.equalTo(contentLabel)
@@ -277,7 +262,6 @@ extension YXSHomeworkListCell{
                 make.height.equalTo(18)
                 make.right.equalTo(-15)
                 if model.isShowAll{
-                    //                make.top.equalTo(fromLabel.snp_bottom).offset(7.5)
                     make.centerY.equalTo(classLabel)
                 }else{
                     if model.hasSource{
@@ -292,7 +276,7 @@ extension YXSHomeworkListCell{
                 setUpLabel.isHidden = false
                 setUpLabel.snp.makeConstraints { (make) in
                     make.left.equalTo(contentLabel)
-                    make.top.equalTo(classLabel.snp_bottom).offset(16)
+                    make.top.equalTo(classLabel.snp_bottom).offset(10)
                 }
             }
             
@@ -307,73 +291,48 @@ extension YXSHomeworkListCell{
                     finishView.snp.remakeConstraints { (make) in
                         make.top.equalTo(20.5)
                         make.size.equalTo(CGSize.init(width: 62.5, height: 64.5))
-//                        make.right.equalTo(contentLabel)
                         make.right.equalTo(-103.5)
                     }
                     commentButton.isHidden = false
                     commentButton.isSelected = model.isRemark
                 }else{
-                    commonStatusButton.isHidden = false
-                    commonStatusButton.layer.borderWidth = 1
-                    commonStatusButton.layer.borderColor = kRedMainColor.cgColor
-                    commonStatusButton.setTitleColor(kRedMainColor, for: .normal)
-                    commonStatusButton.backgroundColor = UIColor.clear
-                    commonStatusButton.setTitle("去完成", for: .normal)
-                    commonStatusButton.snp.remakeConstraints { (make) in
-                        make.right.equalTo(-15)
-                        make.size.equalTo(CGSize.init(width: 79, height: 32))
-                        make.bottom.equalTo(-13.5)
+                    if model.isExpired {
+                        commonStatusButton.layer.borderColor = UIColor.clear.cgColor
+                        commonStatusButton.setTitleColor(UIColor.white, for: .normal)
+                        commonStatusButton.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
+                        commonStatusButton.setTitle("已过期", for: .normal)
+                        commonStatusButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+                        commonStatusButton.cornerRadius = 9.5
+                        commonStatusButton.snp.remakeConstraints { (make) in
+                            make.right.equalTo(-15)
+                            make.size.equalTo(CGSize.init(width: 70, height: 19))
+                            make.bottom.equalTo(-13.5)
+                        }
+                    } else {
+                        commonStatusButton.layer.borderWidth = 1
+                        commonStatusButton.layer.borderColor = kRedMainColor.cgColor
+                        commonStatusButton.setTitleColor(kRedMainColor, for: .normal)
+                        commonStatusButton.backgroundColor = UIColor.clear
+                        commonStatusButton.setTitle("去完成", for: .normal)
+                        commonStatusButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+                        commonStatusButton.layer.cornerRadius = 15
+                        commonStatusButton.snp.remakeConstraints { (make) in
+                            make.right.equalTo(-15)
+                            make.size.equalTo(CGSize.init(width: 79, height: 32))
+                            make.bottom.equalTo(-13.5)
+                        }
                     }
+                    commonStatusButton.isHidden = false
+                    
                 }
                 
             }
         }
         
-        //  cell高度通过classLabel来约束 老师提交 25
         classLabel.snp.remakeConstraints { (make) in
-            make.top.equalTo(contentLabel.snp_bottom).offset(14)
+            make.top.equalTo(contentLabel.snp_bottom).offset(37)
             make.left.equalTo(contentLabel)
             make.right.equalTo(-80)
-            if needShowMore{
-                if YXSPersonDataModel.sharePerson.personRole == .TEACHER && model.onlineCommit == 1{
-                    make.bottom.equalTo(-75).priorityHigh()
-                }else{
-                    if model.isShowAll{
-                        make.bottom.equalTo(-45).priorityHigh()
-                    }else{//去除空格会导致有问题
-                        if model.hasSource{
-                            let removeHeight = UIUtil.yxs_getTextHeigh(textStr: (model.content ?? "").removeSpace(), attributes: dic , width: SCREEN_WIDTH - 30 - (model.hasSource ? 106.5 : 30), numberOfLines: 2)
-                            make.bottom.equalTo(removeHeight - 95).priorityHigh()
-                        }else{
-                            make.bottom.equalTo(-45).priorityHigh()
-                        }
-                    }
-                }
-            }else{
-                if model.hasSource{
-                    if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                        if recallView.isHidden == false{
-                            make.bottom.equalTo(height - 80).priorityHigh()
-                        }else{
-                            make.bottom.equalTo(height - 80).priorityHigh()
-                        }
-                    }else{
-                        if isShowTag{
-                            let removeHeight = UIUtil.yxs_getTextHeigh(textStr: (model.content ?? "").removeSpace(), attributes: dic , width: SCREEN_WIDTH - 30 - (model.hasSource ? 106.5 : 30), numberOfLines: 2)
-                            make.bottom.equalTo(removeHeight - 90).priorityHigh()
-                        }else{
-                            make.bottom.equalTo(height - 85).priorityHigh()
-                        }
-                    }
-                }else{
-                    if (YXSPersonDataModel.sharePerson.personRole == .TEACHER &&  model.onlineCommit == 1) || recallView.isHidden == false{
-                        make.bottom.equalTo(-45).priorityHigh()
-                    }else{
-                        make.bottom.equalTo(-19).priorityHigh()
-                    }
-                    
-                }
-            }
         }
     }
 }

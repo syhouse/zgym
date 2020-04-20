@@ -748,10 +748,12 @@
 		6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */ = {isa = PBXBuildFile; fileRef = 6F5720BE24493CAC00E1F301 /* 打包注意 */; };
 		6F6511D42445DC820024A5DA /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; };
 		6F6511D52445DC820024A5DA /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F87B889244D41450085CD3B /* YXSMusicPlayerWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87B888244D41450085CD3B /* YXSMusicPlayerWindowView.swift */; };
 		6FA0F331242B451800E2E035 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F32F242B451800E2E035 /* Main.storyboard */; };
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
+		6FF7735C244AB09900D3461E /* YXSListVoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF7735B244AB09900D3461E /* YXSListVoiceView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1900,6 +1902,7 @@
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
 		6F5720BE24493CAC00E1F301 /* 打包注意 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "打包注意"; sourceTree = "<group>"; };
 		6F6511D62446937D0024A5DA /* 优学业.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "优学业.entitlements"; sourceTree = "<group>"; };
+		6F87B888244D41450085CD3B /* YXSMusicPlayerWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSMusicPlayerWindowView.swift; sourceTree = "<group>"; };
 		6FA0F326242B451800E2E035 /* 优学业.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "优学业.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FA0F330242B451800E2E035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6FA0F335242B451E00E2E035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -1911,6 +1914,7 @@
 		6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZGYMUITests.swift; sourceTree = "<group>"; };
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
+		6FF7735B244AB09900D3461E /* YXSListVoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSListVoiceView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2300,6 +2304,7 @@
 				6F0700972445D7FE0090975B /* YXSContentListViewController.swift */,
 				6F0700982445D7FE0090975B /* YXSPlayingViewController.swift */,
 				6F07009B2445D7FE0090975B /* YXSPlayListViewController.swift */,
+				6F87B888244D41450085CD3B /* YXSMusicPlayerWindowView.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -4686,6 +4691,7 @@
 				6F07FFEB2445D7FD0090975B /* YXSAvatarView.swift */,
 				6F07FFEC2445D7FD0090975B /* YXSRouterEventProtocol.swift */,
 				6F07FFED2445D7FD0090975B /* YXSVoiceView.swift */,
+				6FF7735B244AB09900D3461E /* YXSListVoiceView.swift */,
 				6F07FFEE2445D7FD0090975B /* YXSCommonBottomAlerView.swift */,
 				6F07FFEF2445D7FD0090975B /* YXSGuideTool */,
 				6F07FFF22445D7FD0090975B /* NSUtil.swift */,
@@ -4851,6 +4857,7 @@
 				3A6F959F91D86A232965ED3C /* [CP] Embed Pods Frameworks */,
 				0D4E5DACA1C7BC1392BF2228 /* [CP] Copy Pods Resources */,
 				6FA0FA9E242B500200E2E035 /* Embed Frameworks */,
+				6FF7735D244AE5B500D3461E /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -5014,6 +5021,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZGYM/Pods-ZGYM-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		6FF7735D244AE5B500D3461E /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script f ile from your workspace to insert its path.\n if [ $CONFIGURATION == Release ]; then\n     APP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\n    # This script loops through the frameworks embedded in the application and\n    # removes unused architectures.\n    find \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK\n    do\n    FRAMEWORK_EXECUTABLE_NAME=$(defaults read \"$FRAMEWORK/Info.plist\" CFBundleExecutable)\n    FRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\n    echo \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\n\n    EXTRACTED_ARCHS=()\n\n    for ARCH in $ARCHS\n    do\n    echo \"Extracting $ARCH from $FRAMEWORK_EXECUTABLE_NAME\"\n    lipo -extract \"$ARCH\" \"$FRAMEWORK_EXECUTABLE_PATH\" -o \"$FRAMEWORK_EXECUTABLE_PATH-$ARCH\"\n    EXTRACTED_ARCHS+=(\"$FRAMEWORK_EXECUTABLE_PATH-$ARCH\")\n    done\n\n    echo \"Merging extracted architectures: ${ARCHS}\"\n    lipo -o \"$FRAMEWORK_EXECUTABLE_PATH-merged\" -create \"${EXTRACTED_ARCHS[@]}\"\n    rm \"${EXTRACTED_ARCHS[@]}\"\n\n    echo \"Replacing original executable with thinned version\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_EXECUTABLE_PATH-merged\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n\n    done\n fi\n\n\n";
+		};
 		89004E7B5EDD9263D6A6A862 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -5144,6 +5169,7 @@
 				6F0704162445D8030090975B /* YXSPhotoBrowserTool.m in Sources */,
 				6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */,
 				6F07FE082445D7C70090975B /* YXSBasePopingView.swift in Sources */,
+				6F87B889244D41450085CD3B /* YXSMusicPlayerWindowView.swift in Sources */,
 				6F0703B52445D8030090975B /* CreatGroupAvatar.m in Sources */,
 				6F0704462445D8040090975B /* YXSMineAboutViewController.swift in Sources */,
 				6F07036C2445D8030090975B /* TUIContactSelectController.m in Sources */,
@@ -5301,6 +5327,7 @@
 				6F0704572445D8040090975B /* YXSBaseFileModel.swift in Sources */,
 				6F0705782445D8060090975B /* LFImageUtil.m in Sources */,
 				6F0704C82445D8040090975B /* YXSPunchCardSingleStudentListCell.swift in Sources */,
+				6FF7735C244AB09900D3461E /* YXSListVoiceView.swift in Sources */,
 				6F0705732445D8060090975B /* SPDropMenu.m in Sources */,
 				6F0704DB2445D8050090975B /* YXSSearchViewController.swift in Sources */,
 				6F0703EF2445D8030090975B /* YXSClassStarRequest.swift in Sources */,
@@ -5937,7 +5964,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5983,7 +6010,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

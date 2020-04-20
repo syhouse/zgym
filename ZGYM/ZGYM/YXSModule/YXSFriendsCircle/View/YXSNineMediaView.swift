@@ -164,6 +164,7 @@ class HMSingleMediaView: UIView {
         if model.type == .serviceVedio{
             imageView.isHidden = false
             playerView.isHidden = false
+            graffitiBtn.isHidden = true
             imageView.yxs_setImageWithURL(url: URL.init(string: (model.url ?? "").yxs_getVediUrlImage()), placeholder:kImageDefualtMixedImage)
             
         }else if model.type == .serviceImg{

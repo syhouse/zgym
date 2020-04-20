@@ -31,12 +31,10 @@ class YXSNoticeListCell: YXSHomeBaseCell {
         layout()
         initCommonUI()
         if isShowTag{
-            nameTimeLabel.snp.makeConstraints { (make) in
-                make.left.equalTo(68)
+            topTimeLabel.snp.remakeConstraints { (make) in
+                make.left.equalTo(69)
                 make.centerY.equalTo(tagLabel)
-                make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45 - 40)
             }
-            
             sourceView.snp.makeConstraints { (make) in
                 make.size.equalTo(CGSize.init(width: 65, height: 65))
                 make.top.equalTo(contentLabel)
@@ -49,27 +47,29 @@ class YXSNoticeListCell: YXSHomeBaseCell {
                 make.size.equalTo(CGSize.init(width: 26, height: 29))
             }
         }else{
-            nameTimeLabel.snp.makeConstraints { (make) in
+            topTimeLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
                 make.top.equalTo(19)
-                make.width.equalTo(SCREEN_WIDTH - 30 - 15 - 45)
             }
             
             sourceView.snp.makeConstraints { (make) in
                 make.size.equalTo(CGSize.init(width: 65, height: 65))
-                make.top.equalTo(19)
+                make.top.equalTo(contentLabel)
                 make.right.equalTo(-15)
             }
             
             recallView.snp.remakeConstraints { (make) in
                 make.right.equalTo(-8.5)
-                make.size.equalTo(CGSize.init(width: 38, height: 38))
-                make.bottom.equalTo(-8.5)
+                make.centerY.equalTo(topTimeLabel)
             }
         }
         
-//        tagLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-//        nameTimeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        nameTimeLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(classLabel)
+            make.bottom.equalTo(classLabel.snp_top).offset(-10)
+            make.right.equalTo(classLabel)
+        }
+        
     }
     
     required init?(coder: NSCoder) {
@@ -106,6 +106,7 @@ class YXSNoticeListCell: YXSHomeBaseCell {
         
         bgContainView.addSubview(contentLabel)
         bgContainView.addSubview(nameTimeLabel)
+        bgContainView.addSubview(topTimeLabel)
         bgContainView.addSubview(showAllControl)
         bgContainView.addSubview(sourceView)
         bgContainView.addSubview(visibleView)
@@ -150,69 +151,39 @@ extension YXSNoticeListCell{
         if isShowTag{
             setTagUI("通知", backgroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#E1EBFE"), textColor: kBlueColor)
         }
-        
+        ///红点
         if YXSPersonDataModel.sharePerson.personRole == .PARENT,YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: model.serviceId ?? 1001, childId: model.childrenId ?? 0){
             redView.isHidden = false
         }
         
         UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(model.teacherName ?? "")", "  |  \(model.createTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54"), night: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
         classLabel.text = model.className
-
+        topTimeLabel.text = model.createTime?.date(withFormat: kCommonDateFormatString)?.yxs_homeTimeWeek()
+        setSourceViewData()
+        
         
         visibleView.locailImage = "visible"
         visibleView.imageSize = CGSize.init(width: 18, height: 18)
-        
-        setSourceViewData()
 
-
+        UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowAll && model.needShowAllButton)
         showAllControl.isSelected = model.isShowAll
         contentLabel.numberOfLines = model.isShowAll ? 0 : 2
         
-        // title处理是否有资源
-        if model.hasSource{
-            contentLabel.snp.remakeConstraints { (make) in
-                make.left.equalTo(15)
-                make.top.equalTo(nameTimeLabel.snp_bottom).offset(14)
-                make.right.equalTo(sourceView.snp_left).offset(-20)
-            }
-            sourceView.isHidden = false
-        }else{
-            contentLabel.snp.remakeConstraints { (make) in
-                make.left.equalTo(15)
-                make.top.equalTo(nameTimeLabel.snp_bottom).offset(14)
-                make.right.equalTo(-15)
-            }
-            sourceView.isHidden = true
+        sourceView.isHidden = !model.hasSource
+        
+        contentLabel.snp.remakeConstraints { (make) in
+            make.left.equalTo(15)
+            make.top.equalTo(topTimeLabel.snp_bottom).offset(YXSHomeListModel.midMagin)
+            make.width.equalTo(model.contentLabelWidth)
         }
-        
-        /*
-         需要展示全部  已展示全部 未展示全部
-         不需要展示全部
-         
-         是否有资源
-         
-         家长  需要回执  已回执 未回执   不需要回执  已读 未读
-         老师
-         
-         */
-        
-        //
-        
-        let dic = [NSAttributedString.Key.font: kTextMainBodyFont]
-        var height: CGFloat = UIUtil.yxs_getTextHeigh(textStr: model.content ?? "", attributes: dic , width: SCREEN_WIDTH - 30 - (model.hasSource ? 106.5 : 30))
-        height = ((model.content ?? "") == "") ? 0 : height
-        //需要展示多行
-        let needShowMore = height > 45
-        
-        UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowAll && needShowMore)
-        contentLabel.preferredMaxLayoutWidth = SCREEN_WIDTH - 15 - 20 - (model.hasSource ? 106.5 : 30)
+
         
         let isTeacher: Bool = YXSPersonDataModel.sharePerson.personRole == .TEACHER
-        if needShowMore{
+        if model.needShowAllButton{
             showAllControl.isHidden = false
             showAllControl.snp.remakeConstraints { (make) in
                 make.left.equalTo(contentLabel)
-                make.top.equalTo(isTeacher ? visibleView.snp_bottom : classLabel.snp_bottom).offset(9)
+                make.top.equalTo(classLabel.snp_bottom).offset(9)
                 make.height.equalTo(26)
             }
         }else{
@@ -236,26 +207,18 @@ extension YXSNoticeListCell{
                 UIUtil.yxs_setLabelAttributed(visibleView.textLabel, text: ["\(model.readCount)", "/\(model.memberCount ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), kTextLightColor])
             }
             
-            if isShowTag{
-                visibleView.snp.remakeConstraints { (make) in
-                    make.height.equalTo(18)
-                    make.right.equalTo(-15)
-                    if model.isShowAll{
-                        //                make.top.equalTo(fromLabel.snp_bottom).offset(7.5)
-                        make.centerY.equalTo(classLabel)
+            visibleView.snp.remakeConstraints { (make) in
+                make.height.equalTo(18)
+                make.right.equalTo(-15)
+                if model.isShowAll{
+                    //                make.top.equalTo(fromLabel.snp_bottom).offset(7.5)
+                    make.centerY.equalTo(classLabel)
+                }else{
+                    if model.hasSource{
+                        make.top.equalTo(sourceView.snp_bottom).offset(12.5)
                     }else{
-                        if model.hasSource{
-                            make.top.equalTo(sourceView.snp_bottom).offset(12.5)
-                        }else{
-                            make.centerY.equalTo(classLabel)
-                        }
+                        make.centerY.equalTo(classLabel)
                     }
-                }
-            }else{
-                visibleView.snp.remakeConstraints { (make) in
-                    make.height.equalTo(22)
-                    make.top.equalTo(classLabel.snp_bottom).offset(12)
-                    make.left.equalTo(classLabel)
                 }
             }
 
@@ -266,40 +229,9 @@ extension YXSNoticeListCell{
         }
         // 老师提交 25
         classLabel.snp.remakeConstraints { (make) in
-            make.top.equalTo(contentLabel.snp_bottom).offset(14)
+            make.top.equalTo(contentLabel.snp_bottom).offset(37)
             make.left.equalTo(contentLabel)
             make.right.equalTo(-80)
-            //控制cell高度
-            if needShowMore{
-                if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                    make.bottom.equalTo(-75)
-                }else{
-                    make.bottom.equalTo(-45)
-                }
-            }else{
-                if model.hasSource{
-                    if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                        if recallView.isHidden == false{
-                            make.bottom.equalTo(height - 80)
-                        }else{
-                            make.bottom.equalTo(height - 70)
-                        }
-                    }else{
-                        make.bottom.equalTo(height - 85)
-                    }
-                }else{
-                    if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                        if isShowTag{
-                            make.bottom.equalTo(-19)
-                        }else{
-                            make.bottom.equalTo(-40)
-                        }
-                    }else{
-                        make.bottom.equalTo(-19)
-                    }
-                    
-                }
-            }
         }
     }
 }

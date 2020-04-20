@@ -189,21 +189,19 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let model: YXSClassModel
-        if indexPath.section == 0 {
-            model = createClassList[indexPath.row]
-            yxs_loadClassDetailData(classId: model.id ?? 0)
-        } else {
-            model = joinClassList[indexPath.row]
-            
-            let vc = YXSClassInfoViewController.init(classModel: model)
-            self.navigationController?.pushViewController(vc)
+        let model: YXSClassModel = indexPath.section == 0 ?  createClassList[indexPath.row] : joinClassList[indexPath.row]
+        if isOldUI{
+            if  indexPath.section == 0{
+                yxs_loadClassDetailData(classId: model.id ?? 0)
+            } else {
+                let vc = YXSClassInfoViewController.init(classModel: model)
+                self.navigationController?.pushViewController(vc)
+            }
+        }else{
+            let vc = YXSClassDetialListController.init(classModel: model)
+            vc.navRightBarButtonTitle = indexPath.section == 0 ? "班级管理":"班级信息"
+            navigationController?.pushViewController(vc)
         }
-        
-//        let vc = YXSClassDetialListController.init(classModel: model)
-//        vc.navRightBarButtonTitle = indexPath.section == 0 ? "班级管理":"班级信息"
-//        navigationController?.pushViewController(vc)
-        
         
     }
     
