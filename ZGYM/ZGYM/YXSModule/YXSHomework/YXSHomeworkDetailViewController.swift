@@ -1052,7 +1052,6 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         tableView.estimatedSectionHeaderHeight = 0
         //去除group空白
         tableView.estimatedSectionFooterHeight = 0.0
-        tableView.fd_debugLogEnabled = true
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")

@@ -152,41 +152,40 @@ class YXSContentDetialController: YXSBaseTableViewController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let curruntTrack = listSource[indexPath.row]
-        let vc = YXSPlayingViewController()
-        let track = XMTrack.init(dictionary: curruntTrack.toJSON())
-        vc.track = track
+        let track: XMTrack = XMTrack.init(dictionary: curruntTrack.toJSON())!
         var trackList = [XMTrack]()
         for model in listSource{
             trackList.append(XMTrack.init(dictionary: model.toJSON()))
         }
-        vc.trackList = trackList
+        let vc = YXSPlayingViewController.init(track: track, trackList: trackList)
+        
         navigationController?.pushViewController(vc)
         
-//        YXSEducationXMLYSearchTracksV2Request.init(id: curruntTrack.id ?? 0).request({ (result: YXSAlbumsBrowseModel) in
-//            self.albumsModel = result
-//            self.customNav.title = result.albumTitle
-//            self.yxs_tableHeaderView.yxs_setHeaderModel(result)
-//            self.yxs_tableHeaderView.layoutIfNeeded()
-//            self.headerHeight = self.yxs_tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-//            self.yxs_tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: self.headerHeight > (241 + kSafeTopHeight) ? self.headerHeight : 241 + kSafeTopHeight )
-//            self.tableView.tableHeaderView = self.yxs_tableHeaderView
-//            self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#745683"), night: UIColor.yxs_hexToAdecimalColor(hex: "#745683"))
-//            self.tableView.reloadData()
-//        }) { (msg, code) in
-//
-//        }
-
-//
-//        let curruntTrack = listSource[indexPath.row]
-//        let playerVc = PlayingViewController()
-//        let track = XMTrack.init(dictionary: curruntTrack.toJSON())
-//        playerVc.track = track
-//        var trackList = [XMTrack]()
-//        for model in listSource{
-//            trackList.append(XMTrack.init(dictionary: model.toJSON()))
-//        }
-//        playerVc.trackList = trackList
-//        self.navigationController?.pushViewController(playerVc)
+        //        YXSEducationXMLYSearchTracksV2Request.init(id: curruntTrack.id ?? 0).request({ (result: YXSAlbumsBrowseModel) in
+        //            self.albumsModel = result
+        //            self.customNav.title = result.albumTitle
+        //            self.yxs_tableHeaderView.yxs_setHeaderModel(result)
+        //            self.yxs_tableHeaderView.layoutIfNeeded()
+        //            self.headerHeight = self.yxs_tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        //            self.yxs_tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: self.headerHeight > (241 + kSafeTopHeight) ? self.headerHeight : 241 + kSafeTopHeight )
+        //            self.tableView.tableHeaderView = self.yxs_tableHeaderView
+        //            self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#745683"), night: UIColor.yxs_hexToAdecimalColor(hex: "#745683"))
+        //            self.tableView.reloadData()
+        //        }) { (msg, code) in
+        //
+        //        }
+        
+        //
+        //        let curruntTrack = listSource[indexPath.row]
+        //        let playerVc = PlayingViewController()
+        //        let track = XMTrack.init(dictionary: curruntTrack.toJSON())
+        //        playerVc.track = track
+        //        var trackList = [XMTrack]()
+        //        for model in listSource{
+        //            trackList.append(XMTrack.init(dictionary: model.toJSON()))
+        //        }
+        //        playerVc.trackList = trackList
+        //        self.navigationController?.pushViewController(playerVc)
     }
     
     

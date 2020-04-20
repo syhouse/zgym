@@ -42,7 +42,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             make.bottom.equalTo(-kSafeBottomHeight)
         }
         tableView.register(YXSNoticeListCell.self, forCellReuseIdentifier: "YXSNoticeListCell")
-        tableView.fd_debugLogEnabled = true
+
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER && !isAgenda{
             rightButton.isHidden = false
@@ -50,20 +50,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             rightButton.isHidden = true
         }
         
-        let list = YXSCacheHelper.yxs_getCacheNoticeList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
-        for (index, model) in list.enumerated(){
-            if index < 7{
-               self.dataSource.append(model)
-            }
-        }
-        SLLog("viewDidLoad")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        SLLog("viewDidAppear")
         self.dataSource = YXSCacheHelper.yxs_getCacheNoticeList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
-        self.tableView.reloadData()
     }
     
     // MARK: -UI
@@ -164,7 +151,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let model = self.dataSource[indexPath.row]
-        return 0
+        return model.height
     }
     
     

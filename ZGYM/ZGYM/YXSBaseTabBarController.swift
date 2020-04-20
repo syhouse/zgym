@@ -45,6 +45,8 @@ class YXSBaseTabBarController: UITabBarController {
             }
         }
         
+        self.delegate = self
+        
     }
     
     deinit {
@@ -70,6 +72,16 @@ class YXSBaseTabBarController: UITabBarController {
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return self.selectedViewController?.supportedInterfaceOrientations ?? .portrait
+    }
+}
+
+extension YXSBaseTabBarController: UITabBarControllerDelegate{
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        ///当前控制器不是优教育 隐藏弹窗
+        if let nav = viewController as? UINavigationController{
+            YXSMusicPlayerWindowView.setView(hide: !(nav.viewControllers.first is YXSContentHomeController))
+        }
+        return true
     }
 }
 

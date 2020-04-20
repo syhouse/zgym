@@ -13,6 +13,7 @@ class YXSRootNavController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        self.delegate = self
     }
     
 
@@ -32,5 +33,12 @@ class YXSRootNavController: UINavigationController {
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return self.viewControllers.last?.supportedInterfaceOrientations ?? .portrait
     }
+    
+}
 
+extension YXSRootNavController: UINavigationControllerDelegate{
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        ///跳转到导航栏根视图
+        YXSMusicPlayerWindowView.setUpdateFrame(isNavFirstVC: self.viewControllers.first == viewController)
+    }
 }
