@@ -26,7 +26,18 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     var currentImg: UIImage?
     var currentVideoUrl: URL?
     
+    var classId: Int = -1
     private var navRightBtn: YXSButton = YXSButton()
+    
+    init(classId: Int) {
+        super.init()
+        
+        self.classId = classId
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,13 +80,66 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         self.navigationItem.rightBarButtonItems = [navShareItem]
     }
     
+    // MARK: - Request
     override func yxs_refreshData() {
+        loadData()
         yxs_endingRefresh()
     }
     
-    // MARK: - Request
     @objc func loadData() {
+        
+        let workingGroup = DispatchGroup()
+        let workingQueue = DispatchQueue(label: "request_queue")
+        
+        // 入组
+        workingGroup.enter()
+        workingQueue.async {
+            // 出组
+            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: self.curruntPage).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let hasNext = json["hasNext"]
+                
+                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                workingGroup.leave()
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
+        
+        // 入组
+        workingGroup.enter()
+        workingQueue.async {
+            // 出组
+            YXSFilePageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let hasNext = json["hasNext"]
+                
+                weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+                workingGroup.leave()
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
 
+        // 调度组里的任务都执行完毕
+        workingGroup.notify(queue: workingQueue) {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    /// 批量删除
+    @objc func batchDeleteRequest(fileIdList:[Int] = [Int](), folderIdList:[Int] = [Int](), completionHandler:(()->Void)?) {
+        YXSFileBatchDeleteRequest(classId: classId, fileIdList: fileIdList, folderIdList: folderIdList, parentFolderId: parentFolderId).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            completionHandler?()
+            
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     // MARK: - Action
@@ -108,14 +172,22 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
     
     @objc func selectedFromBagClick() {
-//        let vc = SLFileBagViewController()
         let vc = YXSChoseFileViewController()
         navigationController?.pushViewController(vc)
     }
     
     @objc func createFolderClick() {
-        let view = YXSInputAlertView2.showIn(target: self.view) { (result, btn) in
-            
+        let view = YXSInputAlertView2.showIn(target: self.view) { [weak self](result, btn) in
+            guard let weakSelf = self else {return}
+            if btn.titleLabel?.text == "创建" {
+                YXSFileCreateFolderRequest(classId: weakSelf.classId, folderName: result, parentFolderId: weakSelf.parentFolderId).request({ [weak self](json) in
+                    guard let weakSelf = self else {return}
+                    weakSelf.loadData()
+                    
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
+            }
         }
         view.lbTitle.text = "创建文件夹"
         view.tfInput.placeholder = "请输入文件夹名称"
@@ -138,14 +210,117 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     // MARK: -重命名、移动、删除
     @objc func renameBtnClick(sender: YXSButton) {
         
+        let tmpFolderList = getSelectedFolerList()
+        let tmpFileList = getSelectedFileList()
+        
+        if tmpFolderList.count == 1 || tmpFileList.count == 1 {
+            let view = YXSInputAlertView2.showIn(target: self.view) { [weak self](result, btn) in
+                guard let weakSelf = self else {return}
+                if btn.titleLabel?.text == "确定" {
+                    
+                    if tmpFolderList.count == 1 {
+                        /// 文件夹更名
+                        let tmpItem = tmpFolderList.first
+                        YXSFileRenameFolderRequest(classId: weakSelf.classId, folderId: tmpItem?.id ?? 0, folderName: result).request({ [weak self](json) in
+                            guard let weakSelf = self else {return}
+                            tmpItem?.folderName = result
+                            weakSelf.tableView.reloadSections([0], with: .none)
+                            
+                        }) { (msg, code) in
+                            
+                        }
+                        
+                    } else if tmpFileList.count == 1 {
+                        /// 文件更名
+                        let tmpItem = tmpFileList.first
+                        let fileName = "\(result).\(tmpItem?.fileType ?? "")"
+                        YXSFileRenameFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, fileId: tmpItem?.id ?? 0, fileName: fileName).request({ [weak self](json) in
+                            guard let weakSelf = self else {return}
+                            tmpItem?.fileName = fileName
+                            weakSelf.tableView.reloadSections([1], with: .none)
+                            
+                        }) { (msg, code) in
+                            
+                        }
+                    }
+                }
+            }
+            
+            
+            view.lbTitle.text = "重命名"
+            view.tfInput.placeholder = "请输入名称"
+            view.btnDone.setTitle("确定", for: .normal)
+            view.btnCancel.setTitle("取消", for: .normal)
+            var name = ""
+            if tmpFolderList.count == 1 {
+                name = tmpFolderList.first?.folderName ?? ""
+            } else if tmpFileList.count == 1 {
+                name = tmpFileList.first?.fileName ?? ""
+            }
+            view.tfInput.text = name
+        }
     }
     
     @objc func moveBtnClick(sender: YXSButton) {
+        var selectedFolderList :[Int] = [Int]()
+        var selectedFileList :[Int] = [Int]()
+        for sub in folderList {
+            if sub.isSelected ?? false {
+                selectedFolderList.append(sub.id ?? 0)
+            }
+        }
         
+        let vc = YXSMoveToViewController(classId: classId, folderIdList: selectedFolderList, fileIdList: selectedFileList, oldParentFolderId: -1, parentFolderId: -1) { [weak self](oldParentFolderId, parentFolderId) in
+            guard let weakSelf = self else {return}
+            /// 移动成功
+            /// 取消编辑
+            weakSelf.endEditing()
+
+            /// 更新界面
+            weakSelf.folderList = weakSelf.getUnselectedFolerList()
+            weakSelf.tableView.reloadData()
+        }
+        
+        let nav = UINavigationController(rootViewController: vc)
+        self.present(nav, animated: true, completion: nil)
     }
     
     @objc func deleteBtnClick(sender: YXSButton) {
+        let tmpFolderList = getSelectedFolerList()
+        let tmpFileList = getSelectedFileList()
         
+        if tmpFolderList.count > 0 || tmpFileList.count > 0 {
+            let alert = YXSConfirmationAlertView.showIn(target: self.view) { [weak self](sender, view) in
+            guard let weakSelf = self else {return}
+                if sender.titleLabel?.text == "删除" {
+                    
+                    var tmpFolderIdArr = [Int]()
+                    var tmpFileIdIdArr = [Int]()
+                    for (index, value) in tmpFolderList.enumerated() {
+                        tmpFolderIdArr.append(value.id ?? 0)
+                    }
+                    
+                    for (index, value) in tmpFileList.enumerated() {
+                        tmpFileIdIdArr.append(value.id ?? 0)
+                    }
+                    
+                    weakSelf.batchDeleteRequest(fileIdList: tmpFileIdIdArr, folderIdList: tmpFolderIdArr) { [weak self] in
+                        guard let weakSelf = self else {return}
+                        weakSelf.folderList = weakSelf.getUnselectedFolerList()
+                        weakSelf.fileList = weakSelf.getUnselectedFileList()
+                        weakSelf.tableView.reloadData()
+                    }
+                    view.close()
+                    weakSelf.endEditing()
+                    
+                } else {
+                    /// 取消
+                }
+            }
+            alert.lbTitle.text = "提示"
+            alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+            alert.btnDone.setTitle("删除", for: .normal)
+        }
     }
     
     // MARK: - 图片选择代理
@@ -156,44 +331,29 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     
     /// 选中图片资源
     func didSelectSourceAssets(assets: [YXSMediaModel]) {
+        var tmpArr: [PHAsset] = [PHAsset]()
         for sub in assets {
-            if sub.type == .image {
-                
-                let imgName = "\(sub.fileName).\(sub.fileType)"
-                UIUtil.PHAssetToImage(sub.asset) { (result) in
-                    if sub.fileType == "JPG" {
-                        
-                        let data = result.sd_imageData(as: .JPEG)
-                        let fullPath = YXSFileManagerHelper.sharedInstance.getDocumentFullPathURL(lastPathComponent: imgName)
-                        try! data?.write(to: fullPath)
-                     
-                        DispatchQueue.main.async {
-                            self.currentImg = UIImage(contentsOfFile: fullPath.path)
-                            self.tableView.reloadData()
-                        }
-
-                    }
-                }
-                
-            } else if sub.type == .video {
-                
-                let videoName = "\(sub.fileName).\(sub.fileType)"
-                PHCachingImageManager().requestAVAsset(forVideo: sub.asset, options:nil, resultHandler: { (asset, audioMix, info)in
-                    if let avAsset = asset as? AVURLAsset {
-                        let session = AVAssetExportSession(asset: avAsset, presetName: AVAssetExportPresetHighestQuality)
-                        let fullPath = YXSFileManagerHelper.sharedInstance.getDocumentFullPathURL(lastPathComponent: videoName)
-                        session?.outputURL = fullPath
-                        session?.outputFileType = .mp4
-                        session?.exportAsynchronously {
-                            SLLog("转存视频成功:\(fullPath)")
-                            self.currentVideoUrl = fullPath
-                        }
-                        
-                    }
-//                    self.videoUrl = avAsset?.url
-//                    self.showImg = UIImage.yxs_getScreenShotImage(fromVideoUrl: avAsset?.url)
-                })
+            tmpArr.append(sub.asset)
+        }
+        
+        uploadHelper.uploadMedias(mediaAssets: tmpArr, progress: { (progress) in
+            
+        }, sucess: { [weak self](list) in
+            guard let weakSelf = self else {return}
+            
+            var dicArr = [[String: Any]]()
+            for sub in list {
+                dicArr.append(sub.toJSON())
             }
+            YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: dicArr).request({ (json) in
+                weakSelf.loadData()
+
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+            
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     
@@ -364,7 +524,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            navigationController?.pushViewController(YXSClassFileViewController())
+            navigationController?.pushViewController(YXSClassFileViewController(classId: classId))
             
         } else {
             // 视频
@@ -410,6 +570,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         view.btnSecond.addTarget(self, action: #selector(moveBtnClick(sender:)), for: .touchUpInside)
         view.btnThird.addTarget(self, action: #selector(deleteBtnClick(sender:)), for: .touchUpInside)
         return view
+    }()
+    
+    lazy var uploadHelper: YXSFileUploadHelper = {
+        let helper = YXSFileUploadHelper()
+        return helper
     }()
     
     /*

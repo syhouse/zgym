@@ -187,7 +187,7 @@ class YXSMineViewController: YXSBaseTableViewController{
     
     @objc func classFileClick() {
         /// 班级文件
-        let vc = YXSClassFileViewController()
+        let vc = YXSClassFileViewController(classId: -1)
         self.navigationController?.pushViewController(vc)
     }
     
@@ -340,7 +340,7 @@ class YXSMineViewController: YXSBaseTableViewController{
         var section3 = [["title":"夜间模式", "imgName":"yxs_mine_theme_red", "action":""]]
 
         #if DEBUG
-        var section4 = [["title":"书包", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
+        var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"书包", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
         #else
         var section4 = [["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
         #endif

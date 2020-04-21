@@ -127,3 +127,133 @@ class YXSSatchelFolderPageQueryRequest: YXSBaseRequset {
                  "parentFolderId":parentFolderId]
     }
 }
+
+
+
+
+let fileCreateFolder = "/file/create-folder"
+/// 创建文件夹
+class YXSFileCreateFolderRequest: YXSBaseRequset {
+    init(classId: Int = 0, folderName: String, parentFolderId: Int = -1) {
+        super.init()
+        method = .post
+        host = fileHost
+        path = fileCreateFolder
+        param = [
+            "classId":classId,
+            "folderName":folderName,
+            "parentFolderId":parentFolderId]
+    }
+}
+
+
+let fileBatchMove = "/file/batch-move"
+/// 批量移动文件夹、文件
+class YXSFileBatchMoveRequest: YXSBaseRequset {
+    init(classId: Int = 0, folderIdList: [Int] = [Int](), fileIdList: [Int] = [Int](), oldParentFolderId: Int, parentFolderId: Int){
+        super.init()
+        method = .post
+        host = fileHost
+        path = fileBatchMove
+        param = [
+            "classId":classId,
+            "folderIdList":folderIdList,
+                 "fileIdList":fileIdList,
+            "oldParentFolderId":oldParentFolderId,
+            "parentFolderId":parentFolderId]
+    }
+}
+
+
+let fileBatchDelete = "/file/batch-delete"
+/// 批量删除书包文件夹、文件
+class YXSFileBatchDeleteRequest: YXSBaseRequset {
+    init(classId:Int, fileIdList:[Int] = [Int](), folderIdList:[Int] = [Int](), parentFolderId: Int) {
+        super.init()
+        method = .post
+        host = fileHost
+        path = fileBatchDelete
+        param = [
+            "classId":classId,
+            "parentFolderId":parentFolderId,
+                 "fileIdList": fileIdList,
+                 "folderIdList": folderIdList]
+    }
+}
+
+let fileRenameFile = "/file/rename-file"
+/// 重命名文件
+class YXSFileRenameFileRequest: YXSBaseRequset {
+    init(classId: Int, folderId: Int, fileId: Int, fileName: String){
+        super.init()
+        method = .post
+        host = fileHost
+        path = fileRenameFile
+        param = [
+            "classId":classId,
+            "folderId":folderId,
+            "fileId":fileId,
+             "fileName":fileName]
+    }
+}
+
+let fileRenameFolder = "/file/rename-folder"
+/// 重命名文件夹
+class YXSFileRenameFolderRequest: YXSBaseRequset {
+    init(classId: Int, folderId: Int, folderName: String){
+        super.init()
+        method = .post
+        host = fileHost
+        path = fileRenameFolder
+        param = [
+            "classId":classId,
+            "folderId":folderId,
+                 "folderName":folderName]
+    }
+}
+
+/// 上传文件
+let fileUploadFile = "/file/upload-file"
+class YXSFileUploadFileRequest: YXSBaseRequset {
+    init(classId: Int, folderId: Int, classFileList: [[String: Any]]){
+        super.init()
+        method = .post
+        host = fileHost
+        path = fileUploadFile
+        param = [
+            "classId":classId,
+            "folderId":folderId,
+                 "classFileList":classFileList]
+    }
+}
+
+let filePageQuery = "/file/page-query"
+/// 班级文件分页查询
+class YXSFilePageQueryRequest: YXSBaseRequset {
+    init(classId: Int, currentPage: Int, folderId: Int){
+        super.init()
+        method = .post
+        host = fileHost
+        path = satchelFilePageQuery
+        param = [
+            "classId":classId,
+            "currentPage":currentPage,
+                 "pageSize":20,
+                 "folderId":folderId]
+    }
+}
+
+
+let fileFolderPageQuery = "/file/folder-page-query"
+/// 班级文件夹分页查询
+class YXSFileFolderPageQueryRequest: YXSBaseRequset {
+    init(classId: Int, currentPage: Int, folderId: Int = -1){
+        super.init()
+        method = .post
+        host = fileHost
+        path = fileFolderPageQuery
+        param = ["currentPage":currentPage,
+                 "pageSize":20,
+                 "folderId":folderId]
+    }
+}

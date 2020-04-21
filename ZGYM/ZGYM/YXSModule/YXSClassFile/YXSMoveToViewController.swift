@@ -19,12 +19,15 @@ class YXSMoveToViewController: YXSBaseTableViewController {
     var selectedFolderList: [Int] = [Int]()
     var selectedFileIdList: [Int] = [Int]()
     
+    var classId: Int?
 //    var completionHandler: ((_ folderIdList: [Int], _ fileIdList: [Int], _ oldParentFolderId: Int, _ parentFolderId: Int)-> Void)?
     var completionHandler: ((_ oldParentFolderId: Int, _ parentFolderId: Int)-> Void)?
     
-    init(folderIdList: [Int] = [Int](), fileIdList: [Int] = [Int](), oldParentFolderId: Int = -1, parentFolderId: Int = -1, completionHandler:((_ oldParentFolderId: Int, _ parentFolderId: Int)->())?) {
+    /// 注意 classId传值则认为是班级文件移动，反之则是老师书包文件移动
+    init(classId: Int?, folderIdList: [Int] = [Int](), fileIdList: [Int] = [Int](), oldParentFolderId: Int = -1, parentFolderId: Int = -1, completionHandler:((_ oldParentFolderId: Int, _ parentFolderId: Int)->())?) {
         super.init()
 
+        self.classId = classId
         self.oldParentFolderId = oldParentFolderId
         self.parentFolderId = parentFolderId
         self.selectedFolderList = folderIdList
@@ -70,16 +73,32 @@ class YXSMoveToViewController: YXSBaseTableViewController {
     
     // MARK: - Request
     @objc func loadData() {
-        YXSSatchelFolderPageQueryRequest(currentPage: curruntPage, parentFolderId: parentFolderId).request({ [weak self](json) in
-            guard let weakSelf = self else {return}
-            let hasNext = json["hasNext"]
+        if classId == nil {
+            YXSSatchelFolderPageQueryRequest(currentPage: curruntPage, parentFolderId: parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let hasNext = json["hasNext"]
+                
+                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                weakSelf.tableView.reloadData()
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
             
-            weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
-            weakSelf.tableView.reloadData()
-            
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
+        } else {
+            YXSFileFolderPageQueryRequest(classId: classId ?? 0, currentPage: curruntPage, folderId: parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let hasNext = json["hasNext"]
+                
+                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                weakSelf.tableView.reloadData()
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
         }
+        
+
     }
     
     // MARK: - Delegate
@@ -116,15 +135,7 @@ class YXSMoveToViewController: YXSBaseTableViewController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = folderList[indexPath.row]
-        
-        let vc = YXSMoveToViewController(folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: item.id ?? 0, completionHandler: completionHandler)
-        
-//        let vc = YXSMoveToViewController(folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: item.id ?? 0) { [weak self](oldParentFolderId, parentFolderId) in
-//            guard let weakSelf = self else {return}
-//            /// code do something
-//
-//            weakSelf.completionHandler?(oldParentFolderId, parentFolderId)
-//        }
+        let vc = YXSMoveToViewController(classId: classId, folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: item.id ?? 0, completionHandler: completionHandler)
 
         navigationController?.pushViewController(vc)
     }
@@ -133,15 +144,31 @@ class YXSMoveToViewController: YXSBaseTableViewController {
     @objc func createFolderBtnClick(sender: YXSButton) {
         let view = YXSInputAlertView2.showIn(target: self.view) { [weak self](result, btn) in
             guard let weakSelf = self else {return}
-            YXSSatchelCreateFolderRequest(folderName: result, parentFolderId: weakSelf.parentFolderId).request({ [weak self](json) in
-                guard let weakSelf = self else {return}
-                if btn.titleLabel?.text == "创建" {
-                    weakSelf.loadData()
+            
+            if weakSelf.classId == nil {
+                YXSSatchelCreateFolderRequest(folderName: result, parentFolderId: weakSelf.parentFolderId).request({ [weak self](json) in
+                    guard let weakSelf = self else {return}
+                    if btn.titleLabel?.text == "创建" {
+                        weakSelf.loadData()
+                    }
+                    
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_showMessage(message: msg)
                 }
                 
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
+            } else {
+                YXSFileCreateFolderRequest(classId: weakSelf.classId ?? 0, folderName: result, parentFolderId: weakSelf.parentFolderId).request({ [weak self](json) in
+                    guard let weakSelf = self else {return}
+                    if btn.titleLabel?.text == "创建" {
+                        weakSelf.loadData()
+                    }
+                    
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
             }
+            
+
         }
         view.lbTitle.text = "创建文件夹"
         view.tfInput.placeholder = "请输入文件夹名称"
@@ -151,16 +178,31 @@ class YXSMoveToViewController: YXSBaseTableViewController {
     
     @objc func moveBtnClick(sender: YXSButton) {
         
-        YXSSatchelBatchMoveRequest(folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: parentFolderId).request({ [weak self](json) in
-            guard let weakSelf = self else {return}
-            if json.stringValue.count > 0 {
-                MBProgressHUD.yxs_showMessage(message: json.stringValue)
+        if classId == nil {
+            YXSSatchelBatchMoveRequest(folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                if json.stringValue.count > 0 {
+                    MBProgressHUD.yxs_showMessage(message: json.stringValue)
+                }
+                weakSelf.completionHandler?(weakSelf.oldParentFolderId, weakSelf.parentFolderId)
+                weakSelf.dismiss(animated: true, completion: nil)
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
             }
-            weakSelf.completionHandler?(weakSelf.oldParentFolderId, weakSelf.parentFolderId)
-            weakSelf.dismiss(animated: true, completion: nil)
             
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
+        } else {
+            YXSFileBatchMoveRequest(classId: classId ?? 0, folderIdList: selectedFolderList, fileIdList: selectedFileIdList, oldParentFolderId: oldParentFolderId, parentFolderId: parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                if json.stringValue.count > 0 {
+                    MBProgressHUD.yxs_showMessage(message: json.stringValue)
+                }
+                weakSelf.completionHandler?(weakSelf.oldParentFolderId, weakSelf.parentFolderId)
+                weakSelf.dismiss(animated: true, completion: nil)
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
         }
     }
     
