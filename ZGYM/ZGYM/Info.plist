@@ -79,6 +79,10 @@
 	<string>为了帮您实现保存图片、更换头像等功能</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>为了帮您实现保存图片、更换头像等功能</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

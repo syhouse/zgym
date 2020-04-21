@@ -193,8 +193,8 @@ extension UIButton {
         }
         
         let relativeFrame = self.bounds
-        let hitFrame = relativeFrame.inset(by: self.ts_touchInsets)
-        
+        let hitFrame = CGRect.init(x: -self.ts_touchInsets.left, y: -self.ts_touchInsets.top, width: relativeFrame.width + ts_touchInsets.left + ts_touchInsets.right, height: relativeFrame.height + ts_touchInsets.top + ts_touchInsets.bottom)
+            relativeFrame.inset(by: self.ts_touchInsets)
         return hitFrame.contains(point)
     }
 }

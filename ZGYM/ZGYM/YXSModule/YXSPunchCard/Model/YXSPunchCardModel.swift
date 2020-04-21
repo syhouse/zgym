@@ -142,7 +142,7 @@ class YXSPunchCardModel : NSObject, NSCopying, NSCoding, Mappable{
             
             height += frameModel.contentHeight
             
-            height += (isTeacher || hasPunch) ? 95.0 : 68.0
+            height += (isTeacher || hasPunch || !hasNeedPunch) ? 95.0 : 68.0
             return height
         }
     }
