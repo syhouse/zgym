@@ -1,27 +1,59 @@
 //
-//  YXSContentHomeController.swift
+//  YXSSynClassHomeListVC.swift
 //  ZGYM
 //
-//  Created by sy_mac on 2020/4/11.
-//  Copyright © 2020 hmym. All rights reserved.
+//  Created by yihao on 2020/4/20.
+//  Copyright © 2020 zgym. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import JXCategoryView
 import NightNight
 
-class YXSContentHomeController: YXSBaseViewController{
+enum YXSSynClassListType: String{
+    ///小学
+    case PRIMARY_SCHOOL
+    ///中学
+    case MIDDLE_SCHOOL
+    ///高中
+    case HIGH_SCHOOL
+}
+
+enum YXSSynClassGradeType: String{
+    ///一年级
+    case first_grade
+    ///二年级
+    case second_grade
+    ///三年级
+    case third_grade
+    ///四年级
+    case fourth_grade
+    ///五年级
+    case fifth_grade
+    ///初一
+    case one_junior
+    ///初二
+    case two_junior
+    ///初三
+    case three_junior
+    ///高一
+    case one_senior
+    ///高二
+    case two_senior
+    ///高三
+    case three_senior
+}
+
+class YXSSynClassHomeListVC: YXSBaseViewController{
     private var listContainerView: JXCategoryListContainerView!
-    ///分类model列表
-    private var categoryLists: [YXSColumnModel] = [YXSColumnModel]()
     ///分类标题
-    private var titles: [String] = [String]()
-    
-    private var hasLoadData = false
+    private var titles: [String] = ["小学","初中","高中"]
+    private var listVCTypes: [YXSSynClassListType] = [.PRIMARY_SCHOOL, .MIDDLE_SCHOOL, .HIGH_SCHOOL]
     
     // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "同步课堂"
         loadCategoryData()
     }
     
@@ -30,53 +62,12 @@ class YXSContentHomeController: YXSBaseViewController{
         loadCategoryData()
     }
     
-    // MARK: -UI
     
-    // MARK: -loadData
     func loadCategoryData(){
-//        YXSEducationXMLYOperationBannersRequest.init(page: 1).requestCollection({ (list:[YXSBannerModel], pageCount) in
-//            SLLog(list.toJSONString())
-//        }) { (msg, code) in
-//
-//        }
-        if hasLoadData{
-            return
-        }
-        
-        YXSEducationXMLYOperationColumnsRequest.init(page: 1).requestCollection({ (list:[YXSColumnModel], pageCount) in
-            var titles = [String]()
-            var newModels = [YXSColumnModel]()
-            for model in list{
-                if model.id == 6680{//小优推荐
-                    titles.insert("推荐", at: 0)
-                    newModels.insert(model, at: 0)
-                }else{
-                    titles.append(model.title ?? "")
-                    newModels.append(model)
-                }
-            }
-            self.titles = titles
-            self.categoryLists = newModels
-            
-            self.congfigUI()
-        }) { (msg, code) in
-            
-        }
+        self.congfigUI()
     }
     
-    // MARK: -action
-    
-    // MARK: -private
-    
-    // MARK: -public
-    
-    // MARK: - UI
     func congfigUI(){
-        if hasLoadData{
-            return
-        }
-        
-        hasLoadData = true
         listContainerView = JXCategoryListContainerView.init(type: .collectionView, delegate: self)
         
         self.view.addSubview(categoryView)
@@ -88,15 +79,12 @@ class YXSContentHomeController: YXSBaseViewController{
         listContainerView.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
             make.top.equalTo(categoryView.snp_bottom)
-            make.bottom.equalTo(-kTabBottomHeight)
+            make.bottom.equalTo(0)
         }
         
         categoryView.contentScrollView = listContainerView.scrollView
         categoryView.delegate = self
     }
-    
-    
-    // MARK: - getter&setter
     
     lazy var categoryView :JXCategoryTitleView = {
         //            64  8 40  15
@@ -107,28 +95,27 @@ class YXSContentHomeController: YXSBaseViewController{
         view.titles = self.titles
         view.cellSpacing = 30
         view.isTitleColorGradientEnabled = true
-        view.cellWidthIncrement = 10
+        view.cellWidthIncrement = 50
         view.layer.cornerRadius = 20
         
         let lineView = JXCategoryIndicatorLineView()
         lineView.indicatorColor = UIColor.yxs_hexToAdecimalColor(hex: "#7CABFF");
-        lineView.indicatorWidth = 20
+        lineView.indicatorWidth = 50
         lineView.indicatorHeight = 2
         view.indicators = [lineView]
         return view
     }()
 }
 
-extension YXSContentHomeController: JXCategoryListContainerViewDelegate, JXCategoryViewDelegate{
+extension YXSSynClassHomeListVC: JXCategoryListContainerViewDelegate, JXCategoryViewDelegate{
     func number(ofListsInlistContainerView listContainerView: JXCategoryListContainerView!) -> Int {
         return categoryView.titles.count
     }
     
+    
+    
     func listContainerView(_ listContainerView: JXCategoryListContainerView!, initListFor index: Int) -> JXCategoryListContentViewDelegate! {
-        if index == 0{
-            return YXSContentListViewController.init(id: categoryLists[index].id ?? 0, showHeader: true)
-        }
-        return YXSContentListViewController.init(id: categoryLists[index].id ?? 0)
+        return YXSSynClassListVC.init(type: listVCTypes[index])
     }
     
     func categoryView(_ categoryView: JXCategoryBaseView!, scrollingFromLeftIndex leftIndex: Int, toRightIndex rightIndex: Int, ratio: CGFloat) {
@@ -139,5 +126,3 @@ extension YXSContentHomeController: JXCategoryListContainerViewDelegate, JXCateg
         self.listContainerView?.didClickSelectedItem(at: index)
     }
 }
-
-

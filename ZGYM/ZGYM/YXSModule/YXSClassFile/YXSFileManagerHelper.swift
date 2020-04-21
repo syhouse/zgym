@@ -94,7 +94,7 @@ class YXSFileManagerHelper: NSObject {
 
             let dict = attr as NSDictionary
             fileSize = dict.fileSize()
-            let mb = CGFloat(fileSize)/(1024.0*1024.0)
+            let mb = CGFloat(fileSize)/1024.0//(1024.0*1024.0)
             
             print(">>>>fileSize:\(fileSize)")
             return CGFloat(mb)
@@ -111,11 +111,12 @@ class YXSFileManagerHelper: NSObject {
     
         fileSize = UInt64(data.count)//attr[FileAttributeKey.size] as! UInt64
 
-        let mb = CGFloat(fileSize)/(1024.0*1024.0)
+        let mb = CGFloat(fileSize)/1024.0//(1024.0*1024.0)
             
         print(">>>>fileSize:\(fileSize)")
         return CGFloat(mb)
     }
+    
     
     
     

@@ -348,12 +348,6 @@
 		6F0704772445D8040090975B /* YXSLastUptrackModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700912445D7FE0090975B /* YXSLastUptrackModel.swift */; };
 		6F0704782445D8040090975B /* YXSSubordinatedAlbumModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700922445D7FE0090975B /* YXSSubordinatedAlbumModel.swift */; };
 		6F0704792445D8040090975B /* YXSTrackModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700932445D7FE0090975B /* YXSTrackModel.swift */; };
-		6F07047A2445D8040090975B /* YXSContentHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700962445D7FE0090975B /* YXSContentHomeController.swift */; };
-		6F07047B2445D8040090975B /* YXSContentListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700972445D7FE0090975B /* YXSContentListViewController.swift */; };
-		6F07047C2445D8040090975B /* YXSPlayingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700982445D7FE0090975B /* YXSPlayingViewController.swift */; };
-		6F07047D2445D8040090975B /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700992445D7FE0090975B /* PlayingViewController.m */; };
-		6F07047E2445D8040090975B /* YXSContentDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07009A2445D7FE0090975B /* YXSContentDetialController.swift */; };
-		6F07047F2445D8040090975B /* YXSPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07009B2445D7FE0090975B /* YXSPlayListViewController.swift */; };
 		6F0704802445D8040090975B /* YXSClassScheduleCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07009D2445D7FE0090975B /* YXSClassScheduleCardCell.swift */; };
 		6F0704812445D8040090975B /* YXSScoreDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07009E2445D7FE0090975B /* YXSScoreDetialController.swift */; };
 		6F0704822445D8040090975B /* YXSClassScheduleCardListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07009F2445D7FE0090975B /* YXSClassScheduleCardListController.swift */; };
@@ -748,12 +742,24 @@
 		6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */ = {isa = PBXBuildFile; fileRef = 6F5720BE24493CAC00E1F301 /* 打包注意 */; };
 		6F6511D42445DC820024A5DA /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; };
 		6F6511D52445DC820024A5DA /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6F87B889244D41450085CD3B /* YXSMusicPlayerWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87B888244D41450085CD3B /* YXSMusicPlayerWindowView.swift */; };
 		6FA0F331242B451800E2E035 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F32F242B451800E2E035 /* Main.storyboard */; };
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
 		6FF7735C244AB09900D3461E /* YXSListVoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF7735B244AB09900D3461E /* YXSListVoiceView.swift */; };
+		E53D8AF9244E80C400590B5A /* YXSContentHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */; };
+		E53D8AFA244E80C400590B5A /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF3244E80C300590B5A /* PlayingViewController.m */; };
+		E53D8AFB244E80C400590B5A /* YXSContentDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF4244E80C400590B5A /* YXSContentDetialController.swift */; };
+		E53D8AFC244E80C400590B5A /* YXSPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF5244E80C400590B5A /* YXSPlayListViewController.swift */; };
+		E53D8AFD244E80C400590B5A /* YXSPlayingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF6244E80C400590B5A /* YXSPlayingViewController.swift */; };
+		E53D8AFE244E80C400590B5A /* YXSContentListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF7244E80C400590B5A /* YXSContentListViewController.swift */; };
+		E53D8AFF244E80C400590B5A /* YXSMusicPlayerWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF8244E80C400590B5A /* YXSMusicPlayerWindowView.swift */; };
+		E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */; };
+		E5F41C59244D52B5007F27AC /* YXSExcellentEducationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */; };
+		E5F41C5D244D7744007F27AC /* YXSSynClassHomeListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */; };
+		E5F41C5F244D7CCF007F27AC /* YXSSynClassListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C5E244D7CCF007F27AC /* YXSSynClassListVC.swift */; };
+		E5F41C61244DA320007F27AC /* YXSSynClassListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C60244DA320007F27AC /* YXSSynClassListCell.swift */; };
+		E5F41C63244DA766007F27AC /* YXSExcellentEducationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C62244DA766007F27AC /* YXSExcellentEducationRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -912,13 +918,6 @@
 		6F0700912445D7FE0090975B /* YXSLastUptrackModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSLastUptrackModel.swift; sourceTree = "<group>"; };
 		6F0700922445D7FE0090975B /* YXSSubordinatedAlbumModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSubordinatedAlbumModel.swift; sourceTree = "<group>"; };
 		6F0700932445D7FE0090975B /* YXSTrackModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSTrackModel.swift; sourceTree = "<group>"; };
-		6F0700952445D7FE0090975B /* PlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingViewController.h; sourceTree = "<group>"; };
-		6F0700962445D7FE0090975B /* YXSContentHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentHomeController.swift; sourceTree = "<group>"; };
-		6F0700972445D7FE0090975B /* YXSContentListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentListViewController.swift; sourceTree = "<group>"; };
-		6F0700982445D7FE0090975B /* YXSPlayingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPlayingViewController.swift; sourceTree = "<group>"; };
-		6F0700992445D7FE0090975B /* PlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayingViewController.m; sourceTree = "<group>"; };
-		6F07009A2445D7FE0090975B /* YXSContentDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentDetialController.swift; sourceTree = "<group>"; };
-		6F07009B2445D7FE0090975B /* YXSPlayListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPlayListViewController.swift; sourceTree = "<group>"; };
 		6F07009D2445D7FE0090975B /* YXSClassScheduleCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassScheduleCardCell.swift; sourceTree = "<group>"; };
 		6F07009E2445D7FE0090975B /* YXSScoreDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSScoreDetialController.swift; sourceTree = "<group>"; };
 		6F07009F2445D7FE0090975B /* YXSClassScheduleCardListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassScheduleCardListController.swift; sourceTree = "<group>"; };
@@ -1902,7 +1901,6 @@
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
 		6F5720BE24493CAC00E1F301 /* 打包注意 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "打包注意"; sourceTree = "<group>"; };
 		6F6511D62446937D0024A5DA /* 优学业.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "优学业.entitlements"; sourceTree = "<group>"; };
-		6F87B888244D41450085CD3B /* YXSMusicPlayerWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSMusicPlayerWindowView.swift; sourceTree = "<group>"; };
 		6FA0F326242B451800E2E035 /* 优学业.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "优学业.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FA0F330242B451800E2E035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6FA0F335242B451E00E2E035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -1915,6 +1913,20 @@
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
 		6FF7735B244AB09900D3461E /* YXSListVoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSListVoiceView.swift; sourceTree = "<group>"; };
+		E53D8AF1244E80C300590B5A /* PlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingViewController.h; sourceTree = "<group>"; };
+		E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentHomeController.swift; sourceTree = "<group>"; };
+		E53D8AF3244E80C300590B5A /* PlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayingViewController.m; sourceTree = "<group>"; };
+		E53D8AF4244E80C400590B5A /* YXSContentDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentDetialController.swift; sourceTree = "<group>"; };
+		E53D8AF5244E80C400590B5A /* YXSPlayListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPlayListViewController.swift; sourceTree = "<group>"; };
+		E53D8AF6244E80C400590B5A /* YXSPlayingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPlayingViewController.swift; sourceTree = "<group>"; };
+		E53D8AF7244E80C400590B5A /* YXSContentListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentListViewController.swift; sourceTree = "<group>"; };
+		E53D8AF8244E80C400590B5A /* YXSMusicPlayerWindowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSMusicPlayerWindowView.swift; sourceTree = "<group>"; };
+		E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationVC.swift; sourceTree = "<group>"; };
+		E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationCell.swift; sourceTree = "<group>"; };
+		E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassHomeListVC.swift; sourceTree = "<group>"; };
+		E5F41C5E244D7CCF007F27AC /* YXSSynClassListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassListVC.swift; sourceTree = "<group>"; };
+		E5F41C60244DA320007F27AC /* YXSSynClassListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassListCell.swift; sourceTree = "<group>"; };
+		E5F41C62244DA766007F27AC /* YXSExcellentEducationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2041,7 +2053,7 @@
 				6F0700642445D7FE0090975B /* YXSClassFile */,
 				6F0700742445D7FE0090975B /* YXSLogin */,
 				6F0700842445D7FE0090975B /* YXSGlobalJump */,
-				6F0700862445D7FE0090975B /* YXSContent */,
+				6F0700862445D7FE0090975B /* YXSExcellentEducation */,
 				6F07009C2445D7FE0090975B /* YXSClassScheduleCard */,
 				6F0700A22445D7FE0090975B /* YXSFirstLaunch */,
 				6F0700A52445D7FE0090975B /* YXSClass */,
@@ -2259,13 +2271,15 @@
 			path = YXSGlobalJump;
 			sourceTree = "<group>";
 		};
-		6F0700862445D7FE0090975B /* YXSContent */ = {
+		6F0700862445D7FE0090975B /* YXSExcellentEducation */ = {
 			isa = PBXGroup;
 			children = (
-				6F0700872445D7FE0090975B /* YXSXMLY */,
+				E5F41C5B244D7709007F27AC /* YXSSynclass */,
+				E5F41C5A244D7374007F27AC /* YXSBabyhear */,
+				E5F41C53244D4051007F27AC /* View */,
 				6F0700942445D7FE0090975B /* Controller */,
 			);
-			path = YXSContent;
+			path = YXSExcellentEducation;
 			sourceTree = "<group>";
 		};
 		6F0700872445D7FE0090975B /* YXSXMLY */ = {
@@ -2297,14 +2311,7 @@
 		6F0700942445D7FE0090975B /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				6F0700952445D7FE0090975B /* PlayingViewController.h */,
-				6F0700992445D7FE0090975B /* PlayingViewController.m */,
-				6F07009A2445D7FE0090975B /* YXSContentDetialController.swift */,
-				6F0700962445D7FE0090975B /* YXSContentHomeController.swift */,
-				6F0700972445D7FE0090975B /* YXSContentListViewController.swift */,
-				6F0700982445D7FE0090975B /* YXSPlayingViewController.swift */,
-				6F07009B2445D7FE0090975B /* YXSPlayListViewController.swift */,
-				6F87B888244D41450085CD3B /* YXSMusicPlayerWindowView.swift */,
+				E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -4681,6 +4688,7 @@
 				6F07FFE82445D7FC0090975B /* YXSNoticeRequset.swift */,
 				6F07FFE92445D7FC0090975B /* YXSSatchelRequest.swift */,
 				560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */,
+				E5F41C62244DA766007F27AC /* YXSExcellentEducationRequest.swift */,
 			);
 			path = YXSNetwork;
 			sourceTree = "<group>";
@@ -4841,6 +4849,40 @@
 				523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E5F41C53244D4051007F27AC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E5F41C5A244D7374007F27AC /* YXSBabyhear */ = {
+			isa = PBXGroup;
+			children = (
+				E53D8AF1244E80C300590B5A /* PlayingViewController.h */,
+				E53D8AF3244E80C300590B5A /* PlayingViewController.m */,
+				E53D8AF4244E80C400590B5A /* YXSContentDetialController.swift */,
+				E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */,
+				E53D8AF7244E80C400590B5A /* YXSContentListViewController.swift */,
+				E53D8AF8244E80C400590B5A /* YXSMusicPlayerWindowView.swift */,
+				E53D8AF6244E80C400590B5A /* YXSPlayingViewController.swift */,
+				E53D8AF5244E80C400590B5A /* YXSPlayListViewController.swift */,
+				6F0700872445D7FE0090975B /* YXSXMLY */,
+			);
+			path = YXSBabyhear;
+			sourceTree = "<group>";
+		};
+		E5F41C5B244D7709007F27AC /* YXSSynclass */ = {
+			isa = PBXGroup;
+			children = (
+				E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */,
+				E5F41C5E244D7CCF007F27AC /* YXSSynClassListVC.swift */,
+				E5F41C60244DA320007F27AC /* YXSSynClassListCell.swift */,
+			);
+			path = YXSSynclass;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -5091,6 +5133,7 @@
 				6F0705B32445D8060090975B /* LFMEGIFImageSerialization.m in Sources */,
 				6F0703A22445D8030090975B /* TUIBubbleMessageCell.m in Sources */,
 				6F07FE092445D7C70090975B /* YXSBaseUserModel.swift in Sources */,
+				E53D8AFF244E80C400590B5A /* YXSMusicPlayerWindowView.swift in Sources */,
 				6F0704002445D8030090975B /* NSUtil.swift in Sources */,
 				6F0705232445D8050090975B /* YXSHomeworkCommentModel.swift in Sources */,
 				6F07051F2445D8050090975B /* YXSHomeworkDetailViewController.swift in Sources */,
@@ -5138,6 +5181,7 @@
 				6F0704FA2445D8050090975B /* YXSAgendaListController.swift in Sources */,
 				6F0705F22445D8060090975B /* LFPreviewBar.m in Sources */,
 				6F0704982445D8040090975B /* YXSClassMemberModel.swift in Sources */,
+				E53D8AF9244E80C400590B5A /* YXSContentHomeController.swift in Sources */,
 				6F0703AC2445D8030090975B /* TUIGroupInfoDataProviderService.m in Sources */,
 				6F0703D02445D8030090975B /* CLPlayerView.m in Sources */,
 				6F0705DF2445D8060090975B /* LFAssetCell.m in Sources */,
@@ -5158,6 +5202,7 @@
 				6F0705C62445D8060090975B /* LFStickerItem+View.m in Sources */,
 				6F07041E2445D8030090975B /* YXSShowBrowserHelper.swift in Sources */,
 				6F07048A2445D8040090975B /* YXSClassRepeatCheckController.swift in Sources */,
+				E53D8AFD244E80C400590B5A /* YXSPlayingViewController.swift in Sources */,
 				6F0704082445D8030090975B /* YXSShareView.swift in Sources */,
 				6F0704272445D8040090975B /* YXSConfirmationAlertView.swift in Sources */,
 				6F07058B2445D8060090975B /* LFSampleBufferHolder.m in Sources */,
@@ -5169,7 +5214,6 @@
 				6F0704162445D8030090975B /* YXSPhotoBrowserTool.m in Sources */,
 				6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */,
 				6F07FE082445D7C70090975B /* YXSBasePopingView.swift in Sources */,
-				6F87B889244D41450085CD3B /* YXSMusicPlayerWindowView.swift in Sources */,
 				6F0703B52445D8030090975B /* CreatGroupAvatar.m in Sources */,
 				6F0704462445D8040090975B /* YXSMineAboutViewController.swift in Sources */,
 				6F07036C2445D8030090975B /* TUIContactSelectController.m in Sources */,
@@ -5206,7 +5250,6 @@
 				6F0705EF2445D8060090975B /* LFAsset.m in Sources */,
 				6F07052F2445D8050090975B /* YXSSetTopAlertView.swift in Sources */,
 				6F07053C2445D8050090975B /* YXSHomeworkCommitListCell.swift in Sources */,
-				6F07047A2445D8040090975B /* YXSContentHomeController.swift in Sources */,
 				6F07034F2445D8020090975B /* Toast.swift in Sources */,
 				6F0704FC2445D8050090975B /* YXSClassStarDetailListController.swift in Sources */,
 				6F0704412445D8040090975B /* YXSMineBottomCornerRadiusTableViewCell.swift in Sources */,
@@ -5288,6 +5331,7 @@
 				6F0703BD2445D8030090975B /* TCServiceManager.m in Sources */,
 				6F0704D22445D8050090975B /* YXSSolitaireModel.swift in Sources */,
 				6F07055A2445D8050090975B /* YXSFriendCircleMessageListCell.swift in Sources */,
+				E5F41C61244DA320007F27AC /* YXSSynClassListCell.swift in Sources */,
 				6F0704F82445D8050090975B /* YXSHomeNavView.swift in Sources */,
 				6F0705142445D8050090975B /* YXSClassStarCommentAlertView.swift in Sources */,
 				6F0705742445D8060090975B /* SPDropItem.m in Sources */,
@@ -5342,6 +5386,7 @@
 				6F0703A82445D8030090975B /* TUIGroupMembersView.m in Sources */,
 				6F0703A62445D8030090975B /* TUIMoreView.m in Sources */,
 				6F07039F2445D8030090975B /* TUIImageMessageCell.m in Sources */,
+				E53D8AFE244E80C400590B5A /* YXSContentListViewController.swift in Sources */,
 				6F0705B82445D8060090975B /* LFGridMaskLayer.m in Sources */,
 				6F0705022445D8050090975B /* YXSClassStarCommentEditItemListController.swift in Sources */,
 				6F0705692445D8060090975B /* LBXScanViewStyle.swift in Sources */,
@@ -5371,6 +5416,7 @@
 				6F07041C2445D8030090975B /* YXSClassEmptyView.swift in Sources */,
 				6F0704042445D8030090975B /* YXSCommonAlertView.swift in Sources */,
 				6F0705EC2445D8060090975B /* LFResultImage.m in Sources */,
+				E5F41C59244D52B5007F27AC /* YXSExcellentEducationCell.swift in Sources */,
 				6F0704AC2445D8040090975B /* YXSPhotoEditAlbumController.swift in Sources */,
 				6F0703872445D8030090975B /* TUIImageMessageCellData.m in Sources */,
 				6F0705082445D8050090975B /* YXSClassStarChildrenModel.swift in Sources */,
@@ -5407,7 +5453,6 @@
 				6F0704C52445D8040090975B /* YXSPunchCardCommintListModel.swift in Sources */,
 				6F0704592445D8040090975B /* YXSFileItemModel.swift in Sources */,
 				6F0704D12445D8050090975B /* YXSSolitairePublishController.swift in Sources */,
-				6F07047C2445D8040090975B /* YXSPlayingViewController.swift in Sources */,
 				6F0704822445D8040090975B /* YXSClassScheduleCardListController.swift in Sources */,
 				6F0705942445D8060090975B /* UIView+LFMEFrame.m in Sources */,
 				6F0705322445D8050090975B /* YXSLinkView.swift in Sources */,
@@ -5447,8 +5492,8 @@
 				6F0704962445D8040090975B /* YXSClassInfoViewController.swift in Sources */,
 				6F07053A2445D8050090975B /* YXSPublishSwitchLabel.swift in Sources */,
 				6F07052C2445D8050090975B /* YXSHomeworkDetailCommentView.swift in Sources */,
+				E53D8AFC244E80C400590B5A /* YXSPlayListViewController.swift in Sources */,
 				6F0704052445D8030090975B /* YXSBaseDetailViewCell.swift in Sources */,
-				6F07047E2445D8040090975B /* YXSContentDetialController.swift in Sources */,
 				6F0704992445D8040090975B /* YXSTransferItemModel.swift in Sources */,
 				6F0704682445D8040090975B /* YXSLoginTipsAlertView.swift in Sources */,
 				6F0703392445D8020090975B /* UserDefaultsExtensions.swift in Sources */,
@@ -5515,7 +5560,6 @@
 				6F0704E22445D8050090975B /* YXSSearchView.swift in Sources */,
 				6F0705852445D8060090975B /* LFFilterGifView.m in Sources */,
 				6F0703F02445D8030090975B /* YXSRequset.swift in Sources */,
-				6F07047F2445D8040090975B /* YXSPlayListViewController.swift in Sources */,
 				6F0704FE2445D8050090975B /* YXSClassStarTeacherPublishCommentController.swift in Sources */,
 				6F07040E2445D8030090975B /* YXSSSAudioPlayer.swift in Sources */,
 				6F0704632445D8040090975B /* YXSForgotPwdViewController.swift in Sources */,
@@ -5537,6 +5581,7 @@
 				6F07041D2445D8030090975B /* UIUtil.swift in Sources */,
 				6F0703E22445D8030090975B /* AFImageDownloader.m in Sources */,
 				6F0705AB2445D8060090975B /* LFVideoEditingView.m in Sources */,
+				E5F41C63244DA766007F27AC /* YXSExcellentEducationRequest.swift in Sources */,
 				6F07043B2445D8040090975B /* YXSPOITableViewCell.swift in Sources */,
 				6F0703C12445D8030090975B /* wav.mm in Sources */,
 				6F07034E2445D8020090975B /* NSObject+XYSDescription.swift in Sources */,
@@ -5580,6 +5625,7 @@
 				6F0703AF2445D8030090975B /* TUIMessageDataProviderService.m in Sources */,
 				6F0703BC2445D8030090975B /* TCContext.m in Sources */,
 				6F0705352445D8050090975B /* YXSSelectClassView.swift in Sources */,
+				E53D8AFB244E80C400590B5A /* YXSContentDetialController.swift in Sources */,
 				6F0704702445D8040090975B /* YXSAnnouncer.swift in Sources */,
 				6F0704882445D8040090975B /* YXSComplaintOptionsViewController.swift in Sources */,
 				6F0705E72445D8060090975B /* LFAssetManager+CreateMedia.m in Sources */,
@@ -5600,7 +5646,6 @@
 				6F0703C22445D8030090975B /* amrFileCodec.mm in Sources */,
 				6F0704B72445D8040090975B /* YXSPunchCardListController.swift in Sources */,
 				6F0703FF2445D8030090975B /* YXSGuideView.swift in Sources */,
-				6F07047D2445D8040090975B /* PlayingViewController.m in Sources */,
 				6F0705272445D8050090975B /* YXSHomeworkThumbnailsView.swift in Sources */,
 				6F0704942445D8040090975B /* YXSClassRepeatController.swift in Sources */,
 				6F07045E2445D8040090975B /* YXSChoseFileViewController.swift in Sources */,
@@ -5615,7 +5660,6 @@
 				6F07051B2445D8050090975B /* YXSClassStarPartentDetialController.swift in Sources */,
 				6F0705302445D8050090975B /* YXSHomeWorkDetailTableHeaderView.swift in Sources */,
 				6F0704BF2445D8040090975B /* YXSPunchCardShareView.swift in Sources */,
-				6F07047B2445D8040090975B /* YXSContentListViewController.swift in Sources */,
 				6F0704BB2445D8040090975B /* YXSPunchCardStatisticsModel.swift in Sources */,
 				6F0703A92445D8030090975B /* TUIGroupMemberCell.m in Sources */,
 				6F07044F2445D8040090975B /* YXSNoticeListCell.swift in Sources */,
@@ -5662,6 +5706,7 @@
 				6F07045B2445D8040090975B /* YXSFileAbleSlectedCell.swift in Sources */,
 				6F0704AB2445D8040090975B /* YXSEditAlbumBaseController.swift in Sources */,
 				6F07053B2445D8050090975B /* YXSSelectClassCell.swift in Sources */,
+				E53D8AFA244E80C400590B5A /* PlayingViewController.m in Sources */,
 				6F0705522445D8050090975B /* YXSFriendsCircleMessageView.swift in Sources */,
 				6F0704422445D8040090975B /* YXSSettingTableViewCell.swift in Sources */,
 				6F07045D2445D8040090975B /* YXSBaseFileCell.swift in Sources */,
@@ -5675,6 +5720,7 @@
 				6F0703A52445D8030090975B /* TUIMessageController.m in Sources */,
 				6F0703412445D8020090975B /* UINavigationController+YXSCommon.swift in Sources */,
 				6F07038A2445D8030090975B /* TUIGroupPendencyViewModel.m in Sources */,
+				E5F41C5D244D7744007F27AC /* YXSSynClassHomeListVC.swift in Sources */,
 				6F0705432445D8050090975B /* YXSRecordVideoController.swift in Sources */,
 				6F0705362445D8050090975B /* YXSBottomBtnView.swift in Sources */,
 				6F0703DF2445D8030090975B /* UIActivityIndicatorView+AFNetworking.m in Sources */,
@@ -5746,6 +5792,7 @@
 				6F0705192445D8050090975B /* YXSClassStartTeacherClassListController.swift in Sources */,
 				6F0704F92445D8050090975B /* YXSAgendaListModel.swift in Sources */,
 				6F0703B32445D8030090975B /* TUIConversationCell.m in Sources */,
+				E5F41C5F244D7CCF007F27AC /* YXSSynClassListVC.swift in Sources */,
 				6F0703442445D8020090975B /* UIViewController+YXSAlertController.swift in Sources */,
 				6F07036E2445D8030090975B /* TContactViewModel.m in Sources */,
 				6F0703C52445D8030090975B /* TUIImageCache.m in Sources */,
@@ -5771,6 +5818,7 @@
 				6F0704242445D8040090975B /* YXSCustomImageControl.swift in Sources */,
 				6F0704802445D8040090975B /* YXSClassScheduleCardCell.swift in Sources */,
 				6F0704342445D8040090975B /* YXSMineChildrenListViewController.swift in Sources */,
+				E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */,
 				6F0703AE2445D8030090975B /* TUIConversationDataProviderService.m in Sources */,
 				6F0703532445D8030090975B /* TUnReadView.m in Sources */,
 				6F0705A62445D8060090975B /* LFDrawView.m in Sources */,

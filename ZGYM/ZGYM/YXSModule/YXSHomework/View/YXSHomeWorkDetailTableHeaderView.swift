@@ -264,6 +264,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             mediaModel.images = imgs
             mediaModel.bgUrl = self.model?.bgUrl
             mediaModel.videoUrl = self.model?.videoUrl
+            mediaView.voiceView.id = "\(self.model?.id ?? 0)"
             mediaView.layoutIfNeeded();
             mediaView.model = mediaModel
             mediaView.layoutIfNeeded();

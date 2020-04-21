@@ -80,6 +80,7 @@ class RequsetParamManager {
 class YXSBaseRequset: NSObject {
     //默认host 用户相关业务
     var host: String =  sericeType.getServiceUrl() + "user-api"
+    var classHost: String = sericeType.getServiceUrl() + "synch-classroom"
     var path: String = ""
     var isUploadImage = false
 

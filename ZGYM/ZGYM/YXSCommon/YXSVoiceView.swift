@@ -120,8 +120,15 @@ class YXSVoiceBaseView: UIView {
         }
     }
     
+    ///最大录音时间长度 单位秒
+    var maxTime: CGFloat = 300.0 {
+        didSet {
+            updateLayout()
+        }
+    }
+    
     @objc func updateLayout() {
-        let percentage: CGFloat = CGFloat(voiceDuration ?? 0) / 60.0
+        let percentage: CGFloat = CGFloat(voiceDuration ?? 0) / maxTime
         //伸缩宽度
         var flexibleWidth = self.frame.width - minWidth
         if let maxWidth = maxWidth{
