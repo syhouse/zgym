@@ -8,6 +8,7 @@
 
 import UIKit
 import NightNight
+import SDWebImage
 
 class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XMLivePlayerDelegate {
 
@@ -47,7 +48,24 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     // MARK: - leftCycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        ///注意顺序
         YXSMusicPlayerWindowView.hidePlayerWindow()
+        
+        ///接收锁屏事件
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        self.resignFirstResponder()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        ///注意顺序
+        
+        ///结束锁屏事件
+        UIApplication.shared.endReceivingRemoteControlEvents()
+        self.becomeFirstResponder()
+        
+        YXSMusicPlayerWindowView.showPlayerWindow()
     }
     
     override func viewDidLoad() {
@@ -340,14 +358,13 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     @objc func onBackClick(sender: UIButton) {
         navigationController?.popViewController()
-        
-        YXSMusicPlayerWindowView.showPlayerWindow()
     }
     
     // MARK: - Delegate
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
         progressView.value = Float(percent)
         lbCurrentDuration.text = stringWithDuration(duration: Int(currentSecond))
+        UIUtil.configNowPlayingCenter(curruntTime: Int(currentSecond))
     }
     
     func xmTrackPlayNotifyCacheProcess(_ percent: CGFloat) {
@@ -365,7 +382,15 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         
         customNav.title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
         lbTotalDuration.text = stringWithDuration(duration: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0)
-        imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: nil)
+        
+        if let image = SDImageCache.shared.imageFromCache(forKey: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""){
+            UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: 0, totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0, image: image)
+        }else{
+            imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: { (image, error, type, url) in
+                UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: 0, totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0, image: image)
+            })
+        }
+        
         imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: nil)
     }
 
@@ -384,7 +409,6 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     func xmLiveRadioPlayerDidStart() {
         playListVC?.tableView.reloadData()
         setPlayerDidStartUI()
-        
     }
     
     // MARK: -Tool
@@ -522,4 +546,33 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }
     */
 
+}
+
+// MARK: - 锁屏控制
+extension YXSPlayingViewController{
+    
+    override var canBecomeFirstResponder: Bool {
+         get {
+             return true
+         }
+     }
+     
+     override func remoteControlReceived(with event: UIEvent?) {
+         if event?.type == UIEvent.EventType.remoteControl{
+             switch event?.subtype {
+             case .remoteControlPause:
+                 btnPlayPause.isSelected = !btnPlayPause.isSelected
+                 self.pause()
+             case .remoteControlPlay:
+                 btnPlayPause.isSelected = !btnPlayPause.isSelected
+                 self.resume()
+             case .remoteControlNextTrack:
+                 self.playNextTrack(sender: YXSButton())
+             case .remoteControlPreviousTrack:
+                 self.playPreTrack(sender: YXSButton())
+             default:
+                 break
+             }
+         }
+     }
 }
