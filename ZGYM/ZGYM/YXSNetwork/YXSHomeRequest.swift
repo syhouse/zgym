@@ -9,29 +9,6 @@
 import UIKit
 
 // MARK: - 首页
-
-// MARK: -瀑布（小学|中学|幼儿园） 瀑布流分页请求参数
-let waterfallPageQuery = "/waterfall/page-query"
-
-//业务类型(0:通知,1:作业,2:打卡,3:接龙,4:成绩,5:班级圈6:班级之星 105 班级圈消息),首页聚合所有数据时无需传该参数,查询对应业务数据时需要传
-//查询起始id
-class YXSEducationFWaterfallPageQueryRequest: YXSBaseRequset {
-    init(currentPage: Int, pageSize: Int = kPageSize,classIdList: [Int],stage: String,userType: String, childrenId: Int?) {
-        super.init()
-        host = homeHost
-        method = .post
-        path = waterfallPageQuery
-        param = ["pageSize":pageSize,
-                 "stage": stage,
-                 "userType": userType,
-                 "classIdList": classIdList,
-                 "currentPage": currentPage]
-        if let childrenId = childrenId{
-            param?["childrenId"] = childrenId
-        }
-    }
-}
-
 // MARK: -瀑布（小学|中学|幼儿园） 首页瀑布流分页查询v2
 let waterfallPageQueryV2 = "/waterfall/page-query/v2"
 

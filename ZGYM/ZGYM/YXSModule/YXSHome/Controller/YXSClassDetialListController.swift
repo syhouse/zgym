@@ -19,8 +19,6 @@ class YXSClassDetialListController: YXSHomeBaseController {
     ///班级详细信息
     private var classDetialModel: YXSClassDetailModel!
     private var yxs_rightButton: YXSButton!
-    ///重新刷新班级信息
-    private var reloadClassDetail = true
     
     /// 导航栏 右边按钮的标题
     public var navRightBarButtonTitle: String? {
@@ -31,6 +29,13 @@ class YXSClassDetialListController: YXSHomeBaseController {
         }
     }
     
+    /// 更新时间
+    var firstPageCacheSource: [YXSHomeListModel] = [YXSHomeListModel]()
+    var lastRecordId: Int = 0
+    var lastRecordTime: String? = Date().toString(format: DateFormatType.custom(kCommonDateFormatString))
+    ///最近更新时间
+    var tsLast: Int?
+    
     // MARK: - init
     init(classModel: YXSClassModel) {
         self.classModel = classModel
@@ -38,6 +43,7 @@ class YXSClassDetialListController: YXSHomeBaseController {
         tableViewIsGroup = true
         self.title = classModel.name
         isSingleHome = true
+        showBegainRefresh = false
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -64,6 +70,7 @@ class YXSClassDetialListController: YXSHomeBaseController {
         tableView.estimatedRowHeight = 214
         tableView.register(YXSHomeTableSectionView.self, forHeaderFooterViewReuseIdentifier: "SLHomeTableSectionView")
         
+        yxs_loadClassDetailData()
     }
     
     // MARK: - loadData
@@ -75,48 +82,72 @@ class YXSClassDetialListController: YXSHomeBaseController {
                 childs.first?.isSelect = true
             }
             self.stage = StageType.init(rawValue:model.stage ?? "") ?? StageType.KINDERGARTEN
-            self.reloadClassDetail = true
-            self.yxs_loadListData()
-            self.group.leave()
+            
+            self.yxs_loadData()
         }) { (msg, code) in
-            self.view.makeToast("\(msg)")
-            self.group.leave()
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     ///瀑布流
     func yxs_loadListData(){
-        group.enter()
-        queue.async(group: group) {
-            YXSEducationFWaterfallPageQueryRequest.init(currentPage: self.curruntPage,classIdList: [self.classModel.id ?? 0],stage: self.stage.rawValue, userType: self.yxs_user.type ?? "", childrenId: self.classModel.childrenId ?? 0).request({ (result) in
-                if self.curruntPage == 1{
-                    self.yxs_removeAll()
+        YXSEducationwaterfallPageQueryV2Request.init(currentPage: self.curruntPage,classIdList: [self.classModel.id ?? 0],stage: self.stage.rawValue, userType: self.yxs_user.type ?? "", childrenId: self.classModel.childrenId ?? 0, lastRecordId: self.lastRecordId, lastRecordTime: self.lastRecordTime, tsLast: self.tsLast).request({ (result) in
+            var list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["waterfallList"].object) ?? [YXSHomeListModel]()
+            self.loadMore = result["hasNext"].boolValue
+            if self.curruntPage == 1{
+                self.tsLast = result["tsLast"].intValue
+                self.yxs_removeAll()
+                
+                if list.count == 0{///没有更新 取缓存数据
+                    list = self.firstPageCacheSource
+                    self.loadMore = list.count >= kPageSize ? true : false
+                }else{
+                    self.firstPageCacheSource = list
                 }
-                let list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["waterfallList"].object) ?? [YXSHomeListModel]()
-                for model in list{
-                    model.childrenId = self.classModel.childrenId
-                    model.childrenRealName = self.classModel.realName
-                    //置顶
-                    if let isTop = model.isTop{
-                        if isTop == 1 {
-                            self.yxs_dataSource[0].items.append(model)
-                            continue
-                        }
-                    }
-                    //今天
-                    if NSUtil.yxs_isSameDay(NSUtil.yxs_string2Date(model.createTime ?? ""), date2: Date()){
-                        self.yxs_dataSource[1].items.append(model)
+            }else{
+                self.loadMore = result["hasNext"].boolValue
+            }
+            
+            self.lastRecordId = list.last?.id ?? 0
+            self.lastRecordTime = list.last?.createTime
+            
+            for model in list{
+                model.childrenId = self.classModel.childrenId
+                model.childrenRealName = self.classModel.realName
+                //置顶
+                if let isTop = model.isTop{
+                    if isTop == 1 {
+                        self.yxs_dataSource[0].items.append(model)
                         continue
                     }
-                    //更早
-                    self.yxs_dataSource[2].items.append(model)
                 }
-                self.loadMore = result["hasNext"].boolValue
-                self.group.leave()
-            }) { (msg, code) in
-                self.group.leave()
+                //今天
+                if NSUtil.yxs_isSameDay(NSUtil.yxs_string2Date(model.createTime ?? ""), date2: Date()){
+                    self.yxs_dataSource[1].items.append(model)
+                    continue
+                }
+                //更早
+                self.yxs_dataSource[2].items.append(model)
             }
+            
+            self.tableView.reloadData()
+            self.yxs_reloadFooterView()
+            
+            self.yxs_endingRefresh()
+            
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+                self.yxs_tableHeaderView.teacherView.setViewModel(self.classDetialModel)
+            }else{
+                self.yxs_tableHeaderView.parentView.setViewModel(self.classDetialModel,classModel: self.classModel)
+                self.yxs_tableHeaderView.childModel = self.classDetialModel.getCurruntChild(classModel: self.classModel)
+                
+            }
+            //更新学段
+            self.yxs_tableHeaderView.setButtonUI(stage:self.stage)
+            
+        }) { (msg, code) in
+            self.yxs_endingRefresh()
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
-        
     }
     
     override func yxs_homeLoadUpdateTopData(type: YXSHomeType, id: Int = 0, createTime: String = "", isTop: Int = 0, sucess: (() -> ())? = nil) {
@@ -128,32 +159,7 @@ class YXSClassDetialListController: YXSHomeBaseController {
     }
     
     override func yxs_loadData(){
-        if self.curruntPage == 1 && self.reloadClassDetail{
-            group.enter()
-            queue.async(group: group) {
-                self.yxs_loadClassDetailData()
-            }
-        }else{
-            self.yxs_loadListData()
-        }
-        
-        group.notify(queue: queue) {
-            DispatchQueue.main.async {
-                self.yxs_endingRefresh()
-                self.tableView.reloadData()
-                self.yxs_reloadFooterView()
-                
-                if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                    self.yxs_tableHeaderView.teacherView.setViewModel(self.classDetialModel)
-                }else{
-                    self.yxs_tableHeaderView.parentView.setViewModel(self.classDetialModel,classModel: self.classModel)
-                    self.yxs_tableHeaderView.childModel = self.classDetialModel.getCurruntChild(classModel: self.classModel)
-                    
-                }
-                //更新学段
-                self.yxs_tableHeaderView.setButtonUI(stage:self.stage)
-            }
-        }
+        yxs_loadListData()
     }
     
     // MARK: - action
@@ -210,11 +216,7 @@ extension YXSClassDetialListController: YXSRouterEventProtocol{
             yxs_showAlert(title: "push" + kYXSHomeTableHeaderViewLookClassEvent)
         case kYXSHomeTableHeaderViewScanEvent:
             yxs_showAlert(title: "push" + kYXSHomeTableHeaderViewScanEvent)
-        case kYXSClassDetialTableHeaderViewUpDateListEvent:
-            reloadClassDetail = false
-            yxs_refreshData()
         case kYXSClassDetialTableHeaderViewLookChildDetialEvent:
-            //            showAlert(title: "push" + kYXSClassDetialTableHeaderViewLookChildDetialEvent)
             let vc = YXSClassMembersViewController()
             vc.gradeId = classModel.id ?? 0
             self.navigationController?.pushViewController(vc)

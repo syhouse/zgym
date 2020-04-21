@@ -265,7 +265,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
                 }
                 self.dataSource += list
                 self.dealIsShowTime()
-                self.loadMore = list.count == kPageSize
+                self.loadMore = list.count >= kPageSize
                 self.reloadTableView()
             }) { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)

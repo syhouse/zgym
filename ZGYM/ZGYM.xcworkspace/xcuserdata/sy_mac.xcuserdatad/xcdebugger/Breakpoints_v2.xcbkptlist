@@ -108,22 +108,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9225B1F9-C1AA-4F57-AC1D-A4E28C994BB8"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ZGYM/YXSBase/YXSBaseTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "loadMore"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "BD0F043E-1FBF-40AA-A4A9-391FD02EE577"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -231,6 +215,54 @@
             endingLineNumber = "49"
             landmarkName = "hidePlayerWindow()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8EB09509-9988-4C32-B3A3-87DCD407172A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ZGYM/YXSModule/YXSHome/Controller/YXSClassDetialListController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "yxs_loadListData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "8EB09509-9988-4C32-B3A3-87DCD407172A - edac210c96b09324"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ZGYM.YXSClassDetialListController.yxs_loadListData() -&gt; ()"
+                  moduleName = "&#x4f18;&#x5b66;&#x4e1a;"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sy_mac/Documents/zgym/ZGYM/ZGYM/YXSModule/YXSHome/Controller/YXSClassDetialListController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
+                  offsetFromSymbolStart = "56">
+               </Location>
+               <Location
+                  uuid = "8EB09509-9988-4C32-B3A3-87DCD407172A - f88d9d9b5307bf72"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (SwiftyJSON.JSON) -&gt; () in ZGYM.YXSClassDetialListController.yxs_loadListData() -&gt; ()"
+                  moduleName = "&#x4f18;&#x5b66;&#x4e1a;"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sy_mac/Documents/zgym/ZGYM/ZGYM/YXSModule/YXSHome/Controller/YXSClassDetialListController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "94"
+                  endingLineNumber = "94"
+                  offsetFromSymbolStart = "194">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

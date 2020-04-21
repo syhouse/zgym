@@ -135,7 +135,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
             
             self.solitaireLists += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
             
-            self.loadMore = list.count == kPageSize
+            self.loadMore = list.count >= kPageSize
             self.yxs_endingRefresh()
             self.tableView.reloadData()
         }) { (msg, code) in

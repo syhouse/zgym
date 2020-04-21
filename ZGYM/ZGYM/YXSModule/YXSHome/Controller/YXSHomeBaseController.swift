@@ -448,38 +448,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         return model.height
     }
     
-    func getCacheKey(model: YXSHomeListModel) -> (String, String){
-        var  identifier = "YXSHomeBaseCell"
-        
-        var friendCacheAppend = ""
-        switch model.type {
-        case .classstart:
-            identifier = "SLHomeClassStartCell"
-        case .friendCicle:
-            friendCacheAppend = "friend"
-            if let praises = model.friendCircleModel?.praises{
-                for model in praises{
-                    if model.isMyOperation{
-                        friendCacheAppend = "friendPraises"
-                        break
-                    }
-                }
-            }
-            identifier = "SLHomeFriendCell"
-        case .notice:
-            identifier = "SLNoticeListHomeCell"
-        case .punchCard:
-            identifier = "SLPunchCardListHomeCell"
-        case .solitaire:
-            identifier = "SLSolitaireListHomeCell"
-        case .homework:
-            identifier = "SLHomeworkListHomeCell"
-        default:
-            break
-        }
-        return ("\(identifier)\(model.serviceId ?? 0)\(model.isShowAll)\(friendCacheAppend)", identifier)
-    }
-    
     // MARK: - getter&setter
     lazy var publishButton: YXSButton = {
         let button = YXSButton()
