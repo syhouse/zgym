@@ -475,11 +475,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             case 1:
                 height += (isTeacher && onlineCommit == 1) ? 90.5 : 67.5
             case 2:
-                if isShowTag{
-                    height += (isTeacher || hasPunch) ? 117.5 : 95.0
-                }else{
-                   height += (isTeacher || hasPunch) ? 95.0 : 68.0
-                }
+                height += (isTeacher || hasPunch || !hasNeedPunch) ? 117.5 : 95.0
             case 3:
             if isShowTag{
                 height += 120.0

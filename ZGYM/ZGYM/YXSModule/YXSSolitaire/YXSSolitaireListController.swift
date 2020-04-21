@@ -205,6 +205,15 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
         }
     }
     
+    ///处理预加载数据
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if loadMore{
+            if indexPath.row + 1 >= solitaireLists.count - kPreloadSize{
+                tableView.mj_footer?.beginRefreshing()
+            }
+        }
+    }
+    
     
     // MARK: - getter&setter
     

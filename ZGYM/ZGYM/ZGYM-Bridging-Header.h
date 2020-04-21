@@ -42,7 +42,6 @@
 #import <TencentOpenAPI/QQApiInterface.h>
 #import "CLPlayerView.h"
 #import "SLVideoPlayController.h"
-#import <FLEX/FLEXManager.h>
 #import "AFNetworking.h"
 
 #import "YXSConvertAudioFile.h"
@@ -52,6 +51,12 @@
 #import "XMSDK.h"
 
 #import "PlayingViewController.h"
+
+///仅在DEBUG下使用
+#ifdef DEBUG
+#import <FLEX/FLEXManager.h>
+//#import "LLDebug.h"
+#endif
 
 
 #endif /* ZGYM_Bridging_Header_h */

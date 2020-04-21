@@ -82,6 +82,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         #if DEBUG
         FLEXManager.shared()?.showExplorer()
         #endif
+        
+        // MARK: -DeBugLLDebugTool  调试器
+        #if DEBUG
+        LLConfig.shared().userIdentity = "com.youxueye.HNUMEducation"
+        LLDebugTool.shared().startWorking()
+        #endif
 
 //        // MARK: -创建网络缓存
 //        NetworkReachabilityManager.init()?.startListening()

@@ -126,6 +126,8 @@ public let kHMVedioAppendKey = "_HMVideo"
 /// 显示用户协议
 public let kShowPrivacyProtocolKey = "ShowPrivacyProtocolKey"
 public let kPageSize = 20
+///还剩多少条数据进行预加载
+public let kPreloadSize = 5
 public let JGAppkey = "a0cd7307b3360d5a618fcfa1"
 
 
