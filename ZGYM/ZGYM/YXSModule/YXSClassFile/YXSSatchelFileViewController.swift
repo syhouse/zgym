@@ -197,9 +197,10 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                     } else if tmpFileList.count == 1 {
                         /// 文件更名
                         let tmpItem = tmpFileList.first
-                        YXSSatchelRenameFileRequest(fileId: tmpItem?.id ?? 0, fileName: result).request({ [weak self](json) in
+                        let fileName = "\(result).\(tmpItem?.fileType ?? "")"
+                        YXSSatchelRenameFileRequest(fileId: tmpItem?.id ?? 0, fileName: fileName).request({ [weak self](json) in
                             guard let weakSelf = self else {return}
-                            tmpItem?.fileName = "\(result).\(tmpItem?.fileType ?? "")"
+                            tmpItem?.fileName = fileName
                             weakSelf.tableView.reloadSections([1], with: .none)
                             
                         }) { (msg, code) in
@@ -347,7 +348,8 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             let cell: YXSFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! YXSFileCell
             cell.lbTitle.text = item.fileName
             cell.lbSubTitle.text = "\(item.fileSize ?? 0)KB | \(item.createTime?.yxs_DayTime() ?? "")" ///"老师名 | 2020-8-16"
-            cell.imgIcon.sd_setImage(with: URL(string: item.fileUrl ?? ""), placeholderImage: kImageDefualtImage)
+            let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
+            cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
             cell.model = item
             return cell
         }
@@ -371,7 +373,29 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 
             } else {
                 let item = fileList[indexPath.row]
-                previewFile(fileModel: item)
+//                var dataSourceArr = [y]
+                
+                if item.fileType == "jpg" {
+                    let imgData = YBIBImageData()
+                    imgData.imageURL = URL(string: item.fileUrl ?? "")
+                    
+                    let browser: YBImageBrowser = YBImageBrowser()
+                    browser.dataSourceArray = [imgData]
+                    browser.show()
+                    
+                } else if item.fileType == "mp4" {
+                    // 视频
+                    let videoData: YBIBVideoData = YBIBVideoData()
+                    videoData.videoURL = URL(string: item.fileUrl ?? "")
+                    
+                    let browser: YBImageBrowser = YBImageBrowser()
+                    browser.dataSourceArray = [videoData]
+                    browser.show()
+                    
+                } else {
+                    previewFile(fileModel: item)
+                }
+
             }
             
         } else {
