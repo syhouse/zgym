@@ -184,7 +184,7 @@ class YXSSynClassFolderTableHeaderView:UIView {
         if sender.yxs_getIsShowLineView() {
             sender.yxs_removeLine()
         } else {
-            sender.yxs_addLine(position: .bottom, color: kNight5E88F7, leftMargin: 15, rightMargin: 15, lineHeight: 2)
+            sender.yxs_addLine(position: .bottom, color: kNight5E88F7, leftMargin: 15, rightMargin: 15, lineHeight: 3)
         }
         self.folderHeaderClickBlock?(true)
     }
@@ -195,7 +195,7 @@ class YXSSynClassFolderTableHeaderView:UIView {
         if sender.yxs_getIsShowLineView() {
             sender.yxs_removeLine()
         } else {
-            sender.yxs_addLine(position: .bottom, color: kNight5E88F7, leftMargin: 15, rightMargin: 15, lineHeight: 2)
+            sender.yxs_addLine(position: .bottom, color: kNight5E88F7, leftMargin: 15, rightMargin: 15, lineHeight: 3)
         }
         self.folderHeaderClickBlock?(false)
     }
@@ -213,7 +213,7 @@ class YXSSynClassFolderTableHeaderView:UIView {
         btn.setMixedTitleColor(MixedColor(normal: kNight5E88F7, night: kNight5E88F7), forState: .selected)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         btn.isSelected = true
-        btn.yxs_addLine(position: .bottom, color: kNight5E88F7, leftMargin: 15, rightMargin: 15, lineHeight: 2)
+        btn.yxs_addLine(position: .bottom, color: kNight5E88F7, leftMargin: 15, rightMargin: 15, lineHeight: 3)
         btn.addTarget(self, action: #selector(contentBtnClick(sender:)), for: .touchUpInside)
         return btn
     }()

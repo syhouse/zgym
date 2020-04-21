@@ -82,8 +82,8 @@ class YXSSynClassHomeListVC: YXSBaseViewController{
         view.cellSpacing = 30
         view.isTitleColorGradientEnabled = true
         view.cellWidthIncrement = 50
-        view.layer.cornerRadius = 20
-        
+//        view.layer.cornerRadius = 20
+        view.mixedBackgroundColor = MixedColor(normal: kF3F5F9Color, night: kNightForegroundColor)
         let lineView = JXCategoryIndicatorLineView()
         lineView.indicatorColor = UIColor.yxs_hexToAdecimalColor(hex: "#7CABFF");
         lineView.indicatorWidth = 50

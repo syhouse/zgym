@@ -37,9 +37,7 @@ class YXSSynClassFolderCell: UITableViewCell {
     var folderModel:YXSSynClassFolderModel?
     func setModel(model:YXSSynClassFolderModel) {
         folderModel = model
-        let iconImageStr = "yxs_synclass_chinese_Icon"
-        
-        iconImgV.sd_setImage(with: URL(string: model.coverUrl ?? ""), placeholderImage: UIImage.init(named: iconImageStr))
+        iconImgV.sd_setImage(with: URL(string: model.coverUrl ?? ""), placeholderImage: UIImage.init(named: "yxs_synclass_foldercell_default"))
         contentLbl.text = model.resourceName
     }
     
