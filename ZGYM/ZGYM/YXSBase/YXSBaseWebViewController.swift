@@ -26,9 +26,16 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate {
         })
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if URL(string: self.loadUrl ?? "") != nil {
+            MBProgressHUD.yxs_showLoading(inView: self.view)
+        }
+    }
+    
     // MARK: - WKNavigationDelegate
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        MBProgressHUD.yxs_showLoading(inView: self.view)
+//        MBProgressHUD.yxs_showLoading(inView: self.view)
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -45,7 +52,6 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate {
             if let url = URL(string: self.loadUrl ?? "") {
                 let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 5)
                 webView.load(request)
-                
             } else {
                 MBProgressHUD.yxs_showMessage(message: "网页地址无效")
             }

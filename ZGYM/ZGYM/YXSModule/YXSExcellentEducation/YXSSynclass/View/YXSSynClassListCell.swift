@@ -48,6 +48,24 @@ class YXSSynClassListCell: UITableViewCell {
         }
     }
     
+    // MARK: - Setter
+    var listModel:YXSSynClassListModel?
+    func setModel(model:YXSSynClassListModel) {
+        listModel = model
+        var iconImageStr = ""
+        if model.subject == .CHINESE {
+            iconImageStr = "yxs_synclass_chinese_Icon"
+        } else if model.subject == .MATHEMATICS {
+            iconImageStr = "yxs_synclass_math_Icon"
+        } else if model.subject == .FOREIGN_LANGUAGES {
+            iconImageStr = "yxs_synclass_english_Icon"
+        }
+        
+        iconImgV.sd_setImage(with: URL(string: model.coverUrl ?? ""), placeholderImage: UIImage.init(named: iconImageStr))
+        nameLbl.text = model.folderName
+        playnumLbl.text = "播放:\(model.playCount ?? 0)"
+    }
+    
     // MARK: - getter&setter
     lazy var iconImgV: UIImageView = {
         let imgV = UIImageView()
@@ -57,7 +75,7 @@ class YXSSynClassListCell: UITableViewCell {
     
     lazy var nameLbl: UILabel = {
         let nameLbl = UILabel()
-        nameLbl.text = "一年级语文"
+        nameLbl.text = ""
         nameLbl.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kNight898F9A)
         nameLbl.font = UIFont.systemFont(ofSize: 16)
         return nameLbl
@@ -73,7 +91,7 @@ class YXSSynClassListCell: UITableViewCell {
         let lbl = UILabel()
         lbl.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kNight898F9A)
         lbl.font = UIFont.systemFont(ofSize: 13)
-        lbl.text = "播放：23456"
+        lbl.text = "播放：0"
         return lbl
     }()
     
