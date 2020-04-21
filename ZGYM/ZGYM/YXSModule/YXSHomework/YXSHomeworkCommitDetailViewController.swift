@@ -611,10 +611,10 @@ class YXSHomeworkCommitDetailViewController: YXSBaseViewController {
     
     lazy var mediaView: YXSMediaView = {
         let view = YXSMediaView()
-        view.voiceTouchedHandler = { [weak self](voiceUlr, voiceDuration) in
-            guard let weakSelf = self else {return}
-            weakSelf.stopAllVoiceAnimation(view: view.voiceView)
-        }
+//        view.voiceTouchedHandler = { [weak self](voiceUlr, voiceDuration) in
+//            guard let weakSelf = self else {return}
+//            weakSelf.stopAllVoiceAnimation(view: view.voiceView)
+//        }
         view.videoTouchedHandler = { [weak self](url) in
             guard let weakSelf = self else {return}
             let vc = SLVideoPlayController()
@@ -627,10 +627,10 @@ class YXSHomeworkCommitDetailViewController: YXSBaseViewController {
     lazy var commentView: YXSHomeworkDetailCommentView = {
         let view = YXSHomeworkDetailCommentView()
         view.yxs_addLine(position: .top, color: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), leftMargin: 0, rightMargin: 0, lineHeight: 1)
-        view.voiceTouchedHandler = { [weak self](voiceUlr, voiceDuration) in
-            guard let weakSelf = self else {return}
-            weakSelf.stopAllVoiceAnimation(view: view.commetAudioView)
-        }
+//        view.voiceTouchedHandler = { [weak self](voiceUlr, voiceDuration) in
+//            guard let weakSelf = self else {return}
+//            weakSelf.stopAllVoiceAnimation(view: view.commetAudioView)
+//        }
         view.btnCancel.addTarget(self, action: #selector(yxs_deleteCommentClick(sender:)), for: .touchUpInside)
         return view
     }()
@@ -677,10 +677,10 @@ class YXSHomeworkCommitDetailViewController: YXSBaseViewController {
         let view = HomeworkFoldDetailView()
         view.yxs_addLine(position: .top, color: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), leftMargin: 0, rightMargin: 0, lineHeight: 10)
         view.isHidden = true
-        view.mediaView.voiceTouchedHandler = { [weak self](voiceUlr, voiceDuration) in
-            guard let weakSelf = self else {return}
-            weakSelf.stopAllVoiceAnimation(view: view.mediaView.voiceView)
-        }
+//        view.mediaView.voiceTouchedHandler = { [weak self](voiceUlr, voiceDuration) in
+//            guard let weakSelf = self else {return}
+//            weakSelf.stopAllVoiceAnimation(view: view.mediaView.voiceView)
+//        }
         view.mediaView.videoTouchedHandler = { [weak self](url) in
             guard let weakSelf = self else {return}
             let vc = SLVideoPlayController()

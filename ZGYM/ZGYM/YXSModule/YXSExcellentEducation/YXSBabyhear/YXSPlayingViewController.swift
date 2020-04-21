@@ -8,6 +8,7 @@
 
 import UIKit
 import NightNight
+import SDWebImage
 
 class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XMLivePlayerDelegate {
 
@@ -17,6 +18,8 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     private var programList: [Any] = []
     private var radioSchedule: XMRadioSchedule?
     
+    ///当前播放时间
+    private var curruntTime: Int
     /// 播放列表菜单
     var playListVC: YXSPlayListViewController?
     
@@ -24,7 +27,9 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     
     /// 展示当前喜马拉雅专辑播放UI
-    override init() {
+    /// - Parameter curruntTime: 当前播放进度时间
+    init(curruntTime: Int) {
+        self.curruntTime = curruntTime
         super.init()
     }
     
@@ -34,7 +39,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     ///   - track: 当前声音
     ///   - trackList: 声音列表
     convenience init(track: XMTrack, trackList: [Any] = []){
-        self.init()
+        self.init(curruntTime: 0)
         self.track = track
         self.trackList = trackList
     }
@@ -47,7 +52,24 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     // MARK: - leftCycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        ///注意顺序
         YXSMusicPlayerWindowView.hidePlayerWindow()
+        
+        ///接收锁屏事件
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        self.becomeFirstResponder()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        ///注意顺序
+        
+        ///结束锁屏事件
+        UIApplication.shared.endReceivingRemoteControlEvents()
+        self.resignFirstResponder()
+        
+        YXSMusicPlayerWindowView.showPlayerWindow(curruntTime: curruntTime)
     }
     
     override func viewDidLoad() {
@@ -87,8 +109,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         controlPanel.addSubview(btnNext)
         
         view.addSubview(btnMenu)
-        view.addSubview(btnCollect)
-        
+        view.addSubview(btnPlayerMode)
         view.addSubview(progressView)
         view.addSubview(lbCurrentDuration)
         view.addSubview(lbTotalDuration)
@@ -114,7 +135,12 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             track = XMSDKPlayer.shared()?.currentTrack()
             trackList = XMSDKPlayer.shared()?.playList() ?? [Any]()
             xmTrackPlayerDidStart()
-            btnPlayPause.isSelected = !(XMSDKPlayer.shared()?.isPaused() ?? false)
+            updatePlayerModelUI()
+            if let shared = XMSDKPlayer.shared(){
+                progressView.value = Float(curruntTime)/Float(shared.currentTrack()?.duration ?? 1)
+                lbCurrentDuration.text = stringWithDuration(duration: curruntTime)
+                btnPlayPause.isSelected = !shared.isPaused()
+            }
         }
     }
     
@@ -147,9 +173,9 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             make.centerY.equalTo(controlPanel.snp_centerY)
         })
         
-        btnCollect.snp.makeConstraints({ (make) in
+        btnPlayerMode.snp.makeConstraints({ (make) in
             make.right.equalTo(-15)
-            make.centerY.equalTo(controlPanel.snp_centerY)
+            make.centerY.equalTo(btnMenu.snp_centerY)
         })
         
         progressView.snp.makeConstraints({ (make) in
@@ -218,10 +244,11 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             btnPlayPause.isSelected = true
             progressView.value = 0.0
             XMSDKPlayer.shared()?.setPlayMode(.track)
-            XMSDKPlayer.shared()?.setTrackPlayMode(.XMTrackPlayerModeList)
+            XMSDKPlayer.shared()?.setTrackPlayMode(.XMTrackModeCycle)
             XMSDKPlayer.shared()?.play(with: track, playlist: trackList)
             XMSDKPlayer.shared()?.setAutoNexTrack(true)
             
+            updatePlayerModelUI()
         } else if radio != nil {
             btnPlayPause.isSelected = true
             XMSDKPlayer.shared()?.setPlayMode(.live)
@@ -267,7 +294,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
 
     @objc func playPreTrack(sender: YXSButton) {
         progressView.value = 0.0
-        
+        btnPlayPause.isSelected = true
         if trackList.count > 0 {
             XMSDKPlayer.shared()?.playPrevTrack()
             
@@ -281,7 +308,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
 
     @objc func playNextTrack(sender: YXSButton) {
         progressView.value = 0.0
-        
+        btnPlayPause.isSelected = true
         if trackList.count > 0 {
             XMSDKPlayer.shared()?.playNextTrack()
             
@@ -340,14 +367,31 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     @objc func onBackClick(sender: UIButton) {
         navigationController?.popViewController()
-        
-        YXSMusicPlayerWindowView.showPlayerWindow()
+    }
+    
+    @objc func changePlayerModel(){
+        if let share = XMSDKPlayer.shared(){
+            switch share.getTrackPlayMode() {
+            case .XMTrackModeCycle:
+                share.setTrackPlayMode(.XMTrackModeRandom)
+            case .XMTrackModeRandom:
+                share.setTrackPlayMode(.XMTrackModeSingle)
+            case .XMTrackModeSingle:
+                share.setTrackPlayMode(.XMTrackModeCycle)
+            default:
+                share.setTrackPlayMode(.XMTrackModeCycle)
+            }
+        }
+        updatePlayerModelUI()
     }
     
     // MARK: - Delegate
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
         progressView.value = Float(percent)
         lbCurrentDuration.text = stringWithDuration(duration: Int(currentSecond))
+        UIUtil.configNowPlayingCenter(curruntTime: Int(currentSecond))
+        
+        curruntTime = Int(currentSecond)
     }
     
     func xmTrackPlayNotifyCacheProcess(_ percent: CGFloat) {
@@ -365,8 +409,19 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         
         customNav.title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
         lbTotalDuration.text = stringWithDuration(duration: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0)
-        imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: nil)
-        imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: nil)
+        
+        if let image = SDImageCache.shared.imageFromCache(forKey: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""){
+            UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: 0, totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? Int(XMSDKPlayer.shared()?.appointedTime ?? 0.0), image: image)
+            imgCover.image = image
+        }else{
+            imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"), completed: { (image, error, type, url) in
+                UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: Int(XMSDKPlayer.shared()?.appointedTime ?? 0.0), totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0, image: UIImage.init(named: "yxs_player_defualt_bg"))
+            })
+        }
+        
+        
+        
+        imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"), completed: nil)
     }
 
     // MARK: - Live Radio
@@ -384,7 +439,6 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     func xmLiveRadioPlayerDidStart() {
         playListVC?.tableView.reloadData()
         setPlayerDidStartUI()
-        
     }
     
     // MARK: -Tool
@@ -404,6 +458,22 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             lbTotalDuration.text = String.init(format: "%02d:%02d", ((totalDuration ?? 0)/60),((totalDuration ?? 0)%60))
             imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.backPicUrl ?? ""), completed: nil)
             imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.backPicUrl ?? ""), completed: nil)
+        }
+    }
+    
+    ///切换模式更新UI
+    func updatePlayerModelUI(){
+        if let share = XMSDKPlayer.shared(){
+            switch share.getTrackPlayMode() {
+            case .XMTrackModeCycle:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+            case .XMTrackModeRandom:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_random", night: "yxs_player_random"), forState: .normal)
+            case .XMTrackModeSingle:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_single", night: "yxs_player_single"), forState: .normal)
+            default:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+            }
         }
     }
     
@@ -442,14 +512,6 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         return btn
     }()
     
-    lazy var btnCollect: YXSButton = {
-        let btn = YXSButton()
-        btn.setMixedImage(MixedImage(normal: "yxs_xmly_no_fav", night: "yxs_xmly_no_fav"), forState: .normal)
-        btn.setMixedImage(MixedImage(normal: "yxs_xmly_has_fav", night: "yxs_xmly_has_fav"), forState: .selected)
-        
-        return btn
-    }()
-    
     lazy var progressView : UISlider = {
         let slider = UISlider()
         slider.mixedMinimumTrackTintColor = MixedColor(normal: kNightFFFFFF, night: kNightFFFFFF)
@@ -476,7 +538,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     /// 封面
     lazy var imgCover: UIImageView = {
         let img = UIImageView()
-        img.mixedImage = kImageDefualtMixedImage
+        img.mixedImage = MixedImage(normal: "yxs_player_defualt_bg", night: "yxs_player_defualt_bg")
         img.cornerRadius = (SCREEN_SCALE * 214.0)/2
         return img
     }()
@@ -497,11 +559,31 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         return img
     }()
     
+    lazy var btnPlayerMode: YXSButton = {
+        let btn = YXSButton()
+        btn.setMixedImage(MixedImage(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+        btn.addTarget(self, action: #selector(changePlayerModel), for: .touchUpInside)
+        return btn
+    }()
+    
+    lazy var btnCollect: YXSButton = {
+        let btn = YXSButton()
+        btn.setMixedImage(MixedImage(normal: "yxs_xmly_no_fav", night: "yxs_xmly_no_fav"), forState: .normal)
+        btn.setMixedImage(MixedImage(normal: "yxs_xmly_has_fav", night: "yxs_xmly_has_fav"), forState: .selected)
+        return btn
+    }()
+    
     lazy var customNav: YXSCustomNav = {
         let customNav = YXSCustomNav.init(.backAndTitle)
         customNav.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
         customNav.titleLabel.textColor = UIColor.white
         customNav.backImageButton.addTarget(self, action: #selector(onBackClick(sender:)), for: .touchUpInside)
+        
+        customNav.addSubview(btnCollect)
+        btnCollect.snp.makeConstraints({ (make) in
+            make.right.equalTo(-15)
+            make.centerY.equalTo(customNav.backImageButton)
+        })
         return customNav
     }()
     
@@ -522,4 +604,33 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }
     */
 
+}
+
+// MARK: - 锁屏控制
+extension YXSPlayingViewController{
+    
+    override var canBecomeFirstResponder: Bool {
+         get {
+             return true
+         }
+     }
+     
+     override func remoteControlReceived(with event: UIEvent?) {
+         if event?.type == UIEvent.EventType.remoteControl{
+             switch event?.subtype {
+             case .remoteControlPause:
+                 btnPlayPause.isSelected = !btnPlayPause.isSelected
+                 self.pause()
+             case .remoteControlPlay:
+                 btnPlayPause.isSelected = !btnPlayPause.isSelected
+                 self.resume()
+             case .remoteControlNextTrack:
+                 self.playNextTrack(sender: YXSButton())
+             case .remoteControlPreviousTrack:
+                 self.playPreTrack(sender: YXSButton())
+             default:
+                 break
+             }
+         }
+     }
 }

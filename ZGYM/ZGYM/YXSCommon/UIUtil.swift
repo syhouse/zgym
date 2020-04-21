@@ -10,6 +10,7 @@ import UIKit
 import ObjectMapper
 import NightNight
 import Photos
+import MediaPlayer
 
 enum YXSOperationPosition{
     ///首页操作
@@ -763,3 +764,43 @@ extension UIUtil{
     }
 }
 
+
+// MARK: - 锁屏播放控制
+extension UIUtil{
+    static func configNowPlayingCenter(title: String, author: String, curruntTime: Int, totalTIme: Int, image: UIImage?){
+        //  Converted to Swift 5.2 by Swiftify v5.2.18740 - https://swiftify.com/
+        var info: [String : Any] = [:]
+        //音乐的标题
+        info[MPMediaItemPropertyTitle] = title
+        //音乐的艺术家
+        let author = author
+        info[MPMediaItemPropertyArtist] = author
+        //音乐的播放时间
+        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: curruntTime)
+        //音乐的播放速度
+        info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 1)
+        //音乐的总时间
+        info[MPMediaItemPropertyPlaybackDuration] = NSNumber(value: totalTIme)
+        //音乐的封面
+        var artwork: MPMediaItemArtwork? = nil
+        if let image = image {
+            artwork = MPMediaItemArtwork(image: image)
+        }else{
+            artwork = MPMediaItemArtwork(image: UIImage.init(named: "yxs_player_defualt_bg")!)
+        }
+        info[MPMediaItemPropertyArtwork] = artwork
+        //完成设置
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+    }
+    
+    
+    static func configNowPlayingCenter(curruntTime: Int){
+        //  Converted to Swift 5.2 by Swiftify v5.2.18740 - https://swiftify.com/
+        var info: [String : Any] = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [String : Any]()
+
+        //音乐的播放时间
+        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: curruntTime)
+        //完成设置
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+    }
+}

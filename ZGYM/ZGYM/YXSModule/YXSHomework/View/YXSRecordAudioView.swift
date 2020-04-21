@@ -145,7 +145,7 @@ class YXSRecordAudioView: UIView {
         recordTotalLabel.isHidden = false
         
         recordTotalLabel.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), night: kNightBCC6D4)
-        recordTotalLabel.text = "建议录音时长不超过1分钟"
+        recordTotalLabel.text = "建议录音时长不超过5分钟"
         recordTipsLabel.text = "点击开始录音"
         
         playerControl.status = status
@@ -268,8 +268,8 @@ class YXSRecordAudioView: UIView {
                 let min = time/60
                 let sec = time%60
                 strongSelf.recordTotalLabel.text = "正在录音 \(min):" + String.init(format: "%02d", sec)
-                if time >= 60{
-                    MBProgressHUD.yxs_showMessage(message: "录音最大时长为1分钟")
+                if time >= 300{
+                    MBProgressHUD.yxs_showMessage(message: "录音最大时长为5分钟")
                     strongSelf.stopRecord()
                     strongSelf.playerClick()
                 }
@@ -374,7 +374,7 @@ class YXSRecordAudioView: UIView {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 15)
         label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), night: kNightBCC6D4)
-        label.text = "建议录音时长不超过1分钟"
+        label.text = "建议录音时长不超过5分钟"
         //正在录音 0:05   #575A60
         return label
     }()
