@@ -11,8 +11,8 @@ import SDWebImage
 
 class YXSMusicPlayerWindowView: UIControl {
     
-    /// 展示播放窗
-    public static func showPlayerWindow(){
+    /// 展示播放窗 当前播放时间
+    public static func showPlayerWindow(curruntTime: Int){
         let instanceView = YXSMusicPlayerWindowView.instanceView
         UIUtil.RootController().view.bringSubviewToFront(instanceView)
         instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT, width: SCREEN_WIDTH - 30, height: 49)
@@ -22,13 +22,21 @@ class YXSMusicPlayerWindowView: UIControl {
             instanceView.titleLabel.text = track?.trackTitle
             instanceView.startVoiceAnimation()
         })
-        instanceView.isPlayingMusic = true
+        if (XMSDKPlayer.shared()?.isPlaying())!{
+            instanceView.isPlayingMusic = true
+            instanceView.resetPlayingCenterUI()
+        }else{
+            instanceView.isPlayingMusic = false
+        }
+        
+        instanceView.curruntTime = curruntTime
         instanceView.isHidden = false
         XMSDKPlayer.shared()?.trackPlayDelegate = instanceView
         
         ///接收锁屏事件
         UIApplication.shared.beginReceivingRemoteControlEvents()
-        instanceView.resignFirstResponder()
+        instanceView.becomeFirstResponder()
+        SLLog(instanceView.isFirstResponder)
     }
     
     /// 隐藏播放窗
@@ -36,28 +44,28 @@ class YXSMusicPlayerWindowView: UIControl {
         UIView.animate(withDuration: 0.25, animations: {
             instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT, width: SCREEN_WIDTH - 30, height: 49)
         })
-        instanceView.isPlayingMusic = false
         
         ///结束锁屏事件
         UIApplication.shared.endReceivingRemoteControlEvents()
-        instanceView.becomeFirstResponder()
+        instanceView.resignFirstResponder()
     }
     
     static func setView(hide: Bool){
-        if hide || XMSDKPlayer.shared()?.currentTrack() == nil{
-             YXSMusicPlayerWindowView.instanceView.isHidden = true
+        if XMSDKPlayer.shared()?.playerState == .stop || hide{
+            YXSMusicPlayerWindowView.instanceView.isHidden = true
         }else{
             YXSMusicPlayerWindowView.instanceView.isHidden = false
         }
     }
     
     static func setUpdateFrame(isNavFirstVC: Bool){
-        if XMSDKPlayer.shared()?.currentTrack() != nil && !(UIUtil.TopViewController() is YXSPlayingViewController){
+        if XMSDKPlayer.shared()?.playerState != .stop && !(UIUtil.TopViewController() is YXSPlayingViewController){
           YXSMusicPlayerWindowView.instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 15 - kSafeBottomHeight - (isNavFirstVC ? 49 : 0), width: SCREEN_WIDTH - 30, height: 49)
         }
     }
     
     private static let instanceView: YXSMusicPlayerWindowView = YXSMusicPlayerWindowView()
+    private var curruntTime: Int = 0
     
     private init() {
         super.init(frame: CGRect.zero)
@@ -73,9 +81,9 @@ class YXSMusicPlayerWindowView: UIControl {
         addSubview(nextBtn)
         
         closeBtn.snp.makeConstraints { (make) in
-            make.left.equalTo(16)
+            make.left.equalTo(10)
             make.centerY.equalTo(self)
-            make.size.equalTo(CGSize(width: 15, height: 15))
+            make.size.equalTo(CGSize(width: 12.5, height: 12))
         }
         
         imgIcon.snp.makeConstraints { (make) in
@@ -129,14 +137,16 @@ class YXSMusicPlayerWindowView: UIControl {
                     make.centerY.equalTo(self)
                     make.size.equalTo(CGSize(width: 15.5, height: 14))
                 }
+                startVoiceAnimation()
             }else{
                 playerBtn.isSelected = false
                 closeBtn.isHidden = false
                 imgIcon.snp.remakeConstraints { (make) in
-                    make.left.equalTo(60)
+                    make.left.equalTo(39)
                     make.centerY.equalTo(self)
                     make.size.equalTo(CGSize(width: 15.5, height: 14))
                 }
+                stopVoiceAnimation()
             }
                 
         }
@@ -162,6 +172,7 @@ class YXSMusicPlayerWindowView: UIControl {
      }
     
     @objc func closeClick(){
+        XMSDKPlayer.shared()?.stopTrackPlay()
         YXSMusicPlayerWindowView.hidePlayerWindow()
     }
     
@@ -181,7 +192,7 @@ class YXSMusicPlayerWindowView: UIControl {
     }
     
     @objc func showPlayerView(){
-        let vc = YXSPlayingViewController()
+        let vc = YXSPlayingViewController(curruntTime: curruntTime)
         UIUtil.curruntNav().pushViewController(vc)
     }
     
@@ -189,7 +200,8 @@ class YXSMusicPlayerWindowView: UIControl {
     lazy var closeBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIColor.white, for: .normal)
-        button.setImage(UIImage.init(named: "yxs_publish_close_sucess"), for: .normal)
+        button.ts_touchInsets = UIEdgeInsets.init(top: 10, left: 10, bottom: 10, right: 10)
+        button.setImage(UIImage.init(named: "yxs_xmly_close"), for: .normal)
         button.addTarget(self, action: #selector(closeClick), for: .touchUpInside)
         return button
     }()
@@ -236,27 +248,36 @@ extension YXSMusicPlayerWindowView{
         if event?.type == UIEvent.EventType.remoteControl{
             switch event?.subtype {
             case .remoteControlPause:
-                isPlayingMusic = false
+                playerClick()
             case .remoteControlPlay:
-                isPlayingMusic = true
+                playerClick()
             case .remoteControlNextTrack:
-                XMSDKPlayer.shared()?.playNextTrack()
-                isPlayingMusic = true
+                playerNextClick()
             case .remoteControlPreviousTrack:
-                XMSDKPlayer.shared()?.prevTrack()
+                XMSDKPlayer.shared()?.playPrevTrack()
                 isPlayingMusic = true
             default:
                 break
             }
         }
     }
+    ///设置播放中心UI
+    func resetPlayingCenterUI(){
+        if let image = SDImageCache.shared.imageFromCache(forKey: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""){
+            UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: Int(XMSDKPlayer.shared()?.appointedTime ?? 0.0), totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0, image: image)
+         }else{
+             UIImageView().sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: { (image, error, type, url) in
+                 UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: Int(XMSDKPlayer.shared()?.appointedTime ?? 0.0), totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0, image: UIImage.init(named: "yxs_player_defualt_bg"))
+             })
+         }
+    }
 }
-
 
 extension YXSMusicPlayerWindowView: XMTrackPlayerDelegate{
     // MARK: - Delegate
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
         UIUtil.configNowPlayingCenter(curruntTime: Int(currentSecond))
+        curruntTime = Int(currentSecond)
     }
     
     func xmTrackPlayerWillPlaying() {
@@ -277,13 +298,6 @@ extension YXSMusicPlayerWindowView: XMTrackPlayerDelegate{
     }
     
     func xmTrackPlayerDidStart() {
-        
-        if let image = SDImageCache.shared.imageFromCache(forKey: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""){
-            UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: 0, totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0, image: image)
-        }else{
-            UIImageView().sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), completed: { (image, error, type, url) in
-                UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: 0, totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0, image: image)
-            })
-        }
+        resetPlayingCenterUI()
     }
 }

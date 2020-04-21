@@ -785,6 +785,8 @@ extension UIUtil{
         var artwork: MPMediaItemArtwork? = nil
         if let image = image {
             artwork = MPMediaItemArtwork(image: image)
+        }else{
+            artwork = MPMediaItemArtwork(image: UIImage.init(named: "yxs_player_defualt_bg")!)
         }
         info[MPMediaItemPropertyArtwork] = artwork
         //完成设置
