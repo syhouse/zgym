@@ -206,7 +206,7 @@ class YXSHomeTableHeaderView: UIView {
 
     lazy var yxs_classButton: YXSButton = {
         let button = YXSButton.init()
-        button.setMixedImage(MixedImage(normal: "yxs_classlist_night", night: "yxs_classlist_night"), forState: .normal)
+        button.setMixedImage(MixedImage(normal: isOldUI ? "yxs_classlist_night" : "class_list_icon", night: "yxs_classlist_night"), forState: .normal)
         button.addTarget(self, action: #selector(yxs_classButtonCick), for: .touchUpInside)
         return button
     }()

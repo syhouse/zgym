@@ -104,13 +104,13 @@ class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableV
             leftBtn.isSelected = true
             rightBtn.isSelected = false
             rightBtn.yxs_removeLine()
-            leftBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), leftMargin: 40, rightMargin: 40, lineHeight: 2)
+            leftBtn.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: kNight5E88F7, night: kNight5E88F7), leftMargin: 40, rightMargin: 40, lineHeight: 2)
         case 2002:
             type = .album
             rightBtn.isSelected = true
             leftBtn.isSelected = false
             leftBtn.yxs_removeLine()
-            rightBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), leftMargin: 40, rightMargin: 40, lineHeight: 2)
+            rightBtn.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: kNight5E88F7, night: kNight5E88F7), leftMargin: 40, rightMargin: 40, lineHeight: 2)
         default:
             print("")
         }
@@ -281,7 +281,7 @@ class YXSMyCollectDetailsVC: YXSBaseViewController,UITableViewDelegate, UITableV
         leftBtn.tag = 2001
         leftBtn.addTarget(self, action: #selector(headerBtnClick(sender:)), for: .touchUpInside)
         leftBtn.isSelected = true
-        leftBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), leftMargin: 40, rightMargin: 40, lineHeight: 2)
+        leftBtn.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: kNight5E88F7, night: kNight5E88F7), leftMargin: 40, rightMargin: 40, lineHeight: 2)
         return leftBtn
     }()
     lazy var rightBtn: UIButton = {

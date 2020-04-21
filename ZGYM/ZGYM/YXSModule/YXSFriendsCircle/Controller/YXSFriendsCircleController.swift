@@ -119,8 +119,10 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
 
         addNotification()
         
+        if !isDetial && userIdPublisher == nil{
+            self.showGuide()
+        }
         
-        self.showGuide()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -512,6 +514,14 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
         if let comments = dataSource[indexPath.section].comments{
             self.curruntIndexPath = indexPath
             self.showComment(comments[indexPath.row], section: indexPath.section)
+        }
+    }
+    ///处理预加载
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if loadMore{
+            if section + 1 >= dataSource.count - kPreloadSize{
+                tableView.mj_footer?.beginRefreshing()
+            }
         }
     }
     

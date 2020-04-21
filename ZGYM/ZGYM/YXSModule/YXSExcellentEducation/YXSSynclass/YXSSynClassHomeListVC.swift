@@ -10,6 +10,7 @@ import Foundation
 import JXCategoryView
 import NightNight
 
+/// 学段
 enum YXSSynClassListType: String{
     ///小学
     case PRIMARY_SCHOOL
@@ -19,29 +20,14 @@ enum YXSSynClassListType: String{
     case HIGH_SCHOOL
 }
 
-enum YXSSynClassGradeType: String{
-    ///一年级
-    case first_grade
-    ///二年级
-    case second_grade
-    ///三年级
-    case third_grade
-    ///四年级
-    case fourth_grade
-    ///五年级
-    case fifth_grade
-    ///初一
-    case one_junior
-    ///初二
-    case two_junior
-    ///初三
-    case three_junior
-    ///高一
-    case one_senior
-    ///高二
-    case two_senior
-    ///高三
-    case three_senior
+///学科
+enum YXSSynClassSubjectType: String{
+    ///语文
+    case CHINESE
+    ///数学
+    case MATHEMATICS
+    ///外语（英语）
+    case FOREIGN_LANGUAGES
 }
 
 class YXSSynClassHomeListVC: YXSBaseViewController{
@@ -59,7 +45,7 @@ class YXSSynClassHomeListVC: YXSBaseViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadCategoryData()
+//        loadCategoryData()
     }
     
     
@@ -96,8 +82,8 @@ class YXSSynClassHomeListVC: YXSBaseViewController{
         view.cellSpacing = 30
         view.isTitleColorGradientEnabled = true
         view.cellWidthIncrement = 50
-        view.layer.cornerRadius = 20
-        
+//        view.layer.cornerRadius = 20
+        view.mixedBackgroundColor = MixedColor(normal: kF3F5F9Color, night: kNightForegroundColor)
         let lineView = JXCategoryIndicatorLineView()
         lineView.indicatorColor = UIColor.yxs_hexToAdecimalColor(hex: "#7CABFF");
         lineView.indicatorWidth = 50

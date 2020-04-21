@@ -135,7 +135,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
             
             self.solitaireLists += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
             
-            self.loadMore = list.count == kPageSize
+            self.loadMore = list.count >= kPageSize
             self.yxs_endingRefresh()
             self.tableView.reloadData()
         }) { (msg, code) in
@@ -202,6 +202,15 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
             UIUtil.yxs_reduceAgenda(serviceId: model.censusId ?? 0, info: [kEventKey:YXSHomeType.solitaire])
             //            self.dataSource.remove(at: indexPath.row)
             //            self.tableView.reloadData()
+        }
+    }
+    
+    ///处理预加载数据
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if loadMore{
+            if indexPath.row + 1 >= solitaireLists.count - kPreloadSize{
+                tableView.mj_footer?.beginRefreshing()
+            }
         }
     }
     

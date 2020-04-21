@@ -187,7 +187,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
                 self.dataSource.removeAll()
             }
             self.dataSource += list
-            self.loadMore = list.count == kPageSize
+            self.loadMore = list.count >= kPageSize
             self.group.leave()
         }) { (msg, code) in
             self.group.leave()

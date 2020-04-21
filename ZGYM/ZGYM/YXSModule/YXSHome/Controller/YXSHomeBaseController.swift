@@ -353,6 +353,29 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         return 0
     }
     
+    ///处理预加载数据
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if loadMore{
+            var totalCount = 0
+            for items in self.yxs_dataSource{
+                totalCount += items.items.count
+            }
+            var curruntCounts = 0
+            for index in 0...indexPath.section{
+                if index < indexPath.section{
+                    curruntCounts += yxs_dataSource[index].items.count
+                }else{
+                    curruntCounts += indexPath.row + 1
+                }
+
+            }
+
+            if curruntCounts >= totalCount - kPreloadSize{
+                tableView.mj_footer?.beginRefreshing()
+            }
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if yxs_dataSource.count > indexPath.section {
             if yxs_dataSource[indexPath.section].items.count > indexPath.row {
@@ -423,38 +446,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         let model = yxs_dataSource[indexPath.section].items[indexPath.row]
         model.isShowTag = true
         return model.height
-    }
-    
-    func getCacheKey(model: YXSHomeListModel) -> (String, String){
-        var  identifier = "YXSHomeBaseCell"
-        
-        var friendCacheAppend = ""
-        switch model.type {
-        case .classstart:
-            identifier = "SLHomeClassStartCell"
-        case .friendCicle:
-            friendCacheAppend = "friend"
-            if let praises = model.friendCircleModel?.praises{
-                for model in praises{
-                    if model.isMyOperation{
-                        friendCacheAppend = "friendPraises"
-                        break
-                    }
-                }
-            }
-            identifier = "SLHomeFriendCell"
-        case .notice:
-            identifier = "SLNoticeListHomeCell"
-        case .punchCard:
-            identifier = "SLPunchCardListHomeCell"
-        case .solitaire:
-            identifier = "SLSolitaireListHomeCell"
-        case .homework:
-            identifier = "SLHomeworkListHomeCell"
-        default:
-            break
-        }
-        return ("\(identifier)\(model.serviceId ?? 0)\(model.isShowAll)\(friendCacheAppend)", identifier)
     }
     
     // MARK: - getter&setter

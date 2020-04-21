@@ -113,7 +113,7 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
                 self.yxs_punchCardDataSource.removeAll()
             }
             self.yxs_punchCardDataSource += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
-            self.loadMore = list.count == kPageSize
+            self.loadMore = list.count >= kPageSize
             self.yxs_endingRefresh()
             YXSCacheHelper.yxs_cachePunchCardList(dataSource: self.yxs_punchCardDataSource,childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
             self.tableView.reloadData()
@@ -205,6 +205,15 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
             UIUtil.yxs_reduceAgenda(serviceId: model.clockInId ?? 0, info: [kEventKey: YXSHomeType.punchCard])
 //            self.dataSource.remove(at: indexPath.row)
 //            self.tableView.reloadData()
+        }
+    }
+    
+    ///处理预加载数据
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if loadMore{
+            if indexPath.row + 1 >= yxs_punchCardDataSource.count - kPreloadSize{
+                tableView.mj_footer?.beginRefreshing()
+            }
         }
     }
     

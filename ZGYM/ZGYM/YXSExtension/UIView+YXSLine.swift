@@ -70,4 +70,14 @@ extension UIView{
             }
         }
     }
+    
+    @discardableResult
+    func yxs_getIsShowLineView() -> Bool {
+        let view = self.viewWithTag(123456)
+        if view != nil {
+            return true
+        } else {
+            return false
+        }
+    }
 }

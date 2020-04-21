@@ -26,8 +26,9 @@ target 'ZGYM' do
 #    pod 'UITableView+FDTemplateLayoutCell', '~> 1.6'
     pod 'TZImagePickerController'
     pod 'NightNight'
-    pod 'FLEX', '~> 2.4.0'
+    pod 'FLEX', '~> 2.4.0' ,:configurations => ['Debug']
     
+#    pod 'LLDebugTool' ,:configurations => ['Debug']
 #    视频预览
     pod 'YBImageBrowser/Video'
     

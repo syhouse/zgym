@@ -168,7 +168,7 @@ class YXSAddressPickerView: YXSBasePopingView, UIPickerViewDelegate, UIPickerVie
         btn.setTitle("确认", for: .normal)
         btn.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight383E56)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        btn.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), for: .normal)
+        btn.setTitleColor(kNight5E88F7, for: .normal)
         btn.layer.cornerRadius = 3
         btn.addTarget(self, action: #selector(doneClick(sender:)), for: .touchUpInside)
         return btn
