@@ -11,6 +11,7 @@ import NightNight
 import ObjectMapper
 
 class YXSSynClassFolderVC:YXSBaseTableViewController {
+    var refreshPlayBlock:(() -> ())?
     var folderId: Int?
     var isShowContent: Bool = true
     var folderInfoModel: YXSSynClassFolderInfoModel?
@@ -87,7 +88,7 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
     
     func addPlayCountRequest(model:YXSSynClassFolderModel) {
         YXSEducationPlayAddCountRequest.init(folderId: model.folderId!).request({ (json) in
-            
+            self.refreshPlayBlock?()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }

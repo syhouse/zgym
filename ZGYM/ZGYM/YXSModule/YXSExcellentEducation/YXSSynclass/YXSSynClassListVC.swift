@@ -141,6 +141,8 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
         if dataSource.count > indexPath.row {
             let model = dataSource[indexPath.row]
             let vc = YXSSynClassFolderVC.init(folderId: model.id!, title: model.folderName ?? "")
+            vc.refreshPlayBlock = { ()in
+            }
             self.navigationController?.pushViewController(vc)
         }
     }

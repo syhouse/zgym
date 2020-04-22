@@ -568,6 +568,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 /// 刷新按钮
                 homeModel.commitState = 1
                 refreshLayout()
+                refreshUnreadMessage()
             }
         }
     }
@@ -577,17 +578,19 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         let userInfo = obj?.object as? [String: Any]
         if let model = userInfo?[kNotificationModelKey] as? YXSHomeListModel{
             if model.type == .homework {
-                let vc = YXSHomeworkCommitDetailViewController()
-                vc.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: self.view.frame.size.height)
+//                let vc = YXSHomeworkCommitDetailViewController()
+//                vc.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: self.view.frame.size.height)
                 //                vc.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
                 homeModel.commitState = 2
-                vc.homeModel = homeModel
-                vc.view.tag = 110
-                self.view.addSubview(vc.view)
-                self.addChild(vc)
+                self.refreshData()
+//                vc.homeModel = homeModel
+//                vc.view.tag = 110
+//                self.view.addSubview(vc.view)
+//                self.addChild(vc)
                 
                 /// 刷新按钮
                 refreshLayout()
+                refreshUnreadMessage()
             }
         }
     }

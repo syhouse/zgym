@@ -58,21 +58,21 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         })
         
         textView.snp.makeConstraints({ (make) in
-            make.top.equalTo(0)
-            make.left.equalTo(0)
-            make.right.equalTo(0)
-            make.height.equalTo(200)
+            make.top.equalTo(15)
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.height.equalTo(180)
         })
         
         voiceView.snp.makeConstraints { (make) in
-            make.top.equalTo(textView.snp_bottom).offset(5)
+            make.top.equalTo(textView.snp_bottom).offset(15)
             make.left.equalTo(15)
             make.right.equalTo(-15)
             make.height.equalTo(44)
         }
         
         btnVoice.snp.makeConstraints({ (make) in
-            make.top.equalTo(textView.snp_bottom).offset(5)
+            make.top.equalTo(textView.snp_bottom).offset(15)
             make.left.equalTo(15)
             make.height.width.equalTo(29)
         })
@@ -134,7 +134,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
             voiceView.isHidden = true
             btnVoice.isEnabled = true
             btnVoice.snp.remakeConstraints({ (make) in
-                make.top.equalTo(textView.snp_bottom).offset(5)
+                make.top.equalTo(textView.snp_bottom).offset(15)
                 make.left.equalTo(15)
                 make.height.width.equalTo(29)
             })
@@ -243,6 +243,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     
     
     @objc func voiceClick(sender: YXSButton) {//语音
+        textView.resignFirstResponder()
        showAudio()
     }
     
@@ -311,6 +312,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         let title = self.dataSource[indexPath.row]
         let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell")!
         cell.textLabel?.text = title
+        cell.textLabel?.numberOfLines = 0
         cell.textLabel?.mixedTextColor = MixedColor(normal: 0x898F9A, night: 0xFFFFFF)
         cell.backgroundColor = UIColor.clear
         cell.selectionStyle = .none
@@ -323,6 +325,11 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         if title != remarkContent {
             self.isModify = true
         }
+//        let paragraphStye = NSMutableParagraphStyle()
+//        paragraphStye.lineSpacing = kMainContentLineHeight
+//        paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
+//        let dic = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15), NSAttributedString.Key.paragraphStyle:paragraphStye]
+//        self.textView.attributedText = NSMutableAttributedString.init(string: title, attributes: dic)
         self.textView.text = title
     }
     
@@ -347,11 +354,29 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         return view
     }()
     
+//    lazy var textView: UITextView = {
+//            let tv = UITextView()
+//            tv.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight2C3144)
+////            tv.limitCount = 200
+////            tv.contentInset = UIEdgeInsets(top: 17, left: 17, bottom: -17, right: 17)
+//    //        tv.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#575A60")
+//            tv.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNightFFFFFF)
+////            tv.placeholderColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
+////            tv.placeholder = "请输入评语或添加语音"
+////            tv.textDidChangeBlock = { (str)in
+////                if str != self.remarkContent {
+////                    self.isModify = true
+////                }
+////            }
+//            tv.font = UIFont.systemFont(ofSize: 15)
+//            return tv
+//        }()
+    
     lazy var textView: YXSPlaceholderTextView = {
         let tv = YXSPlaceholderTextView()
         tv.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight2C3144)
         tv.limitCount = 200
-        tv.contentInset = UIEdgeInsets(top: 17, left: 17, bottom: -17, right: 17)
+//        tv.contentInset = UIEdgeInsets(top: 17, left: 17, bottom: -17, right: 17)
 //        tv.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#575A60")
         tv.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNightFFFFFF)
         tv.placeholderColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
@@ -387,6 +412,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         let voiceView = YXSVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 36), complete: {
             [weak self](url, duration) in
             guard let strongSelf = self else { return }
+            strongSelf.textView.resignFirstResponder()
             strongSelf.showAudio(strongSelf.audioModel)
             }, delectHandler: {
                 [weak self] in
