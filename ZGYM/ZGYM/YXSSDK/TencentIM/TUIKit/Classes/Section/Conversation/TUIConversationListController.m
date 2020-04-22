@@ -114,6 +114,12 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         TUIConversationCellData *conv = self.viewModel.dataList[indexPath.row];
         [self.viewModel removeData:conv];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+        
+        /// 消除角标数值
+        NSInteger count = [self yxs_getBadgeCountOnItemWithIndex:2];
+        count = count - conv.unRead;
+        [self yxs_showBadgeOnItemWithIndex:2 count:count];
+        
         [tableView endUpdates];
     }
 }

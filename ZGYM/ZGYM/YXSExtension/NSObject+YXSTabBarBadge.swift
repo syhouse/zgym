@@ -11,7 +11,7 @@ import UIKit
 
 extension NSObject{
     // 获取TabBarItem当前Count数
-    func yxs_getBadgeCountOnItem(index:Int)-> Int {
+    @objc func yxs_getBadgeCountOnItem(index:Int)-> Int {
         let tabBar = yxs_getTabBar()
         for subView:UIView in tabBar?.subviews ?? [UIView]() {
             if subView.tag == 888+index {
@@ -25,7 +25,7 @@ extension NSObject{
     }
     
     /// TabBar 红色未读角标
-    func yxs_showBadgeOnItem(index:Int, count:Int) {
+    @objc func yxs_showBadgeOnItem(index:Int, count:Int) {
         yxs_removeBadgeOnItem(index: index)
         let bview = YXSUnReadView()
         bview.tag = 888+index
@@ -53,7 +53,7 @@ extension NSObject{
     }
     
     //隐藏红点
-    func yxs_hideBadgeOnItem(index:Int) {
+    @objc func yxs_hideBadgeOnItem(index:Int) {
         yxs_removeBadgeOnItem(index: index)
     }
     
@@ -68,7 +68,7 @@ extension NSObject{
         }
     }
     
-    func yxs_getTabBar()-> UITabBar?{
+    @objc func yxs_getTabBar()-> UITabBar?{
         if UIUtil.RootController() is UITabBarController {
             let tabBarController = UIUtil.RootController() as! UITabBarController
             return tabBarController.tabBar
