@@ -295,14 +295,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 } else {
                     weakSelf.tableView.tableFooterView = nil
                 }
-//                if weakSelf.curruntPage == 1 {
-//                    weakSelf.tableView.reloadData {
-//                        weakSelf.tableView.scrollToTop()
-//                    }
-//                } else {
-                    weakSelf.tableView.reloadData()
-//                }
-
+                weakSelf.tableView.reloadData()
             }, failureHandler: { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)
             })
@@ -329,13 +322,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 } else {
                     weakSelf.tableView.tableFooterView = nil
                 }
-//                if weakSelf.curruntPage == 1 {
-//                    weakSelf.tableView.reloadData {
-//                        weakSelf.tableView.scrollToTop()
-//                    }
-//                } else {
-                    weakSelf.tableView.reloadData()
-//                }
+                weakSelf.tableView.reloadData()
             }, failureHandler: { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)
             })
@@ -363,11 +350,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 } else {
                     weakSelf.tableView.tableFooterView = nil
                 }
-//                weakSelf.tableView.reloadData {
-//                    weakSelf.tableView.scrollToTop()
-//                }
                 weakSelf.tableView.reloadData()
-                
             }) { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
@@ -568,6 +551,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 /// 刷新按钮
                 homeModel.commitState = 1
                 refreshLayout()
+                refreshUnreadMessage()
             }
         }
     }
@@ -577,17 +561,19 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         let userInfo = obj?.object as? [String: Any]
         if let model = userInfo?[kNotificationModelKey] as? YXSHomeListModel{
             if model.type == .homework {
-                let vc = YXSHomeworkCommitDetailViewController()
-                vc.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: self.view.frame.size.height)
+//                let vc = YXSHomeworkCommitDetailViewController()
+//                vc.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: self.view.frame.size.height)
                 //                vc.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
                 homeModel.commitState = 2
-                vc.homeModel = homeModel
-                vc.view.tag = 110
-                self.view.addSubview(vc.view)
-                self.addChild(vc)
+                self.refreshData()
+//                vc.homeModel = homeModel
+//                vc.view.tag = 110
+//                self.view.addSubview(vc.view)
+//                self.addChild(vc)
                 
                 /// 刷新按钮
                 refreshLayout()
+                refreshUnreadMessage()
             }
         }
     }
@@ -1052,7 +1038,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         tableView.estimatedSectionHeaderHeight = 0
         //去除group空白
         tableView.estimatedSectionFooterHeight = 0.0
-        tableView.estimatedRowHeight = 50
+        tableView.estimatedRowHeight = 0
         tableView.rowHeight = UITableView.automaticDimension
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
         return tableView

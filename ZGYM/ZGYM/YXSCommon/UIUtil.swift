@@ -11,6 +11,7 @@ import ObjectMapper
 import NightNight
 import Photos
 import MediaPlayer
+import SDWebImage
 
 enum YXSOperationPosition{
     ///首页操作
@@ -767,7 +768,17 @@ extension UIUtil{
 
 // MARK: - 锁屏播放控制
 extension UIUtil{
-    static func configNowPlayingCenter(title: String, author: String, curruntTime: Int, totalTIme: Int, image: UIImage?){
+    static func configNowPlayingCenterUI(){
+        if let image = SDImageCache.shared.imageFromCache(forKey: YXSRemoteControlInfoHelper.imageUrl){
+            UIUtil.configNowPlayingCenter(title: YXSRemoteControlInfoHelper.title, author: YXSRemoteControlInfoHelper.author, curruntTime: YXSRemoteControlInfoHelper.curruntTime, totalTIme: YXSRemoteControlInfoHelper.totalTime, image: image)
+        }else{
+            UIImageView().sd_setImage(with: URL(string: YXSRemoteControlInfoHelper.imageUrl), completed: { (image, error, type, url) in
+                UIUtil.configNowPlayingCenter(title: YXSRemoteControlInfoHelper.title, author: YXSRemoteControlInfoHelper.author, curruntTime: YXSRemoteControlInfoHelper.curruntTime, totalTIme: YXSRemoteControlInfoHelper.totalTime, image: image)
+            })
+        }
+    }
+    
+    static private func configNowPlayingCenter(title: String, author: String, curruntTime: UInt, totalTIme: Int, image: UIImage?){
         //  Converted to Swift 5.2 by Swiftify v5.2.18740 - https://swiftify.com/
         var info: [String : Any] = [:]
         //音乐的标题
@@ -791,16 +802,7 @@ extension UIUtil{
         info[MPMediaItemPropertyArtwork] = artwork
         //完成设置
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
-    }
-    
-    
-    static func configNowPlayingCenter(curruntTime: Int){
-        //  Converted to Swift 5.2 by Swiftify v5.2.18740 - https://swiftify.com/
-        var info: [String : Any] = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [String : Any]()
-
-        //音乐的播放时间
-        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: curruntTime)
-        //完成设置
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+        
+        SLLog(MPNowPlayingInfoCenter.default().nowPlayingInfo)
     }
 }

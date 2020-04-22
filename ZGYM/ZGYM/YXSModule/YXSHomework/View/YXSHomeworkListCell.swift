@@ -142,6 +142,7 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
         label.font = kTextMainBodyFont
         label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         label.numberOfLines = 2
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     
@@ -234,6 +235,7 @@ extension YXSHomeworkListCell{
             make.width.equalTo(model.contentLabelWidth)
         }
         UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowAll && model.needShowAllButton)
+        contentLabel.lineBreakMode = .byTruncatingTail
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             UIUtil.yxs_setLabelAttributed(setUpLabel, text: ["提交情况  ", "\(model.commitCount)","/\(model.memberCount ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),kRedMainColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")])

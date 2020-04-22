@@ -18,15 +18,8 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     var dataSource: [YXSColumnContentModel] = [YXSColumnContentModel]()
     ///是否有顶部header
     var showHeader: Bool
-    var cycleSource: [YXSBannerModel] = [YXSBannerModel](){
-        didSet{
-            var array = [String]()
-            for model in cycleSource{
-                array.append(model.bannerCoverUrl ?? "")
-            }
-            headerView.cycleScrollView.serverImgArray = array
-        }
-    }
+    var cycleSource: [YXSBannerModel] = [YXSBannerModel]()
+
     init(id: Int, showHeader: Bool = false) {
         self.id = id
         self.showHeader = showHeader
@@ -38,6 +31,9 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
         layout.sectionInset = UIEdgeInsets.init(top: 10, left: 15, bottom: 0, right: 15)
         let itemW = (SCREEN_WIDTH - CGFloat(15*2) - 2*16.5)/3
         layout.itemSize = CGSize.init(width: itemW, height: itemW + 30)
+//        if showHeader {
+//            layout.headerReferenceSize = CGSize.init(width: SCREEN_WIDTH, height: 175*SCREEN_SCALE + 55)
+//        }
         
         self.layout = layout
     }
@@ -48,15 +44,18 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        if showHeader{
-            self.view.addSubview(headerView)
-        }
+
         collectionView.snp.remakeConstraints { (make) in
             make.left.right.equalTo(0)
-            make.top.equalTo(showHeader ? headerView.height : 0)
+            make.top.equalTo(0)
             make.bottom.equalTo(0)
         }
         collectionView.register(YXSContentListCell.self, forCellWithReuseIdentifier: "YXSContentListCell")
+        collectionView.register(YXSContentListHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSContentListHeaderView")
+//        collectionView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: kSafeBottomHeight, right: 0)
+        if showHeader{
+            self.layout.headerReferenceSize = CGSize.init(width: SCREEN_WIDTH, height: 175*SCREEN_SCALE + 55)
+        }
         loadBannerData()
     }
     
@@ -129,13 +128,30 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
         self.navigationController?.pushViewController(vc)
     }
     
-    // MARK: - getter&setter
-    lazy var headerView: YXSContentListHeaderView = {
-        let headerView = YXSContentListHeaderView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 175*SCREEN_SCALE + 55))
-        headerView.cycleScrollView.delegate = self
-        return headerView
-    }()
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            if showHeader{
+                let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSContentListHeaderView", for: indexPath) as! YXSContentListHeaderView
+                headerView.cycleScrollView.delegate = self
+                if self.cycleSource.count > 0 {
+                    var array = [String]()
+                    for model in cycleSource{
+                        array.append(model.bannerCoverUrl ?? "")
+                    }
+                    headerView.cycleScrollView.serverImgArray = array
+                }
+                return headerView
+            } else {
+                return UICollectionReusableView.init()
+            }
+        } else {
+            return UICollectionReusableView.init()
+        }
+
+    }
+    
 }
+    // MARK: - getter&setter
 
 extension YXSContentListViewController: WRCycleScrollViewDelegate{
     func cycleScrollViewDidSelect(at index: Int, cycleScrollView: WRCycleScrollView) {
@@ -151,7 +167,7 @@ extension YXSContentListViewController:JXCategoryListContentViewDelegate{
     }
 }
 
-class YXSContentListHeaderView: UIView{
+class YXSContentListHeaderView: UICollectionReusableView{
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(cycleScrollView)
@@ -175,7 +191,7 @@ class YXSContentListHeaderView: UIView{
         fatalError("init(coder:) has not been implemented")
     }
     
-        lazy var cycleScrollView: WRCycleScrollView = {
+    lazy var cycleScrollView: WRCycleScrollView = {
         let frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 175*SCREEN_SCALE)
         let view = WRCycleScrollView(frame: frame)
         view.pageControlAliment = .CenterBottom
@@ -228,7 +244,7 @@ class YXSContentListCell: UICollectionViewCell {
         }
         title.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
-            make.top.equalTo(imageView.snp_bottom).offset(12)
+            make.top.equalTo(imageView.snp_bottom).offset(5)
         }
     
     }

@@ -50,6 +50,10 @@ class YXSBaseTableViewController: YXSBaseScrollViewController {
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.emptyDataSetDelegate = self
         tableView.emptyDataSetSource = self
+//        tableView.estimatedSectionHeaderHeight = 0
+//        //去除group空白
+//        tableView.estimatedSectionFooterHeight = 0.0
+//        tableView.estimatedRowHeight = 0
         if #available(iOS 11.0, *){
             tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         }
