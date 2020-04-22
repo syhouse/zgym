@@ -742,6 +742,7 @@
 		6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */ = {isa = PBXBuildFile; fileRef = 6F5720BE24493CAC00E1F301 /* 打包注意 */; };
 		6F6511D42445DC820024A5DA /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; };
 		6F6511D52445DC820024A5DA /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F87B88C244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87B88B244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift */; };
 		6FA0F331242B451800E2E035 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F32F242B451800E2E035 /* Main.storyboard */; };
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
@@ -1905,6 +1906,7 @@
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
 		6F5720BE24493CAC00E1F301 /* 打包注意 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "打包注意"; sourceTree = "<group>"; };
 		6F6511D62446937D0024A5DA /* 优学业.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "优学业.entitlements"; sourceTree = "<group>"; };
+		6F87B88B244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSRemoteControlInfoHelper.swift; sourceTree = "<group>"; };
 		6FA0F326242B451800E2E035 /* 优学业.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "优学业.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FA0F330242B451800E2E035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6FA0F335242B451E00E2E035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -4895,6 +4897,7 @@
 				E53D8AF7244E80C400590B5A /* YXSContentListViewController.swift */,
 				E53D8AF8244E80C400590B5A /* YXSMusicPlayerWindowView.swift */,
 				E53D8AF6244E80C400590B5A /* YXSPlayingViewController.swift */,
+				6F87B88B244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift */,
 				E53D8AF5244E80C400590B5A /* YXSPlayListViewController.swift */,
 				6F0700872445D7FE0090975B /* YXSXMLY */,
 			);
@@ -5588,6 +5591,7 @@
 				6F0704072445D8030090975B /* YXSSelectAlertView.swift in Sources */,
 				6F0703852445D8030090975B /* TUISystemMessageCellData.m in Sources */,
 				6F0703582445D8030090975B /* TNavigationController.m in Sources */,
+				6F87B88C244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift in Sources */,
 				6F0703302445D8020090975B /* UINavigationItemExtensions.swift in Sources */,
 				6F0705A52445D8060090975B /* LFStampBrush.m in Sources */,
 				6F0704112445D8030090975B /* YXSUploadSourceHelper.swift in Sources */,
@@ -6062,7 +6066,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6108,7 +6112,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

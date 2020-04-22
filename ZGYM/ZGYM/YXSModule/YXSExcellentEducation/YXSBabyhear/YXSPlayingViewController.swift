@@ -19,7 +19,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     private var radioSchedule: XMRadioSchedule?
     
     ///当前播放时间
-    private var curruntTime: Int
+    private var curruntTime: UInt
     /// 播放列表菜单
     var playListVC: YXSPlayListViewController?
     
@@ -28,7 +28,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     /// 展示当前喜马拉雅专辑播放UI
     /// - Parameter curruntTime: 当前播放进度时间
-    init(curruntTime: Int) {
+    init(curruntTime: UInt) {
         self.curruntTime = curruntTime
         super.init()
     }
@@ -56,8 +56,6 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         ///注意顺序
         YXSMusicPlayerWindowView.hidePlayerWindow()
         
-        ///接收锁屏事件
-        UIApplication.shared.beginReceivingRemoteControlEvents()
         self.becomeFirstResponder()
     }
     
@@ -65,10 +63,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         super.viewWillDisappear(animated)
         ///注意顺序
         
-        ///结束锁屏事件
-        UIApplication.shared.endReceivingRemoteControlEvents()
         self.resignFirstResponder()
-        
         YXSMusicPlayerWindowView.showPlayerWindow(curruntTime: curruntTime)
     }
     
@@ -138,7 +133,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             updatePlayerModelUI()
             if let shared = XMSDKPlayer.shared(){
                 progressView.value = Float(curruntTime)/Float(shared.currentTrack()?.duration ?? 1)
-                lbCurrentDuration.text = stringWithDuration(duration: curruntTime)
+                lbCurrentDuration.text = stringWithDuration(duration: UInt(curruntTime))
                 btnPlayPause.isSelected = !shared.isPaused()
             }
         }
@@ -388,15 +383,17 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     // MARK: - Delegate
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
         progressView.value = Float(percent)
-        lbCurrentDuration.text = stringWithDuration(duration: Int(currentSecond))
-        UIUtil.configNowPlayingCenter(curruntTime: Int(currentSecond))
+        lbCurrentDuration.text = stringWithDuration(duration: currentSecond)
+
+        YXSRemoteControlInfoHelper.curruntTime = currentSecond
+        curruntTime = currentSecond
         
-        curruntTime = Int(currentSecond)
+        UIUtil.configNowPlayingCenterUI()
     }
     
     func xmTrackPlayNotifyCacheProcess(_ percent: CGFloat) {
         ///
-        SLLog("CacheProcess:\(percent)")
+//        SLLog("CacheProcess:\(percent)")
     }
     
     func xmTrackPlayerWillPlaying() {
@@ -408,30 +405,21 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         requestJudge(voiceId: track?.trackId ?? 0)
         
         customNav.title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
-        lbTotalDuration.text = stringWithDuration(duration: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0)
+        lbTotalDuration.text = stringWithDuration(duration: UInt(XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0))
         
-        if let image = SDImageCache.shared.imageFromCache(forKey: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""){
-            UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: 0, totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? Int(XMSDKPlayer.shared()?.appointedTime ?? 0.0), image: image)
-            imgCover.image = image
-        }else{
-            imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"), completed: { (image, error, type, url) in
-                UIUtil.configNowPlayingCenter(title: XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? "", author: XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? "", curruntTime: Int(XMSDKPlayer.shared()?.appointedTime ?? 0.0), totalTIme: XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0, image: UIImage.init(named: "yxs_player_defualt_bg"))
-            })
-        }
-        
-        
-        
+        imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"))
         imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"), completed: nil)
+        UIUtil.configNowPlayingCenterUI()
     }
 
     // MARK: - Live Radio
     func xmLiveRadioPlayerNotifyPlayProgress(_ percent: CGFloat, currentTime: Int) {
         progressView.value = Float(percent)
-        lbCurrentDuration.text = stringWithDuration(duration: currentTime)
+        lbCurrentDuration.text = stringWithDuration(duration: UInt(currentTime))
     }
     
     func xmLiveRadioPlayerNotifyCacheProgress(_ percent: CGFloat) {
-        SLLog("CacheProcess:\(percent)")
+//        SLLog("CacheProcess:\(percent)")
     }
     
 
@@ -448,7 +436,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         if radio != nil {
             customNav.title = XMSDKPlayer.shared()?.currentPlayingRadio()?.radioName
             let totalDuration = Int(XMSDKPlayer.shared()?.currentPlayingRadio()?.radioDesc ?? "0")
-            lbTotalDuration.text = stringWithDuration(duration: totalDuration ?? 0)
+            lbTotalDuration.text = stringWithDuration(duration: UInt(totalDuration ?? 0))
             imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingRadio()?.coverUrlLarge ?? ""), completed: nil)
             imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingRadio()?.coverUrlLarge ?? ""), completed: nil)
             
@@ -477,7 +465,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         }
     }
     
-    @objc func stringWithDuration(duration: Int) -> String {
+    @objc func stringWithDuration(duration: UInt) -> String {
         return String.init(format: "%02d:%02d", (duration/60),(duration%60))
     }
     

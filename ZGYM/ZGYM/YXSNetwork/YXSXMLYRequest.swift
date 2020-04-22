@@ -146,49 +146,6 @@ class YXSEducationXMLYAlbumsBrowseDetialRequest: YXSXMLYRequest {
     }
 }
 
-// MARK: 我收藏专辑列表
-let developerCollectedAlbums = "/operation/developer_collected_albums"
-///我收藏专辑列表
-class YXSEducationXMLYDeveloperCollectedAlbumsRequest: YXSXMLYRequest {
-    ///id 听单id
-    init(page: Int,pageSize: Int = kPageSize) {
-        super.init()
-        path = developerCollectedAlbums
-        destinationJsonPaths = ["albums"]
-        param = ["page": page,
-                 "count": pageSize]
-    }
-}
-
-// MARK: 搜索听单
-///搜索听单列表
-class YXSEducationXMLYSearchAlbumsRequest: YXSXMLYRequest {
-    ///id 听单id
-    init(page: Int,pageSize: Int = kPageSize, searchText: String) {
-        super.init()
-        path = operation_columns
-        destinationJsonPaths = ["columns"]
-        param = ["page": page,
-                 "count": pageSize,
-                 "scopes": "developer",
-                 "q": searchText]
-    }
-}
-
-
-// MARK: 搜索听单
-///搜索听单列表
-let searchTracksV2 = "/v2/search/tracks"
-class YXSEducationXMLYSearchTracksV2Request: YXSXMLYRequest {
-    ///id 听单id
-    init(id: Int) {
-        super.init()
-        path = searchTracksV2
-        destinationJsonPaths = ["columns"]
-        param = ["id": id]
-    }
-}
-
 ///批量获取声音信息
 let tracksGetBatch = "/tracks/get_batch"
 class YXSEducationXMLYTracksGetBatchRequest: YXSXMLYRequest {

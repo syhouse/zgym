@@ -371,7 +371,9 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             }
 
             if curruntCounts >= totalCount - kPreloadSize{
-                tableView.mj_footer?.beginRefreshing()
+                if !isSingleHome{///单个详情页 tableview 会滑动跳到底部
+                    tableView.mj_footer?.beginRefreshing()
+                }
             }
         }
     }
@@ -446,38 +448,6 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         let model = yxs_dataSource[indexPath.section].items[indexPath.row]
         model.isShowTag = true
         return model.height
-    }
-    
-    func getCacheKey(model: YXSHomeListModel) -> (String, String){
-        var  identifier = "YXSHomeBaseCell"
-        
-        var friendCacheAppend = ""
-        switch model.type {
-        case .classstart:
-            identifier = "SLHomeClassStartCell"
-        case .friendCicle:
-            friendCacheAppend = "friend"
-            if let praises = model.friendCircleModel?.praises{
-                for model in praises{
-                    if model.isMyOperation{
-                        friendCacheAppend = "friendPraises"
-                        break
-                    }
-                }
-            }
-            identifier = "SLHomeFriendCell"
-        case .notice:
-            identifier = "SLNoticeListHomeCell"
-        case .punchCard:
-            identifier = "SLPunchCardListHomeCell"
-        case .solitaire:
-            identifier = "SLSolitaireListHomeCell"
-        case .homework:
-            identifier = "SLHomeworkListHomeCell"
-        default:
-            break
-        }
-        return ("\(identifier)\(model.serviceId ?? 0)\(model.isShowAll)\(friendCacheAppend)", identifier)
     }
     
     // MARK: - getter&setter

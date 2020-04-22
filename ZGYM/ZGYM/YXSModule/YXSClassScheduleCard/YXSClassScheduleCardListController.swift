@@ -56,7 +56,7 @@ class YXSClassScheduleCardListController: YXSBaseTableViewController {
 
         self.yxs_dataSource += list
 
-        self.loadMore = list.count == kPageSize
+        self.loadMore = list.count >= kPageSize
         self.tableView.reloadData()
         self.yxs_endingRefresh()
         }) { (msg, code) in

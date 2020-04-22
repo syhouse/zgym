@@ -145,7 +145,7 @@ class YXSMediaView: UIView {
     }()
     
     lazy var voiceView: YXSListVoiceView = {
-        let vv = YXSListVoiceView(frame: CGRect(x: 0, y: 0, width: 162, height: 36))
+        let vv = YXSListVoiceView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 36))
         vv.completionHandler = {[weak self](voiceUrl, duration) in
             guard let weakSelf = self else {return}
             weakSelf.voiceTouchedHandler?(voiceUrl, duration)

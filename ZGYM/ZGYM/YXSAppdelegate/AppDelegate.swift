@@ -13,6 +13,8 @@ import Bugly
 import NightNight
 import Alamofire
 import CoreData
+import MediaPlayer
+import SDWebImage
 //import LifetimeTracker
 
 @UIApplicationMain
@@ -170,6 +172,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         }, fail: { (code, msg) in
             SLLog("Fail----->: \(code)->\(msg ?? "")")
         })
+        
+        
+        ///如果xmly播放器存在  开启锁屏控制
+        if XMSDKPlayer.shared()?.playerState != .stop{
+            UIUtil.configNowPlayingCenterUI()
+            UIApplication.shared.beginReceivingRemoteControlEvents()
+        }
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -178,6 +187,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         }, fail: { (code, msg) in
             SLLog("Fail----->: \(code)->\(msg ?? "")")
         })
+        
+        ///如果xmly播放器存在  开启锁屏控制
+        UIApplication.shared.endReceivingRemoteControlEvents()
     }
     
     // MARK: -Other

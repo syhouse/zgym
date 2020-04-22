@@ -186,7 +186,6 @@ class YXSHomeController: YXSHomeBaseController {
                 }
                 self.tableHeaderView.setHeaderModel(self.yxs_weathModel,agendaCount: self.yxs_agendaCount)
                 self.yxs_endingRefresh()
-                SLLog("yxs_endingRefresh")
             }
         }
     }
@@ -209,7 +208,6 @@ class YXSHomeController: YXSHomeBaseController {
             classIdList = yxs_user.gradeIds ?? []
             stage = yxs_user.stage ?? ""
         }
-        SLLog("YXSEducationwaterfallPageQueryV2Request_start")
         YXSEducationwaterfallPageQueryV2Request.init(currentPage: curruntPage,classIdList: classIdList,stage: stage,userType: yxs_user.type ?? "", childrenId: yxs_user.curruntChild?.id, lastRecordId: lastRecordId,lastRecordTime: lastRecordTime, tsLast: tsLast).request({ (result) in
             
             var list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["waterfallList"].object) ?? [YXSHomeListModel]()
@@ -220,13 +218,12 @@ class YXSHomeController: YXSHomeBaseController {
                 
                 if list.count == 0{///没有更新 取缓存数据
                     list = self.firstPageCacheSource["\(self.yxs_user.curruntChild?.id ?? 0)"] ?? [YXSHomeListModel]()
-                    self.loadMore = list.count == kPageSize ? true : false
+                    self.loadMore = list.count >= kPageSize ? true : false
                 }else{
                     self.firstPageCacheSource["\(self.yxs_user.curruntChild?.id ?? 0)"] = list
                 }
             }else{
                 self.loadMore = result["hasNext"].boolValue
-                self.tsLastSets[self.yxs_user.curruntChild?.id ?? 0] = nil
             }
             
             self.lastRecordId = list.last?.id ?? 0
@@ -250,7 +247,6 @@ class YXSHomeController: YXSHomeBaseController {
                 self.yxs_dataSource[2].items.append(model)
             }
             YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource, childrenId: self.yxs_user.curruntChild?.id)
-            SLLog("YXSEducationwaterfallPageQueryV2Request_end")
             self.group.leave()
         }) { (msg, code) in
             self.group.leave()

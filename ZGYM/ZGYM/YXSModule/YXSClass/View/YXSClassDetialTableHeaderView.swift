@@ -12,7 +12,6 @@ import NightNight
 private var kMaxCount = 8
 
 let kYXSClassDetialTableHeaderViewLookChildDetialEvent = "SLClassDetialTableHeaderViewLookChildDetialEvent"
-let kYXSClassDetialTableHeaderViewUpDateListEvent = "SLClassDetialTableHeaderViewUpDateListEvent"
 
 class YXSClassDetialTableHeaderView: UIView {
     var classModel: YXSClassModel

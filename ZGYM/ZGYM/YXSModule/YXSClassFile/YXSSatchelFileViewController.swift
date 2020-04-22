@@ -1,5 +1,5 @@
 //
-//  SLFileBagViewController.swift
+//  YXSSatchelFileViewController.swift
 //  ZGYM
 //
 //  Created by Liu Jie on 2020/4/1.
@@ -20,7 +20,8 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     
     
     init(parentFolderId: Int = -1) {
-        super.init()
+        super.init(classId: -1)
+        
         self.parentFolderId = parentFolderId
     }
     
@@ -112,7 +113,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     }
     
     /// 批量删除
-    @objc func batchDeleteRequest(fileIdList:[Int] = [Int](), folderIdList:[Int] = [Int](), completionHandler:(()->Void)?) {
+    @objc override func batchDeleteRequest(fileIdList:[Int] = [Int](), folderIdList:[Int] = [Int](), completionHandler:(()->Void)?) {
         YXSSatchelBatchDeleteRequest(fileIdList: fileIdList, folderIdList: folderIdList, parentFolderId: parentFolderId).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             completionHandler?()
@@ -234,16 +235,17 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             }
         }
         
-        let vc = YXSMoveToViewController(folderIdList: selectedFolderList, fileIdList: selectedFileList, oldParentFolderId: -1, parentFolderId: -1) { [weak self](oldParentFolderId, parentFolderId) in
+        let vc = YXSMoveToViewController(classId: nil, folderIdList: selectedFolderList, fileIdList: selectedFileList, oldParentFolderId: -1, parentFolderId: -1) { [weak self](oldParentFolderId, parentFolderId) in
             guard let weakSelf = self else {return}
             /// 移动成功
             /// 取消编辑
             weakSelf.endEditing()
-            
+
             /// 更新界面
             weakSelf.folderList = weakSelf.getUnselectedFolerList()
             weakSelf.tableView.reloadData()
         }
+        
         let nav = UINavigationController(rootViewController: vc)
         self.present(nav, animated: true, completion: nil)
     }
@@ -496,10 +498,10 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         return btn
     }()
     
-    lazy var uploadHelper: YXSFileUploadHelper = {
-        let helper = YXSFileUploadHelper()
-        return helper
-    }()
+//    lazy var uploadHelper: YXSFileUploadHelper = {
+//        let helper = YXSFileUploadHelper()
+//        return helper
+//    }()
     
     /*
     // MARK: - Navigation
