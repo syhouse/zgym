@@ -28,7 +28,6 @@ class YXSParentClassListViewController: YXSBaseTableViewController {
         let barButton = UIBarButtonItem(customView: btnAdd)
         self.navigationItem.rightBarButtonItem = barButton
         
-        
     }
     
 

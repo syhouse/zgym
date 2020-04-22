@@ -90,7 +90,7 @@ class YXSMoveToViewController: YXSBaseTableViewController {
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
-                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
                 weakSelf.tableView.reloadData()
                 
             }) { (msg, code) in
@@ -157,7 +157,7 @@ class YXSMoveToViewController: YXSBaseTableViewController {
                 }
                 
             } else {
-                YXSFileCreateFolderRequest(classId: weakSelf.classId ?? 0, folderName: result, parentFolderId: weakSelf.parentFolderId).request({ [weak self](json) in
+                YXSFileCreateFolderRequest(classId: weakSelf.classId ?? 0, folderName: result, parentId: weakSelf.parentFolderId).request({ [weak self](json) in
                     guard let weakSelf = self else {return}
                     if btn.titleLabel?.text == "创建" {
                         weakSelf.loadData()
@@ -183,10 +183,13 @@ class YXSMoveToViewController: YXSBaseTableViewController {
                 guard let weakSelf = self else {return}
                 if json.stringValue.count > 0 {
                     MBProgressHUD.yxs_showMessage(message: json.stringValue)
+                    weakSelf.dismiss(animated: true, completion: nil)
+                    
+                } else {
+                    weakSelf.completionHandler?(weakSelf.oldParentFolderId, weakSelf.parentFolderId)
+                    weakSelf.dismiss(animated: true, completion: nil)
                 }
-                weakSelf.completionHandler?(weakSelf.oldParentFolderId, weakSelf.parentFolderId)
-                weakSelf.dismiss(animated: true, completion: nil)
-                
+
             }) { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
@@ -196,9 +199,12 @@ class YXSMoveToViewController: YXSBaseTableViewController {
                 guard let weakSelf = self else {return}
                 if json.stringValue.count > 0 {
                     MBProgressHUD.yxs_showMessage(message: json.stringValue)
+                    weakSelf.dismiss(animated: true, completion: nil)
+                    
+                } else {
+                    weakSelf.completionHandler?(weakSelf.oldParentFolderId, weakSelf.parentFolderId)
+                    weakSelf.dismiss(animated: true, completion: nil)
                 }
-                weakSelf.completionHandler?(weakSelf.oldParentFolderId, weakSelf.parentFolderId)
-                weakSelf.dismiss(animated: true, completion: nil)
                 
             }) { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)

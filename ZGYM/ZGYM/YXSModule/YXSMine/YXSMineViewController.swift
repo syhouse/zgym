@@ -8,6 +8,7 @@
 
 import UIKit
 import NightNight
+import ObjectMapper
 //import MBProgressHUD
 
 class YXSMineViewController: YXSBaseTableViewController{
@@ -187,8 +188,32 @@ class YXSMineViewController: YXSBaseTableViewController{
     
     @objc func classFileClick() {
         /// 班级文件
-        let vc = YXSClassFileViewController(classId: -1)
-        self.navigationController?.pushViewController(vc)
+        YXSEducationGradeListRequest().request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            var list:[YXSClassModel] = [YXSClassModel]()
+            let joinClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
+            let createClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
+            
+            list += createClassList
+            list += joinClassList
+            
+            if list.count > 1 {
+                let vc = YXSFileClassListViewController(dataSource: list)
+                weakSelf.navigationController?.pushViewController(vc)
+                
+            } else if list.count == 1 {
+                let classId = list.first?.id
+                let vc = YXSClassFileViewController(classId: classId ?? 0, parentFolderId: -1)
+                weakSelf.navigationController?.pushViewController(vc)
+                
+            } else {
+                MBProgressHUD.yxs_showMessage(message: "暂未班级")
+            }
+            
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     @objc func fileBagClick() {

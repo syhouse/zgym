@@ -17,6 +17,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
 
     /// 页面是否在编辑状态
     var isTbViewEditing: Bool = false
+    var classId: Int = -1
     var parentFolderId: Int = -1
     /// 文件夹列表
     var folderList: [YXSFolderModel] = [YXSFolderModel]()
@@ -26,13 +27,13 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     var currentImg: UIImage?
     var currentVideoUrl: URL?
     
-    var classId: Int = -1
     private var navRightBtn: YXSButton = YXSButton()
     
-    init(classId: Int) {
+    init(classId: Int, parentFolderId: Int) {
         super.init()
         
         self.classId = classId
+        self.parentFolderId = parentFolderId
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -43,7 +44,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        self.title = "移动文件"
+        self.title = "班级文件"
         
         view.mixedBackgroundColor = MixedColor(normal: kNightFFFFFF, night: kNightBackgroundColor)
         tableView.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
@@ -95,11 +96,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         workingGroup.enter()
         workingQueue.async {
             // 出组
-            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: self.curruntPage).request({ [weak self](json) in
+            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
-                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
                 workingGroup.leave()
                 
             }) { (msg, code) in
@@ -115,7 +116,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
-                weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+                weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
                 workingGroup.leave()
                 
             }) { (msg, code) in
@@ -180,7 +181,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         let view = YXSInputAlertView2.showIn(target: self.view) { [weak self](result, btn) in
             guard let weakSelf = self else {return}
             if btn.titleLabel?.text == "创建" {
-                YXSFileCreateFolderRequest(classId: weakSelf.classId, folderName: result, parentFolderId: weakSelf.parentFolderId).request({ [weak self](json) in
+                YXSFileCreateFolderRequest(classId: weakSelf.classId, folderName: result, parentId: weakSelf.parentFolderId).request({ [weak self](json) in
                     guard let weakSelf = self else {return}
                     weakSelf.loadData()
                     
@@ -264,9 +265,16 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     @objc func moveBtnClick(sender: YXSButton) {
         var selectedFolderList :[Int] = [Int]()
         var selectedFileList :[Int] = [Int]()
-        for sub in folderList {
+        
+        for sub in getSelectedFolerList() {
             if sub.isSelected ?? false {
                 selectedFolderList.append(sub.id ?? 0)
+            }
+        }
+        
+        for sub in getSelectedFileList() {
+            if sub.isSelected ?? false {
+                selectedFileList.append(sub.id ?? 0)
             }
         }
         
@@ -278,6 +286,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
 
             /// 更新界面
             weakSelf.folderList = weakSelf.getUnselectedFolerList()
+            weakSelf.fileList = weakSelf.getUnselectedFileList()
             weakSelf.tableView.reloadData()
         }
         
@@ -358,6 +367,13 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
     
     // MARK: - Other
+    /// 预览文件
+    @objc func previewFile(fileModel: YXSFileModel) {
+        let wk = YXSBaseWebViewController()
+        wk.loadUrl = fileModel.fileUrl
+        navigationController?.pushViewController(wk)
+    }
+    
     @objc func saveImageFileToDocument(image: UIImage) {
 
     }
@@ -483,39 +499,40 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 1
+            return folderList.count
         } else {
-            return 4
+            return fileList.count
         }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
+            let item = folderList[indexPath.row]
             let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
-            cell.lbTitle.text = "作业"
+            cell.model = item
+            cell.lbTitle.text = item.folderName//"作业"
             return cell
             
         } else {
+            let item = fileList[indexPath.row]
             let cell: YXSFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! YXSFileCell
-            cell.lbTitle.text = "十万个为什么.pdf"
-            cell.lbSubTitle.text = "老师名 | 2020-8-16"
-            switch indexPath.row {
-                case 0:
-                    cell.imgIcon.image = currentImg != nil ? currentImg : UIImage(named: "yxs_file_excel")
-                case 1:
-                    cell.imgIcon.image = currentImg != nil ? currentImg : UIImage(named: "yxs_file_pdf")
-                case 2:
-                    cell.imgIcon.image = currentImg != nil ? currentImg : UIImage(named: "yxs_file_ppt")
-                default:
-                    cell.imgIcon.image = currentImg != nil ? currentImg : UIImage(named: "yxs_file_word")
-            }
-
+            cell.lbTitle.text = item.fileName
+            cell.lbSubTitle.text = "\(item.fileSize ?? 0)KB | \(item.createTime?.yxs_DayTime() ?? "")" ///"老师名 | 2020-8-16"
+            let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
+            cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+            cell.model = item
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 10
+        if section == 0  {
+            return CGFloat.leastNormalMagnitude
+            
+        } else {
+            
+            return folderList.count == 0 ? CGFloat.leastNormalMagnitude : 10
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -523,18 +540,50 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            navigationController?.pushViewController(YXSClassFileViewController(classId: classId))
+        if isTbViewEditing == false {
+            
+            if indexPath.section == 0 {
+                let item = folderList[indexPath.row]
+                navigationController?.pushViewController(YXSClassFileViewController(classId: classId, parentFolderId: item.id ?? -1))
+                
+            } else {
+                let item = fileList[indexPath.row]
+                
+                if item.fileType == "jpg" {
+                    let imgData = YBIBImageData()
+                    imgData.imageURL = URL(string: item.fileUrl ?? "")
+                    
+                    let browser: YBImageBrowser = YBImageBrowser()
+                    browser.dataSourceArray = [imgData]
+                    browser.show()
+                    
+                } else if item.fileType == "mp4" {
+                    // 视频
+                    let videoData: YBIBVideoData = YBIBVideoData()
+                    videoData.videoURL = URL(string: item.fileUrl ?? "")
+                    
+                    let browser: YBImageBrowser = YBImageBrowser()
+                    browser.dataSourceArray = [videoData]
+                    browser.show()
+                    
+                } else {
+                    previewFile(fileModel: item)
+                }
+            }
             
         } else {
-            // 视频
-            let browser = YBImageBrowser()
-            let videoData = YBIBVideoData()
-//            vedioData.videoPHAsset = PHAsset()//item.model?.asset
-            videoData.videoURL = currentVideoUrl
-            videoData.autoPlayCount = 1
-            browser.dataSourceArray.append(videoData)
-            browser.show()
+            /// 编辑状态
+            if indexPath.section == 0 {
+                let item = folderList[indexPath.row]
+                item.isSelected = item.isSelected == true ? false : true
+                tableView.reloadRows(at: [indexPath], with: .none)
+                
+            } else {
+                let item = fileList[indexPath.row]
+                item.isSelected = item.isSelected == true ? false : true
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
+            verifyBottomViewBtnEnable()
         }
     }
 
@@ -555,9 +604,23 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 
         if editingStyle == UITableViewCell.EditingStyle.delete {
-//            self.diagnoseArr.removeObject(at: indexPath.row-1)
-            //刷新tableview
-//            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            
+            if indexPath.section == 0 {
+                let tmp = folderList[indexPath.row].id
+                batchDeleteRequest(folderIdList: [tmp!]) { [weak self] in
+                    guard let weakSelf = self else {return}
+                    weakSelf.folderList.remove(at: indexPath.row)
+                    weakSelf.tableView.reloadData()
+                }
+                
+            } else {
+                let tmp = fileList[indexPath.row].id
+                batchDeleteRequest(fileIdList: [tmp!]) { [weak self] in
+                    guard let weakSelf = self else {return}
+                    weakSelf.fileList.remove(at: indexPath.row)
+                    weakSelf.tableView.reloadData()
+                }
+            }
         }
     }
     
@@ -662,41 +725,4 @@ class YXSClassFileBottomView: UIView {
         btn.yxs_setIconInTopWithSpacing(4)
         return btn
     }()
-    
-
-//    lazy var btnFirst: YXSCustomImageControl = {
-//        let btn = YXSCustomImageControl(imageSize: CGSize(width: 22, height: 22), position: YXSImagePositionType.top, padding: 4, insets: UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0))
-////        btn.backgroundColor = UIColor.yellow
-//        btn.font = UIFont.systemFont(ofSize: 12)
-//        btn.mixedTextColor = MixedColor(normal: k575A60Color, night: k575A60Color)
-//        btn.setTitle("重命名", for: .normal)
-//        btn.setImage(UIImage(named: "yxs_file_edit_1"), for: .normal)
-//        btn.setImage(UIImage(named: "yxs_file_edit_2"), for: .selected)
-//        btn.isSelected = false
-//        return btn
-//    }()
-//
-//    lazy var btnSecond: YXSCustomImageControl = {
-//        let btn = YXSCustomImageControl(imageSize: CGSize(width: 22, height: 22), position: YXSImagePositionType.top, padding: 7, insets: UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0))
-////        btn.backgroundColor = UIColor.green
-//        btn.font = UIFont.systemFont(ofSize: 12)
-//        btn.mixedTextColor = MixedColor(normal: k575A60Color, night: k575A60Color)
-//        btn.setTitle("移动", for: .normal)
-//        btn.setImage(UIImage(named: "yxs_file_move"), for: .normal)
-//        btn.setImage(UIImage(named: "yxs_file_move"), for: .selected)
-//        btn.isSelected = false
-//        return btn
-//    }()
-//
-//    lazy var btnThird: YXSCustomImageControl = {
-//        let btn = YXSCustomImageControl(imageSize: CGSize(width: 22, height: 22), position: YXSImagePositionType.top, padding: 7, insets: UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0))
-////        btn.backgroundColor = UIColor.gray
-//        btn.font = UIFont.systemFont(ofSize: 12)
-//        btn.mixedTextColor = MixedColor(normal: k575A60Color, night: k575A60Color)
-//        btn.setTitle("删除", for: .normal)
-//        btn.setImage(UIImage(named: "yxs_file_delete"), for: .normal)
-//        btn.setImage(UIImage(named: "yxs_file_delete"), for: .selected)
-//        btn.isSelected = false
-//        return btn
-//    }()
 }

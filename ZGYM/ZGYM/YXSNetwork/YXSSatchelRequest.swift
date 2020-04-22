@@ -134,7 +134,7 @@ class YXSSatchelFolderPageQueryRequest: YXSBaseRequset {
 let fileCreateFolder = "/file/create-folder"
 /// 创建文件夹
 class YXSFileCreateFolderRequest: YXSBaseRequset {
-    init(classId: Int = 0, folderName: String, parentFolderId: Int = -1) {
+    init(classId: Int = 0, folderName: String, parentId: Int = -1) {
         super.init()
         method = .post
         host = fileHost
@@ -142,7 +142,7 @@ class YXSFileCreateFolderRequest: YXSBaseRequset {
         param = [
             "classId":classId,
             "folderName":folderName,
-            "parentFolderId":parentFolderId]
+            "parentId":parentId]
     }
 }
 
@@ -234,7 +234,7 @@ class YXSFilePageQueryRequest: YXSBaseRequset {
         super.init()
         method = .post
         host = fileHost
-        path = satchelFilePageQuery
+        path = filePageQuery
         param = [
             "classId":classId,
             "currentPage":currentPage,
@@ -252,7 +252,9 @@ class YXSFileFolderPageQueryRequest: YXSBaseRequset {
         method = .post
         host = fileHost
         path = fileFolderPageQuery
-        param = ["currentPage":currentPage,
+        param = [
+            "classId":classId,
+            "currentPage":currentPage,
                  "pageSize":20,
                  "folderId":folderId]
     }

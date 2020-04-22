@@ -13,16 +13,10 @@ import Photos
 import YBImageBrowser
 
 /// 老师-书包
-class YXSSatchelFileViewController: YXSClassFileViewController {
-
-
-//    var fileList
-    
+class YXSSatchelFileViewController: YXSClassFileViewController {    
     
     init(parentFolderId: Int = -1) {
-        super.init(classId: -1)
-        
-        self.parentFolderId = parentFolderId
+        super.init(classId: -1, parentFolderId: parentFolderId)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -229,9 +223,16 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     @objc override func moveBtnClick(sender: YXSButton) {
         var selectedFolderList :[Int] = [Int]()
         var selectedFileList :[Int] = [Int]()
-        for sub in folderList {
+        
+        for sub in getSelectedFolerList() {
             if sub.isSelected ?? false {
                 selectedFolderList.append(sub.id ?? 0)
+            }
+        }
+        
+        for sub in getSelectedFileList() {
+            if sub.isSelected ?? false {
+                selectedFileList.append(sub.id ?? 0)
             }
         }
         
@@ -243,6 +244,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
 
             /// 更新界面
             weakSelf.folderList = weakSelf.getUnselectedFolerList()
+            weakSelf.fileList = weakSelf.getUnselectedFileList()
             weakSelf.tableView.reloadData()
         }
         
@@ -375,7 +377,6 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 
             } else {
                 let item = fileList[indexPath.row]
-//                var dataSourceArr = [y]
                 
                 if item.fileType == "jpg" {
                     let imgData = YBIBImageData()
@@ -455,18 +456,6 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             }
         }
     }
-    
-    // MARK: - Other
-    /// 预览文件
-    @objc func previewFile(fileModel: YXSFileModel) {
-//        if fileModel.fileType {
-//            <#code#>
-//        }
-        let wk = YXSBaseWebViewController()
-        wk.loadUrl = fileModel.fileUrl
-        navigationController?.pushViewController(wk)
-    }
-
     
     // MARK: - LazyLoad
     lazy var btnSearch: YXSButton = {
