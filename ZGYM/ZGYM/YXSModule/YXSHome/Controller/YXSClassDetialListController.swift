@@ -212,10 +212,6 @@ class YXSClassDetialListController: YXSHomeBaseController {
 extension YXSClassDetialListController: YXSRouterEventProtocol{
     func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
         switch eventName {
-        case kYXSHomeTableHeaderViewLookClassEvent:
-            yxs_showAlert(title: "push" + kYXSHomeTableHeaderViewLookClassEvent)
-        case kYXSHomeTableHeaderViewScanEvent:
-            yxs_showAlert(title: "push" + kYXSHomeTableHeaderViewScanEvent)
         case kYXSClassDetialTableHeaderViewLookChildDetialEvent:
             let vc = YXSClassMembersViewController()
             vc.gradeId = classModel.id ?? 0

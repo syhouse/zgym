@@ -52,7 +52,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
         self.fd_prefersNavigationBarHidden = true
         
         tableView.register(YXSContentDetialCell.self, forCellReuseIdentifier: "YXSContentDetialCell")
-        tableView.yxs_addRoundedCorners(corners: [UIRectCorner.topLeft,.topRight], radii: CGSize.init(width: 15, height: 15), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT*8))
+//        tableView.yxs_addRoundedCorners(corners: [UIRectCorner.topLeft,.topRight], radii: CGSize.init(width: 15, height: 15), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT*8))
         tableView.rowHeight = 62.5
         
         loadData()

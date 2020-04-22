@@ -18,15 +18,7 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     var dataSource: [YXSColumnContentModel] = [YXSColumnContentModel]()
     ///是否有顶部header
     var showHeader: Bool
-    var cycleSource: [YXSBannerModel] = [YXSBannerModel](){
-        didSet{
-            var array = [String]()
-            for model in cycleSource{
-                array.append(model.bannerCoverUrl ?? "")
-            }
-            headerView.cycleScrollView.serverImgArray = array
-        }
-    }
+    var cycleSource: [YXSBannerModel] = [YXSBannerModel]()
     init(id: Int, showHeader: Bool = false) {
         self.id = id
         self.showHeader = showHeader
@@ -48,15 +40,17 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        if showHeader{
-            self.view.addSubview(headerView)
-        }
         collectionView.snp.remakeConstraints { (make) in
             make.left.right.equalTo(0)
-            make.top.equalTo(showHeader ? headerView.height : 0)
+            make.top.equalTo(0)
             make.bottom.equalTo(0)
         }
         collectionView.register(YXSContentListCell.self, forCellWithReuseIdentifier: "YXSContentListCell")
+        collectionView.register(YXSContentListHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSContentListHeaderView")
+//        collectionView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: kSafeBottomHeight, right: 0)
+        if showHeader{
+            self.layout.headerReferenceSize = CGSize.init(width: SCREEN_WIDTH, height: 175*SCREEN_SCALE + 55)
+        }
         loadBannerData()
     }
     
@@ -129,12 +123,24 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
         self.navigationController?.pushViewController(vc)
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "YXSContentListHeaderView", for: indexPath) as! YXSContentListHeaderView
+            var array = [String]()
+            for model in cycleSource{
+                array.append(model.bannerCoverUrl ?? "")
+            }
+            headerView.cycleScrollView.serverImgArray = array
+            return headerView
+        }else{
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "YXSContentListHeaderView", for: indexPath)
+            return view
+        }
+
+    }
+    
     // MARK: - getter&setter
-    lazy var headerView: YXSContentListHeaderView = {
-        let headerView = YXSContentListHeaderView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 175*SCREEN_SCALE + 55))
-        headerView.cycleScrollView.delegate = self
-        return headerView
-    }()
+
 }
 
 extension YXSContentListViewController: WRCycleScrollViewDelegate{
@@ -151,7 +157,7 @@ extension YXSContentListViewController:JXCategoryListContentViewDelegate{
     }
 }
 
-class YXSContentListHeaderView: UIView{
+class YXSContentListHeaderView: UICollectionReusableView{
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(cycleScrollView)
