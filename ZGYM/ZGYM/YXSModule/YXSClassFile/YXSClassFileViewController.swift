@@ -640,6 +640,22 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         return helper
     }()
     
+    // MARK: - EmptyView
+    override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
+        return true
+    }
+    
+    override func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
+        return  NightNight.theme == nil ? UIImage.init(named: "yxs_empty_file") : UIImage(named: "yxs_empty_file")
+    }
+
+    override func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
+        let text = "没有文件"
+        let attributes = [NSAttributedString.Key.font:UIFont.systemFont(ofSize: CGFloat(18)),
+                          NSAttributedString.Key.foregroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")]
+        return NSAttributedString(string: text, attributes: attributes as [NSAttributedString.Key : Any])
+    }
+    
     /*
     // MARK: - Navigation
 
