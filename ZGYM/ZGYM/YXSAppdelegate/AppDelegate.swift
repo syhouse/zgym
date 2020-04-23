@@ -310,8 +310,13 @@ extension AppDelegate{
         } else {
             //正常进入首页
             curruntRootVc = YXSBaseTabBarController()
+                
         }
         window?.rootViewController = curruntRootVc
+        
+        if XMSDKPlayer.shared()?.playerState != .stop{
+            YXSMusicPlayerWindowView.updateSuperView()
+        }
         
         
         yxs_dealRootUI()

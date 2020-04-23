@@ -22,6 +22,7 @@ class YXSPunchCardCommintListModel : NSObject, NSCoding, Mappable{
     var praises : [YXSFriendsPraiseModel]?
     var clockInId : Int?
     var teacherId: Int?
+    var clockInTotalCount: Int?
     //修改内容后高度重新计算
     var content : String?{
         didSet{
@@ -220,6 +221,7 @@ class YXSPunchCardCommintListModel : NSObject, NSCoding, Mappable{
         videoUrl <- map["videoUrl"]
         excellent <- map["excellent"]
         teacherId <- map["teacherId"]
+        clockInTotalCount <- map["clockInTotalCount"]
     }
     
     /**
@@ -249,6 +251,7 @@ class YXSPunchCardCommintListModel : NSObject, NSCoding, Mappable{
         excellent = aDecoder.decodeObject(forKey: "excellent") as? Bool
         isShowTime = aDecoder.decodeBool(forKey: "isShowTime")
         teacherId = aDecoder.decodeObject(forKey: "teacherId") as? Int
+        clockInTotalCount = aDecoder.decodeObject(forKey: "clockInTotalCount") as? Int
     }
     /**
      * NSCoding required method.
@@ -317,6 +320,9 @@ class YXSPunchCardCommintListModel : NSObject, NSCoding, Mappable{
         
         if teacherId != nil{
             aCoder.encode(teacherId, forKey: "teacherId")
+        }
+        if clockInTotalCount != nil{
+            aCoder.encode(clockInTotalCount, forKey: "clockInTotalCount")
         }
     }
     

@@ -250,6 +250,9 @@ class YXSHomeController: YXSHomeBaseController {
             self.group.leave()
         }) { (msg, code) in
             self.group.leave()
+            DispatchQueue.main.async {
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
             //            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }

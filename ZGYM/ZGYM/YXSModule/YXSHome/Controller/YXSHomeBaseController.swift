@@ -372,7 +372,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
 
             if curruntCounts >= totalCount - kPreloadSize{
                 if !isSingleHome{///单个详情页 tableview 会滑动跳到底部
-                    tableView.mj_footer?.beginRefreshing()
+//                    tableView.mj_footer?.beginRefreshing()
                 }
             }
         }
