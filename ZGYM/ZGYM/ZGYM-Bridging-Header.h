@@ -58,6 +58,7 @@
 //#import "LLDebug.h"
 #endif
 
+#import "LSLWeakProxy.h"
 
 #endif /* ZGYM_Bridging_Header_h */
 

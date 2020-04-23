@@ -286,17 +286,6 @@ class ClassStartPartentBottomView: UIView {
         bottomView.addSubview(avrgerLabel)
         bottomView.addSubview(lineView)
         
-        labelImageView.snp.makeConstraints { (make) in
-            make.top.equalTo(0)
-            make.centerX.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 149.5, height: 57))
-        }
-        
-        titleLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(self)
-            make.top.equalTo(labelImageView.snp_bottom).offset(20)
-            
-        }
         bottomView.snp.makeConstraints { (make) in
             make.top.equalTo(titleLabel.snp_bottom).offset(15)
             make.left.right.bottom.equalTo(0)
@@ -328,41 +317,38 @@ class ClassStartPartentBottomView: UIView {
     }
     
     func setViewModel(_ model: YXSClassStarPartentModel, dateType: DateType){
-        scoreLabel.isHidden = true
-        avrgerLabel.isHidden = true
-        overLabel.isHidden = true
         labelImageView.isHidden = true
-        if let currentChildren = model.currentChildren{
-            if let showRankNotice = model.showRankNotice,showRankNotice{
-                var text: String? = nil
-                    if currentChildren.topNo ?? 101 == 1{
-                        text = "冠军"
-                    }else if currentChildren.topNo ?? 101 == 2{
-                        text = "亚军"
-                    }else if currentChildren.topNo ?? 101 == 3{
-                        text = "季军"
-                    }
-                    if let text = text{
-                        UIUtil.yxs_setLabelAttributed(titleLabel, text: ["恭喜！\(currentChildren.childrenName ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))荣获\(text)", "\n您的孩子\(NSUtil.yxs_getDateText(dateType: dateType))在班级表现非常榜"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
-                    }else{
-                        UIUtil.yxs_setLabelAttributed(titleLabel, text: ["孩子名\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
-                    }
-                    if stage == .KINDERGARTEN{
-                        UIUtil.yxs_setLabelAttributed(scoreLabel, text: ["\(model.currentChildren?.score ?? 0)","朵\n", "\(NSUtil.yxs_getDateText(dateType: dateType))小红花"], colors: [kBlueColor, kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
-                        
-                        UIUtil.yxs_setLabelAttributed(avrgerLabel, text: ["\(model.averageScore ?? "")","朵\n", "班级平均分"], colors: [kBlueColor, kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
-                    }else{
-                        UIUtil.yxs_setLabelAttributed(scoreLabel, text: ["\(model.currentChildren?.score ?? 0)\n", "\(NSUtil.yxs_getDateText(dateType: dateType))得分"], colors: [kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
-                        UIUtil.yxs_setLabelAttributed(avrgerLabel, text: ["\(model.averageScore ?? "")\n", "班级平均分"], colors: [kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
-                    }
-                    UIUtil.yxs_setLabelAttributed(overLabel, text: ["\(model.currentChildren?.topPercent ?? "")%\n", "超越本班同学"], colors: [kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
-                }else{
-                    UIUtil.yxs_setLabelAttributed(titleLabel, text: ["\(self.yxs_user.curruntChild?.realName ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
-                }
-            }else{
-                 UIUtil.yxs_setLabelAttributed(titleLabel, text: ["\(self.yxs_user.curruntChild?.realName ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
-            }
+        titleLabel.isHidden = true
+        var rankText: String? = nil
+        
+        if stage == .KINDERGARTEN{
+            UIUtil.yxs_setLabelAttributed(scoreLabel, text: ["\(model.currentChildren?.score ?? 0)","朵\n", "\(NSUtil.yxs_getDateText(dateType: dateType))小红花"], colors: [kBlueColor, kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
             
+            UIUtil.yxs_setLabelAttributed(avrgerLabel, text: ["\(model.averageScore ?? "")","朵\n", "班级平均分"], colors: [kBlueColor, kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
+        }else{
+            UIUtil.yxs_setLabelAttributed(scoreLabel, text: ["\(model.currentChildren?.score ?? 0)\n", "\(NSUtil.yxs_getDateText(dateType: dateType))得分"], colors: [kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
+            UIUtil.yxs_setLabelAttributed(avrgerLabel, text: ["\(model.averageScore ?? "")\n", "班级平均分"], colors: [kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
+        }
+        UIUtil.yxs_setLabelAttributed(overLabel, text: ["\(model.currentChildren?.topPercent ?? "0")%\n", "超越本班同学"], colors: [kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 23),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 12)
+        
+        if  let showRankNotice = model.showRankNotice,showRankNotice{
+            if let currentChildren = model.currentChildren{
+                if currentChildren.topNo ?? 101 == 1{
+                    rankText = "冠军"
+                }else if currentChildren.topNo ?? 101 == 2{
+                    rankText = "亚军"
+                }else if currentChildren.topNo ?? 101 == 3{
+                    rankText = "季军"
+                }
+
+            }
+            if let rankText = rankText{
+                UIUtil.yxs_setLabelAttributed(titleLabel, text: ["恭喜！\(model.currentChildren?.childrenName ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))荣获\(rankText)", "\n您的孩子\(NSUtil.yxs_getDateText(dateType: dateType))在班级表现非常榜"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
+            }else{
+                UIUtil.yxs_setLabelAttributed(titleLabel, text: ["孩子名\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
+            }
+        }
+        
         if model.showRemindTeacher{
             bottomView.backgroundColor = UIColor.white
             bottomView.snp.remakeConstraints { (make) in
@@ -371,36 +357,50 @@ class ClassStartPartentBottomView: UIView {
             }
             titleLabel.snp_removeConstraints()
         }else{
-            if model.currentChildren == nil{
-                titleLabel.snp.remakeConstraints { (make) in
-                    make.centerX.equalTo(self)
-                    make.top.equalTo(25)
-                    make.bottom.equalTo(-25)
+            if let showRankNotice = model.showRankNotice,showRankNotice{
+                titleLabel.isHidden = false
+                if rankText != nil {
+                    labelImageView.isHidden = false
+                    
+                    labelImageView.snp.remakeConstraints { (make) in
+                        make.top.equalTo(0)
+                        make.centerX.equalTo(self)
+                        make.size.equalTo(CGSize.init(width: 149.5, height: 57))
+                    }
+                    
+                    titleLabel.snp.remakeConstraints { (make) in
+                        make.centerX.equalTo(self)
+                        make.top.equalTo(labelImageView.snp_bottom).offset(20)
+                    }
+                }else{
+                    labelImageView.isHidden = true
+                    titleLabel.snp.remakeConstraints { (make) in
+                        make.centerX.equalTo(self)
+                        make.top.equalTo(15)
+                        
+                    }
                 }
-                bottomView.snp_removeConstraints()
+                bottomView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F4F7FF")
+                bottomView.snp.remakeConstraints { (make) in
+                    make.top.equalTo(titleLabel.snp_bottom).offset(15)
+                    make.left.right.bottom.equalTo(0)
+                    make.height.equalTo(85)
+                }
+
             }else{
-                updateShowNoRankUI()
+                bottomView.backgroundColor = UIColor.white
+                bottomView.snp.remakeConstraints { (make) in
+                    make.top.equalTo(0)
+                    make.left.right.bottom.equalTo(0)
+                    make.height.equalTo(85)
+                }
             }
         }
     }
     
     ///不展示排名信息
     func updateShowNoRankUI(){
-        scoreLabel.isHidden = false
-        avrgerLabel.isHidden = false
-        overLabel.isHidden = false
-        labelImageView.isHidden = false
-        bottomView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F4F7FF")
-        bottomView.snp.remakeConstraints { (make) in
-            make.top.equalTo(titleLabel.snp_bottom).offset(15)
-            make.left.right.bottom.equalTo(0)
-            make.height.equalTo(85)
-        }
-        titleLabel.snp.remakeConstraints { (make) in
-            make.centerX.equalTo(self)
-            make.top.equalTo(labelImageView.snp_bottom).offset(20)
-            
-        }
+        
     }
     
     

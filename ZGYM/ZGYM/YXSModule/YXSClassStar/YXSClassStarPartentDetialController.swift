@@ -244,18 +244,19 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > kSafeTopHeight + 64{
-            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
-            customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "yxs_back_white"), forState: .normal)
-            customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
-            rightControl.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: UIColor.white)
-            rightControl.mixedImage = MixedImage(normal: "yxs_classstar_down_gray", night: "yxs_classstar_down")
-        }else{
             customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.clear)
             customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: isEmptyUI ? "back" : "yxs_back_white"), forState: .normal)
             customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
             
             rightControl.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: isEmptyUI ? UIColor.yxs_hexToAdecimalColor(hex: "#575A60") : UIColor.white)
             rightControl.mixedImage = MixedImage(normal: "yxs_classstar_down_gray", night: isEmptyUI ? "yxs_classstar_down_gray" : "yxs_classstar_down")
+        }else{
+            
+            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: kNightForegroundColor)
+            customNav.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
+            customNav.titleLabel.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+            rightControl.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+            rightControl.mixedImage = MixedImage(normal: "yxs_classstar_down", night: "yxs_classstar_down")
         }
     }
     

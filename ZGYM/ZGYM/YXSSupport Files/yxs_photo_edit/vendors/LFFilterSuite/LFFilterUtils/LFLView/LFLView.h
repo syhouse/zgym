@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) UIImage *image; // default is nil
 
+
 @end
 
 NS_ASSUME_NONNULL_END

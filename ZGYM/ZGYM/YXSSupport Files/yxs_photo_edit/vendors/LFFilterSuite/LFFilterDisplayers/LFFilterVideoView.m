@@ -37,6 +37,7 @@ static char* LFItemChanged = "CurrentItemContext";
 - (void)setPlayer:(AVPlayer *)player
 {
     if (_player != player) {
+        [self suspendDisplay];
         [_player removeObserver:self forKeyPath:@"currentItem"];
         _player = player;
         [_player addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionNew context:LFItemChanged];
@@ -122,8 +123,8 @@ static char* LFItemChanged = "CurrentItemContext";
 #pragma mark - CADisplayLink
 
 - (void)suspendDisplay {
-    _displayLink.paused = YES;
     [_videoOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:0.1];
+    _displayLink.paused = YES;
 }
 
 - (void)setupDisplayLink {

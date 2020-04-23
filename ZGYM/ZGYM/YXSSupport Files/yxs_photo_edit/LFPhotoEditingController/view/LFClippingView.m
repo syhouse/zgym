@@ -92,7 +92,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
         CGRect newRect = [weakSelf.zoomingView convertRect:rect toView:weakSelf];
         CGRect clipTransRect = CGRectApplyAffineTransform(weakSelf.frame, weakSelf.transform);
         CGRect screenRect = (CGRect){weakSelf.contentOffset, clipTransRect.size};
-        screenRect = CGRectInset(screenRect, 44, 44);
+        screenRect = CGRectInset(screenRect, 44/weakSelf.screenScale, 44/weakSelf.screenScale);
         return !CGRectIntersectsRect(screenRect, newRect);
     };
     [self addSubview:zoomingView];
@@ -105,6 +105,12 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     {
         self.lf_protocolxecutor = self.zoomingView;
     }
+}
+
+- (void)dealloc
+{
+    // 释放LFEditingProtocol协议
+    [self clearProtocolxecutor];
 }
 
 - (void)setImage:(UIImage *)image

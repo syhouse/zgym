@@ -23,6 +23,8 @@
 #import "FilterSuiteUtils.h"
 #import "AVAsset+LFMECommon.h"
 
+#import "NSObject+LFTipsGuideView.h"
+
 /************************ Attributes ************************/
 /** NSNumber containing LFVideoEditOperationSubType, default 0 */
 LFVideoEditOperationStringKey const LFVideoEditDrawColorAttributeName = @"LFVideoEditDrawColorAttributeName";
@@ -30,6 +32,8 @@ LFVideoEditOperationStringKey const LFVideoEditDrawColorAttributeName = @"LFVide
 LFVideoEditOperationStringKey const LFVideoEditDrawBrushAttributeName = @"LFVideoEditDrawBrushAttributeName";
 /** NSString containing string path, default nil. sticker resource path. */
 LFVideoEditOperationStringKey const LFVideoEditStickerAttributeName = @"LFVideoEditStickerAttributeName";
+/** NSArray containing NSArray<LFStickerContent *>, default @[[LFStickerContent stickerContentWithTitle:@"默认" contents:@[LFStickerContentDefaultSticker]]]. */
+LFVideoEditOperationStringKey const LFVideoEditStickerContentsAttributeName = @"LFVideoEditStickerContentsAttributeName";
 /** NSNumber containing LFVideoEditOperationSubType, default 0 */
 LFVideoEditOperationStringKey const LFVideoEditTextColorAttributeName = @"LFVideoEditTextColorAttributeName";
 /** NSNumber containing BOOL, default false: default audioTrack ,true: mute. */
@@ -46,7 +50,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMinDurationAttributeName = @"
 LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"LFVideoEditClipMaxDurationAttributeName";
 /************************ Attributes ************************/
 
-@interface LFVideoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFTextBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFAudioTrackBarDelegate, LFVideoClipToolbarDelegate, LFPhotoEditDelegate, UIGestureRecognizerDelegate>
+@interface LFVideoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFTextBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFAudioTrackBarDelegate, LFVideoClipToolbarDelegate, LFPhotoEditDelegate, UIGestureRecognizerDelegate, LFVideoEditingPlayerDelegate>
 {
     /** 编辑模式 */
     LFVideoEditingView *_EditingView;
@@ -76,6 +80,10 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 /** 滤镜缩略图 */
 @property (nonatomic, strong) UIImage *filterSmallImage;
 
+@property (nonatomic, strong, nullable) NSDictionary *editData;
+
+@property (nonatomic, strong, nullable) id stickerBarCacheResource;
+
 @end
 
 @implementation LFVideoEditingController
@@ -92,16 +100,20 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 
 - (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image;
 {
-    _asset = [AVURLAsset assetWithURL:url];
-    _placeholderImage = image;
-    [self setVideoAsset:_asset placeholderImage:image];
+    AVAsset *asset = [AVURLAsset assetWithURL:url];
+    [self setVideoAsset:asset placeholderImage:image];
 }
 
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image
 {
     _asset = asset;
     _placeholderImage = image;
-    [_EditingView setVideoAsset:asset placeholderImage:image];
+}
+
+- (void)setVideoEdit:(LFVideoEdit *)videoEdit
+{
+    [self setVideoAsset:videoEdit.editAsset placeholderImage:videoEdit.editPreviewImage];
+    _editData = videoEdit.editData;
 }
 
 - (void)setMinClippingDuration:(double)minClippingDuration
@@ -124,7 +136,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     
     /** 为了适配iOS13的UIModalPresentationPageSheet模态，它会在viewDidLoad之后对self.view的大小调整，迫不得已暂时只能在viewWillAppear加载视图 */
     if (@available(iOS 13.0, *)) {
-        if (isiPhone && self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet) {
+        if (isiPhone && self.presentingViewController && self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet) {
             return;
         }
     }
@@ -157,10 +169,17 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     }
 }
 
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    // 部分视图需要获取安全区域。统一在这里执行用户指引；
+    [self configUserGuide];
+}
+
 - (void)dealloc
 {
-    /** 恢复原来的音频 */
-    [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -185,6 +204,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     _EditingView = [[LFVideoEditingView alloc] initWithFrame:editRect];
     _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _EditingView.editDelegate = self;
+    _EditingView.playerDelegate = self;
     
     /** 单击的 Recognizer */
     singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singlePressed)];
@@ -200,11 +220,14 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     double maxClippingDuration = [self operationDoubleForKey:LFVideoEditClipMaxDurationAttributeName];
     _EditingView.minClippingDuration = minClippingDuration;
     _EditingView.maxClippingDuration = maxClippingDuration;
-    if (_videoEdit) {
-        _EditingView.photoEditData = _videoEdit.editData;
-        [self setVideoAsset:_videoEdit.editAsset placeholderImage:_videoEdit.editPreviewImage];
+    
+    [_EditingView setVideoAsset:_asset placeholderImage:_placeholderImage];
+    if (self.editData) {
+        // 设置编辑数据
+        _EditingView.photoEditData = self.editData;
+        // 释放销毁
+        self.editData = nil;
     } else {
-        [self setVideoAsset:_asset placeholderImage:_placeholderImage];
         
         /** default audio urls */
         NSMutableArray *m_audioUrls = [_EditingView.audioUrls mutableCopy];
@@ -223,6 +246,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
                     LFAudioItem *item = [LFAudioItem new];
                     item.title = [url.lastPathComponent stringByDeletingPathExtension];;
                     item.url = url;
+                    item.isEnable = YES;
                     [m_audioUrls addObject:item];
                 }
             }
@@ -414,8 +438,9 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         };
         
         if (containOperation(LFVideoEditOperationType_clip)) {
-            [_EditingView setIsClipping:YES animated:NO];
-            [self changeClipMenu:YES animated:NO];
+//            [_EditingView setIsClipping:YES animated:NO];
+//            [self changeClipMenu:YES animated:NO];
+            [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_clip];
         } else {
             if (containOperation(LFVideoEditOperationType_draw)) {
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_draw];
@@ -444,6 +469,26 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     }
 }
 
+- (void)configUserGuide
+{
+    // 设置首次启动其他功能，需要返回后再提示
+    if (self.defaultOperationType&LFVideoEditOperationType_clip && _EditingView.isClipping) {
+        return;
+    }
+    
+    UIView *mainView = self.navigationController.view;
+    {
+        if (_edit_toolBar.items > kToolbar_MaxItems) {
+            CGFloat height = kToolbar_MainHeight;
+            if (@available(iOS 11.0, *)) {
+                height += self.view.safeAreaInsets.bottom;
+            }
+            CGRect toolbarFrame = CGRectMake(0, CGRectGetHeight(self.view.frame)-height, CGRectGetWidth(self.view.frame), height);
+            [self lf_showInView:mainView maskRects:@[[NSValue valueWithCGRect:toolbarFrame]] withTips:@[[NSBundle LFME_localizedStringForKey:@"_LFME_UserGuide_ToolBar_Scroll"]]];
+        }
+    }
+}
+
 #pragma mark - 顶部栏(action)
 - (void)singlePressed
 {
@@ -459,9 +504,18 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 - (void)cancelButtonClick
 {
     [_EditingView pauseVideo];
-    if ([self.delegate respondsToSelector:@selector(lf_VideoEditingController:didCancelPhotoEdit:)]) {
-        [self.delegate lf_VideoEditingController:self didCancelPhotoEdit:self.videoEdit];
+    /** 恢复原来的音频 */
+    [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+    if ([self.delegate respondsToSelector:@selector(lf_VideoEditingControllerDidCancel:)]) {
+        [self.delegate lf_VideoEditingControllerDidCancel:self];
     }
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    else if ([self.delegate respondsToSelector:@selector(lf_VideoEditingController:didCancelPhotoEdit:)]) {
+        [self.delegate lf_VideoEditingController:self didCancelPhotoEdit:nil];
+    }
+    #pragma clang diagnostic pop
+    
 }
 
 - (void)finishButtonClick
@@ -482,6 +536,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
                         [weakSelf showErrorMessage:error.description];
                     } else {
                         videoEdit = [[LFVideoEdit alloc] initWithEditAsset:weakSelf.asset editFinalURL:trimURL data:data];
+                        [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
                         if ([weakSelf.delegate respondsToSelector:@selector(lf_VideoEditingController:didFinishPhotoEdit:)]) {
                             [weakSelf.delegate lf_VideoEditingController:weakSelf didFinishPhotoEdit:videoEdit];
                         }                        
@@ -493,6 +548,9 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf->_EditingView pauseVideo];
+                [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
                 if ([weakSelf.delegate respondsToSelector:@selector(lf_VideoEditingController:didFinishPhotoEdit:)]) {
                     [weakSelf.delegate lf_VideoEditingController:weakSelf didFinishPhotoEdit:videoEdit];
                 }
@@ -755,6 +813,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         [_EditingView cancelClipping:YES];
         [self changeClipMenu:NO];
         [self configDefaultOperation];
+        [self configUserGuide];
     }
 }
 /** 完成 */
@@ -766,6 +825,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         [_EditingView setIsClipping:NO animated:YES];
         [self changeClipMenu:NO];
         [self configDefaultOperation];
+        [self configUserGuide];
     }
 }
 
@@ -824,6 +884,13 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         weakSelf.isHideNaviBar = NO;
         [weakSelf changedBarState];
     });
+}
+
+#pragma mark - LFVideoEditingPlayerDelegate
+/** 错误回调 */
+- (void)lf_videoEditingViewFailedToPrepare:(LFVideoEditingView *)editingView error:(NSError *)error
+{
+    [self showErrorMessage:error.localizedDescription];
 }
 
 #pragma mark - private
@@ -916,10 +983,12 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
             [UIView animateWithDuration:.25f animations:^{
                 self->_edit_sticker_toolBar.frame = frame;
             } completion:^(BOOL finished) {
+                self.stickerBarCacheResource = self->_edit_sticker_toolBar.cacheResources;
                 [self->_edit_sticker_toolBar removeFromSuperview];
                 self->_edit_sticker_toolBar = nil;
             }];
         } else {
+            self.stickerBarCacheResource = self->_edit_sticker_toolBar.cacheResources;
             [_edit_sticker_toolBar removeFromSuperview];
             _edit_sticker_toolBar = nil;
         }
@@ -1054,16 +1123,29 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 - (LFStickerBar *)edit_sticker_toolBar
 {
     if (_edit_sticker_toolBar == nil) {
-        CGFloat row = 2;
+        CGFloat row = 4;
         CGFloat w=self.view.width, h=lf_stickerSize*row+lf_stickerMargin*(row+1);
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
         }
+        CGRect frame = CGRectMake(0, self.view.height, w, h);
         
-        /** 设置默认贴图资源路径 */
-        NSString *stickerPath = [self operationStringForKey:LFVideoEditStickerAttributeName];
+        if (self.stickerBarCacheResource) {
+            _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:frame cacheResources:self.stickerBarCacheResource];
+        } else {
+            /** 设置默认贴图资源路径 */
+            NSArray <LFStickerContent *>*stickerContents = [self operationArrayForKey:LFVideoEditStickerContentsAttributeName];
+            
+            if (stickerContents == nil) {
+                stickerContents = @[
+                    [LFStickerContent stickerContentWithTitle:@"默认" contents:@[LFStickerContentDefaultSticker]],
+                    [LFStickerContent stickerContentWithTitle:@"相册" contents:@[LFStickerContentAllAlbum]]
+                ];
+            }
+            
+            _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:frame resources:stickerContents];
+        }
         
-        _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:stickerPath];
         _edit_sticker_toolBar.delegate = self;
     }
     return _edit_sticker_toolBar;
@@ -1222,17 +1304,33 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     return 0;
 }
 
-- (NSString *)operationStringForKey:(LFVideoEditOperationStringKey)key
+//- (NSString *)operationStringForKey:(LFVideoEditOperationStringKey)key
+//{
+//    id obj = [self.operationAttrs objectForKey:key];
+//    if ([obj isKindOfClass:[NSString class]]) {
+//        return (NSString *)obj;
+//    } else if (obj) {
+//        #pragma clang diagnostic push
+//        #pragma clang diagnostic ignored "-Wunused-variable"
+//
+//        BOOL isContain = [key isEqualToString:LFVideoEditStickerContentsAttributeName];
+//        NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+//        #pragma clang diagnostic pop
+//    }
+//    return nil;
+//}
+
+- (NSArray *)operationArrayForKey:(LFVideoEditOperationStringKey)key
 {
     id obj = [self.operationAttrs objectForKey:key];
-    if ([obj isKindOfClass:[NSString class]]) {
-        return (NSString *)obj;
+    if ([obj isKindOfClass:[NSArray class]]) {
+        return (NSArray *)obj;
     } else if (obj) {
         #pragma clang diagnostic push
         #pragma clang diagnostic ignored "-Wunused-variable"
                 
-        BOOL isContain = [key isEqualToString:LFVideoEditStickerAttributeName];
-        NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+        BOOL isContain = [key isEqualToString:LFVideoEditStickerContentsAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is NSArray", key);
         #pragma clang diagnostic pop
     }
     return nil;

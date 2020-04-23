@@ -24,19 +24,62 @@
     assetImageGenerator.apertureMode =AVAssetImageGeneratorApertureModeEncodedPixels;
     assetImageGenerator.maximumSize = size;
     
-    CGImageRef thumbnailImageRef = NULL;
+    CGImageRef imageRef = NULL;
     CFTimeInterval thumbnailImageTime = 1;
     NSError *thumbnailImageGenerationError = nil;
-    thumbnailImageRef = [assetImageGenerator copyCGImageAtTime:CMTimeMake(thumbnailImageTime, self.duration.timescale) actualTime:NULL error:&thumbnailImageGenerationError];
+    imageRef = [assetImageGenerator copyCGImageAtTime:CMTimeMake(thumbnailImageTime, self.duration.timescale) actualTime:NULL error:&thumbnailImageGenerationError];
     
-    if(!thumbnailImageRef) {
+    if(!imageRef) {
         NSLog(@"thumbnailImageGenerationError %@",thumbnailImageGenerationError);
         if (error) {
             *error = thumbnailImageGenerationError;
         }
+        return nil;
     }
     
-    return thumbnailImageRef ? [[UIImage alloc]initWithCGImage:thumbnailImageRef] : nil;
+    { // fixed black background
+        size_t width = CGImageGetWidth(imageRef);
+        size_t height = CGImageGetHeight(imageRef);
+        CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(imageRef);
+        BOOL hasAlpha = !(alphaInfo == kCGImageAlphaNone ||
+                          alphaInfo == kCGImageAlphaNoneSkipFirst ||
+                          alphaInfo == kCGImageAlphaNoneSkipLast);
+        CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Host;
+        bitmapInfo |= hasAlpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;
+        
+        static CGColorSpaceRef colorSpace;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            if (@available(iOS 9.0, tvOS 9.0, *)) {
+                colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
+            } else {
+                colorSpace = CGColorSpaceCreateDeviceRGB();
+            }
+        });
+        
+        CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, 0, colorSpace, bitmapInfo);
+        if (context) {
+            CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef); // The rect is bounding box of CGImage, don't swap width & height
+            CGImageRelease(imageRef);
+            
+            CGImageRef newImageRef = CGBitmapContextCreateImage(context);
+            CGContextRelease(context);
+            
+            UIImage *image = [UIImage imageWithCGImage:newImageRef];
+            CGImageRelease(newImageRef);
+            
+            return image;
+        }
+    }
+    
+    UIImage *image = nil;
+    if (imageRef) {
+        image = [[UIImage alloc]initWithCGImage:imageRef];
+        CGImageRelease(imageRef);
+    }
+    
+    
+    return image;
 }
 
 - (CGSize)videoNaturalSize

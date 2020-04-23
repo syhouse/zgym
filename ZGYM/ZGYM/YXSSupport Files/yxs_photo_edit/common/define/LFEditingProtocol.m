@@ -8,12 +8,14 @@
 
 #import "LFEditingProtocol.h"
 #import <objc/runtime.h>
+#import "NSBundle+LFMediaEditing.h"
 
 #import "LFDrawView.h"
 #import "LFStickerView.h"
 
-#import "LFDataFilterImageView.h"
-#import "LFDataFilterVideoView.h"
+#import "LFFilterGifView.h"
+
+#import "LFFilterDataProtocol.h"
 
 static const char * LFEditingProtocolProtocolxecutorKey = "LFEditingProtocolProtocolxecutorKey";
 static const char * LFEditingProtocolEditDelegateKey = "LFEditingProtocolEditDelegateKey";
@@ -22,8 +24,7 @@ static const char * LFEditingProtocolDrawViewKey = "LFEditingProtocolDrawViewKey
 static const char * LFEditingProtocolStickerViewKey = "LFEditingProtocolStickerViewKey";
 static const char * LFEditingProtocolSplashViewKey = "LFEditingProtocolSplashViewKey";
 
-static const char * LFEditingProtocolImageViewKey = "LFEditingProtocolImageViewKey";
-static const char * LFEditingProtocolPlayerViewKey = "LFEditingProtocolPlayerViewKey";
+static const char * LFEditingProtocolDisplayViewKey = "LFEditingProtocolDisplayViewKey";
 
 static const char * LFEditingProtocolEditEnableKey = "LFEditingProtocolEditEnableKey";
 static const char * LFEditingProtocolDrawViewEnableKey = "LFEditingProtocolDrawViewEnableKey";
@@ -87,24 +88,19 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     objc_setAssociatedObject(self, LFEditingProtocolSplashViewKey, splashView, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (LFDataFilterImageView *)lf_imageView
+- (id<LFFilterDataProtocol>)lf_displayView
 {
-    return objc_getAssociatedObject(self, LFEditingProtocolImageViewKey);
+    return objc_getAssociatedObject(self, LFEditingProtocolDisplayViewKey);
 }
-- (void)setLf_imageView:(LFDataFilterImageView *)imageView
+- (void)setLf_displayView:(id<LFFilterDataProtocol>)lf_displayView
 {
-    objc_setAssociatedObject(self, LFEditingProtocolImageViewKey, imageView, OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (LFDataFilterVideoView *)lf_playerView
-{
-    return objc_getAssociatedObject(self, LFEditingProtocolPlayerViewKey);
-}
-- (void)setLf_playerView:(LFDataFilterVideoView *)playerView
-{
-    objc_setAssociatedObject(self, LFEditingProtocolPlayerViewKey, playerView, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, LFEditingProtocolDisplayViewKey, lf_displayView, OBJC_ASSOCIATION_ASSIGN);
 }
 
+- (void)clearProtocolxecutor
+{
+    objc_removeAssociatedObjects(self);
+}
 
 
 #pragma mark - LFEditingProtocolPrivate property
@@ -270,8 +266,7 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
         [self.lf_protocolxecutor changeFilterType:cmType];
         return;
     }
-    self.lf_imageView.type = cmType;
-    self.lf_playerView.type = cmType;
+    self.lf_displayView.type = cmType;
 }
 /** 当前使用滤镜类型 */
 - (NSInteger)getFilterType
@@ -279,10 +274,7 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     if (self.lf_protocolxecutor) {
         return [self.lf_protocolxecutor getFilterType];
     }
-    if (self.lf_imageView) {
-        return self.lf_imageView.type;
-    }
-    return self.lf_playerView.type;
+    return self.lf_displayView.type;
 }
 /** 获取滤镜图片 */
 - (UIImage *)getFilterImage
@@ -290,10 +282,12 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     if (self.lf_protocolxecutor) {
         return [self.lf_protocolxecutor getFilterImage];
     }
-    if (self.lf_imageView) {
-        return [self.lf_imageView renderedAnimatedUIImage];
+    if ([self.lf_displayView isKindOfClass:[LFFilterGifView class]]) {
+        return [(LFFilterGifView *)self.lf_displayView renderedAnimatedUIImage];
+    } else if ([self.lf_displayView isKindOfClass:[LFContextImageView class]]) {
+        return [(LFContextImageView *)self.lf_displayView renderedUIImage];
     }
-    return [self.lf_playerView renderedUIImage];
+    return nil;
 }
 
 #pragma mark - 绘画功能
@@ -362,7 +356,9 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
         // LFBlurryBrush 不因颜色而改变效果。
     } else if ([self.lf_drawView.brush isKindOfClass:[LFMosaicBrush class]]) {
         // LFMosaicBrush 不因颜色而改变效果。
-    }  else if ([self.lf_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
+    } else if ([self.lf_drawView.brush isKindOfClass:[LFEraserBrush class]]) {
+        // LFEraserBrush 不因颜色而改变效果。
+    } else if ([self.lf_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
         ((LFFluorescentBrush *)self.lf_drawView.brush).lineColor = color;
     } else if ([self.lf_drawView.brush isKindOfClass:[LFHighlightBrush class]]) {
         ((LFHighlightBrush *)self.lf_drawView.brush).outerLineColor = color;
@@ -395,6 +391,9 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     } else if ([self.lf_drawView.brush isKindOfClass:[LFMosaicBrush class]]) {
         // 对马赛克笔的线粗相对调整
         self.lf_drawView.brush.lineWidth = lineWidth*5;
+    } else if ([self.lf_drawView.brush isKindOfClass:[LFEraserBrush class]]) {
+        // 对橡皮擦笔的线粗相对调整
+        self.lf_drawView.brush.lineWidth = lineWidth+4;
     } else {
         self.lf_drawView.brush.lineWidth = lineWidth;
         if ([self.lf_drawView.brush isKindOfClass:[LFHighlightBrush class]]) {
@@ -449,6 +448,14 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     }
     self.lf_stickerView.screenScale = scale;
 }
+- (CGFloat)screenScale
+{
+    if (self.lf_protocolxecutor) {
+        return [self.lf_protocolxecutor screenScale];
+    }
+    return self.lf_stickerView.screenScale;
+}
+
 /** 最小缩放率 默认0.2 */
 - (void)setStickerMinScale:(CGFloat)stickerMinScale
 {
@@ -586,11 +593,12 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
             break;
         case LFSplashStateType_Smear:
         {
-            brush = [[LFSmearBrush alloc] init];
+            brush = [[LFSmearBrush alloc] initWithImageName:@"brush/EditImageSmearBrush@2x.png"];
         }
             break;
     }
     if (brush) {
+        brush.bundle = [NSBundle LF_mediaEditingBundle];
         [self.lf_splashView setBrush:brush];
         [self setSplashLineWidth:self.lf_splashLineWidth];
     }

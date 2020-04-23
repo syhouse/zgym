@@ -24,8 +24,6 @@
 
 CGFloat const lf_editingView_drawLineWidth = 5.f;
 CGFloat const lf_editingView_splashWidth = 25.f;
-CGFloat const lf_editingView_stickMinScale = .2f;
-CGFloat const lf_editingView_stickMaxScale = 3.f;
 
 typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     LFEditingViewOperationNone = 0,
@@ -150,6 +148,12 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     
 }
 
+- (void)dealloc
+{
+    // 释放LFEditingProtocol协议
+    [self clearProtocolxecutor];
+}
+
 - (UIEdgeInsets)refer_clippingInsets
 {
     CGFloat top = kClipZoom_margin;
@@ -195,11 +199,6 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
                 self.defaultMaximumZoomScale = self.frame.size.height * kMaxZoomScale / cropRect.size.height;
             }
             self.maximumZoomScale = self.defaultMaximumZoomScale;
-            
-            /** 调整贴图的缩放比例 */
-            CGFloat diffScale = kMaxZoomScale / self.defaultMaximumZoomScale;
-            [self setStickerMinScale:(lf_editingView_stickMinScale * diffScale)];
-            [self setStickerMaxScale:(lf_editingView_stickMaxScale * diffScale)];
         }
         self.clippingView.frame = cropRect;
     }
@@ -597,7 +596,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     CGFloat scale = self.clippingView.zoomScale;
     CGAffineTransform trans = self.clippingView.transform;
     CGPoint contentOffset = self.clippingView.contentOffset;
-    CGSize contentSize = self.clippingView.contentSize;
+//    CGSize contentSize = self.clippingView.contentSize;
     CGRect clippingRect = self.clippingView.frame;
     
     /** 参数取整，否则可能会出现1像素偏差 */
@@ -637,8 +636,8 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     clipRect.size.width = ((int)(clipRect.size.width+0.5)*1.f);
     clipRect.size.height = ((int)(clipRect.size.height+0.5)*1.f);
     
-    // CIImage 的原始坐标在左下角，y值需要重新计算。
-    clipRect.origin.y = (int)((contentSize.height/clipScale - clipRect.size.height - clipRect.origin.y)+0.5)*1.f;
+    // CIImage 的原始坐标在左下角，y值需要重新计算。（注：因使用CIImage的截取方式会出现模糊情况。改为使用CGImage的方法。）
+//    clipRect.origin.y = (int)((contentSize.height/clipScale - clipRect.size.height - clipRect.origin.y)+0.5)*1.f;
     
     /** 滤镜图片 */
     UIImage *showImage = [self getFilterImage];
@@ -680,6 +679,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
             /** 若数量不一致，解析gif失败，生成静态图片 */
             if (images.count == showImage.images.count) {
                 editImage = [UIImage animatedImageWithImages:images duration:showImage.duration];
+                [images removeAllObjects];
             }
         } else {
             editImage = ClipEditImage(showImage);
@@ -987,7 +987,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 {
     CGFloat scale = self.clippingView.zoomScale/self.clippingView.first_minimumZoomScale;
     CGSize realSize = CGSizeMake(CGRectGetWidth(self.gridView.gridRect)/scale, CGRectGetHeight(self.gridView.gridRect)/scale);
-    CGFloat screenScale = [UIScreen mainScreen].scale;
+    CGFloat screenScale = self.image.scale;
     int pixelW = (int)((self.imageSize.width*screenScale)/self.referenceSize.width*realSize.width+0.5);
     int pixelH = (int)((self.imageSize.height*screenScale)/self.referenceSize.height*realSize.height+0.5);
     self.imagePixel.text = [NSString stringWithFormat:@"%dx%d", pixelW, pixelH];
