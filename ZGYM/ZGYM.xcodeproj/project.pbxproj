@@ -7,11 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F50B5595FA21A44544FED3B /* Pods_ZGYM_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 618C09E4FB1C58890A88E3DB /* Pods_ZGYM_Share.framework */; };
 		1F822DB2F8FEBE4193BA5026 /* Pods_ZGYM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */; };
 		560B20AE244706E4003D8A19 /* YXSXMLYNativeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */; };
 		560B20B1244995A9003D8A19 /* YXSFileUploadHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20B0244995A9003D8A19 /* YXSFileUploadHelper.swift */; };
 		560B20B324501597003D8A19 /* YXSFileClassListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20B224501597003D8A19 /* YXSFileClassListViewController.swift */; };
 		560B20B524501D7E003D8A19 /* YXSFileClassListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20B424501D7E003D8A19 /* YXSFileClassListCell.swift */; };
+		560B20BD24518AC3003D8A19 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20BC24518AC3003D8A19 /* ShareViewController.swift */; };
+		560B20C024518AC3003D8A19 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 560B20BE24518AC3003D8A19 /* MainInterface.storyboard */; };
+		560B20C424518AC3003D8A19 /* Share.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 560B20BA24518AC3003D8A19 /* Share.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		560B20CD24518C41003D8A19 /* UIViewController+ShareExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20C924518C40003D8A19 /* UIViewController+ShareExtension.swift */; };
+		560B20CE24518C41003D8A19 /* YXSCustomShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20CA24518C40003D8A19 /* YXSCustomShareViewController.swift */; };
+		560B20CF24518C41003D8A19 /* right_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 560B20CB24518C40003D8A19 /* right_arrow.png */; };
+		560B20D024518C41003D8A19 /* ShareTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20CC24518C40003D8A19 /* ShareTableViewCell.swift */; };
+		560B20D2245192B9003D8A19 /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
+		560B20D3245193D9003D8A19 /* YXSFileItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07006B2445D7FE0090975B /* YXSFileItemModel.swift */; };
 		6F0703262445D8020090975B /* Date+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE102445D7F20090975B /* Date+YXSCategory.swift */; };
 		6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE112445D7F20090975B /* String+YXSCategory.swift */; };
 		6F0703282445D8020090975B /* UITextField+YXSPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE122445D7F20090975B /* UITextField+YXSPlaceholder.swift */; };
@@ -793,6 +803,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		560B20C224518AC3003D8A19 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FA0F31E242B451800E2E035 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 560B20B924518AC3003D8A19;
+			remoteInfo = Share;
+		};
 		6FA0F33D242B451E00E2E035 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6FA0F31E242B451800E2E035 /* Project object */;
@@ -810,6 +827,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		560B20C524518AC3003D8A19 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				560B20C424518AC3003D8A19 /* Share.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6FA0FA9E242B500200E2E035 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -825,11 +853,22 @@
 
 /* Begin PBXFileReference section */
 		19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.debug.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.debug.xcconfig"; sourceTree = "<group>"; };
+		457E87BB35F024AA9B22D536 /* Pods-ZGYM-Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM-Share.debug.xcconfig"; path = "Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share.debug.xcconfig"; sourceTree = "<group>"; };
 		523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.release.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.release.xcconfig"; sourceTree = "<group>"; };
 		560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSXMLYNativeRequest.swift; sourceTree = "<group>"; };
 		560B20B0244995A9003D8A19 /* YXSFileUploadHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSFileUploadHelper.swift; sourceTree = "<group>"; };
 		560B20B224501597003D8A19 /* YXSFileClassListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSFileClassListViewController.swift; sourceTree = "<group>"; };
 		560B20B424501D7E003D8A19 /* YXSFileClassListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSFileClassListCell.swift; sourceTree = "<group>"; };
+		560B20BA24518AC3003D8A19 /* Share.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Share.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		560B20BC24518AC3003D8A19 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		560B20BF24518AC3003D8A19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		560B20C124518AC3003D8A19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		560B20C924518C40003D8A19 /* UIViewController+ShareExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+ShareExtension.swift"; sourceTree = "<group>"; };
+		560B20CA24518C40003D8A19 /* YXSCustomShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSCustomShareViewController.swift; sourceTree = "<group>"; };
+		560B20CB24518C40003D8A19 /* right_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right_arrow.png; sourceTree = "<group>"; };
+		560B20CC24518C40003D8A19 /* ShareTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareTableViewCell.swift; sourceTree = "<group>"; };
+		560B20D424519839003D8A19 /* Share.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Share.entitlements; sourceTree = "<group>"; };
+		618C09E4FB1C58890A88E3DB /* Pods_ZGYM_Share.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM_Share.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0700302445D7FE0090975B /* YXSVersionUpdateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateView.swift; sourceTree = "<group>"; };
 		6F0700322445D7FE0090975B /* YXSVersionUpdateModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateModel.swift; sourceTree = "<group>"; };
@@ -1697,6 +1736,7 @@
 		6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZGYMUITests.swift; sourceTree = "<group>"; };
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
+		7F9C59C04709DE5F8BB575A3 /* Pods-ZGYM-Share.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM-Share.release.xcconfig"; path = "Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share.release.xcconfig"; sourceTree = "<group>"; };
 		E53D8AF1244E80C300590B5A /* PlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingViewController.h; sourceTree = "<group>"; };
 		E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentHomeController.swift; sourceTree = "<group>"; };
 		E53D8AF3244E80C300590B5A /* PlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayingViewController.m; sourceTree = "<group>"; };
@@ -2016,6 +2056,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		560B20B724518AC3003D8A19 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0F50B5595FA21A44544FED3B /* Pods_ZGYM_Share.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6FA0F323242B451800E2E035 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2052,8 +2100,24 @@
 			isa = PBXGroup;
 			children = (
 				6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */,
+				618C09E4FB1C58890A88E3DB /* Pods_ZGYM_Share.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		560B20BB24518AC3003D8A19 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				560B20C124518AC3003D8A19 /* Info.plist */,
+				560B20BE24518AC3003D8A19 /* MainInterface.storyboard */,
+				560B20CB24518C40003D8A19 /* right_arrow.png */,
+				560B20D424519839003D8A19 /* Share.entitlements */,
+				560B20CC24518C40003D8A19 /* ShareTableViewCell.swift */,
+				560B20BC24518AC3003D8A19 /* ShareViewController.swift */,
+				560B20C924518C40003D8A19 /* UIViewController+ShareExtension.swift */,
+				560B20CA24518C40003D8A19 /* YXSCustomShareViewController.swift */,
+			);
+			path = Share;
 			sourceTree = "<group>";
 		};
 		6F07002D2445D7FE0090975B /* YXSModule */ = {
@@ -4072,6 +4136,7 @@
 				6FA0F328242B451800E2E035 /* ZGYM */,
 				6FA0F33F242B451E00E2E035 /* ZGYMTests */,
 				6FA0F34A242B451E00E2E035 /* ZGYMUITests */,
+				560B20BB24518AC3003D8A19 /* Share */,
 				6FA0F327242B451800E2E035 /* Products */,
 				8BB160F380F9924FFFFAF8B3 /* Pods */,
 				557FB7817754CB9BC2A9CE90 /* Frameworks */,
@@ -4084,6 +4149,7 @@
 				6FA0F326242B451800E2E035 /* 优学业.app */,
 				6FA0F33C242B451E00E2E035 /* ZGYMTests.xctest */,
 				6FA0F347242B451E00E2E035 /* ZGYMUITests.xctest */,
+				560B20BA24518AC3003D8A19 /* Share.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4136,6 +4202,8 @@
 			children = (
 				19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */,
 				523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */,
+				457E87BB35F024AA9B22D536 /* Pods-ZGYM-Share.debug.xcconfig */,
+				7F9C59C04709DE5F8BB575A3 /* Pods-ZGYM-Share.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -5190,6 +5258,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		560B20B924518AC3003D8A19 /* Share */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 560B20C824518AC3003D8A19 /* Build configuration list for PBXNativeTarget "Share" */;
+			buildPhases = (
+				A62386687B6B696A78E14CF2 /* [CP] Check Pods Manifest.lock */,
+				560B20B624518AC3003D8A19 /* Sources */,
+				560B20B724518AC3003D8A19 /* Frameworks */,
+				560B20B824518AC3003D8A19 /* Resources */,
+				C4BF6CD551208CC0CF48D8AA /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Share;
+			productName = Share;
+			productReference = 560B20BA24518AC3003D8A19 /* Share.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		6FA0F325242B451800E2E035 /* ZGYM */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6FA0F350242B451E00E2E035 /* Build configuration list for PBXNativeTarget "ZGYM" */;
@@ -5203,10 +5290,12 @@
 				6FA0FA9E242B500200E2E035 /* Embed Frameworks */,
 				6FF7735D244AE5B500D3461E /* Run Script */,
 				6F87B88A244ECD4A0085CD3B /* ShellScript */,
+				560B20C524518AC3003D8A19 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				560B20C324518AC3003D8A19 /* PBXTargetDependency */,
 			);
 			name = ZGYM;
 			productName = ZGYM;
@@ -5259,6 +5348,9 @@
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = zgym;
 				TargetAttributes = {
+					560B20B924518AC3003D8A19 = {
+						CreatedOnToolsVersion = 11.3;
+					};
 					6FA0F325242B451800E2E035 = {
 						CreatedOnToolsVersion = 11.3.1;
 					};
@@ -5288,11 +5380,21 @@
 				6FA0F325242B451800E2E035 /* ZGYM */,
 				6FA0F33B242B451E00E2E035 /* ZGYMTests */,
 				6FA0F346242B451E00E2E035 /* ZGYMUITests */,
+				560B20B924518AC3003D8A19 /* Share */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		560B20B824518AC3003D8A19 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				560B20CF24518C41003D8A19 /* right_arrow.png in Resources */,
+				560B20C024518AC3003D8A19 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6FA0F324242B451800E2E035 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5422,9 +5524,61 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		A62386687B6B696A78E14CF2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ZGYM-Share-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C4BF6CD551208CC0CF48D8AA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		560B20B624518AC3003D8A19 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				560B20D3245193D9003D8A19 /* YXSFileItemModel.swift in Sources */,
+				560B20D2245192B9003D8A19 /* YXSFileManagerHelper.swift in Sources */,
+				560B20CE24518C41003D8A19 /* YXSCustomShareViewController.swift in Sources */,
+				560B20D024518C41003D8A19 /* ShareTableViewCell.swift in Sources */,
+				560B20CD24518C41003D8A19 /* UIViewController+ShareExtension.swift in Sources */,
+				560B20BD24518AC3003D8A19 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6FA0F322242B451800E2E035 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -6209,6 +6363,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		560B20C324518AC3003D8A19 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 560B20B924518AC3003D8A19 /* Share */;
+			targetProxy = 560B20C224518AC3003D8A19 /* PBXContainerItemProxy */;
+		};
 		6FA0F33E242B451E00E2E035 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6FA0F325242B451800E2E035 /* ZGYM */;
@@ -6222,6 +6381,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		560B20BE24518AC3003D8A19 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				560B20BF24518AC3003D8A19 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
 		6FA0F32F242B451800E2E035 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -6241,6 +6408,50 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		560B20C624518AC3003D8A19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 457E87BB35F024AA9B22D536 /* Pods-ZGYM-Share.debug.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
+				INFOPLIST_FILE = Share/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation.Share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		560B20C724518AC3003D8A19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F9C59C04709DE5F8BB575A3 /* Pods-ZGYM-Share.release.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
+				INFOPLIST_FILE = Share/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation.Share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		6FA0F34E242B451E00E2E035 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6359,6 +6570,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
@@ -6405,6 +6617,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
@@ -6530,6 +6743,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		560B20C824518AC3003D8A19 /* Build configuration list for PBXNativeTarget "Share" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				560B20C624518AC3003D8A19 /* Debug */,
+				560B20C724518AC3003D8A19 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6FA0F321242B451800E2E035 /* Build configuration list for PBXProject "ZGYM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -25,7 +25,7 @@ public enum YXSFileExtension: String  {
     case mov
 }
 
-
+/// 原生分享 ShareExtension 模型
 class YXSFileItemModel: NSObject {
     
     var fileName: String?
