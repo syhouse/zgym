@@ -1142,10 +1142,12 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
                     }
                     
                     let vc = LFPhotoEditingController.init()
+                    
                     vc.modalPresentationStyle = .fullScreen
                     vc.titleStr = self.graffitiDetailModel.childrenName ?? ""
                     let nav = UINavigationController.init(rootViewController: vc)
                     nav.modalPresentationStyle = .fullScreen
+                    nav.setNavigationBarHidden(true, animated: false)
                     vc.isShowClearReductionBtn = false
                     if originalImgModel != nil {
                         vc.isShowClearReductionBtn = !((originalImgModel?.url ?? "") == imgModel.url)
