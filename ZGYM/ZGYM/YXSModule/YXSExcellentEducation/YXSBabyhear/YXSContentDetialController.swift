@@ -55,6 +55,10 @@ class YXSContentDetialController: YXSBaseTableViewController {
 //        tableView.yxs_addRoundedCorners(corners: [UIRectCorner.topLeft,.topRight], radii: CGSize.init(width: 15, height: 15), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT*8))
         tableView.rowHeight = 62.5
         
+        self.yxs_tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: self.headerHeight)
+        self.tableView.tableHeaderView = self.yxs_tableHeaderView
+        self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+        
         loadData()
         loadIsCollectionData()
     }
@@ -62,7 +66,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
     // MARK: -UI
     
     // MARK: -loadData
-    var headerHeight: CGFloat = 0
+    var headerHeight: CGFloat = 241 + kSafeTopHeight
     func loadData(){
         YXSEducationXMLYAlbumsBrowseDetialRequest.init(album_id: id).request({ (result: YXSAlbumsBrowseModel) in
             self.albumsModel = result
@@ -341,7 +345,7 @@ class YXSContentDetialHeaderView: UIView {
     }
     // MARK: -getter&setter
     lazy var imageView: UIImageView = {
-        let timeIcon = UIImageView.init(image: UIImage.init(named: "yxs_xmly_time"))
+        let timeIcon = UIImageView.init(image: UIImage.init(named: "yxs_track_defult"))
         return timeIcon
     }()
     

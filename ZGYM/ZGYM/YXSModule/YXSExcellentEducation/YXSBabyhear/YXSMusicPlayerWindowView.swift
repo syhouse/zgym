@@ -14,7 +14,7 @@ class YXSMusicPlayerWindowView: UIControl {
     /// 展示播放窗 当前播放时间
     public static func showPlayerWindow(curruntTime: UInt){
         let instanceView = YXSMusicPlayerWindowView.instanceView
-        UIUtil.RootController().view.bringSubviewToFront(instanceView)
+        UIUtil.RootController().view.addSubview(instanceView)
         instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT, width: SCREEN_WIDTH - 30, height: 49)
         UIView.animate(withDuration: 0.25, animations: {
             instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 15 - kSafeBottomHeight, width: SCREEN_WIDTH - 30, height: 49)
@@ -36,15 +36,16 @@ class YXSMusicPlayerWindowView: UIControl {
     }
     
     /// 隐藏播放窗
-    static func hidePlayerWindow(){
+    public static func hidePlayerWindow(){
         UIView.animate(withDuration: 0.25, animations: {
             instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT, width: SCREEN_WIDTH - 30, height: 49)
+            instanceView.removeFromSuperview()
         })
-        
         instanceView.resignFirstResponder()
     }
     
-    static func setView(hide: Bool){
+    ///更新播放窗口是否需要隐藏
+    public static func setView(hide: Bool){
         if XMSDKPlayer.shared()?.playerState == .stop || hide{
             YXSMusicPlayerWindowView.instanceView.isHidden = true
         }else{
@@ -52,10 +53,18 @@ class YXSMusicPlayerWindowView: UIControl {
         }
     }
     
-    static func setUpdateFrame(isNavFirstVC: Bool){
+    ///更新播放窗口frame
+    /// - Parameter isNavFirstVC: 是否是nav的第一个视图
+    public static func setUpdateFrame(isNavFirstVC: Bool){
         if XMSDKPlayer.shared()?.playerState != .stop && !(UIUtil.TopViewController() is YXSPlayingViewController){
           YXSMusicPlayerWindowView.instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 15 - kSafeBottomHeight - (isNavFirstVC ? 49 : 0), width: SCREEN_WIDTH - 30, height: 49)
         }
+    }
+    
+    public static func updateSuperView(){
+        let instanceView = YXSMusicPlayerWindowView.instanceView
+        instanceView.removeFromSuperview()
+        UIUtil.RootController().view.addSubview(instanceView)
     }
     
     private static let instanceView: YXSMusicPlayerWindowView = YXSMusicPlayerWindowView()
@@ -110,9 +119,6 @@ class YXSMusicPlayerWindowView: UIControl {
         
         self.backgroundColor = UIColor.black
         self.cornerRadius = 5
-        
-        UIUtil.RootController().view.addSubview(self)
-        
         self.isHidden = true
     }
     

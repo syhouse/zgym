@@ -130,21 +130,17 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
-            if showHeader{
-                let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSContentListHeaderView", for: indexPath) as! YXSContentListHeaderView
-                headerView.cycleScrollView.delegate = self
-                if self.cycleSource.count > 0 {
-                    var array = [String]()
-                    for model in cycleSource{
-                        array.append(model.bannerCoverUrl ?? "")
-                    }
-                    headerView.cycleScrollView.serverImgArray = array
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSContentListHeaderView", for: indexPath) as! YXSContentListHeaderView
+            headerView.cycleScrollView.delegate = self
+            if self.cycleSource.count > 0 {
+                var array = [String]()
+                for model in cycleSource{
+                    array.append(model.bannerCoverUrl ?? "")
                 }
-                return headerView
-            } else {
-                return UICollectionReusableView.init()
+                headerView.cycleScrollView.serverImgArray = array
             }
-        } else {
+            return headerView
+        }else{
             return UICollectionReusableView.init()
         }
 
@@ -218,11 +214,6 @@ class YXSContentListHeaderView: UICollectionReusableView{
     }()
 }
 
-
-
-
-import UIKit
-
 class YXSContentListCell: UICollectionViewCell {
     var isEdit: Bool = false
     override init(frame: CGRect) {
@@ -250,7 +241,7 @@ class YXSContentListCell: UICollectionViewCell {
     }
     
     func setCellModel(_ model: YXSColumnContentModel){
-        imageView.sd_setImage(with: URL.init(string: model.coverUrlMiddle ?? ""), placeholderImage: UIImage.init(named: "yxs_photo_nocover"))
+        imageView.sd_setImage(with: URL.init(string: model.coverUrlMiddle ?? ""), placeholderImage: UIImage.init(named: "yxs_track_defult"))
         title.text = model.albumTitle
     }
     

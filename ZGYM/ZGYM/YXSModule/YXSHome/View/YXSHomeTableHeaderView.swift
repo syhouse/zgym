@@ -252,6 +252,9 @@ extension YXSHomeTableHeaderView{
                 kHeaderTexts = ["通知", "作业", "班级之星", "打卡", "接龙", "课表", "通讯录"]
                 kHeaderImages = [kNoticeKey, kHomeworkKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kCourseKey, kAddressbookKey]
                 kHeaderActions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .course, .addressbook]
+//                kHeaderTexts = ["通知", "作业", "班级之星", "打卡", "接龙", "课表", "通讯录", "相册"]
+//                kHeaderImages = [kNoticeKey, kHomeworkKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kCourseKey, kAddressbookKey, "yxs_photo"]
+//                kHeaderActions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .course, .addressbook, .photo]
                 lineCount = 4
     
             }

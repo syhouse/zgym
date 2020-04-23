@@ -414,7 +414,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                 if let classstartModel = classStarModel,classstartModel.showRemindTeacher{
                     return 14.0 + 512.0
                 }
-                return 14.0 + 458.0
+                return 14.0 + 468.0
             }
             //朋友圈
             if serviceType == 5{
