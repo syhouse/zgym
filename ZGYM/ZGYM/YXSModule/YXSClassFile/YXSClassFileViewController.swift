@@ -24,9 +24,6 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     /// 文件列表
     var fileList: [YXSFileModel] = [YXSFileModel]()
     
-    var currentImg: UIImage?
-    var currentVideoUrl: URL?
-    
     private var navRightBtn: YXSButton = YXSButton()
     
     init(classId: Int, parentFolderId: Int) {
@@ -173,7 +170,9 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
     
     @objc func selectedFromBagClick() {
-        let vc = YXSChoseFileViewController()
+        let vc = YXSChoseFileViewController { (choseFileList) in
+            
+        }
         navigationController?.pushViewController(vc)
     }
     
