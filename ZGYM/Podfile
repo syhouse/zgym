@@ -55,9 +55,11 @@ target 'ZGYM' do
 #    pod 'mob_linksdk_pro', '~> 3.2.6'
     use_frameworks!
     
-    target 'Share' do
-        pod 'SnapKit' , '~> 4.0.0'
-    end
+end
+
+target 'Share' do
+    pod 'SnapKit' , '~> 4.0.0'
+    use_frameworks!
 end
 
 
