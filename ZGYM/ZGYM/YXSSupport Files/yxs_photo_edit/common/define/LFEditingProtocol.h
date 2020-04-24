@@ -11,19 +11,12 @@
 #import "LFStickerItem.h"
 #import "LFMediaEditingType.h"
 
-#import "LFPaintBrush.h"
-#import "LFStampBrush.h"
-#import "LFHighlightBrush.h"
-#import "LFChalkBrush.h"
-#import "LFFluorescentBrush.h"
-#import "LFBlurryBrush.h"
-#import "LFMosaicBrush.h"
-#import "LFSmearBrush.h"
+#import "LFDrawViewHeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class LFBrush, LFDrawView, LFStickerView, LFDataFilterImageView, LFDataFilterVideoView;
-@protocol LFEditingProtocol;
+@protocol LFEditingProtocol, LFFilterDataProtocol;
 
 // 实现LFEditingProtocol的所有非必要方法。
 @interface UIView (LFEditingProtocol)
@@ -38,10 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 /** 模糊（马赛克、高斯模糊、涂抹） */
 @property (nonatomic, weak) LFDrawView *lf_splashView;
 
-/** 图片展示 */
-@property (nonatomic, weak) LFDataFilterImageView *lf_imageView;
-/** 视频展示 */
-@property (nonatomic, weak) LFDataFilterVideoView *lf_playerView;
+/** 展示 */
+@property (nonatomic, weak) id<LFFilterDataProtocol> lf_displayView;
+
+- (void)clearProtocolxecutor;
 
 @end
 
@@ -87,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** 删除选中贴图 */
 - (void)removeSelectStickerView;
 /** 屏幕缩放率 */
-- (void)setScreenScale:(CGFloat)scale;
+@property (nonatomic, assign) CGFloat screenScale;
 /** 最小缩放率 默认0.2 */
 @property (nonatomic, assign) CGFloat stickerMinScale;
 /** 最大缩放率 默认3.0 */

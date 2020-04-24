@@ -47,7 +47,8 @@
         _oKButtonTitleColorNormal = [UIColor colorWithRed:(26/255.0) green:(173/255.0) blue:(25/255.0) alpha:1.0];
         _cancelButtonTitleColorNormal = [UIColor colorWithWhite:0.8f alpha:1.f];
         /** 创建笔刷缓存 */
-        [LFBrushCache share].countLimit = 20;
+        [LFBrushCache share].countLimit = 0;
+        [LFBrushCache free];
         /** 刘海屏的顶部一直会存在安全区域，window的显示区域不在刘海屏范围，调整window的层级无法遮挡状态栏。 */
         if (@available(iOS 11.0, *)) {
             if (hasSafeArea) {

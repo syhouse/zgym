@@ -19,6 +19,6 @@
 #import "LFFilterImageView.h"
 #import "LFFilterVideoView.h"
 #import "LFFilterGifView.h"
-#import "LFVideoExportSession.h"
+#import "LFFilterVideoExportSession.h"
 
 #endif /* LFFilterSuiteHeader_h */

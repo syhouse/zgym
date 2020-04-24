@@ -9,9 +9,9 @@
 import UIKit
 import MobileCoreServices
 /// 开发者账号AppGroup标识
-public let suitName = "group.youxuesheng.UMEducation"
+public let suitName = "group.com.youxueye.HNUMEducation.Share"
 /// ShareExtenstion URL Schemes
-public let shareExtensionSchemes = "YMSHAREEXTENSION"
+public let shareExtensionSchemes = "YXSSHAREEXTENSION"
 
 class YXSFileManagerHelper: NSObject {
     

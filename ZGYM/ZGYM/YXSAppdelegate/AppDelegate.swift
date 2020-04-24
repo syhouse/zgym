@@ -101,6 +101,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        if url.absoluteString.contains(shareExtensionSchemes) {
+            /// ShareExtension
+            let list = url.lastPathComponent.components(separatedBy: ",")
+            let url = YXSFileManagerHelper.sharedInstance.getFullPathURL(lastPathComponent: list.first ?? "")
+            let size = YXSFileManagerHelper.sharedInstance.sizeOfDataSrouce(fileUrl: url)
+            return true
+        }
+        
         let qqShare = QQApiInterface.handleOpen(url, delegate: HMQQShareResponseTool.shareTool)
         if qqShare{
             return qqShare

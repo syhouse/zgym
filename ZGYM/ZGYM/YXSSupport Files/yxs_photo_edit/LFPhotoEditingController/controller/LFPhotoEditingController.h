@@ -7,6 +7,7 @@
 //
 
 #import "LFBaseEditingController.h"
+#import "LFStickerContent.h"
 #import "LFPhotoEdit.h"
 
 typedef NS_ENUM(NSUInteger, LFPhotoEditOperationType) {
@@ -53,7 +54,31 @@ UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditDrawBrushAttributeNa
  
  NSString containing string path, default nil. sticker resource path.
  */
-UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditStickerAttributeName;
+UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditStickerAttributeName __deprecated_msg("LFPhotoEditOperationStringKey deprecated. Use `LFPhotoEditStickerContentsAttributeName`");
+/**
+ 详细请看LFStickerContent.h。
+ 所有资源不适宜过大。开发者需要把控数据大小。防止内存崩溃。
+ 
+ See LFStickerContent.h for details.
+ All resources should not be too large. Developers need to control the size of the data. Prevent memory crash.
+ 
+ @{LFPhotoEditStickerContentsAttributeName:@[
+    // 第一个标签的数据。
+    // Data for the first tab.
+    [LFStickerContent stickerContentWithTitle:@"Tab Name" contents:@[@"Tab Datas"]],
+    // 第二个标签的数据。
+    // Data for the second tab.
+    [LFStickerContent stickerContentWithTitle:@"Tab Name" contents:@[@"Tab Datas"]],
+    ......
+ ]}
+ 
+ NSArray containing NSArray<LFStickerContent *>, default
+ @[
+    [LFStickerContent stickerContentWithTitle:@"默认" contents:@[LFStickerContentDefaultSticker]],
+    [LFStickerContent stickerContentWithTitle:@"相册" contents:@[LFStickerContentAllAlbum]]
+ ].
+ */
+UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditStickerContentsAttributeName;
 /**
  文字的默认颜色
  The default color of the text.
@@ -177,8 +202,6 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {
     LFPhotoEditOperationSubTypeCropAspectRatio16x10,
 };
 
-//typedef void(^clearReductionBlock)();
-
 @protocol LFPhotoEditingControllerDelegate;
 
 @interface LFPhotoEditingController : LFBaseEditingController
@@ -197,6 +220,7 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {
 @property (nonatomic, copy) NSString *titleStr;
 
 @property (nonatomic, copy) void(^clearReductionBlock)(void);
+
 /**
  对GIF而言。editImage的每帧持续间隔是平均分配的，durations的每帧持续间隔是真实的。同时也会影响到最终生成的GIF数据。
  
@@ -206,7 +230,6 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {
  durations = LFME_UIImageGIFDurationsFromData(imageData, &error);
  */
 - (void)setEditImage:(UIImage *)editImage durations:(NSArray<NSNumber *> *)durations;
-
 
 /**
  设置编辑对象->重新编辑

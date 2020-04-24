@@ -10,10 +10,11 @@
 #import "LFVideoClippingView.h"
 #import "LFVideoTrimmerView.h"
 #import <AVFoundation/AVFoundation.h>
-#import "LFVideoExportSession.h"
+#import "LFFilterVideoExportSession.h"
 #import "LFAudioTrackBar.h"
 
 #import "UIView+LFMEFrame.h"
+#import "LFMediaEditingHeader.h"
 
 /** 默认剪辑尺寸 */
 #define kClipZoom_margin 20.f
@@ -44,7 +45,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 @property (nonatomic, assign) CGRect clippingRect;
 
 @property (nonatomic, strong) AVAsset *asset;
-@property (nonatomic, strong) LFVideoExportSession *exportSession;
+@property (nonatomic, strong) LFFilterVideoExportSession *exportSession;
 
 /* 底部栏高度 默认44 */
 @property (nonatomic, assign) CGFloat editToolbarDefaultHeight;
@@ -78,6 +79,8 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 - (void)dealloc
 {
     [self.exportSession cancelExport];
+    // 释放LFEditingProtocol协议
+    [self clearProtocolxecutor];
 }
 
 - (void)layoutSubviews
@@ -346,7 +349,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     CMTime duration = CMTimeMakeWithSeconds(self.clippingView.endTime - self.clippingView.startTime, self.asset.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
     
-    self.exportSession = [[LFVideoExportSession alloc] initWithAsset:self.asset];
+    self.exportSession = [[LFFilterVideoExportSession alloc] initWithAsset:self.asset];
     // 输出路径
     self.exportSession.outputURL = trimURL;
     // 视频剪辑
@@ -384,7 +387,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 
 #pragma mark - LFVideoClippingViewDelegate
 /** 视频准备完毕，可以获取相关属性与操作 */
-- (void)lf_videLClippingViewReadyToPlay:(LFVideoClippingView *)clippingView
+- (void)lf_videoClippingViewReadyToPlay:(LFVideoClippingView *)clippingView
 {
     self.trimmerView.controlMinWidth = self.trimmerView.width * (self.minClippingDuration / clippingView.totalDuration);
     if (self.maxClippingDuration > 0) {
@@ -403,6 +406,15 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
         [self.trimmerView setGridRange:NSMakeRange(x, width) animated:NO];
     }
 }
+
+/** 错误回调 */
+- (void)lf_videoClippingViewFailedToPrepare:(LFVideoClippingView *_Nonnull)clippingView error:(NSError *)error
+{
+    if ([self.playerDelegate respondsToSelector:@selector(lf_videoEditingViewFailedToPrepare:error:)]) {
+        [self.playerDelegate lf_videoEditingViewFailedToPrepare:self error:error];
+    }
+}
+
 /** 进度回调 */
 - (void)lf_videoClippingView:(LFVideoClippingView *)clippingView duration:(double)duration
 {
@@ -417,6 +429,28 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 - (CGFloat)lf_videoClippingViewProgressWidth:(LFVideoClippingView *)clippingView
 {
     return self.trimmerView.width;
+}
+
+/** 播放视频 */
+- (void)lf_videoClippingViewPlay:(LFVideoClippingView *_Nonnull)clippingView
+{
+    if ([self.playerDelegate respondsToSelector:@selector(lf_videoEditingViewPlay:)]) {
+        [self.playerDelegate lf_videoEditingViewPlay:self];
+    }
+}
+/** 暂停视频 */
+- (void)lf_videoClippingViewPause:(LFVideoClippingView *_Nonnull)clippingView
+{
+    if ([self.playerDelegate respondsToSelector:@selector(lf_videoEditingViewPause:)]) {
+        [self.playerDelegate lf_videoEditingViewPause:self];
+    }
+}
+/** 播放完毕 */
+- (void)lf_videoClippingViewPlayToEndTime:(LFVideoClippingView *_Nonnull)clippingView
+{
+    if ([self.playerDelegate respondsToSelector:@selector(lf_videoEditingViewPlayToEndTime:)]) {
+        [self.playerDelegate lf_videoEditingViewPlayToEndTime:self];
+    }
 }
 
 #pragma mark - LFVideoTrimmerViewDelegate

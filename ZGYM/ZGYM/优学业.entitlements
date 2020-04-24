@@ -8,5 +8,9 @@
 	<array>
 		<string>applinks:call.c989.cn</string>
 	</array>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.youxueye.HNUMEducation.Share</string>
+	</array>
 </dict>
 </plist>

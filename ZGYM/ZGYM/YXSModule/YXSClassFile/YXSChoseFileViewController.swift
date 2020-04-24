@@ -8,11 +8,37 @@
 
 import UIKit
 import NightNight
+import ObjectMapper
 
 /// 从书包选择文件
 class YXSChoseFileViewController: YXSBaseTableViewController {
-
+    
+    var parentFolderId: Int = -1
+    /// 文件夹列表
+    var folderList: [YXSFolderModel] = [YXSFolderModel]()
+    /// 文件列表
+    var fileList: [YXSFileModel] = [YXSFileModel]()
+    /// 选中的文件集合
+    var selectedFileList: [YXSFileModel] = [YXSFileModel]()
+    ///
+    var completionHandler:((_ selectedFileList: [YXSFileModel])->())?
+    
+    init(parentFolderId: Int = -1, selectedFileList: [YXSFileModel] = [YXSFileModel](), completionHandler:(((_ selectedFileList: [YXSFileModel])->())?)) {
+        super.init()
+        
+        self.completionHandler = completionHandler
+        self.parentFolderId = parentFolderId
+        self.selectedFileList = selectedFileList
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
+        hasRefreshHeader = false
+        showEmptyDataSource = true
+        
         super.viewDidLoad()
         self.title = "选择文件"
         
@@ -35,9 +61,70 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         })
     }
     
+    // MARK: - Request
+    override func yxs_refreshData() {
+        loadData()
+        yxs_endingRefresh()
+    }
+    
+    @objc func loadData() {
+        
+        let workingGroup = DispatchGroup()
+        let workingQueue = DispatchQueue(label: "request_queue")
+        
+        // 入组
+        workingGroup.enter()
+        workingQueue.async {
+            // 出组
+            YXSSatchelFolderPageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let hasNext = json["hasNext"]
+                
+                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                workingGroup.leave()
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
+        
+        // 入组
+        workingGroup.enter()
+        workingQueue.async {
+            // 出组
+            YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let hasNext = json["hasNext"]
+                
+                weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+                workingGroup.leave()
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+            
+        }
+
+        // 调度组里的任务都执行完毕
+        workingGroup.notify(queue: workingQueue) {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    // MARK: - Setter
+    /// 选中的文件总大小 kb
+    var totalSize: UInt = 0 {
+        didSet {
+            bottomView.lbSize.text = "已选择：\(self.totalSize)KB"
+            bottomView.btnDone.setTitle("确定(\(selectedFileList.count))", for: .normal)
+        }
+    }
+    
     // MARK: - Action
     @objc func doneClick(sender: YXSButton) {
-        
+        completionHandler?(selectedFileList)
     }
     
     // MARK: - Delegate
@@ -47,33 +134,43 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 1
+            return folderList.count
         } else {
-            return 4
+            return fileList.count
         }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
+            let item = folderList[indexPath.row]
             let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
-            cell.lbTitle.text = "文件夹"
+            cell.model = item
+            cell.lbTitle.text = item.folderName
             return cell
             
         } else {
+            let item = fileList[indexPath.row]//[indexPath.row]
             let cell: YXSFileAbleSlectedCell = tableView.dequeueReusableCell(withIdentifier: "SLFileAbleSlectedCell") as! YXSFileAbleSlectedCell
-            cell.lbTitle.text = "十万个为什么.pdf"
-            cell.lbSubTitle.text = "56M"
-            cell.lbThirdTitle.text = "05/02"
-            switch indexPath.row {
-                case 0:
-                    cell.imgIcon.image = UIImage(named: "yxs_file_excel")
-                case 1:
-                    cell.imgIcon.image = UIImage(named: "yxs_file_pdf")
-                case 2:
-                    cell.imgIcon.image = UIImage(named: "yxs_file_ppt")
-                default:
-                    cell.imgIcon.image = UIImage(named: "yxs_file_word")
-            }
+            cell.lbTitle.text = item.fileName
+            cell.lbSubTitle.text = "\(item.fileSize ?? 0)KB"
+            cell.lbThirdTitle.text = "\(item.createTime?.yxs_DayTime() ?? "")"
+            let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
+            cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+            cell.model = item
+            
+//            cell.lbTitle.text = //"十万个为什么.pdf"
+//            cell.lbSubTitle.text = "56M"
+//            cell.lbThirdTitle.text = "05/02"
+//            switch indexPath.row {
+//                case 0:
+//                    cell.imgIcon.image = UIImage(named: "yxs_file_excel")
+//                case 1:
+//                    cell.imgIcon.image = UIImage(named: "yxs_file_pdf")
+//                case 2:
+//                    cell.imgIcon.image = UIImage(named: "yxs_file_ppt")
+//                default:
+//                    cell.imgIcon.image = UIImage(named: "yxs_file_word")
+//            }
 
             return cell
         }
@@ -89,14 +186,36 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            navigationController?.pushViewController(YXSChoseFileViewController())
+           let folderItem = folderList[indexPath.row]
+            let vc = YXSChoseFileViewController(parentFolderId: folderItem.id ?? 0, selectedFileList: selectedFileList, completionHandler: completionHandler)
+            vc.totalSize = totalSize
+            navigationController?.pushViewController(vc)
             
         } else {
             let cell: YXSFileAbleSlectedCell = tableView.cellForRow(at: indexPath) as! YXSFileAbleSlectedCell
             cell.btnSelect.isSelected = !cell.btnSelect.isSelected
+            
+            let fileItem = fileList[indexPath.row]
+            if cell.btnSelect.isSelected {
+                /// 选中
+                if selectedFileList.contains(fileItem) == false {
+                    selectedFileList.append(fileItem)
+                    totalSize += UInt(fileItem.fileSize ?? 0)
+                }
+                
+                
+            } else {
+                /// 取消选中
+                if selectedFileList.contains(fileItem) == true {
+                    if let indx = selectedFileList.firstIndex(of: fileItem) {
+                        selectedFileList.remove(at: indx)
+                        totalSize -= UInt(fileItem.fileSize ?? 0)
+                    }
+                }
+            }
         }
     }
-
+    
     /*
     // MARK: - Navigation
 
@@ -111,6 +230,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     lazy var bottomView: SLChoseFileBottomView = {
         let view = SLChoseFileBottomView()
         view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#E6EAF3")
+        view.btnDone.addTarget(self, action: #selector(doneClick(sender:)), for: .touchUpInside)
         return view
     }()
 }
@@ -149,7 +269,7 @@ class SLChoseFileBottomView: UIView {
     
     lazy var btnDone: YXSButton = {
         let btn = YXSButton()
-        btn.setTitle("确定(2)", for: .normal)
+        btn.setTitle("确定(0)", for: .normal)
         btn.setTitleColor(kNightFFFFFF, for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         btn.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: 214, height: 40), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 20)
