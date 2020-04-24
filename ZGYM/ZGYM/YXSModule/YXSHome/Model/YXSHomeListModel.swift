@@ -450,6 +450,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                         }else{
                             if isTeacher {
                                 totalHeight = 45.0
+                            }else{
+                                totalHeight = 55.0
                             }
                         }
                     }else if serviceType == 1 && !isTeacher || (isTeacher && onlineCommit == 0){
