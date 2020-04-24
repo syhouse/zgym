@@ -237,9 +237,9 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 make.height.equalTo(62)
             })
             if self.model?.isExpired ?? false {
-                self.bottomBtnView.btnCommit.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), night: kNightFFFFFF), forState: .normal)
                 self.bottomBtnView.btnCommit.setTitle("当前作业已过期", for: .normal)
-                self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.white, endColor: UIColor.white, cornerRadius: 21)
+                self.bottomBtnView.btnCommit.setMixedTitleColor(MixedColor(normal: kNight898F9A, night: kNight898F9A), forState: .normal)
+                self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), cornerRadius: 21)
                 bottomBtnView.isHidden = false
                 bottomBtnView.isUserInteractionEnabled = false
             } else {
@@ -251,14 +251,14 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                         bottomBtnView.isUserInteractionEnabled = true
                     } else {
                         self.bottomBtnView.btnCommit.setTitle("已提交", for: .normal)
-                        self.bottomBtnView.btnCommit.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), night: kNightFFFFFF), forState: .normal)
-                        self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.white, endColor: UIColor.white, cornerRadius: 21)
+                        self.bottomBtnView.btnCommit.setMixedTitleColor(MixedColor(normal: kNight898F9A, night: kNight898F9A), forState: .normal)
+                        self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), cornerRadius: 21)
                         bottomBtnView.isUserInteractionEnabled = false
                     }
                 } else {
-                    self.bottomBtnView.btnCommit.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), night: kNightFFFFFF), forState: .normal)
                     self.bottomBtnView.btnCommit.setTitle("当前作业无需提交", for: .normal)
-                    self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.white, endColor: UIColor.white, cornerRadius: 21)
+                    self.bottomBtnView.btnCommit.setMixedTitleColor(MixedColor(normal: kNight898F9A, night: kNight898F9A), forState: .normal)
+                    self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), cornerRadius: 21)
                     bottomBtnView.isUserInteractionEnabled = false
                     bottomBtnView.isHidden = false
                 }
@@ -290,7 +290,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     weakSelf.dataSource.removeAll()
                 }
                 weakSelf.dataSource += joinList
-                if weakSelf.dataSource.count == 0 {
+                if weakSelf.dataSource.count == 0  && weakSelf.model?.onlineCommit == 1{
                     weakSelf.tableView.tableFooterView = weakSelf.tableFooterView
                 } else {
                     weakSelf.tableView.tableFooterView = nil
@@ -317,7 +317,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     weakSelf.dataSource.removeAll()
                 }
                 weakSelf.dataSource += joinList
-                if weakSelf.dataSource.count == 0 {
+                if weakSelf.dataSource.count == 0 && weakSelf.model?.onlineCommit == 1{
                     weakSelf.tableView.tableFooterView = weakSelf.tableFooterView
                 } else {
                     weakSelf.tableView.tableFooterView = nil
@@ -345,7 +345,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     weakSelf.dataSource += joinList
                 }
                 weakSelf.loadMore = false
-                if weakSelf.dataSource.count == 0 {
+                if weakSelf.dataSource.count == 0 && weakSelf.model?.onlineCommit == 1{
                     weakSelf.tableView.tableFooterView = weakSelf.tableFooterView
                 } else {
                     weakSelf.tableView.tableFooterView = nil

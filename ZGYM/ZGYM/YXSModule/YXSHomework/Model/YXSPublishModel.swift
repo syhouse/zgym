@@ -68,7 +68,17 @@ class YXSPublishModel: NSObject, NSCoding {
     var solitaireDate: Date?
     
     /// 作业截止日期
-    var homeworkDate: Date?
+    var homeworkDate: Date? {
+        didSet {
+            //超过3个月为不限时
+            if let date = homeworkDate {
+                homeworkDateIsUnlimited = date.yxs_isDifferWithMonth(month: 3) ?? false
+            }
+        }
+    }
+    
+    /// 作业截止日期是否为不限时
+    var homeworkDateIsUnlimited: Bool = false
     
     /// 作业是否可见
     var homeworkAllowLook: Bool = false

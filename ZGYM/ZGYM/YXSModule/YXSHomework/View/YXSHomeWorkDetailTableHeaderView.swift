@@ -212,8 +212,13 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             self.messageModel = messagemodel
             filterBtnView.model = self.model
 
-            let endDateStr = self.model?.endTime?.yxs_Date().toString(format: .custom("yyyy-MM-dd HH:mm"))
-            dateView.title = "截止日期：\(endDateStr ?? "")"
+            if self.model?.endTimeIsUnlimited ?? false {
+                dateView.title = "截止日期：不限时"
+            } else {
+                let endDateStr = self.model?.endTime?.yxs_Date().toString(format: .custom("yyyy-MM-dd HH:mm"))
+                dateView.title = "截止日期：\(endDateStr ?? "")"
+            }
+            
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
                 var teacherName = "我"
                 if self.model?.teacherName != YXSPersonDataModel.sharePerson.userModel.name {

@@ -40,6 +40,19 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
     }
     var createTime : String?
     var endTime : String?
+    
+    var endTimeIsUnlimited: Bool {
+        get {
+            //超过3个月为不限时
+            var isUnlimited = false
+            let endDate = Date.init(fromString: endTime!, format: .custom("yyyy-MM-dd HH:mm:ss"))
+            if let date = endDate {
+                isUnlimited = date.yxs_isDifferWithMonth(month: 3) ?? false
+            }
+            return isUnlimited
+        }
+    }
+    
     var id : Int?
     var imageUrl : String? {
         didSet{
@@ -319,7 +332,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
                 height += 12.5 + favsHeight + 11 + 12.5
                 
             } else {
-                height += 12.5 + 12.5
+                if remarkHeight <= 0 && commentJsonList!.count > 0 {
+                    height += 12.5
+                }
             }
 //            height += 30
 

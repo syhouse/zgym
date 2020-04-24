@@ -75,19 +75,15 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         }
 
         lbName.snp.makeConstraints { (make) in
+            make.centerY.equalTo(imgAvatar)
             make.left.equalTo(imgAvatar.snp_right).offset(15)
             make.right.equalTo(goodControl.snp_left).offset(-10)
 //            make.width.equalTo(SCREEN_WIDTH - 150)
-            make.top.equalTo(imgAvatar.snp_top)
+//            make.top.equalTo(imgAvatar.snp_top)
             make.height.equalTo(20)
         }
 
-        lbTime.snp.makeConstraints({ (make) in
-            make.bottom.equalTo(imgAvatar.snp_bottom)
-            make.height.equalTo(20)
-            make.left.equalTo(lbName)
-            make.right.equalTo(goodControl.snp_left).offset(-10)
-        })
+        
 
         homeWorkChangeButton.snp.makeConstraints { (make) in
             make.top.equalTo(15)
@@ -110,6 +106,13 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
 //            make.height.equalTo(26)
 //        })
 
+        lbTime.snp.makeConstraints({ (make) in
+//            make.bottom.equalTo(imgAvatar.snp_bottom)
+            make.centerY.equalTo(reviewControl)
+            make.height.equalTo(20)
+            make.left.equalTo(15)
+            make.right.equalTo(reviewControl.snp_left).offset(-10)
+        })
         praiseButton.snp.makeConstraints { (make) in
             make.right.equalTo(-15)
             make.centerY.equalTo(reviewControl)

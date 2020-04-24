@@ -28,7 +28,7 @@ class LSLFPSMonitor: UILabel {
         self.textColor = UIColor.white
         self.textAlignment = .center
         self.font = UIFont.init(name: "Menlo", size: 12.0)
-        self.backgroundColor = UIColor.black
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         
         link = CADisplayLink.init(target: LSLWeakProxy(target: self), selector: #selector(tick))
         link.add(to: RunLoop.current, forMode: .common)

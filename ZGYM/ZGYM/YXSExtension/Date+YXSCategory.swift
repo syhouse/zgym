@@ -131,4 +131,66 @@ extension Date {
         return first + last
     }
     
+    
+    /// 返回一个日期，是在当前时间往后n年的日期
+    /// - Parameter years: 需要增加的时间（年）
+    /// - Returns: 增加后日期
+    func yxs_dateByAddingYears(years:Int) -> Date? {
+        let calendar = Calendar.current
+        var components = DateComponents.init()
+        components.year = years
+        return calendar.date(byAdding: components, to: self) ?? nil
+    }
+    
+    /// 返回一个日期，是在当前时间往后n月的日期
+    /// - Parameter Months: 需要增加的时间（月）
+    /// - Returns: 增加后日期
+    func yxs_dateByAddingMonths(months:Int) -> Date? {
+        let calendar = Calendar.current
+        var components = DateComponents.init()
+        components.month = months
+        return calendar.date(byAdding: components, to: self) ?? nil
+    }
+    
+    /// 返回一个日期，是在当前时间往后n周的日期
+    /// - Parameter Weeks: 需要增加的时间（周）
+    /// - Returns: 增加后日期
+    func yxs_dateByAddingWeeks(weeks:Int) -> Date? {
+        let calendar = Calendar.current
+        var components = DateComponents.init()
+        components.weekOfYear = weeks
+        return calendar.date(byAdding: components, to: self) ?? nil
+    }
+    
+    /// 返回一个日期，是在当前时间往后n天的日期
+    /// - Parameter Days: 需要增加的时间（天）
+    /// - Returns: 增加后日期
+    func yxs_dateByAddingDays(days:Int) -> Date? {
+        let calendar = Calendar.current
+        var components = DateComponents.init()
+        components.day = days
+        return calendar.date(byAdding: components, to: self) ?? nil
+    }
+    
+    /// 与当前时间的月份差是否超过传入的值  传入的时间  比 当前时间 大
+    /// - Returns: 相差的月数 正值为大于当前日期 负值为小于当前日期
+    func yxs_isDifferWithMonth(month: Int) -> Bool? {
+        let calendar = Calendar.current
+        let cmps = calendar.dateComponents([Calendar.Component.year,Calendar.Component.month,Calendar.Component.day,Calendar.Component.hour,Calendar.Component.minute,Calendar.Component.second], from: Date(), to: self)
+        if cmps.year ?? 0 > 0 {
+            return true
+        } else if cmps.month ?? 0 > month {
+            return true
+        } else if cmps.month ?? 0 == month {
+            // 相差的月份 等于 月份时，如果天 时 分 秒 超出，就算 大于相差的月份
+            if cmps.day ?? 0 > 0 || cmps.hour ?? 0 > 0 || cmps.minute ?? 0 > 0 || cmps.second ?? 0 > 0 {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+    
 }

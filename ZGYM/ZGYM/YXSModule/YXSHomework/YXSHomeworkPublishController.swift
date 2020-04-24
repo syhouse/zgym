@@ -117,7 +117,8 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
 //                let date2 = Date.init(timeIntervalSinceNow: 15*24*60*60)
 //                let date3 = Date.init(timeIntervalSince1970: 15*24*60*60*1000)
 //                let date4 = Date.init(timeIntervalSince1970: 15*24*60*60)
-                publishModel.homeworkDate = Date.init(timeIntervalSinceNow: 15*24*60*60)
+                publishModel.homeworkDate = Date().yxs_dateByAddingMonths(months: 4)
+//                publishModel.homeworkDate = Date.init(timeIntervalSinceNow: 15*24*60*60)
 //                print("")
             }
         }
@@ -186,8 +187,11 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
         topSwitch.swt.isOn = publishModel.isTop
         homeworkLookSwitch.swt.isOn = publishModel.homeworkAllowLook
         commentlookSwitch.swt.isOn = publishModel.homeworkCommentAllowLook
-        
-        dateSection.rightLabel.text = publishModel.homeworkDate?.toString(format: DateFormatType.custom("MM.dd HH:mm"))
+        if publishModel.homeworkDateIsUnlimited {
+            dateSection.rightLabel.text = "不限时"
+        } else {
+            dateSection.rightLabel.text = publishModel.homeworkDate?.toString(format: DateFormatType.custom("MM.dd HH:mm"))
+        }
         dateSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
     }
     
@@ -327,11 +331,22 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
     // MARK: - action
     @objc func dateSectionClick(){
         view.endEditing(true)
-        YXSDatePickerView.showDateView(publishModel.homeworkDate) {[weak self]  (date) in
+        let maxDate = Date().yxs_dateByAddingMonths(months: 3)
+        YXSDatePickerView.showDateView(publishModel.homeworkDate, maximumDate: maxDate, dateModel: .dateAndTime, title: "选择截止时间", topRightTitle: "不限时") { [weak self](date) in
             guard let strongSelf = self else { return }
             strongSelf.publishModel.homeworkDate = date
-            strongSelf.dateSection.rightLabel.text = date.toString(format: DateFormatType.custom("MM.dd HH:mm"))
+            if strongSelf.publishModel.homeworkDateIsUnlimited {
+                strongSelf.dateSection.rightLabel.text = "不限时"
+            } else {
+                strongSelf.dateSection.rightLabel.text = date.toString(format: DateFormatType.custom("MM.dd HH:mm"))
+            }
+            
         }
+//        YXSDatePickerView.showDateView(publishModel.homeworkDate) {[weak self]  (date) in
+//            guard let strongSelf = self else { return }
+//            strongSelf.publishModel.homeworkDate = date
+//            strongSelf.dateSection.rightLabel.text = date.toString(format: DateFormatType.custom("MM.dd HH:mm"))
+//        }
     }
     
     // MARK: - getter&setter

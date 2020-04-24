@@ -48,7 +48,7 @@ class YXSBaseTabBarController: UITabBarController {
         self.delegate = self
         
         if isDebug{
-            let fpsView = LSLFPSMonitor.init(frame: CGRect.init(x: UIScreen.main.bounds.size.width - 100, y: 0, width: 100, height: 30))
+            let fpsView = LSLFPSMonitor.init(frame: CGRect.init(x: UIScreen.main.bounds.size.width - 100 - 70, y: 0, width: 100, height: 30))
             self.view.addSubview(fpsView)
         }
     }
