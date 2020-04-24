@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0F50B5595FA21A44544FED3B /* Pods_ZGYM_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 618C09E4FB1C58890A88E3DB /* Pods_ZGYM_Share.framework */; };
 		1F822DB2F8FEBE4193BA5026 /* Pods_ZGYM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */; };
 		560B20AE244706E4003D8A19 /* YXSXMLYNativeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */; };
 		560B20B1244995A9003D8A19 /* YXSFileUploadHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20B0244995A9003D8A19 /* YXSFileUploadHelper.swift */; };
@@ -619,6 +618,7 @@
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
+		96C37695CA743AAF4EA54F3F /* Pods_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D2807CC37D3F419340D76A2 /* Pods_Share.framework */; };
 		E53D8AF9244E80C400590B5A /* YXSContentHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */; };
 		E53D8AFA244E80C400590B5A /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF3244E80C300590B5A /* PlayingViewController.m */; };
 		E53D8AFB244E80C400590B5A /* YXSContentDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF4244E80C400590B5A /* YXSContentDetialController.swift */; };
@@ -856,7 +856,8 @@
 
 /* Begin PBXFileReference section */
 		19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.debug.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.debug.xcconfig"; sourceTree = "<group>"; };
-		457E87BB35F024AA9B22D536 /* Pods-ZGYM-Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM-Share.debug.xcconfig"; path = "Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share.debug.xcconfig"; sourceTree = "<group>"; };
+		338D34C9F988C3B57E623DF8 /* Pods-Share.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.release.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.release.xcconfig"; sourceTree = "<group>"; };
+		4D2807CC37D3F419340D76A2 /* Pods_Share.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Share.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.release.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.release.xcconfig"; sourceTree = "<group>"; };
 		560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSXMLYNativeRequest.swift; sourceTree = "<group>"; };
 		560B20B0244995A9003D8A19 /* YXSFileUploadHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSFileUploadHelper.swift; sourceTree = "<group>"; };
@@ -871,7 +872,6 @@
 		560B20CB24518C40003D8A19 /* right_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right_arrow.png; sourceTree = "<group>"; };
 		560B20CC24518C40003D8A19 /* ShareTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareTableViewCell.swift; sourceTree = "<group>"; };
 		560B20D424519839003D8A19 /* Share.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Share.entitlements; sourceTree = "<group>"; };
-		618C09E4FB1C58890A88E3DB /* Pods_ZGYM_Share.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM_Share.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0700302445D7FE0090975B /* YXSVersionUpdateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateView.swift; sourceTree = "<group>"; };
 		6F0700322445D7FE0090975B /* YXSVersionUpdateModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateModel.swift; sourceTree = "<group>"; };
@@ -1743,7 +1743,7 @@
 		6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZGYMUITests.swift; sourceTree = "<group>"; };
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
-		7F9C59C04709DE5F8BB575A3 /* Pods-ZGYM-Share.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM-Share.release.xcconfig"; path = "Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share.release.xcconfig"; sourceTree = "<group>"; };
+		78DA037DE3DFCFE843299175 /* Pods-Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.debug.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.debug.xcconfig"; sourceTree = "<group>"; };
 		E53D8AF1244E80C300590B5A /* PlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingViewController.h; sourceTree = "<group>"; };
 		E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentHomeController.swift; sourceTree = "<group>"; };
 		E53D8AF3244E80C300590B5A /* PlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayingViewController.m; sourceTree = "<group>"; };
@@ -2067,7 +2067,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0F50B5595FA21A44544FED3B /* Pods_ZGYM_Share.framework in Frameworks */,
+				96C37695CA743AAF4EA54F3F /* Pods_Share.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2107,7 +2107,7 @@
 			isa = PBXGroup;
 			children = (
 				6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */,
-				618C09E4FB1C58890A88E3DB /* Pods_ZGYM_Share.framework */,
+				4D2807CC37D3F419340D76A2 /* Pods_Share.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -4210,8 +4210,8 @@
 			children = (
 				19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */,
 				523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */,
-				457E87BB35F024AA9B22D536 /* Pods-ZGYM-Share.debug.xcconfig */,
-				7F9C59C04709DE5F8BB575A3 /* Pods-ZGYM-Share.release.xcconfig */,
+				78DA037DE3DFCFE843299175 /* Pods-Share.debug.xcconfig */,
+				338D34C9F988C3B57E623DF8 /* Pods-Share.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -5270,11 +5270,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 560B20C824518AC3003D8A19 /* Build configuration list for PBXNativeTarget "Share" */;
 			buildPhases = (
-				A62386687B6B696A78E14CF2 /* [CP] Check Pods Manifest.lock */,
+				D8E7C341236B0828A8D7A6E6 /* [CP] Check Pods Manifest.lock */,
 				560B20B624518AC3003D8A19 /* Sources */,
 				560B20B724518AC3003D8A19 /* Frameworks */,
 				560B20B824518AC3003D8A19 /* Resources */,
-				C4BF6CD551208CC0CF48D8AA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5532,7 +5531,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A62386687B6B696A78E14CF2 /* [CP] Check Pods Manifest.lock */ = {
+		D8E7C341236B0828A8D7A6E6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -5547,28 +5546,11 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ZGYM-Share-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Share-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C4BF6CD551208CC0CF48D8AA /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZGYM-Share/Pods-ZGYM-Share-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -6419,7 +6401,7 @@
 /* Begin XCBuildConfiguration section */
 		560B20C624518AC3003D8A19 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 457E87BB35F024AA9B22D536 /* Pods-ZGYM-Share.debug.xcconfig */;
+			baseConfigurationReference = 78DA037DE3DFCFE843299175 /* Pods-Share.debug.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
@@ -6441,7 +6423,7 @@
 		};
 		560B20C724518AC3003D8A19 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7F9C59C04709DE5F8BB575A3 /* Pods-ZGYM-Share.release.xcconfig */;
+			baseConfigurationReference = 338D34C9F988C3B57E623DF8 /* Pods-Share.release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
