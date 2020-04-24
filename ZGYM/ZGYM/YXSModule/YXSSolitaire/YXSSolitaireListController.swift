@@ -129,6 +129,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
         }
         
         request.requestCollection({ (list: [YXSSolitaireModel]) in
+            self.yxs_endingRefresh()
             if self.curruntPage == 1{
                 self.solitaireLists.removeAll()
             }
@@ -136,7 +137,6 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
             self.solitaireLists += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
             
             self.loadMore = list.count >= kPageSize
-            self.yxs_endingRefresh()
             self.tableView.reloadData()
             YXSCacheHelper.yxs_cacheSolitaireList(dataSource: self.solitaireLists, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
         }) { (msg, code) in

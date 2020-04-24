@@ -17,13 +17,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
     // MARK: - property
     ///专辑id
     let id: Int
-    var albumsModel: YXSAlbumsBrowseModel?{
-        didSet{
-            if let track = albumsModel?.tracks{
-                listSource = track
-            }
-        }
-    }
+    var albumsModel: YXSAlbumsBrowseModel?
     var listSource: [YXSTrackModel] = [YXSTrackModel]()
     // MARK: - init
     init(id: Int) {
@@ -50,7 +44,6 @@ class YXSContentDetialController: YXSBaseTableViewController {
             make.left.right.top.equalTo(0)
         }
         self.fd_prefersNavigationBarHidden = true
-        
         tableView.register(YXSContentDetialCell.self, forCellReuseIdentifier: "YXSContentDetialCell")
 //        tableView.yxs_addRoundedCorners(corners: [UIRectCorner.topLeft,.topRight], radii: CGSize.init(width: 15, height: 15), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT*8))
         tableView.rowHeight = 62.5
@@ -66,22 +59,37 @@ class YXSContentDetialController: YXSBaseTableViewController {
     // MARK: -UI
     
     // MARK: -loadData
+    override func yxs_loadNextPage() {
+        loadData()
+    }
+    
     var headerHeight: CGFloat = 241 + kSafeTopHeight
     func loadData(){
-        YXSEducationXMLYAlbumsBrowseDetialRequest.init(album_id: id).request({ (result: YXSAlbumsBrowseModel) in
+        YXSEducationXMLYAlbumsBrowseDetialRequest.init(album_id: id, page: curruntPage).request({ (result: YXSAlbumsBrowseModel) in
+            self.yxs_endingRefresh()
             self.albumsModel = result
             self.customNav.title = result.albumTitle
+            
+            if self.curruntPage == 1{
+                self.listSource.removeAll()
+            }
+            
+            self.listSource += result.tracks ?? [YXSTrackModel]()
+            
+            self.loadMore = self.listSource.count != result.totalCount ?? 0
+            
             self.yxs_tableHeaderView.yxs_setHeaderModel(result)
             self.yxs_tableHeaderView.layoutIfNeeded()
             self.headerHeight = self.yxs_tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
             self.yxs_tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: self.headerHeight > (241 + kSafeTopHeight) ? self.headerHeight : 241 + kSafeTopHeight )
             self.tableView.tableHeaderView = self.yxs_tableHeaderView
-            self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#745683"), night: UIColor.yxs_hexToAdecimalColor(hex: "#745683"))
+            self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.white)
             self.tableView.reloadData()
             self.requestJudge(albumId: result.albumId ?? 0)
             
         }) { (msg, code) in
-            
+            MBProgressHUD.yxs_showMessage(message: msg)
+            self.yxs_endingRefresh()
         }
     }
     

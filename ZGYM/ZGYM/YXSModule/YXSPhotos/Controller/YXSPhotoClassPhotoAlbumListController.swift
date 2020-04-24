@@ -49,6 +49,7 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     
     func yxs_loadData() {
         YXSEducationAlbumPagequeryRequest.init(classId: classId, currentPage: curruntPage).request({ (result) in
+            self.yxs_endingRefresh()
             if self.curruntPage == 1{
                 self.dataSource.removeAll()
             }
@@ -60,7 +61,7 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
                 self.dataSource.insert(createAlbums!, at: 0)
             }
             self.loadMore = result["hasNext"].boolValue
-            self.yxs_endingRefresh()
+            
             self.collectionView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()

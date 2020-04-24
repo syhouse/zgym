@@ -109,12 +109,12 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
             }
         }
         request.requestCollection({ (list: [YXSPunchCardModel]) in
+            self.yxs_endingRefresh()
             if self.curruntPage == 1{
                 self.yxs_punchCardDataSource.removeAll()
             }
             self.yxs_punchCardDataSource += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
             self.loadMore = list.count >= kPageSize
-            self.yxs_endingRefresh()
             YXSCacheHelper.yxs_cachePunchCardList(dataSource: self.yxs_punchCardDataSource,childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
             self.tableView.reloadData()
         }) { (msg, code) in

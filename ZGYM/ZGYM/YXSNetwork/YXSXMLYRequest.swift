@@ -134,15 +134,23 @@ class YXSEducationXMLYOperationColumnsListRequest: YXSXMLYRequest {
     }
 }
 
-// MARK: 专辑详情  【我的运营素材-听单】
+// MARK: 专辑详情  【我的运营素材-听单】(点播api)
+
+//album_id    Int    是    专辑ID
+//sort    String    否    返回结果排序方式： "asc" - 喜马拉雅正序，"desc" - 喜马拉雅倒序，"time_asc" - 发布时间升序，"time_desc" - 发布时间降序，默认为"asc"
+//page    Int    否    返回第几页，从1开始，默认为1
+//count    Int    否    每页大小，范围为[1,200]，默认为20
+
 let albumsBrowse = "/albums/browse"
 ///专辑详情
 class YXSEducationXMLYAlbumsBrowseDetialRequest: YXSXMLYRequest {
     ///id 听单id
-    init(album_id: Int) {
+    init(album_id: Int, page: Int,pageSize: Int = kPageSize) {
         super.init()
         path = albumsBrowse
-        param = ["album_id": album_id]
+        param = ["album_id": album_id,
+                 "page": page,
+        "count": pageSize]
     }
 }
 

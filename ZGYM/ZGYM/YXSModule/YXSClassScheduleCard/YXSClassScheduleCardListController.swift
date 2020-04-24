@@ -50,6 +50,7 @@ class YXSClassScheduleCardListController: YXSBaseTableViewController {
             request = YXSEducationClassScheduleCardParentsClassScheduleCardListRequest.init(currentPage: curruntPage, stage: YXSPersonDataModel.sharePerson.personStage,childrenId: yxs_childrenId,classId:yxs_classId)
         }
         request.requestCollection({ (list:[YXSClassScheduleCardModel]) in
+        self.yxs_endingRefresh()
         if self.curruntPage == 1{
             self.yxs_dataSource.removeAll()
         }
@@ -58,7 +59,7 @@ class YXSClassScheduleCardListController: YXSBaseTableViewController {
 
         self.loadMore = list.count >= kPageSize
         self.tableView.reloadData()
-        self.yxs_endingRefresh()
+
         }) { (msg, code) in
             self.yxs_endingRefresh()
             self.view.makeToast("\(msg)")
