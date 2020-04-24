@@ -73,10 +73,10 @@ class YXSClassStarCommentEditItemListController: YXSBaseViewController, JXCatego
         return vcs.count
     }
     
-    var vcs = [YXSClassStarCommentItemController]()
+    var vcs = [YXSClassStarItemListController]()
     
     func initVC(){
-        let firstVC = YXSClassStarCommentItemController.init(dataSource: totalModel.dataSource[0])
+        let firstVC = YXSClassStarItemListController.init(dataSource: totalModel.dataSource[0])
         firstVC.didSelectItems = {
             [weak self] (item: YXSClassStarCommentItemModel) in
             guard let strongSelf = self else { return }
@@ -84,7 +84,7 @@ class YXSClassStarCommentEditItemListController: YXSBaseViewController, JXCatego
         }
         vcs.append(firstVC)
         if totalModel.stage != .KINDERGARTEN{
-            let secentVC = YXSClassStarCommentItemController.init(dataSource: totalModel.dataSource[1])
+            let secentVC = YXSClassStarItemListController.init(dataSource: totalModel.dataSource[1])
             secentVC.didSelectItems = {
                 [weak self] (item: YXSClassStarCommentItemModel) in
                 guard let strongSelf = self else { return }
@@ -107,13 +107,8 @@ class YXSClassStarCommentEditItemListController: YXSBaseViewController, JXCatego
             self.navigationController?.pushViewController(vc)
             
         }else{
-            // 判断是否是系统的 考评项类别（10 系统 20 老师的所有班级 30 当前班级），默认是20
-            if item.itemIsSystem == true{
-                return
-            }else{
-                let vc = YXSClassStarCommentEditItemController.init(classId: totalModel.classId,itemModel: item, index: defultIndex,stage: totalModel.stage)
-                self.navigationController?.pushViewController(vc)
-            }
+            let vc = YXSClassStarCommentEditItemController.init(classId: totalModel.classId,itemModel: item, index: defultIndex,stage: totalModel.stage)
+            self.navigationController?.pushViewController(vc)
         }
     }
     

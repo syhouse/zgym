@@ -145,7 +145,6 @@ class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassCom
             MBProgressHUD.hide(for: self.view, animated: true)
             if self.childrenModel.stageType == .KINDERGARTEN{
                 var source = list
-                source.append(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Edit, title: "编辑"))
                 self.alertModel = ClassStarCommentTotalModel.init(titles: ["表扬"], dataSource: [list],classId:self.classId,stage: self.childrenModel.stageType)
             }else{
                 var pariseLists = [YXSClassStarCommentItemModel]()
@@ -157,8 +156,6 @@ class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassCom
                         impLists.append(model)
                     }
                 }
-                pariseLists.append(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Edit, title: "编辑"))
-                impLists.append(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Edit, title: "编辑"))
                 self.alertModel = ClassStarCommentTotalModel.init(titles: ["表扬", "待改进"], dataSource: [pariseLists,impLists],classId:self.classId,stage: self.childrenModel.stageType)
                 
                 self.dealCommentEvent()
@@ -191,7 +188,7 @@ class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassCom
         }
         alertModel.childrenIds = childrenIds
         alertModel.alertTitle = "点评\(model.childrenName ?? "")"
-        YXSClassStarCommentAlertView.showClassStarComment(model: self.alertModel) {
+        YXSClassStarCommentWindowView.showClassStarComment(model: self.alertModel) {
             [weak self](item) in
             guard let strongSelf = self else { return }
             strongSelf.reloadChildrenInfo = true

@@ -169,7 +169,7 @@ private var ts_touchAreaEdgeInsets: UIEdgeInsets = .zero
 extension UIButton {
     /// Increase your button touch area.
     /// If your button frame is (0,0,40,40). Then call button.ts_touchInsets = UIEdgeInsetsMake(-30, -30, -30, -30), it will Increase the touch area
-    public var ts_touchInsets: UIEdgeInsets {
+    public var yxs_touchInsets: UIEdgeInsets {
         get {
             if let value = objc_getAssociatedObject(self, &ts_touchAreaEdgeInsets) as? NSValue {
                 var edgeInsets: UIEdgeInsets = .zero
@@ -188,13 +188,13 @@ extension UIButton {
     }
     
     open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        if self.ts_touchInsets == .zero || !self.isEnabled || self.isHidden {
+        if self.yxs_touchInsets == .zero || !self.isEnabled || self.isHidden {
             return super.point(inside: point, with: event)
         }
         
         let relativeFrame = self.bounds
-        let hitFrame = CGRect.init(x: -self.ts_touchInsets.left, y: -self.ts_touchInsets.top, width: relativeFrame.width + ts_touchInsets.left + ts_touchInsets.right, height: relativeFrame.height + ts_touchInsets.top + ts_touchInsets.bottom)
-            relativeFrame.inset(by: self.ts_touchInsets)
+        let hitFrame = CGRect.init(x: -self.yxs_touchInsets.left, y: -self.yxs_touchInsets.top, width: relativeFrame.width + yxs_touchInsets.left + yxs_touchInsets.right, height: relativeFrame.height + yxs_touchInsets.top + yxs_touchInsets.bottom)
+            relativeFrame.inset(by: self.yxs_touchInsets)
         return hitFrame.contains(point)
     }
 }
