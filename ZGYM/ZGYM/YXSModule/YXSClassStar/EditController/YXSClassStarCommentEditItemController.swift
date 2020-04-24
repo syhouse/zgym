@@ -47,8 +47,9 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
         
         if let itemModel = itemModel{
             nameFieldLabel.contentField.text = itemModel.evaluationItem
-            buttonView.selectIndex = (itemModel.score ?? 1) - 1
+            buttonView.selectIndex = (Int(abs(itemModel.score ?? 1)) ) - 1
             allSwitch.swt.isSelected = (itemModel.type ?? "") == "20"
+            logoImageView.sd_setImage(with: URL.init(string: (itemModel.evaluationUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!),placeholderImage: kImageDefualtImage, completed: nil)
         }
         
         loadData()
@@ -114,9 +115,9 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
                 typeSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
                 newUrl = (dataSource[0].iconUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             }
-            
+            logoImageView.sd_setImage(with: URL.init(string: newUrl),placeholderImage: kImageDefualtImage, completed: nil)
         }
-        logoImageView.sd_setImage(with: URL.init(string: newUrl),placeholderImage: kImageDefualtImage, completed: nil)
+        
         
     }
     // MARK: -loadData
@@ -174,7 +175,7 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
             guard let strongSelf = self else { return }
             strongSelf.typeSection.rightLabel.text = strongSelf.dataSource[selectIndex].name
             strongSelf.typeSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
-            strongSelf.logoImageView.sd_setImage(with: URL.init(string: NSUtil.yxs_urlAllowedCharacters(url:strongSelf.dataSource[selectIndex].iconUrl ?? "")) ,placeholderImage: kImageDefualtImage, completed: nil)
+            
             for (index,model) in strongSelf.dataSource.enumerated(){
                 if index == selectIndex{
                     model.isSelected = true

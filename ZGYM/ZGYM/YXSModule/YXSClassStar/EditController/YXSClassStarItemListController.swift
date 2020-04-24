@@ -10,7 +10,7 @@ import UIKit
 import JXCategoryView
 import NightNight
 
-class YXSClassStarCommentItemController: YXSBaseViewController,UICollectionViewDelegate,UICollectionViewDataSource,JXCategoryListContentViewDelegate {
+class YXSClassStarItemListController: YXSBaseViewController,UICollectionViewDelegate,UICollectionViewDataSource,JXCategoryListContentViewDelegate {
     var dataSource: [YXSClassStarCommentItemModel]{
         didSet{
             collectionView.reloadData()

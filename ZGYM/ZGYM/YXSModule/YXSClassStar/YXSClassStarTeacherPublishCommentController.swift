@@ -153,7 +153,6 @@ class YXSClassStarTeacherPublishCommentController: YXSBaseViewController {
             
            if self.model.stageType == .KINDERGARTEN{
                 var source = list
-                source.append(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Edit, title: "编辑"))
                 self.alertModel = ClassStarCommentTotalModel.init(titles: ["表扬"], dataSource: [source],classId:self.model.classId ?? 0,stage: self.model.stageType)
             }else{
                 var pariseLists = [YXSClassStarCommentItemModel]()
@@ -165,8 +164,6 @@ class YXSClassStarTeacherPublishCommentController: YXSBaseViewController {
                         impLists.append(model)
                     }
                 }
-                pariseLists.append(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Edit, title: "编辑"))
-                impLists.append(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Edit, title: "编辑"))
                 self.alertModel = ClassStarCommentTotalModel.init(titles: ["表扬", "待改进"], dataSource: [pariseLists,impLists],classId:self.model.classId ?? 0,stage: self.model.stageType)
             }
             SLLog("end_yxs_loadEvaluationListData")
@@ -221,7 +218,7 @@ class YXSClassStarTeacherPublishCommentController: YXSBaseViewController {
             alertModel.alertTitle = "点评\(selectComments[0].childrenName ?? "")"
         }
         alertModel.childrenIds = childrenIds
-        YXSClassStarCommentAlertView.showClassStarComment(model: self.alertModel) { [weak self](item) in
+        YXSClassStarCommentWindowView.showClassStarComment(model: self.alertModel) { [weak self](item) in
             guard let strongSelf = self else { return }
             let isAdd = (item.score ?? 0) > 0 ? true : false
             if isAllClass{

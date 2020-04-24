@@ -353,30 +353,30 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         return 0
     }
     
-    ///处理预加载数据
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if loadMore{
-            var totalCount = 0
-            for items in self.yxs_dataSource{
-                totalCount += items.items.count
-            }
-            var curruntCounts = 0
-            for index in 0...indexPath.section{
-                if index < indexPath.section{
-                    curruntCounts += yxs_dataSource[index].items.count
-                }else{
-                    curruntCounts += indexPath.row + 1
-                }
-
-            }
-
-            if curruntCounts >= totalCount - kPreloadSize{
-                if !isSingleHome{///单个详情页 tableview 会滑动跳到底部
-//                    tableView.mj_footer?.beginRefreshing()
-                }
-            }
-        }
-    }
+//    ///处理预加载数据
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if loadMore{
+//            var totalCount = 0
+//            for items in self.yxs_dataSource{
+//                totalCount += items.items.count
+//            }
+//            var curruntCounts = 0
+//            for index in 0...indexPath.section{
+//                if index < indexPath.section{
+//                    curruntCounts += yxs_dataSource[index].items.count
+//                }else{
+//                    curruntCounts += indexPath.row + 1
+//                }
+//
+//            }
+//
+//            if curruntCounts >= totalCount - kPreloadSize{
+//                if !isSingleHome{///单个详情页 tableview 会滑动跳到底部
+////                    tableView.mj_footer?.beginRefreshing()
+//                }
+//            }
+//        }
+//    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if yxs_dataSource.count > indexPath.section {

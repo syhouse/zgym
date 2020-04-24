@@ -22,6 +22,8 @@ class YXSFileModel : YXSBaseFileModel {
     var id : Int?
     var updateTime : String?
     var userId : Int?
+    
+    
 
     required init?(map: Map){
         super.init(map: map)

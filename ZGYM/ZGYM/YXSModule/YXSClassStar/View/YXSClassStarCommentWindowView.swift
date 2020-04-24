@@ -26,9 +26,10 @@ class ClassStarCommentTotalModel: NSObject{
     }
 }
 
-class YXSClassStarCommentAlertView: UIView {
-    @discardableResult static func showClassStarComment(model: ClassStarCommentTotalModel,sucess:((_ item:YXSClassStarCommentItemModel)->())?) -> YXSClassStarCommentAlertView{
-        let view = YXSClassStarCommentAlertView(model: model,sucess:sucess)
+
+class YXSClassStarCommentWindowView: UIView {
+    @discardableResult static func showClassStarComment(model: ClassStarCommentTotalModel,sucess:((_ item:YXSClassStarCommentItemModel)->())?) -> YXSClassStarCommentWindowView{
+        let view = YXSClassStarCommentWindowView(model: model,sucess:sucess)
         view.beginAnimation()
         return view
     }
@@ -44,21 +45,25 @@ class YXSClassStarCommentAlertView: UIView {
         self.addSubview(titleLabel)
         self.addSubview(btnClose)
         
+        categoryView.addSubview(editBtn)
+        
         titleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(24)
+            make.top.equalTo(17)
             make.centerX.equalTo(self)
         }
         btnClose.snp.makeConstraints { (make) in
-            make.top.equalTo(15.5)
-            make.right.equalTo(-17.5)
-            make.size.equalTo(CGSize.init(width: 34, height: 34))
+            make.left.equalTo(16)
+            make.centerY.equalTo(titleLabel)
         }
         
         categoryView.snp.makeConstraints { (make) in
-            make.centerX.equalTo(self)
-            make.width.equalTo(model.stage == StageType.KINDERGARTEN ? 134.5 : 269)
-            make.top.equalTo(64.5)
-            make.height.equalTo(30)
+            make.left.right.equalTo(0)
+            make.top.equalTo(49)
+            make.height.equalTo(49)
+        }
+        editBtn.snp.makeConstraints { (make) in
+            make.right.equalTo(-15.5)
+            make.centerY.equalTo(categoryView)
         }
         
         listContainerView.snp.makeConstraints { (make) in
@@ -85,14 +90,8 @@ class YXSClassStarCommentAlertView: UIView {
             make.edges.equalTo(0)
         }
         self.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
-        self.cornerRadius = 15
-        
-        self.snp.makeConstraints { (make) in
-            make.left.equalTo(21)
-            make.right.equalTo(-21)
-            make.centerY.equalTo(bgWindow)
-            make.height.equalTo(401.5)
-        }
+        self.frame = CGRect.init(x: 0, y: kSafeTopHeight + 64, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - (kSafeTopHeight + 64))
+        self.yxs_addRoundedCorners(corners: [.topLeft, .topRight], radii: CGSize.init(width: 5, height: 5))
         bgWindow.alpha = 0
         UIView.animate(withDuration: 0.25, animations: {
             self.bgWindow.alpha = 1
@@ -102,48 +101,16 @@ class YXSClassStarCommentAlertView: UIView {
     // MARK: -event
     
     func pushWithItemModel(item: YXSClassStarCommentItemModel,defultIndex: Int){
-        
-        //剔除系统的
-        var firstCleanList = [YXSClassStarCommentItemModel]()
-        var secendCleanList = [YXSClassStarCommentItemModel]()
-        for model in model.dataSource[0]{
-            if model.itemType == .Service && model.itemIsSystem == false{
-                firstCleanList.append(model)
-            }
-        }
-        if model.stage != .KINDERGARTEN{
-            for model in model.dataSource[1]{
-                if model.itemType == .Service && model.itemIsSystem == false{
-                    secendCleanList.append(model)
-                }
-            }
-        }
-        
-        if item.itemType == .Edit{
-            let newModel = ClassStarCommentTotalModel.init(titles: model.titles, dataSource: [firstCleanList, secendCleanList],classId:model.classId,stage: model.stage)
-            if model.stage == .KINDERGARTEN{
-                newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Delect, title: "删除"), at: 0)
-                newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Add, title: "添加"), at: 0)
-            }else{
-                newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Delect, title: "删除"), at: 0)
-                newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Add, title: "添加"), at: 0)
-                newModel.dataSource[1].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Delect, title: "删除"), at: 0)
-                newModel.dataSource[1].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Add, title: "添加"), at: 0)
-            }
-            UIUtil.curruntNav().pushViewController(YXSClassStarCommentEditItemListController.init(totalModel: newModel, defultIndex: defultIndex))
-            dismiss()
-        }else{
-            //do comment
-            MBProgressHUD.showAdded(to: self.bgWindow, animated: true)
-            YXSEducationClassStarTeacherEvaluationChildrenRequest.init(childrenIds: model.childrenIds, classId: model.classId, evaluationId: item.id ?? 0).request({ (result) in
-                MBProgressHUD.hide(for: self.bgWindow, animated: true)
-                self.sucess?(item)
-                self.dismiss()
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kUpdateClassStarScoreNotification), object: nil)
-            }) { (msg, code) in
-                MBProgressHUD.hide(for: self.bgWindow, animated: true)
-                MBProgressHUD.yxs_showMessage(message: msg, inView: self.bgWindow)
-            }
+        //do comment
+        MBProgressHUD.showAdded(to: self.bgWindow, animated: true)
+        YXSEducationClassStarTeacherEvaluationChildrenRequest.init(childrenIds: model.childrenIds, classId: model.classId, evaluationId: item.id ?? 0).request({ (result) in
+            MBProgressHUD.hide(for: self.bgWindow, animated: true)
+            self.sucess?(item)
+            self.dismiss()
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kUpdateClassStarScoreNotification), object: nil)
+        }) { (msg, code) in
+            MBProgressHUD.hide(for: self.bgWindow, animated: true)
+            MBProgressHUD.yxs_showMessage(message: msg, inView: self.bgWindow)
         }
         
     }
@@ -157,6 +124,21 @@ class YXSClassStarCommentAlertView: UIView {
         }
     }
     
+    @objc func editItem(){
+        let newModel = ClassStarCommentTotalModel.init(titles: model.titles, dataSource: [model.dataSource[0], model.dataSource[1]],classId:model.classId,stage: model.stage)
+        if model.stage == .KINDERGARTEN{
+            newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Delect, title: "删除"), at: 0)
+            newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Add, title: "添加"), at: 0)
+        }else{
+            newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Delect, title: "删除"), at: 0)
+            newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Add, title: "添加"), at: 0)
+            newModel.dataSource[1].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Delect, title: "删除"), at: 0)
+            newModel.dataSource[1].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Add, title: "添加"), at: 0)
+        }
+        UIUtil.curruntNav().pushViewController(YXSClassStarCommentEditItemListController.init(totalModel: newModel, defultIndex: categoryView.selectedIndex))
+        dismiss()
+    }
+    
     // MARK: -getter
     
     lazy var titleLabel : UILabel = {
@@ -168,24 +150,20 @@ class YXSClassStarCommentAlertView: UIView {
     
     lazy var categoryView :JXCategoryTitleView = {
         let view = JXCategoryTitleView()
-        view.titleSelectedColor = UIColor.white
+        view.titleSelectedColor = kBlueColor
         view.titleColor = UIColor.yxs_hexToAdecimalColor(hex: "#575A60")
         view.titleFont = UIFont.boldSystemFont(ofSize: 15)
         view.titleSelectedFont = UIFont.boldSystemFont(ofSize: 15)
-        view.cellWidth = 134.5;
-        view.cellBackgroundSelectedColor = kBlueColor;
         view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9");
-        view.cellWidthIncrement = 0
         view.titles = model.titles
-        view.cellSpacing = 0
-        view.cornerRadius = 5
-        let lineView = JXCategoryIndicatorBackgroundView()
+        view.contentEdgeInsetLeft = 15
+        view.cellWidth = 48
+        view.isAverageCellSpacingEnabled = false
+        view.cellSpacing = 60.5
+        let lineView = JXCategoryIndicatorLineView()
         lineView.indicatorColor = kBlueColor
-        lineView.indicatorWidth = 134.5;
-        lineView.indicatorHeight = 34
-        lineView.indicatorWidthIncrement = 0
-        lineView.indicatorCornerRadius = 5
-        view.indicators = [lineView];
+        lineView.indicatorHeight = 2
+        view.indicators = [lineView]
         return view
     }()
     
@@ -197,8 +175,21 @@ class YXSClassStarCommentAlertView: UIView {
     
     lazy var btnClose: YXSButton = {
         let btn = YXSButton()
-        btn.setImage(UIImage(named: "close"), for: .normal)
+        btn.setTitle("关闭", for: .normal)
+        btn.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         btn.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
+        btn.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
+        return btn
+    }()
+    
+    lazy var editBtn: YXSButton = {
+        let btn = YXSButton()
+        btn.setTitle("编辑", for: .normal)
+        btn.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#696C73"), for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        btn.addTarget(self, action: #selector(editItem), for: .touchUpInside)
+        btn.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return btn
     }()
     
@@ -210,15 +201,13 @@ class YXSClassStarCommentAlertView: UIView {
     }()
 }
 
-extension YXSClassStarCommentAlertView: JXCategoryListContainerViewDelegate, JXCategoryViewDelegate{
+extension YXSClassStarCommentWindowView: JXCategoryListContainerViewDelegate, JXCategoryViewDelegate{
     func number(ofListsInlistContainerView listContainerView: JXCategoryListContainerView!) -> Int {
         return model.titles.count
     }
     
     func listContainerView(_ listContainerView: JXCategoryListContainerView!, initListFor index: Int) -> JXCategoryListContentViewDelegate! {
-        let vc = YXSClassStarCommentItemController.init(dataSource: model.dataSource[index])
-        vc.collectionWidth = SCREEN_WIDTH - 42
-        vc.view.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 42, height: 0)
+        let vc = YXSClassStarCommentItemController.init(canCommentDataSource: model.dataSource[index], childrens: model.childrenIds, classId: model.classId, stage: model.stage, category: index == 0 ? 10 : 20)
         vc.didSelectItems = {
             [weak self] (item: YXSClassStarCommentItemModel) in
             guard let strongSelf = self else { return }

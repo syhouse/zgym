@@ -276,3 +276,23 @@ class YXSEducationClassStarParentClassChildrenTopRequest: YXSBaseRequset {
         }
     }
 }
+
+// MARK: -今日考评项列表
+let classStarEvaluationListTodayList = "/evaluationList/todayList"
+class YXSEducationClassStarEvaluationListTodayListRequest: YXSBaseRequset {
+    init(category: Int ,childrenId: Int,classId: Int ,stage: StageType) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = classStarEvaluationListTodayList
+        param = ["classId": classId,
+                 "childrenId": childrenId,
+                 "category": category]
+        
+        var classify: Int = 20
+        if stage == .KINDERGARTEN{
+            classify = 10
+        }
+        param?["classify"] = classify
+    }
+}
