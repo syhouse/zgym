@@ -90,6 +90,7 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
             YXSCacheHelper.yxs_cacheHomeWorkList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
             self.group.leave()
         }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
             self.group.leave()
         }
     }
@@ -184,13 +185,13 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
     }
     
     ///处理预加载数据
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if loadMore{
-            if indexPath.row + 1 >= dataSource.count - kPreloadSize{
-                tableView.mj_footer?.beginRefreshing()
-            }
-        }
-    }
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if loadMore{
+//            if indexPath.row + 1 >= dataSource.count - kPreloadSize{
+//                tableView.mj_footer?.beginRefreshing()
+//            }
+//        }
+//    }
     // MARK: - getter&setter
     
 }

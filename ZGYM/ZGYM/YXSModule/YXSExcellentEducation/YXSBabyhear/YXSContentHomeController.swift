@@ -60,7 +60,7 @@ class YXSContentHomeController: YXSBaseViewController{
             
             self.congfigUI()
         }) { (msg, code) in
-            
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     

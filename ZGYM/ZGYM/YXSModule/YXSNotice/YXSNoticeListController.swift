@@ -87,6 +87,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             request = YXSEducationNoticePageQueryRequest.init(currentPage: curruntPage, classIdList: classIdList, userType: yxs_user.type ?? "", filterType: filterType)
         }
         request.request({ (result) in
+            self.yxs_endingRefresh()
             if self.curruntPage == 1{
                 self.dataSource.removeAll()
             }
@@ -94,7 +95,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             self.dataSource += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
             self.loadMore = result["hasNext"].boolValue
             self.tableView.reloadData()
-            self.yxs_endingRefresh()
+            
             YXSCacheHelper.yxs_cacheNoticeList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
             
         }) { (msg, code) in

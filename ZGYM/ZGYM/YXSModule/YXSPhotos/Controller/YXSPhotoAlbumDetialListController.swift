@@ -74,6 +74,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     
     func yxs_loadData() {
         YXSEducationAlbumPagequeryResourceRequest.init(albumId: albumModel.id ?? 0, currentPage: curruntPage).request({ (result) in
+            self.yxs_endingRefresh()
             if self.curruntPage == 1{
                 self.dataSource.removeAll()
             }
@@ -86,7 +87,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             }
             self.dataSource += list
             self.loadMore = result["hasNext"].boolValue
-            self.yxs_endingRefresh()
+            
             self.refreshShowFooterData()
         }) { (msg, code) in
             self.yxs_endingRefresh()

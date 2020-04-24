@@ -34,9 +34,9 @@ class YXSBaseTableViewController: YXSBaseScrollViewController {
     var loadMore: Bool = false{
         didSet{
             if self.loadMore{
-                self.scrollView.mj_footer = tableRefreshFooter
+                self.tableView.mj_footer = tableRefreshFooter
             }else{
-                self.scrollView.mj_footer = nil
+                self.tableView.mj_footer = nil
 //                self.scrollView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
             }
         }
@@ -72,10 +72,10 @@ class YXSBaseCollectionViewController: YXSBaseScrollViewController {
     var loadMore: Bool = false{
         didSet{
             if self.loadMore{
-                self.scrollView.mj_footer = tableRefreshFooter
+                self.collectionView.mj_footer = tableRefreshFooter
             }else{
-                self.scrollView.mj_footer = nil
-//                self.scrollView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
+                self.collectionView.mj_footer = nil
+//                self.collectionView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
             }
         }
     }
@@ -169,13 +169,11 @@ class YXSBaseScrollViewController: YXSBaseViewController, UITableViewDelegate, U
     func yxs_endingRefresh(endSucess: (() ->())? = nil){
         showEmptyDataSource = true
         if self.curruntPage == 1{
-            if hasRefreshHeader,let header = self.scrollView.mj_header{
-                header.endRefreshing(completionBlock: endSucess ?? {()})
+            if hasRefreshHeader{
+                tableViewRefreshHeader.endRefreshing(completionBlock: endSucess ?? {()})
             }
         }else{
-            if let footer = self.scrollView.mj_footer {
-                footer.endRefreshing(completionBlock: endSucess ?? {()})
-            }
+            tableRefreshFooter.endRefreshing(completionBlock: endSucess ?? {()})
         }
     }
 

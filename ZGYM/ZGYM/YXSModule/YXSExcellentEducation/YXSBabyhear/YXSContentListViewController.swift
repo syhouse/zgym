@@ -78,12 +78,12 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     
     func yxs_loadData() {
         YXSEducationXMLYOperationColumnsListRequest.init(page: curruntPage, id: id).requestCollection({ (list:[YXSColumnContentModel], pageCount) in
+            self.yxs_endingRefresh()
             if self.curruntPage == 1{
                 self.dataSource.removeAll()
             }
             self.dataSource += list
             self.loadMore = pageCount != self.dataSource.count
-            self.yxs_endingRefresh()
             self.collectionView.reloadData()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
