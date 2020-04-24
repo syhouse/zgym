@@ -794,6 +794,7 @@
 		E58F170C245149D500A6AC18 /* YXSInputAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F16D6245149D400A6AC18 /* YXSInputAlertView.swift */; };
 		E58F170D245149D500A6AC18 /* LSLWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F16D8245149D400A6AC18 /* LSLWeakProxy.m */; };
 		E58F170E245149D500A6AC18 /* YXSFPSLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F16DA245149D400A6AC18 /* YXSFPSLabel.swift */; };
+		E58F17122452BB8900A6AC18 /* NSUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F17112452BB8900A6AC18 /* NSUtil.swift */; };
 		E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */; };
 		E5F41C59244D52B5007F27AC /* YXSExcellentEducationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */; };
 		E5F41C5D244D7744007F27AC /* YXSSynClassHomeListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */; };
@@ -2047,7 +2048,7 @@
 		E58F16D8245149D400A6AC18 /* LSLWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLWeakProxy.m; sourceTree = "<group>"; };
 		E58F16D9245149D400A6AC18 /* LSLWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLWeakProxy.h; sourceTree = "<group>"; };
 		E58F16DA245149D400A6AC18 /* YXSFPSLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSFPSLabel.swift; sourceTree = "<group>"; };
-		E58F170F2452B6AD00A6AC18 /* NSUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUtil.swift; sourceTree = "<group>"; };
+		E58F17112452BB8900A6AC18 /* NSUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUtil.swift; sourceTree = "<group>"; };
 		E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationVC.swift; sourceTree = "<group>"; };
 		E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationCell.swift; sourceTree = "<group>"; };
 		E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassHomeListVC.swift; sourceTree = "<group>"; };
@@ -5057,7 +5058,7 @@
 				E58F1694245149D400A6AC18 /* YXSAvatarView.swift */,
 				E58F1695245149D400A6AC18 /* YXSRouterEventProtocol.swift */,
 				E58F1696245149D400A6AC18 /* YXSVoiceView.swift */,
-				E58F170F2452B6AD00A6AC18 /* NSUtil.swift */,
+				E58F17112452BB8900A6AC18 /* NSUtil.swift */,
 				E58F1697245149D400A6AC18 /* YXSGuideTool */,
 				E58F169B245149D400A6AC18 /* YXSLAuthorityTool.swift */,
 				E58F169C245149D400A6AC18 /* YXSCustomNav.swift */,
@@ -5978,6 +5979,7 @@
 				6F07051E2445D8050090975B /* YXSHomeworkCommitDetailViewController.swift in Sources */,
 				6F0703A02445D8030090975B /* TUIFaceMessageCell.m in Sources */,
 				6FEA7C232452990D0017C9CA /* LFEditingProtocol.m in Sources */,
+				E58F17122452BB8900A6AC18 /* NSUtil.swift in Sources */,
 				6F0705F32445D8060090975B /* LFImagePickerController.m in Sources */,
 				6F07FE062445D7C70090975B /* YXSCommonScreenListBaseController.swift in Sources */,
 				6F0705D42445D8060090975B /* UIImage+LFCommon.m in Sources */,
