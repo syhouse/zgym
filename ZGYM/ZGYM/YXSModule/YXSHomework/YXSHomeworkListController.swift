@@ -87,6 +87,7 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
             let list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["homeworkList"].object) ?? [YXSHomeListModel]()
             self.dataSource += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
             self.loadMore = result["hasNext"].boolValue
+            YXSCacheHelper.yxs_cacheHomeWorkList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
             self.group.leave()
         }) { (msg, code) in
             self.group.leave()
@@ -101,6 +102,7 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
     
     override func reloadTableView(_ indexPath: IndexPath? = nil, isScroll : Bool = false) {
         super.reloadTableView(indexPath,isScroll: isScroll)
+        YXSCacheHelper.yxs_cacheHomeWorkList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
     }
     
     override func addNotification() {

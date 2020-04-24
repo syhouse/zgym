@@ -93,8 +93,10 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             let list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["noticeList"].object) ?? [YXSHomeListModel]()
             self.dataSource += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
             self.loadMore = result["hasNext"].boolValue
-            self.yxs_endingRefresh()
             self.tableView.reloadData()
+            self.yxs_endingRefresh()
+            YXSCacheHelper.yxs_cacheNoticeList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
+            
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
             self.yxs_endingRefresh()
@@ -103,6 +105,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
     
     override func reloadTableView(_ indexPath: IndexPath? = nil, isScroll : Bool = false) {
         super.reloadTableView(indexPath, isScroll :isScroll)
+        YXSCacheHelper.yxs_cacheNoticeList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
     }
     
     // MARK: -action
@@ -188,14 +191,14 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
     }
     
     ///处理预加载数据
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if loadMore{
-            if indexPath.row + 1 >= dataSource.count - kPreloadSize{
-                tableView.mj_footer?.beginRefreshing()
-            }
-        }
-    }
-    
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if loadMore{
+//            if indexPath.row + 1 >= dataSource.count - kPreloadSize{
+//                tableView.mj_footer?.beginRefreshing()
+//            }
+//        }
+//    }
+//    
     
     // MARK: - getter&setter
     

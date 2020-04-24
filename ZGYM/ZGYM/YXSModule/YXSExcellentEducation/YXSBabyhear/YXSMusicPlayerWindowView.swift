@@ -50,6 +50,9 @@ class YXSMusicPlayerWindowView: UIControl {
             YXSMusicPlayerWindowView.instanceView.isHidden = true
         }else{
             YXSMusicPlayerWindowView.instanceView.isHidden = false
+            if instanceView.superview == nil{
+                UIUtil.RootController().view.addSubview(instanceView)
+            }
         }
     }
     
@@ -57,7 +60,10 @@ class YXSMusicPlayerWindowView: UIControl {
     /// - Parameter isNavFirstVC: 是否是nav的第一个视图
     public static func setUpdateFrame(isNavFirstVC: Bool){
         if XMSDKPlayer.shared()?.playerState != .stop && !(UIUtil.TopViewController() is YXSPlayingViewController){
-          YXSMusicPlayerWindowView.instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 15 - kSafeBottomHeight - (isNavFirstVC ? 49 : 0), width: SCREEN_WIDTH - 30, height: 49)
+            YXSMusicPlayerWindowView.instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 15 - kSafeBottomHeight - (isNavFirstVC ? 49 : 0), width: SCREEN_WIDTH - 30, height: 49)
+            if instanceView.superview == nil{
+                UIUtil.RootController().view.addSubview(instanceView)
+            }
         }
     }
     
@@ -148,28 +154,28 @@ class YXSMusicPlayerWindowView: UIControl {
                 }
                 stopVoiceAnimation()
             }
-                
+            
         }
     }
     
     private func startVoiceAnimation(){
-         //  Converted to Swift 5.1 by Swiftify v5.1.28520 - https://objectivec2swift.com/
-         let ary = [
-             UIImage(named: "yxs_xmla_audio_0"),
-             UIImage(named: "yxs_xmla_audio_1"),
-             UIImage(named: "yxs_xmla_audio_2"),
-             UIImage(named: "yxs_xmla_audio_3")
-         ]
-         imgIcon.animationImages = ary.compactMap { $0 }
-         imgIcon.animationDuration = 1 //动画时间
-         imgIcon.animationRepeatCount = 0 //动画重复次数，0：无限
-         imgIcon.startAnimating() //
-
-     }
-     
-     private func stopVoiceAnimation(){
-         imgIcon.stopAnimating() //
-     }
+        //  Converted to Swift 5.1 by Swiftify v5.1.28520 - https://objectivec2swift.com/
+        let ary = [
+            UIImage(named: "yxs_xmla_audio_0"),
+            UIImage(named: "yxs_xmla_audio_1"),
+            UIImage(named: "yxs_xmla_audio_2"),
+            UIImage(named: "yxs_xmla_audio_3")
+        ]
+        imgIcon.animationImages = ary.compactMap { $0 }
+        imgIcon.animationDuration = 1 //动画时间
+        imgIcon.animationRepeatCount = 0 //动画重复次数，0：无限
+        imgIcon.startAnimating() //
+        
+    }
+    
+    private func stopVoiceAnimation(){
+        imgIcon.stopAnimating() //
+    }
     
     @objc func closeClick(){
         XMSDKPlayer.shared()?.stopTrackPlay()
@@ -200,7 +206,7 @@ class YXSMusicPlayerWindowView: UIControl {
     lazy var closeBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIColor.white, for: .normal)
-        button.ts_touchInsets = UIEdgeInsets.init(top: 10, left: 10, bottom: 10, right: 10)
+        button.yxs_touchInsets = UIEdgeInsets.init(top: 10, left: 10, bottom: 10, right: 10)
         button.setImage(UIImage.init(named: "yxs_xmly_close"), for: .normal)
         button.addTarget(self, action: #selector(closeClick), for: .touchUpInside)
         return button
@@ -239,10 +245,10 @@ class YXSMusicPlayerWindowView: UIControl {
 // MARK: - 锁屏控制
 extension YXSMusicPlayerWindowView{
     override var canBecomeFirstResponder: Bool {
-         get {
-             return true
-         }
-     }
+        get {
+            return true
+        }
+    }
     
     override func remoteControlReceived(with event: UIEvent?) {
         if event?.type == UIEvent.EventType.remoteControl{
@@ -290,6 +296,6 @@ extension YXSMusicPlayerWindowView: XMTrackPlayerDelegate{
     }
     
     func xmTrackPlayerDidStart() {
-         UIUtil.configNowPlayingCenterUI()
+        UIUtil.configNowPlayingCenterUI()
     }
 }

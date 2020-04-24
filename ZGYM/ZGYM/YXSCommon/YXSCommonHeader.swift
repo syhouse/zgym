@@ -10,7 +10,7 @@ import UIKit
 import NightNight
 
 ///*提*包*UI 默认为 true
-public let isOldUI = true
+public let isOldUI = false
 
 // MARK: - 尺寸
 public let IsiphoneX: Bool = UIApplication.shared.statusBarFrame.size.height > 20.0

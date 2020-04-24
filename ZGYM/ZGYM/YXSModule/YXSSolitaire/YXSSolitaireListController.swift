@@ -138,6 +138,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
             self.loadMore = list.count >= kPageSize
             self.yxs_endingRefresh()
             self.tableView.reloadData()
+            YXSCacheHelper.yxs_cacheSolitaireList(dataSource: self.solitaireLists, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
         }) { (msg, code) in
             self.yxs_endingRefresh()
         }
@@ -163,7 +164,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
     // MARK: -private
     override func reloadTableView(_ indexPath: IndexPath? = nil, isScroll : Bool = false) {
         super.reloadTableView(indexPath,isScroll: isScroll)
-//        YXSCacheHelper.yxs_cacheSolitaireList(dataSource: self.solitaireLists, childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
+        YXSCacheHelper.yxs_cacheSolitaireList(dataSource: self.solitaireLists, childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
     }
     
     // MARK: -public
@@ -205,14 +206,14 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
         }
     }
     
-    ///处理预加载数据
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if loadMore{
-            if indexPath.row + 1 >= solitaireLists.count - kPreloadSize{
-                tableView.mj_footer?.beginRefreshing()
-            }
-        }
-    }
+//    ///处理预加载数据
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if loadMore{
+//            if indexPath.row + 1 >= solitaireLists.count - kPreloadSize{
+//                tableView.mj_footer?.beginRefreshing()
+//            }
+//        }
+//    }
     
     
     // MARK: - getter&setter
