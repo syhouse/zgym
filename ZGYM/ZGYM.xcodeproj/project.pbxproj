@@ -610,8 +610,6 @@
 		6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */ = {isa = PBXBuildFile; fileRef = 6F5720BE24493CAC00E1F301 /* 打包注意 */; };
 		6F6511D42445DC820024A5DA /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; };
 		6F6511D52445DC820024A5DA /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6F8272AF24501B1500918757 /* YXSFPSLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8272AE24501B1500918757 /* YXSFPSLabel.swift */; };
-		6F8272B324501C9A00918757 /* LSLWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8272B124501C9900918757 /* LSLWeakProxy.m */; };
 		6F8272B5245171C900918757 /* YXSClassStarCommentItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8272B4245171C900918757 /* YXSClassStarCommentItemController.swift */; };
 		6F87B88C244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87B88B244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift */; };
 		6FA0F331242B451800E2E035 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F32F242B451800E2E035 /* Main.storyboard */; };
@@ -672,7 +670,6 @@
 		E58F1647245149BA00A6AC18 /* LFFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F1552245149B800A6AC18 /* LFFilter.m */; };
 		E58F1648245149BA00A6AC18 /* LFFilterVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F1557245149B800A6AC18 /* LFFilterVideoView.m */; };
 		E58F1649245149BA00A6AC18 /* LFFilterGifView.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F1559245149B800A6AC18 /* LFFilterGifView.m */; };
-		E58F164A245149BA00A6AC18 /* LFContext.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F155A245149B800A6AC18 /* LFContext.m */; };
 		E58F164B245149BA00A6AC18 /* LFFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F155B245149B800A6AC18 /* LFFilterImageView.m */; };
 		E58F164C245149BA00A6AC18 /* LFContextImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F155C245149B800A6AC18 /* LFContextImageView.m */; };
 		E58F164D245149BA00A6AC18 /* LFWeakSelectorTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F1560245149B900A6AC18 /* LFWeakSelectorTarget.m */; };
@@ -750,7 +747,6 @@
 		E58F16DD245149D400A6AC18 /* YXSVoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F1696245149D400A6AC18 /* YXSVoiceView.swift */; };
 		E58F16DE245149D400A6AC18 /* YXSGuideViewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F1698245149D400A6AC18 /* YXSGuideViewWindow.swift */; };
 		E58F16DF245149D400A6AC18 /* YXSGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F1699245149D400A6AC18 /* YXSGuideView.swift */; };
-		E58F16E0245149D400A6AC18 /* NSUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F169A245149D400A6AC18 /* NSUtil.swift */; };
 		E58F16E1245149D400A6AC18 /* YXSLAuthorityTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F169B245149D400A6AC18 /* YXSLAuthorityTool.swift */; };
 		E58F16E2245149D400A6AC18 /* YXSCustomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F169C245149D400A6AC18 /* YXSCustomNav.swift */; };
 		E58F16E3245149D400A6AC18 /* YXSCommonSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F169D245149D400A6AC18 /* YXSCommonSection.swift */; };
@@ -797,6 +793,7 @@
 		E58F170C245149D500A6AC18 /* YXSInputAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F16D6245149D400A6AC18 /* YXSInputAlertView.swift */; };
 		E58F170D245149D500A6AC18 /* LSLWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F16D8245149D400A6AC18 /* LSLWeakProxy.m */; };
 		E58F170E245149D500A6AC18 /* YXSFPSLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F16DA245149D400A6AC18 /* YXSFPSLabel.swift */; };
+		E58F17102452B6AD00A6AC18 /* NSUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F170F2452B6AD00A6AC18 /* NSUtil.swift */; };
 		E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */; };
 		E5F41C59244D52B5007F27AC /* YXSExcellentEducationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */; };
 		E5F41C5D244D7744007F27AC /* YXSSynClassHomeListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */; };
@@ -1727,9 +1724,6 @@
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
 		6F5720BE24493CAC00E1F301 /* 打包注意 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "打包注意"; sourceTree = "<group>"; };
 		6F6511D62446937D0024A5DA /* 优学业.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "优学业.entitlements"; sourceTree = "<group>"; };
-		6F8272AE24501B1500918757 /* YXSFPSLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSFPSLabel.swift; sourceTree = "<group>"; };
-		6F8272B124501C9900918757 /* LSLWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLWeakProxy.m; sourceTree = "<group>"; };
-		6F8272B224501C9A00918757 /* LSLWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLWeakProxy.h; sourceTree = "<group>"; };
 		6F8272B4245171C900918757 /* YXSClassStarCommentItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarCommentItemController.swift; sourceTree = "<group>"; };
 		6F87B88B244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSRemoteControlInfoHelper.swift; sourceTree = "<group>"; };
 		6FA0F326242B451800E2E035 /* 优学业.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "优学业.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2001,7 +1995,6 @@
 		E58F1696245149D400A6AC18 /* YXSVoiceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVoiceView.swift; sourceTree = "<group>"; };
 		E58F1698245149D400A6AC18 /* YXSGuideViewWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSGuideViewWindow.swift; sourceTree = "<group>"; };
 		E58F1699245149D400A6AC18 /* YXSGuideView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSGuideView.swift; sourceTree = "<group>"; };
-		E58F169A245149D400A6AC18 /* NSUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUtil.swift; sourceTree = "<group>"; };
 		E58F169B245149D400A6AC18 /* YXSLAuthorityTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSLAuthorityTool.swift; sourceTree = "<group>"; };
 		E58F169C245149D400A6AC18 /* YXSCustomNav.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSCustomNav.swift; sourceTree = "<group>"; };
 		E58F169D245149D400A6AC18 /* YXSCommonSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSCommonSection.swift; sourceTree = "<group>"; };
@@ -2054,6 +2047,7 @@
 		E58F16D8245149D400A6AC18 /* LSLWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLWeakProxy.m; sourceTree = "<group>"; };
 		E58F16D9245149D400A6AC18 /* LSLWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLWeakProxy.h; sourceTree = "<group>"; };
 		E58F16DA245149D400A6AC18 /* YXSFPSLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSFPSLabel.swift; sourceTree = "<group>"; };
+		E58F170F2452B6AD00A6AC18 /* NSUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUtil.swift; sourceTree = "<group>"; };
 		E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationVC.swift; sourceTree = "<group>"; };
 		E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationCell.swift; sourceTree = "<group>"; };
 		E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassHomeListVC.swift; sourceTree = "<group>"; };
@@ -5063,8 +5057,8 @@
 				E58F1694245149D400A6AC18 /* YXSAvatarView.swift */,
 				E58F1695245149D400A6AC18 /* YXSRouterEventProtocol.swift */,
 				E58F1696245149D400A6AC18 /* YXSVoiceView.swift */,
+				E58F170F2452B6AD00A6AC18 /* NSUtil.swift */,
 				E58F1697245149D400A6AC18 /* YXSGuideTool */,
-				E58F169A245149D400A6AC18 /* NSUtil.swift */,
 				E58F169B245149D400A6AC18 /* YXSLAuthorityTool.swift */,
 				E58F169C245149D400A6AC18 /* YXSCustomNav.swift */,
 				E58F169D245149D400A6AC18 /* YXSCommonSection.swift */,
@@ -5792,8 +5786,6 @@
 				E5F41C61244DA320007F27AC /* YXSSynClassListCell.swift in Sources */,
 				6F0704F82445D8050090975B /* YXSHomeNavView.swift in Sources */,
 				6F0705142445D8050090975B /* YXSClassStarCommentWindowView.swift in Sources */,
-				6F0705742445D8060090975B /* SPDropItem.m in Sources */,
-				6F0705762445D8060090975B /* SPDropMainMenu.m in Sources */,
 				6F0703F92445D8030090975B /* YXSSatchelRequest.swift in Sources */,
 				6F0705532445D8050090975B /* YXSFriendsCircleInfoCell.swift in Sources */,
 				6F0705D72445D8060090975B /* UIImage+LF_ImageCompress.m in Sources */,
@@ -6315,6 +6307,7 @@
 				E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */,
 				E58F1645245149BA00A6AC18 /* LFFilter+UIImage.m in Sources */,
 				6F0703AE2445D8030090975B /* TUIConversationDataProviderService.m in Sources */,
+				E58F17102452B6AD00A6AC18 /* NSUtil.swift in Sources */,
 				6F0703532445D8030090975B /* TUnReadView.m in Sources */,
 				E58F1706245149D500A6AC18 /* YXSInputAlertView2.swift in Sources */,
 				E58F16EB245149D400A6AC18 /* YXSShareTool.swift in Sources */,
