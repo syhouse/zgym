@@ -111,15 +111,15 @@ public let kIsNotFirstLuanchKey = "IsNotFirstLuanchKey"
 public let kAppleDeviceToken = "AppleDeviceToken"
 
 
-public var kAddressbookKey = "yxs_addressbook_test"
-public var kClassStartKey = "yxs_classstart_test"
-public var kFoodKey = "yxs_food_test"
-public var kPunchCardKey = "yxs_punchCard_test"
-public var kHomeworkKey = "yxs_homework_test"
-public var kNoticeKey = "yxs_notice_test"
+public var kAddressbookKey = "yxs_addressbook"
+public var kClassStartKey = "yxs_classstart"
+public var kFoodKey = "yxs_food"
+public var kPunchCardKey = "yxs_punchCard"
+public var kHomeworkKey = "yxs_homework"
+public var kNoticeKey = "yxs_notice"
 public var kSolitaireKey = "yxs_solitaire"
-public var kScoreKey = "yxs_score_test"
-public var kCourseKey = "yxs_course_test"
+public var kScoreKey = "yxs_score"
+public var kCourseKey = "yxs_course"
 ///视频后缀
 public let kHMVedioAppendKey = "_HMVideo"
 //
