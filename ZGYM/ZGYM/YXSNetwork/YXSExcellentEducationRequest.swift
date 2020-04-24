@@ -4,7 +4,7 @@
 //
 //  Created by yihao on 2020/4/20.
 //  Copyright © 2020 zgym. All rights reserved.
-//
+//  优教育接口
 
 import Foundation
 
@@ -61,5 +61,53 @@ class YXSEducationPlayAddCountRequest: YXSBaseRequset {
         host = fileHost
         path = playAddCount
         param = ["folderId":folderId]
+    }
+}
+
+// MARK: - 育儿好文
+// MARK: 获取育儿好文首页分类
+let childContentHomeListType = "/article/type/list"
+class YXSEducationChildContentHomeListTypeRequest: YXSBaseRequset {
+    override init() {
+        super.init()
+        method = .post
+        host = host
+        path = childContentHomeListType
+    }
+}
+
+// MARK: 根据分类获取育儿好文列表数据
+let childContentPageList = "/article/page"
+class YXSEducationChildContentPageListRequest: YXSBaseRequset {
+    init(size: Int = 20, current: Int = 0, type: Int = 0) {
+        super.init()
+        method = .post
+        host = host
+        path = childContentPageList
+        var stage = YXSPersonDataModel.sharePerson.userModel.stage
+        if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+            let st = YXSPersonDataModel.sharePerson.userModel.curruntChild?.stage
+            switch st {
+            case .KINDERGARTEN:
+                stage = "KINDERGARTEN"
+            case .PRIMARY_SCHOOL:
+                stage = "PRIMARY_SCHOOL"
+            case .MIDDLE_SCHOOL:
+                stage = "MIDDLE_SCHOOL"
+            default:
+                print("")
+            }
+        }
+        if type <= 0 {
+            param = ["current": current,
+                     "size":size,
+                     "stage":stage ?? ""]
+        } else {
+            param = ["current": current,
+                     "size":size,
+                     "type":type,
+                     "stage":stage ?? ""]
+        }
+        
     }
 }

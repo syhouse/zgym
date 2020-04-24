@@ -11,7 +11,7 @@ import NightNight
 
 class YXSExcellentEducationVC: YXSBaseViewController,UITableViewDelegate, UITableViewDataSource {
     
-    let dataSource: [String] = ["yxs_synclass_background","yxs_childrearing_background","yxs_babyhear_background","yxs_periodical_background"]
+    let dataSource: [String] = ["yxs_synclass_background","yxs_childcontent_background","yxs_babyhear_background","yxs_periodical_background"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +39,8 @@ class YXSExcellentEducationVC: YXSBaseViewController,UITableViewDelegate, UITabl
             let vc = YXSSynClassHomeListVC()
             navigationController?.pushViewController(vc)
         } else if indexPath.row == 1 {
+            let vc = YXSChildContentHomeListVC()
+            navigationController?.pushViewController(vc)
             //育儿好文
         } else if indexPath.row == 2 {
             //宝宝听

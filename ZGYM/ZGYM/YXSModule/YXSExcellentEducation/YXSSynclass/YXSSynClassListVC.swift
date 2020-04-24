@@ -47,10 +47,10 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
     }
-    
-    
+    override func viewWillDisappear(_ animated: Bool) {
+    }
+
     
     func refreshHeaderTab() {
         switch self.type {

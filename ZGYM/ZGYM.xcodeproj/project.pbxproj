@@ -795,6 +795,10 @@
 		E58F170D245149D500A6AC18 /* LSLWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = E58F16D8245149D400A6AC18 /* LSLWeakProxy.m */; };
 		E58F170E245149D500A6AC18 /* YXSFPSLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F16DA245149D400A6AC18 /* YXSFPSLabel.swift */; };
 		E58F17122452BB8900A6AC18 /* NSUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F17112452BB8900A6AC18 /* NSUtil.swift */; };
+		E58F17152452BE4F00A6AC18 /* YXSChildContentHomeListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F17142452BE4F00A6AC18 /* YXSChildContentHomeListVC.swift */; };
+		E58F17182452C67A00A6AC18 /* YXSChildContentListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F17172452C67A00A6AC18 /* YXSChildContentListModel.swift */; };
+		E58F171A2452CA3300A6AC18 /* YXSChildContentListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F17192452CA3300A6AC18 /* YXSChildContentListVC.swift */; };
+		E58F171F2452CB6200A6AC18 /* YXSChildContentListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F171E2452CB6200A6AC18 /* YXSChildContentListCell.swift */; };
 		E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */; };
 		E5F41C59244D52B5007F27AC /* YXSExcellentEducationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */; };
 		E5F41C5D244D7744007F27AC /* YXSSynClassHomeListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */; };
@@ -2049,6 +2053,10 @@
 		E58F16D9245149D400A6AC18 /* LSLWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLWeakProxy.h; sourceTree = "<group>"; };
 		E58F16DA245149D400A6AC18 /* YXSFPSLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSFPSLabel.swift; sourceTree = "<group>"; };
 		E58F17112452BB8900A6AC18 /* NSUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUtil.swift; sourceTree = "<group>"; };
+		E58F17142452BE4F00A6AC18 /* YXSChildContentHomeListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentHomeListVC.swift; sourceTree = "<group>"; };
+		E58F17172452C67A00A6AC18 /* YXSChildContentListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentListModel.swift; sourceTree = "<group>"; };
+		E58F17192452CA3300A6AC18 /* YXSChildContentListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentListVC.swift; sourceTree = "<group>"; };
+		E58F171E2452CB6200A6AC18 /* YXSChildContentListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentListCell.swift; sourceTree = "<group>"; };
 		E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationVC.swift; sourceTree = "<group>"; };
 		E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationCell.swift; sourceTree = "<group>"; };
 		E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassHomeListVC.swift; sourceTree = "<group>"; };
@@ -2354,6 +2362,7 @@
 		6F0700862445D7FE0090975B /* YXSExcellentEducation */ = {
 			isa = PBXGroup;
 			children = (
+				E58F17132452BDA700A6AC18 /* YXSChildContent */,
 				E5F41C5B244D7709007F27AC /* YXSSynclass */,
 				E5F41C5A244D7374007F27AC /* YXSBabyhear */,
 				E5F41C53244D4051007F27AC /* View */,
@@ -5221,6 +5230,33 @@
 			path = FPS;
 			sourceTree = "<group>";
 		};
+		E58F17132452BDA700A6AC18 /* YXSChildContent */ = {
+			isa = PBXGroup;
+			children = (
+				E58F17142452BE4F00A6AC18 /* YXSChildContentHomeListVC.swift */,
+				E58F17192452CA3300A6AC18 /* YXSChildContentListVC.swift */,
+				E58F171B2452CB3D00A6AC18 /* View */,
+				E58F17162452C65F00A6AC18 /* Model */,
+			);
+			path = YXSChildContent;
+			sourceTree = "<group>";
+		};
+		E58F17162452C65F00A6AC18 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E58F17172452C67A00A6AC18 /* YXSChildContentListModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E58F171B2452CB3D00A6AC18 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E58F171E2452CB6200A6AC18 /* YXSChildContentListCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		E5F41C53244D4051007F27AC /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -5723,6 +5759,7 @@
 				6F0704A62445D8040090975B /* YXSPhotoCreateAlbumController.swift in Sources */,
 				6F0704D82445D8050090975B /* PAirSandbox.m in Sources */,
 				E58F16E6245149D400A6AC18 /* YXSBaseDetailViewCell.swift in Sources */,
+				E58F17152452BE4F00A6AC18 /* YXSChildContentHomeListVC.swift in Sources */,
 				6FEA7C042452990D0017C9CA /* LFAssetExportSession.m in Sources */,
 				6F0704F22445D8050090975B /* YXSHomeListSelectView.swift in Sources */,
 				6F0703972445D8030090975B /* TUIMenuCell.m in Sources */,
@@ -5851,6 +5888,7 @@
 				6F0705132445D8050090975B /* YXSClassStarTeacherSingleCell.swift in Sources */,
 				6F0705DA2445D8060090975B /* LFPhotoPickerController.m in Sources */,
 				6F0705EB2445D8060090975B /* LFResultInfo.m in Sources */,
+				E58F171A2452CA3300A6AC18 /* YXSChildContentListVC.swift in Sources */,
 				E58F16DF245149D400A6AC18 /* YXSGuideView.swift in Sources */,
 				6F0703DC2445D8030090975B /* AFNetworkActivityIndicatorManager.m in Sources */,
 				6F0705422445D8050090975B /* YXSHomeworkReadListViewController.swift in Sources */,
@@ -6130,6 +6168,7 @@
 				E58F16E7245149D400A6AC18 /* YXSCacheHelper.swift in Sources */,
 				6F0703E52445D8030090975B /* AFURLSessionManager.m in Sources */,
 				6F0703E72445D8030090975B /* AFNetworkReachabilityManager.m in Sources */,
+				E58F171F2452CB6200A6AC18 /* YXSChildContentListCell.swift in Sources */,
 				6FEA7BFC2452990C0017C9CA /* LFFluorescentBrush.m in Sources */,
 				6F0703752445D8030090975B /* TCommonPendencyCell.m in Sources */,
 				6F07051B2445D8050090975B /* YXSClassStarPartentDetialController.swift in Sources */,
@@ -6148,6 +6187,7 @@
 				6F07052A2445D8050090975B /* YXSHomeworkDetailSectionHeaderView.swift in Sources */,
 				6FEA7BF22452990C0017C9CA /* JRFilterBarCell.m in Sources */,
 				6FEA7C3B2452990E0017C9CA /* NSData+CompressDecodedImage.m in Sources */,
+				E58F17182452C67A00A6AC18 /* YXSChildContentListModel.swift in Sources */,
 				6F0703772445D8030090975B /* TCommonContactSelectCellData.m in Sources */,
 				6F0703622445D8030090975B /* TCommonSwitchCell.m in Sources */,
 				6F0705CE2445D8060090975B /* LFLayoutPickerController.m in Sources */,
