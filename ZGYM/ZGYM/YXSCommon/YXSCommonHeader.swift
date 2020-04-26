@@ -59,7 +59,7 @@ public let kFFFDFEColor = UIColor.yxs_hexToAdecimalColor(hex: "#FFFDFE")
 public let k131313Color = UIColor.yxs_hexToAdecimalColor(hex: "#131313")
 
 ///新版本主色调
-public let kRedMainColor = UIColor.yxs_hexToAdecimalColor(hex: "#EA6959")
+public let kRedMainColor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
 
 /// #191A21夜间背景主色调  
 public let kNightBackgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#191A21")

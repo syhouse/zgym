@@ -130,6 +130,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             MBProgressHUD.yxs_showLoading()
             YXSEducationNoticeCustodianCommitReceiptRequest(noticeId: model.serviceId ?? 0, childrenId: model.childrenId ?? 0, noticeCreateTime: model.createTime ?? "").request({ (json) in
                 MBProgressHUD.yxs_showMessage(message: "提交成功", inView: self.navigationController?.view)
+                MBProgressHUD.yxs_hideHUD()
                 model.commitState = 2
                 NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationModelKey: model])
                 UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
