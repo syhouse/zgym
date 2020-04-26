@@ -105,8 +105,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         if url.absoluteString.contains(shareExtensionSchemes) {
             /// ShareExtension
             let list = url.lastPathComponent.components(separatedBy: ",")
-            let url = YXSFileManagerHelper.sharedInstance.getFullPathURL(lastPathComponent: list.first ?? "")
-            let size = YXSFileManagerHelper.sharedInstance.sizeOfDataSrouce(fileUrl: url)
+            var uploadArr:[YXSUploadDataResourceModel] = [YXSUploadDataResourceModel]()
+            for sub in list {
+                let fileName = sub
+                let url = YXSFileManagerHelper.sharedInstance.getFullPathURL(lastPathComponent: fileName)
+                let size = YXSFileManagerHelper.sharedInstance.sizeMbOfFilePath(filePath: url)
+                
+                let model = YXSUploadDataResourceModel()
+                model.fileName = fileName
+                model.dataSource = try? Data(contentsOf: url)
+                uploadArr.append(model)
+            }
+            
+            YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, progress: nil, sucess: { (list) in
+                
+            }) { (msg, code) in
+                
+            }
+            
             return true
         }
         

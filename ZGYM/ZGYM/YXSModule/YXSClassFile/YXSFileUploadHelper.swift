@@ -18,11 +18,17 @@ class YXSFileUploadHelper: NSObject {
     private var ossClient: OSSClient?
     private var oSSAuth: YXSOSSAuthModel?
     
+    static let sharedInstance: YXSFileUploadHelper = {
+        let instance = YXSFileUploadHelper()
+        // setup code
+        return instance
+    }()
+    
     // MARK: - Request
     @objc func requestYXSOSSAuth(completionHandler:(((_ model: YXSOSSAuthModel)->())?), failureHandler: ((String, String) -> ())?) {
         YXSEducationOssAuthTokenRequest().request({ (result: YXSOSSAuthModel) in
             completionHandler?(result)
-
+            
         }, failureHandler: failureHandler)
     }
     
@@ -64,11 +70,50 @@ class YXSFileUploadHelper: NSObject {
     }
 
     // MARK: - Method
-    func uploadObjects(objects:[Any], progress : ((_ progress: CGFloat)->())?, sucess:(([YXSFileModel])->())?, failureHandler: ((String, String) -> ())?) {
-        for sub in objects {
-            if sub is UIImage {
+    func uploadDataSource(dataSource:[YXSUploadDataResourceModel], progress : ((_ progress: CGFloat)->())?, sucess:(([YXSFileModel])->())?, failureHandler: ((String, String) -> ())?) {
+        
+        var resultArr = [YXSFileModel]()
+        let queue = DispatchQueue.global()
+        let group = DispatchGroup()
+        
+        for sub in dataSource {
+            
+            let conpArr = sub.fileName?.components(separatedBy: ".")
+            /// 文件后缀名
+            let extName = conpArr?.last?.lowercased()
+            
+            let model = YXSFileModel(JSON: ["":""])
+            var path: String = ""
+            
+            if extName == "mov" {
+                /// 视频需获取视频第一帧
+                
+            } else if extName == "jpg" {
+                /// 直接上传
+                group.enter()
+                queue.async { [weak self] in
+                    guard let weakSelf = self else {return}
+                    path = weakSelf.getImageUrl(name: sub.fileName ?? "")
+                    
+                    weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: sub.dataSource, uploadProgress: nil, completionHandler: { (result) in
+                        model?.fileUrl = result ?? ""
+                        model?.fileName = result.lastPathComponent
+                        model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: sub.dataSource!))
+                        model?.fileType = result.pathExtension
+                        resultArr.append(model!)
+                        group.leave()
+                        
+                    }, failureHandler: failureHandler)
+                }
+
             }
-//            } else if sub is
+
+            
+            group.notify(queue: queue) {
+                DispatchQueue.main.async {
+                    sucess?(resultArr)
+                }
+            }
         }
     }
     
@@ -114,7 +159,7 @@ class YXSFileUploadHelper: NSObject {
                         weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: imageData, uploadProgress: nil, completionHandler: { (result) in
                             model?.fileUrl = result ?? ""
                             model?.fileName = "\(name).\(result.pathExtension)"
-                            model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeOfDataSrouce(data: imageData!))
+                            model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: imageData!))
                             model?.fileType = result.pathExtension
                             resultArr.append(model!)
                             group.leave()
@@ -150,7 +195,7 @@ class YXSFileUploadHelper: NSObject {
                                 
                                 model?.fileUrl = result ?? ""
                                 model?.fileName = "\(name).\(result.pathExtension)"
-                                model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeOfDataSrouce(data: data!))
+                                model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: data!))
                                 model?.fileType = result.pathExtension
                                 resultArr.append(model!)
                                 group.leave()
@@ -314,6 +359,7 @@ class YXSFileUploadHelper: NSObject {
         if oSSAuth == nil {
             requestYXSOSSAuth(completionHandler: { [weak self](model) in
                 guard let weakSelf = self else {return}
+                weakSelf.oSSAuth = model
                 weakSelf.aliyunOSSUpload(objectKey: objectKey, uploadingFileURL: uploadingFileURL, uploadingData: uploadingData, uploadProgress: uploadProgress, completionHandler: completionHandler, failureHandler: failureHandler)
                 
             }, failureHandler: nil)
@@ -389,4 +435,14 @@ class YXSFileUploadHelper: NSObject {
         }
         return nil
     }
+}
+
+class YXSUploadDataResourceModel: NSObject {
+    var dataSource: Data?
+    /// 文件名 带后缀 例如IMG_02.jpg
+    var fileName: String?
+    
+//    override init() {
+//        super.init()
+//    }
 }

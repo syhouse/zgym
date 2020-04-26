@@ -29,7 +29,7 @@ class YXSFileManagerHelper: NSObject {
         model.fileName = fileUrl.lastPathComponent
         model.data = fileUrl2Data(fileUrl: fileUrl)
         model.exteonsion = YXSFileExtension(rawValue: fileUrl.pathExtension)
-        model.fileSize = sizeOfDataSrouce(fileUrl: fileUrl)
+        model.fileSize = sizeMbOfFilePath(filePath: fileUrl)
         return model
     }
     
@@ -85,16 +85,16 @@ class YXSFileManagerHelper: NSObject {
     }
     
     /// 根据文件路径返回文件大小(MB)
-    @objc func sizeOfDataSrouce(fileUrl: URL) -> CGFloat {
+    @objc func sizeMbOfFilePath(filePath: URL) -> CGFloat {
 
         var fileSize : UInt64 = 0
         do {
-            let attr = try FileManager.default.attributesOfItem(atPath: fileUrl.path)
+            let attr = try FileManager.default.attributesOfItem(atPath: filePath.path)
             fileSize = attr[FileAttributeKey.size] as! UInt64
 
             let dict = attr as NSDictionary
             fileSize = dict.fileSize()
-            let mb = CGFloat(fileSize)/1024.0//(1024.0*1024.0)
+            let mb = CGFloat(fileSize)/(1024.0*1024.0)
             
             print(">>>>fileSize:\(fileSize)")
             return CGFloat(mb)
@@ -105,19 +105,31 @@ class YXSFileManagerHelper: NSObject {
         return 0
     }
     
-    @objc func sizeOfDataSrouce(data: Data) -> CGFloat {
+    /// 根据数据Data返回文件大小(MB)
+    @objc func sizeMbOfDataSrouce(data: Data) -> CGFloat {
 
         var fileSize : UInt64 = 0
     
-        fileSize = UInt64(data.count)//attr[FileAttributeKey.size] as! UInt64
+        fileSize = UInt64(data.count)
 
-        let mb = CGFloat(fileSize)/1024.0//(1024.0*1024.0)
+        let mb = CGFloat(fileSize)/(1024.0*1024.0)
             
         print(">>>>fileSize:\(fileSize)")
         return CGFloat(mb)
     }
     
+    /// 根据数据Data返回文件大小(KB)
+    @objc func sizeKbOfDataSrouce(data: Data) -> CGFloat {
+
+        var fileSize : UInt64 = 0
     
+        fileSize = UInt64(data.count)
+
+        let mb = CGFloat(fileSize)/1024.0
+            
+        print(">>>>fileSize:\(fileSize)")
+        return CGFloat(mb)
+    }
     
     
     /// 根据文件路径返回相对应的图标

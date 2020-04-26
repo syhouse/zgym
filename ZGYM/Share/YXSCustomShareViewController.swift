@@ -88,7 +88,7 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
             let data: Data
             do {
                 data = try Data(contentsOf: sub)
-                let size = YXSFileManagerHelper.sharedInstance.sizeOfDataSrouce(data: data)
+                let size = YXSFileManagerHelper.sharedInstance.sizeMbOfDataSrouce(data: data)
                 if size < maxFileSize {
                     try data.write(to: fullPath)
                     filesName.append(lstCompon)
