@@ -89,6 +89,9 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         let workingGroup = DispatchGroup()
         let workingQueue = DispatchQueue(label: "request_queue")
         
+        var tmpFolderList = [YXSFolderModel]()
+        var tmpFileList = [YXSFileModel]()
+        
         // 入组
         workingGroup.enter()
         workingQueue.async {
@@ -97,7 +100,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
-                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
+                tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
                 workingGroup.leave()
                 
             }) { (msg, code) in
@@ -113,7 +116,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
-                weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
+                tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
                 workingGroup.leave()
                 
             }) { (msg, code) in
@@ -124,6 +127,29 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         // 调度组里的任务都执行完毕
         workingGroup.notify(queue: workingQueue) {
             DispatchQueue.main.async {
+                if self.isTbViewEditing {
+                    /// 编辑状态 下拉刷新 填充选中的Cell
+                    for sub in self.getSelectedFolerList() {
+                        for obj in tmpFolderList {
+                            if sub.id == obj.id {
+                                obj.isSelected = true
+                                break
+                            }
+                        }
+                    }
+                    
+                    for sub in self.getSelectedFileList() {
+                        for obj in tmpFileList {
+                            if sub.id == obj.id {
+                                obj.isSelected = true
+                                break
+                            }
+                        }
+                    }
+                }
+                self.folderList = tmpFolderList
+                self.fileList = tmpFileList
+                
                 self.tableView.reloadData()
             }
         }
@@ -131,13 +157,29 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     
     /// 批量删除
     @objc func batchDeleteRequest(fileIdList:[Int] = [Int](), folderIdList:[Int] = [Int](), completionHandler:(()->Void)?) {
-        YXSFileBatchDeleteRequest(classId: classId, fileIdList: fileIdList, folderIdList: folderIdList, parentFolderId: parentFolderId).request({ [weak self](json) in
+        
+        let alert = YXSConfirmationAlertView.showIn(target: self.view) { [weak self](sender, view) in
             guard let weakSelf = self else {return}
-            completionHandler?()
-            
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
+            if sender.titleLabel?.text == "删除" {
+                YXSFileBatchDeleteRequest(classId: weakSelf.classId, fileIdList: fileIdList, folderIdList: folderIdList, parentFolderId: weakSelf.parentFolderId).request({ (json) in
+                    completionHandler?()
+                    
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
+                
+                view.close()
+                weakSelf.endEditing()
+                
+            } else {
+                /// 取消
+            }
         }
+        alert.lbTitle.text = "提示"
+        alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        alert.btnDone.setTitle("删除", for: .normal)
+        
+
     }
     
     // MARK: - Action
@@ -298,36 +340,23 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         let tmpFileList = getSelectedFileList()
         
         if tmpFolderList.count > 0 || tmpFileList.count > 0 {
-            let alert = YXSConfirmationAlertView.showIn(target: self.view) { [weak self](sender, view) in
-            guard let weakSelf = self else {return}
-                if sender.titleLabel?.text == "删除" {
                     
-                    var tmpFolderIdArr = [Int]()
-                    var tmpFileIdIdArr = [Int]()
-                    for (index, value) in tmpFolderList.enumerated() {
-                        tmpFolderIdArr.append(value.id ?? 0)
-                    }
-                    
-                    for (index, value) in tmpFileList.enumerated() {
-                        tmpFileIdIdArr.append(value.id ?? 0)
-                    }
-                    
-                    weakSelf.batchDeleteRequest(fileIdList: tmpFileIdIdArr, folderIdList: tmpFolderIdArr) { [weak self] in
-                        guard let weakSelf = self else {return}
-                        weakSelf.folderList = weakSelf.getUnselectedFolerList()
-                        weakSelf.fileList = weakSelf.getUnselectedFileList()
-                        weakSelf.tableView.reloadData()
-                    }
-                    view.close()
-                    weakSelf.endEditing()
-                    
-                } else {
-                    /// 取消
-                }
+            var tmpFolderIdArr = [Int]()
+            var tmpFileIdIdArr = [Int]()
+            for (index, value) in tmpFolderList.enumerated() {
+                tmpFolderIdArr.append(value.id ?? 0)
             }
-            alert.lbTitle.text = "提示"
-            alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
-            alert.btnDone.setTitle("删除", for: .normal)
+
+            for (index, value) in tmpFileList.enumerated() {
+                tmpFileIdIdArr.append(value.id ?? 0)
+            }
+            
+            batchDeleteRequest(fileIdList: tmpFileIdIdArr, folderIdList: tmpFolderIdArr) { [weak self] in
+                guard let weakSelf = self else {return}
+                weakSelf.folderList = weakSelf.getUnselectedFolerList()
+                weakSelf.fileList = weakSelf.getUnselectedFileList()
+                weakSelf.tableView.reloadData()
+            }
         }
     }
     
@@ -507,6 +536,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let item = folderList[indexPath.row]
+            item.isEditing = isTbViewEditing
             let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
             cell.model = item
             cell.lbTitle.text = item.folderName//"作业"
@@ -514,6 +544,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             
         } else {
             let item = fileList[indexPath.row]
+            item.isEditing = isTbViewEditing
             let cell: YXSFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! YXSFileCell
             cell.lbTitle.text = item.fileName
             cell.lbSubTitle.text = "\(item.fileSize ?? 0)KB | \(item.createTime?.yxs_DayTime() ?? "")" ///"老师名 | 2020-8-16"

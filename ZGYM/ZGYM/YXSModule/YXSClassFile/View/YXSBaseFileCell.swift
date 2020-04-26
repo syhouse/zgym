@@ -16,6 +16,11 @@ class YXSBaseFileCell: YXSBaseTableViewCell {
 
         contentView.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor))
         
+//        contentView.addSubview(panelView)
+//        panelView.snp.makeConstraints({ (make) in
+//            make.edges.equalTo(0)
+//        })
+        
         insertSubview(btnSelect, belowSubview: contentView)
         btnSelect.snp.makeConstraints({ (make) in
             make.top.equalTo(0)
@@ -32,7 +37,7 @@ class YXSBaseFileCell: YXSBaseTableViewCell {
             self.contentView.snp.remakeConstraints({ (make) in
                 make.top.equalTo(0)
                 make.left.equalTo(50)
-                make.right.equalTo(50)
+                make.right.equalTo(0)
                 make.bottom.equalTo(0)
             })
 
@@ -68,6 +73,11 @@ class YXSBaseFileCell: YXSBaseTableViewCell {
     }
 
     // MARK: - LazyLoad
+//    lazy var panelView: UIView = {
+//        let view = UIView()
+//        return view
+//    }()
+    
     lazy var iconBgView: UIView = {
         let view = UIView()
 //        view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#FAC068")

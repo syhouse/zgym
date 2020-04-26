@@ -9,18 +9,22 @@
 import UIKit
 import NightNight
 import ObjectMapper
-
+/// 文件移动VC 将文件移动到指定文件夹下
 class YXSMoveToViewController: YXSBaseTableViewController {
 
+    /// From目录
     var oldParentFolderId: Int = -1
+    /// To目录
     var parentFolderId: Int = -1
+    /// 目录List
     var folderList: [YXSFolderModel] = [YXSFolderModel]()
     
+    /// 移动那些对象
     var selectedFolderList: [Int] = [Int]()
     var selectedFileIdList: [Int] = [Int]()
     
     var classId: Int?
-//    var completionHandler: ((_ folderIdList: [Int], _ fileIdList: [Int], _ oldParentFolderId: Int, _ parentFolderId: Int)-> Void)?
+
     var completionHandler: ((_ oldParentFolderId: Int, _ parentFolderId: Int)-> Void)?
     
     /// 注意 classId传值则认为是班级文件移动，反之则是老师书包文件移动

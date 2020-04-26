@@ -65,6 +65,9 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         let workingGroup = DispatchGroup()
         let workingQueue = DispatchQueue(label: "request_queue")
         
+        var tmpFolderList = [YXSFolderModel]()
+        var tmpFileList = [YXSFileModel]()
+        
         // 入组
         workingGroup.enter()
         workingQueue.async {
@@ -73,7 +76,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
-                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
                 workingGroup.leave()
                 
             }) { (msg, code) in
@@ -89,7 +92,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
-                weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+                tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
                 workingGroup.leave()
                 
             }) { (msg, code) in
@@ -101,6 +104,29 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         // 调度组里的任务都执行完毕
         workingGroup.notify(queue: workingQueue) {
             DispatchQueue.main.async {
+                if self.isTbViewEditing {
+                    /// 编辑状态 下拉刷新 填充选中的Cell
+                    for sub in self.getSelectedFolerList() {
+                        for obj in tmpFolderList {
+                            if sub.id == obj.id {
+                                obj.isSelected = true
+                                break
+                            }
+                        }
+                    }
+                    
+                    for sub in self.getSelectedFileList() {
+                        for obj in tmpFileList {
+                            if sub.id == obj.id {
+                                obj.isSelected = true
+                                break
+                            }
+                        }
+                    }
+                }
+                self.folderList = tmpFolderList
+                self.fileList = tmpFileList
+                
                 self.tableView.reloadData()
             }
         }
@@ -108,13 +134,27 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     
     /// 批量删除
     @objc override func batchDeleteRequest(fileIdList:[Int] = [Int](), folderIdList:[Int] = [Int](), completionHandler:(()->Void)?) {
-        YXSSatchelBatchDeleteRequest(fileIdList: fileIdList, folderIdList: folderIdList, parentFolderId: parentFolderId).request({ [weak self](json) in
+        let alert = YXSConfirmationAlertView.showIn(target: self.view) { [weak self](sender, view) in
             guard let weakSelf = self else {return}
-            completionHandler?()
             
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
+            if sender.titleLabel?.text == "删除" {
+                YXSSatchelBatchDeleteRequest(fileIdList: fileIdList, folderIdList: folderIdList, parentFolderId: weakSelf.parentFolderId).request({ (json) in
+                    completionHandler?()
+                    
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
+                
+                view.close()
+                weakSelf.endEditing()
+                
+            } else {
+                /// 取消
+            }
         }
+        alert.lbTitle.text = "提示"
+        alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        alert.btnDone.setTitle("删除", for: .normal)
     }
     
     // MARK: - Action

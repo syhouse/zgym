@@ -15,6 +15,13 @@ class YXSFileCell: YXSBaseFileCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+//        panelView.addSubview(titlesContainer)
+//        titlesContainer.addSubview(lbTitle)
+//        titlesContainer.addSubview(lbSubTitle)
+//
+//        panelView.addSubview(iconBgView)
+//        iconBgView.addSubview(imgIcon)
+        
         contentView.addSubview(titlesContainer)
         titlesContainer.addSubview(lbTitle)
         titlesContainer.addSubview(lbSubTitle)
@@ -26,6 +33,11 @@ class YXSFileCell: YXSBaseFileCell {
     }
     
     @objc func layout() {
+//        titlesContainer.snp.makeConstraints({ (make) in
+//            make.left.equalTo(17)
+//            make.centerY.equalTo(panelView.snp_centerY)
+//        })
+        
         titlesContainer.snp.makeConstraints({ (make) in
             make.left.equalTo(17)
             make.centerY.equalTo(contentView.snp_centerY)

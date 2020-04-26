@@ -12,6 +12,7 @@ import SwiftyJSON
 import ObjectMapper
 import Photos
 
+/// 上传文件到阿里云的工具
 class YXSFileUploadHelper: NSObject {
     //现在一次请求 生成一个token
     private var ossClient: OSSClient?
