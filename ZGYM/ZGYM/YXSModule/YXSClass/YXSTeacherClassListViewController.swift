@@ -142,8 +142,8 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
         cell.lbTitle.text = model.name
         cell.lbClassNumber.text = "班级号：\(model.num!)"
         cell.lbStudentCount.text = "成员：\(model.members ?? 0)"
-//        cell.btnInvite.isHidden = indexPath.section == 0 ? false : true
-        cell.btnInvite.isHidden = true
+        cell.btnInvite.isHidden = indexPath.section == 0 ? false : true
+//        cell.btnInvite.isHidden = true
         if indexPath.section == 0 {
             cell.btnInvite.tag = indexPath.row
             cell.btnInvite.addTarget(self, action: #selector(inviteClick(sender:)), for: .touchUpInside)

@@ -110,11 +110,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
                 let fileName = sub
                 let url = YXSFileManagerHelper.sharedInstance.getFullPathURL(lastPathComponent: fileName)
                 let size = YXSFileManagerHelper.sharedInstance.sizeMbOfFilePath(filePath: url)
-                
+
                 let model = YXSUploadDataResourceModel()
-                model.fileName = fileName
-                model.dataSource = try? Data(contentsOf: url)
-                uploadArr.append(model)
+                
+                if fileName.pathExtension == "MOV" {
+                    let semaphore = DispatchSemaphore(value: 0)
+                    YXSFileUploadHelper.sharedInstance.video2Mp4(url: url) { (data, newUrl) in
+                        model.fileName = newUrl?.lastPathComponent
+                        model.dataSource = data
+                        uploadArr.append(model)
+                        semaphore.signal()
+                    }
+                    semaphore.wait()
+                    
+                } else {
+                    model.fileName = fileName
+                    model.dataSource = try? Data(contentsOf: url)
+                    uploadArr.append(model)
+                }
             }
             
             YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, progress: nil, sucess: { (list) in
