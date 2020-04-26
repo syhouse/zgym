@@ -26,11 +26,15 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
             return dataSource.first!
         }
     }
+    ///当前item的图标地址   为空的话默认使用当前所属类型的item图标
+    var curruntItemUrl: String?
     init(classId: Int,itemModel: YXSClassStarCommentItemModel?, index:Int,stage: StageType) {
         self.stage = stage
         self.classId = classId
         self.itemModel = itemModel
         self.index = index
+        
+        self.curruntItemUrl = itemModel?.evaluationUrl
         super.init()
     }
     
@@ -49,7 +53,7 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
             nameFieldLabel.contentField.text = itemModel.evaluationItem
             buttonView.selectIndex = (Int(abs(itemModel.score ?? 1)) ) - 1
             allSwitch.swt.isSelected = (itemModel.type ?? "") == "20"
-            logoImageView.sd_setImage(with: URL.init(string: (itemModel.evaluationUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!),placeholderImage: kImageDefualtImage, completed: nil)
+            logoImageView.sd_setImage(with: URL.init(string: (curruntItemUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!),placeholderImage: kImageDefualtImage, completed: nil)
         }
         
         loadData()
@@ -63,11 +67,17 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
         view.addSubview(typeSection)
         view.addSubview(allSwitch)
         view.addSubview(createButton)
+        view.addSubview(editButton)
         
         logoImageView.snp.makeConstraints { (make) in
-            make.width.height.equalTo(70)
+                        make.width.height.equalTo(70)
             make.top.equalTo(41)
             make.centerX.equalTo(view)
+        }
+        editButton.snp.makeConstraints { (make) in
+            make.width.height.equalTo(23)
+            make.bottom.equalTo(logoImageView)
+            make.right.equalTo(logoImageView).offset(-2)
         }
         nameFieldLabel.snp.makeConstraints { (make) in
             make.left.equalTo(20)
@@ -97,15 +107,12 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
             make.size.equalTo(CGSize.init(width: 318, height: 49))
             make.bottom.equalTo(-kSafeBottomHeight - 15)
         }
-        var newUrl = ""
         if let itemModel = itemModel{
             for model in dataSource{
                 if Int(itemModel.evaluationType ?? "") == model.code{
                     model.isSelected = true
                     typeSection.rightLabel.text = model.name
                     typeSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
-                     newUrl = (model.iconUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-                    
                     break
                 }
             }
@@ -113,13 +120,13 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
             if dataSource.count > 0{
                 typeSection.rightLabel.text = dataSource[0].name
                 typeSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
-                newUrl = (dataSource[0].iconUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             }
-            logoImageView.sd_setImage(with: URL.init(string: newUrl),placeholderImage: kImageDefualtImage, completed: nil)
         }
         
-        
+        changeItemImageLogo()
     }
+    
+    
     // MARK: -loadData
     func loadData(){
         YXSEducationFEvaluationListTypeListRequest(stage: stage).requestCollection({ (list:[YXSClassStarTypeModel]) in
@@ -135,12 +142,22 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
             MBProgressHUD.yxs_showMessage(message: "请输入名称")
             return
         }
+        
+        var evaluationUrl = ""
+        if let curruntItemUrl = curruntItemUrl{
+            evaluationUrl = curruntItemUrl
+        }else{
+            evaluationUrl = selectTypeModel.iconUrl ?? ""
+        }
+        
         MBProgressHUD.showAdded(to: self.view, animated: true)
-        YXSEducationFEvaluationListSaveOrUpdateRequest.init(id: itemModel?.id,classId: classId, category: index == 0 ? 10 : 20, evaluationItem: nameFieldLabel.contentField.text!, evaluationType: selectTypeModel.code ?? 0, score: buttonView.score, type: allSwitch.isSelect ? 30 : 20,stage: stage).request({ (item: YXSClassStarCommentItemModel) in
+        
+        YXSEducationFEvaluationListSaveOrUpdateRequest.init(id: itemModel?.id,classId: classId, category: index == 0 ? 10 : 20, evaluationItem: nameFieldLabel.contentField.text!, evaluationUrl: evaluationUrl, evaluationType: selectTypeModel.code ?? 0, score: buttonView.score, type: allSwitch.isSelect ? 30 : 20,stage: stage).request({ (item: YXSClassStarCommentItemModel) in
             MBProgressHUD.hide(for: self.view, animated: true)
             
             //新增item 插入到第一条
             let isUpdate =  self.itemModel == nil ? false : true
+            item.evaluationType = "\(self.selectTypeModel.code ?? 0)"
             for vc in self.navigationController!.viewControllers{
                 if vc is YXSClassStarCommentEditItemListController{
                     let listVc = vc as! YXSClassStarCommentEditItemListController
@@ -159,7 +176,9 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
             self.navigationController?.popViewController()
         }) { (msg, code) in
             MBProgressHUD.hide(for: self.view, animated: true)
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
+        changeItemImageLogo()
     }
     
     @objc func typeSectionClick(){
@@ -183,12 +202,36 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
                     model.isSelected = false
                 }
             }
+            strongSelf.changeItemImageLogo()
             view.cancelClick(sender: nil)
         }
         
     }
     
+    @objc func editImageClick(){
+        let vc = YXSClassStarEvaluationItemLogoViewController()
+        vc.complete = {
+            [weak self] (imageUrl) in
+            guard let strongSelf = self else { return }
+            strongSelf.curruntItemUrl = imageUrl
+            strongSelf.changeItemImageLogo()
+        }
+        self.navigationController?.pushViewController(vc)
+    }
+    
     // MARK: -private
+    ///修改item url
+    func changeItemImageLogo(){
+        var newUrl = ""
+        //当前有curruntItemUrl  (修改item 或者编辑选择了)
+        if let curruntItemUrl = curruntItemUrl{
+            newUrl = curruntItemUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        }else{
+            newUrl = (selectTypeModel.iconUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        }
+        logoImageView.sd_setImage(with: URL.init(string: newUrl),placeholderImage: kImageDefualtImage, completed: nil)
+    }
+    
     
     // MARK: -public
     
@@ -199,6 +242,16 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
         logoImageView.cornerRadius = 35
         return logoImageView
     }()
+    
+    lazy var editButton: UIButton = {
+        let editButton = UIButton()
+        editButton.setBackgroundImage(UIImage.init(named: "yxs_classstar_edit_image"), for: .normal)
+        editButton.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
+        editButton.addTarget(self, action: #selector(editImageClick), for:  .touchUpInside)
+        return editButton
+    }()
+    
+    
     lazy var nameFieldLabel: HMRightTextFieldLabel = {
         let nameFieldLabel = HMRightTextFieldLabel()
         nameFieldLabel.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
