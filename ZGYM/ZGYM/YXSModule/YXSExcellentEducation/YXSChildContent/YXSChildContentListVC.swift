@@ -115,4 +115,17 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
 //            self.navigationController?.pushViewController(vc)
 //        }
     }
+    
+    // MARK: -列表为空
+    override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
+        return showEmptyDataSource
+    }
+    
+    override func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView) -> Bool {
+        return true
+    }
+    
+    override func verticalOffset(forEmptyDataSet scrollView: UIScrollView) -> CGFloat {
+        return 10
+    }
 }
