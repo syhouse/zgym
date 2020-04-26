@@ -327,7 +327,7 @@ class YXSUploadSourceHelper: NSObject {
                 
                 ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
                     progress += (CGFloat(bytesSent)/CGFloat(totalBytesExpectedToSend))/CGFloat(count)
-//                    SLLog(progress)
+                    //                    SLLog(progress)
                     progressBlock?(progress)
                 }
                 
@@ -436,5 +436,85 @@ class HMVideoCompression: NSObject {
     //计算视频大小
     func fileSize(url:URL) -> CGFloat {
         return CGFloat(NSData.init(contentsOf: url)?.length ?? 0 )/// 1024 / 1024
+    }
+}
+
+
+
+
+///请求单个 等 YXSFileUploadHelper 工具构建好 移植
+class YXSUploadDataHepler{
+    //现在一次请求 生成一个token
+    private var ossClient: OSSClient?
+    private var oSSAuth: YXSOSSAuthModel!
+    private func initClient(){
+        let conf = OSSClientConfiguration()
+        conf.maxRetryCount = 2
+        conf.timeoutIntervalForRequest = 300
+        conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
+        conf.maxConcurrentRequestCount = 50
+        let credential2:OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: self.oSSAuth.accessKeyId ?? "", secretKeyId: self.oSSAuth.accessKeySecret ?? "", securityToken: self.oSSAuth.securityToken ?? "")
+        
+        //实例化
+        ossClient = OSSClient(endpoint: oSSAuth.endpoint ?? "", credentialProvider: credential2, clientConfiguration: conf)
+    }
+    
+    static func getImageUploadFilePath(fileDir: String, fileName: String) -> String{
+        return getUploadFilePath(fileDir: fileDir, fileName: fileName, fileType: "jpg")
+    }
+    
+    static func getUploadFilePath(fileDir: String, fileName: String, fileType: String) -> String{
+        return "\(fileDir)/" + "iOS/" + "\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/" + "\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/"  + fileName + "." + fileType
+    }
+    
+    func uploadData(data: Data, path: String, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
+        if oSSAuth == nil{
+            YXSEducationOssAuthTokenRequest().request({ (model: YXSOSSAuthModel) in
+                self.oSSAuth = model
+                self.uploadData(data: data, path: path, progress: progress,sucess: sucess,failureHandler: failureHandler)
+            }, failureHandler: failureHandler)
+            return
+        }
+        
+        initClient()
+        
+        let ossPutObj: OSSPutObjectRequest = OSSPutObjectRequest()
+        //path为上传到阿里云的路径
+        var ossPath: String = productPrefix
+        ossPutObj.uploadingData = data
+        ossPath += path
+        
+        ossPutObj.bucketName = self.oSSAuth.bucket
+        ossPutObj.objectKey = path
+        
+        ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
+            //                            progress?(bytesSent/totalBytesSent)
+            progress?(CGFloat(bytesSent)/CGFloat(totalBytesSent))
+        }
+        
+        let uploadTask = self.ossClient?.putObject(ossPutObj)
+        uploadTask?.continue({ (uploadTask) -> Any? in
+            if let _err = uploadTask.error {
+                DispatchQueue.main.async {
+                    failureHandler?(_err.localizedDescription, "1001")
+                }
+                
+            } else {
+                if  let _:OSSPutObjectResult  = uploadTask.result as? OSSPutObjectResult {
+                    var point: NSString = (self.oSSAuth.endpoint ?? "") as NSString
+                    point = point.replacingOccurrences(of: "http://", with: "") as NSString
+                    point = point.replacingOccurrences(of: "https://", with: "") as NSString
+                    let picUrlStr = "http://\(self.oSSAuth.bucket ?? "").\(point)/\(path)"
+                    DispatchQueue.main.async {
+                        sucess?(picUrlStr)
+                    }
+                }else{
+                    DispatchQueue.main.async {
+                        failureHandler?("链接拼接失败", "1001")
+                    }
+                }
+            }
+            return uploadTask
+        })
     }
 }

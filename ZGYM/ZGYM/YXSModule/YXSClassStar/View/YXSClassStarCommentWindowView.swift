@@ -90,11 +90,11 @@ class YXSClassStarCommentWindowView: UIView {
             make.edges.equalTo(0)
         }
         self.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
-        self.frame = CGRect.init(x: 0, y: kSafeTopHeight + 64, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - (kSafeTopHeight + 64))
+        self.frame = CGRect.init(x: 0, y: SCREEN_HEIGHT, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - (kSafeTopHeight + 64))
         self.yxs_addRoundedCorners(corners: [.topLeft, .topRight], radii: CGSize.init(width: 5, height: 5))
-        bgWindow.alpha = 0
+        bgWindow.alpha = 1
         UIView.animate(withDuration: 0.25, animations: {
-            self.bgWindow.alpha = 1
+            self.frame = CGRect.init(x: 0, y: kSafeTopHeight + 64, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - (kSafeTopHeight + 64))
         })
     }
     

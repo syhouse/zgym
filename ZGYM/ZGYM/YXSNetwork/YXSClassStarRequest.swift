@@ -109,7 +109,7 @@ class YXSEducationFEvaluationListTypeListRequest: YXSBaseRequset {
 //分类：10:幼儿园,20小学和中学
 let evaluationListSaveOrUpdate = "/evaluationList/saveOrUpdate"
 class YXSEducationFEvaluationListSaveOrUpdateRequest: YXSBaseRequset {
-    init(id: Int? = nil,classId: Int,category: Int, evaluationItem: String,evaluationType: Int,score: Int,type: Int, stage: StageType) {
+    init(id: Int? = nil,classId: Int,category: Int, evaluationItem: String, evaluationUrl: String,evaluationType: Int,score: Int,type: Int, stage: StageType) {
         super.init()
         var classify: Int = 20
         if stage == .KINDERGARTEN{
@@ -124,6 +124,7 @@ class YXSEducationFEvaluationListSaveOrUpdateRequest: YXSBaseRequset {
                  "evaluationType": evaluationType,
                  "classify": classify,
                  "score": score,
+                 "evaluationUrl": evaluationUrl,
                  "type": type]
         
         if let id = id{
@@ -294,5 +295,16 @@ class YXSEducationClassStarEvaluationListTodayListRequest: YXSBaseRequset {
             classify = 10
         }
         param?["classify"] = classify
+    }
+}
+
+// MARK: -考评项列表图像
+let classStarEvaluationListListImage = "/evaluationList/listImage"
+class YXSEducationClassStarEvaluationListListImageRequest: YXSBaseRequset {
+    override init() {
+        super.init()
+        method = .post
+        host = homeHost
+        path = classStarEvaluationListListImage
     }
 }

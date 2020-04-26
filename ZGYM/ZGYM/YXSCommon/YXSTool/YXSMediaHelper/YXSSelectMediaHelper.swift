@@ -23,7 +23,6 @@ enum SLSelectMediaStyle {
 }
 
 protocol YXSSelectMediaHelperDelegate {
-    
     /// 拍照完成/选中视频
     /// - Parameter asset: model
     func didSelectMedia(asset: YXSMediaModel)
@@ -31,12 +30,19 @@ protocol YXSSelectMediaHelperDelegate {
     /// 选中图片资源
     /// - Parameter assets: models
     func didSelectSourceAssets(assets: [YXSMediaModel])
+    
+    
+    /// 选中图片资源(裁剪后的)
+    /// - Parameter images: images
+    func didSelectImages(images: [UIImage])
 }
 
 extension YXSSelectMediaHelperDelegate {
     func didSelectMedia(asset: YXSMediaModel){}
 
     func didSelectSourceAssets(assets: [YXSMediaModel]){}
+    
+    func didSelectImages(images: [UIImage]){}
 }
 
 class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
@@ -193,6 +199,32 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
         presentVc.present(imagePickerVc!, animated: true, completion: nil)
     }
     
+    
+    public func pushImageAllCropPickerController(){
+        let imagePickerVc = TZImagePickerController(maxImagesCount: 1, columnNumber: 4, delegate: self, pushPhotoPickerVc: true)
+        imagePickerVc!.preferredLanguage = "zh-Hans"
+        imagePickerVc!.naviBgColor = UIColor.black
+        imagePickerVc!.navigationBar.isTranslucent = false
+        imagePickerVc!.isSelectOriginalPhoto = true
+        imagePickerVc!.allowTakePicture = true // 在内部显示拍照按钮
+        imagePickerVc!.allowPickingVideo = false
+        imagePickerVc!.allowPickingImage = true
+        
+        imagePickerVc!.allowPickingOriginalPhoto = true
+        imagePickerVc!.allowPickingGif = false
+        imagePickerVc!.sortAscendingByModificationDate = false
+        imagePickerVc!.showSelectBtn = false
+        imagePickerVc!.allowCrop = true
+        imagePickerVc!.needCircleCrop = false
+        imagePickerVc!.circleCropRadius = 100
+        imagePickerVc?.isSelectOriginalPhoto = false
+        imagePickerVc!.didFinishPickingPhotosHandle = nil
+        
+
+        imagePickerVc!.modalPresentationStyle = .fullScreen
+        UIUtil.RootController().present(imagePickerVc!, animated: true, completion: nil)
+    }
+    
     func tz_imagePickerControllerDidCancel(_ picker: TZImagePickerController!) {
         print("cancel")
     }
@@ -201,6 +233,8 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
     func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingPhotos photos: [UIImage]!, sourceAssets assets: [Any]!, isSelectOriginalPhoto: Bool) {
         SLLog(picker.selectedAssets)
         delegate?.didSelectSourceAssets(assets: YXSMediaModel.getMediaModels(assets: assets as! [PHAsset]))
+        
+        delegate?.didSelectImages(images: photos ?? [UIImage]())
     }
     
     func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingVideo coverImage: UIImage!, sourceAssets asset: PHAsset!) {
@@ -217,6 +251,7 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
             return
         }
         let model = YXSMediaModel()
+        model.showImg = coverImage
         model.asset = asset
         self.delegate.didSelectMedia(asset: model)
 
