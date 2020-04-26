@@ -24,18 +24,18 @@ class YXSMineViewController: YXSBaseTableViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(headerImageV)
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            headerImageV.snp.remakeConstraints { (make) in
-                make.top.left.right.equalTo(0)
-                make.height.equalTo(161)
-            }
-        } else {
-            headerImageV.snp.remakeConstraints { (make) in
-                make.top.left.right.equalTo(0)
-                make.height.equalTo(168)
-            }
-        }
+//        self.view.addSubview(headerImageV)
+//        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+//            headerImageV.snp.remakeConstraints { (make) in
+//                make.top.left.right.equalTo(0)
+//                make.height.equalTo(161)
+//            }
+//        } else {
+//            headerImageV.snp.remakeConstraints { (make) in
+//                make.top.left.right.equalTo(0)
+//                make.height.equalTo(168)
+//            }
+//        }
         self.fd_prefersNavigationBarHidden = true
         self.view.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNightBackgroundColor)
         // Do any additional setup after loading the view.
@@ -358,16 +358,16 @@ class YXSMineViewController: YXSBaseTableViewController{
     lazy var dataSource: Array<Any> = {
         var arr: [[String: String]]!
 //        ["title":"系统通知", "imgName":"yxs_mine_notice", "action":"systemMessageClick"],
-        var section1 = [["title":"我的班级", "imgName":"yxs_mine_house_red", "action":"classListClick"]]
+        var section1 = [["title":"我的班级", "imgName":"yxs_mine_house", "action":"classListClick"]]
         
-        var section2 = [["title":"我的收藏", "imgName":"yxs_mine_collect_red", "action":"myCollectClick"]]
+        var section2 = [["title":"我的收藏", "imgName":"yxs_mine_collect", "action":"myCollectClick"]]
         
-        var section3 = [["title":"夜间模式", "imgName":"yxs_mine_theme_red", "action":""]]
+        var section3 = [["title":"夜间模式", "imgName":"yxs_mine_theme", "action":""]]
 
         #if DEBUG
-        var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"书包", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
+        var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"书包", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
         #else
-        var section4 = [["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
+        var section4 = [["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
         #endif
 //        var section4 = [["title":"常见问题", "imgName":"yxs_mine_question_red", "action":"questionClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
         
@@ -378,7 +378,6 @@ class YXSMineViewController: YXSBaseTableViewController{
 //        #endif
         
 //        arr = [["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"], ["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"],["title":"夜间模式", "imgName":"yxs_mine_theme", "action":""]]
-//        arr = [["title":"问题反馈", "imgName":"yxs_mine_feedback", "action":"feedbackClick"], ["title":"隐私政策", "imgName":"yxs_mine_privacy", "action":"privacyPolicyClick"], ["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
         return [section1, section2, section3, section4]
         
     }()
@@ -386,6 +385,7 @@ class YXSMineViewController: YXSBaseTableViewController{
     lazy var headerImageV: UIImageView = {
         let header = UIImageView()
         header.image = UIImage.init(named: "yxs_mine_section_red")
+        header.isHidden = true
         return header
     }()
     

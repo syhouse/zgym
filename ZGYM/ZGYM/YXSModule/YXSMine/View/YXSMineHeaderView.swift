@@ -207,10 +207,11 @@ class YXSMineHeaderView: UIView {
 //        btn.setImage(UIImage(named: "yxs_mine_edit"), for: .normal)
         btn.setTitle("编辑信息", for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), night: kNight5E88F7), forState: .normal)
-        btn.borderColor = UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF")
+        btn.setMixedTitleColor(MixedColor(normal: kNight5E88F7, night: kNight5E88F7), forState: .normal)
+        btn.borderColor = kNight5E88F7
         btn.borderWidth = 0.5
         btn.cornerRadius = 12
+        
         return btn
     }()
     
@@ -224,7 +225,7 @@ class YXSMineHeaderView: UIView {
         let lb = YXSLabel()
         lb.text = self.yxs_user.name ?? ""//"张山老师"
         lb.font = UIFont.systemFont(ofSize: 19)
-        lb.mixedTextColor = MixedColor(normal: 0xFFFFFF, night: 0xFFFFFF)
+        lb.mixedTextColor = MixedColor(normal: 0x000000, night: 0xFFFFFF)
         return lb
     }()
     
@@ -236,9 +237,8 @@ class YXSMineHeaderView: UIView {
             btn.setTitle("家长", for: .normal)
         }
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-        btn.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF", alpha: 0.3)
-//        btn.mixedBackgroundColor = MixedColor(normal: 0xE1EBFE, night: 0x20232F)
-        btn.setMixedTitleColor(MixedColor(normal: 0xFFFFFF, night: 0x5E88F7), forState: .normal)
+        btn.mixedBackgroundColor = MixedColor(normal: 0xE1EBFE, night: 0x20232F)
+        btn.setMixedTitleColor(MixedColor(normal: 0x5E88F7, night: 0x5E88F7), forState: .normal)
         btn.clipsToBounds = true
         btn.layer.cornerRadius = 10
         return btn
@@ -249,7 +249,7 @@ class YXSMineHeaderView: UIView {
         lb.text = self.yxs_user.school ?? ""
         lb.font = UIFont.systemFont(ofSize: 13)
 //        lb.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
-        lb.mixedTextColor = MixedColor(normal: 0xFFFFFF, night: 0x898F9A)
+        lb.mixedTextColor = MixedColor(normal: 0x898F9A, night: 0x898F9A)
         return lb
     }()
     

@@ -378,9 +378,14 @@ class YXSFriendsCircleContentView: UIView{
                 make.right.equalTo(-28)
             }
         }else{
-            if model.frameModel != nil{
-                let helper = YXSFriendsConfigHelper.helper
-                contentLabel.frame = CGRect.init(x: helper.contentLeftMargin, y: helper.nameLabelTopPadding + 16 + helper.contentTopToNameLPadding, width: helper.contentWidth, height:model.isShowAll ? model.frameModel.contentIsShowAllHeight : model.frameModel.contentHeight)
+//            if model.frameModel != nil{
+//                let helper = YXSFriendsConfigHelper.helper
+//                contentLabel.frame = CGRect.init(x: helper.contentLeftMargin, y: helper.nameLabelTopPadding + 16 + helper.contentTopToNameLPadding, width: helper.contentWidth, height:model.isShowAll ? model.frameModel.contentIsShowAllHeight : model.frameModel.contentHeight)
+//            }
+            contentLabel.snp.remakeConstraints { (make) in
+                make.left.equalTo(nameLabel)
+                make.top.equalTo(nameLabel.snp_bottom).offset(YXSFriendsConfigHelper.helper.contentTopToNameLPadding)
+                make.right.equalTo(-28)
             }
         }
         
@@ -396,7 +401,7 @@ class YXSFriendsCircleContentView: UIView{
             }
             favView.snp.remakeConstraints { (make) in
                 make.top.equalTo(timeLabel.snp_bottom).offset(12.5)
-                make.left.equalTo(contentLabel)
+                make.left.equalTo(nameLabel)
                 make.right.equalTo(-15)
                 if isAutoCalculateHeight{
                     make.bottom.equalTo(0).priorityHigh()
