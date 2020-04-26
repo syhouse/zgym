@@ -382,6 +382,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let item = folderList[indexPath.row]
+            item.isEditing = isTbViewEditing
             let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
             cell.model = item
             cell.lbTitle.text = item.folderName//"作业"
@@ -389,6 +390,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             
         } else {
             let item = fileList[indexPath.row]
+            item.isEditing = isTbViewEditing
             let cell: YXSFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! YXSFileCell
             cell.lbTitle.text = item.fileName
             cell.lbSubTitle.text = "\(item.fileSize ?? 0)KB | \(item.createTime?.yxs_DayTime() ?? "")" ///"老师名 | 2020-8-16"
