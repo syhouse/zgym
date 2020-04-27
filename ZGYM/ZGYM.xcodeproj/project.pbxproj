@@ -732,6 +732,7 @@
 		6FEA7C622452990F0017C9CA /* LFZoomingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7BEB2452990C0017C9CA /* LFZoomingView.m */; };
 		6FEA7C632452990F0017C9CA /* LFDataFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7BEF2452990C0017C9CA /* LFDataFilterImageView.m */; };
 		6FEA7C6524553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */; };
+		6FEA7C67245668B00017C9CA /* YXSWindowPlayerControlHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C66245668B00017C9CA /* YXSWindowPlayerControlHelper.swift */; };
 		96C37695CA743AAF4EA54F3F /* Pods_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D2807CC37D3F419340D76A2 /* Pods_Share.framework */; };
 		E53D8AF9244E80C400590B5A /* YXSContentHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */; };
 		E53D8AFA244E80C400590B5A /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF3244E80C300590B5A /* PlayingViewController.m */; };
@@ -1984,6 +1985,7 @@
 		6FEA7BEF2452990C0017C9CA /* LFDataFilterImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFDataFilterImageView.m; sourceTree = "<group>"; };
 		6FEA7BF02452990C0017C9CA /* LFDataFilterImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFDataFilterImageView.h; sourceTree = "<group>"; };
 		6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarEvaluationItemLogoViewController.swift; sourceTree = "<group>"; };
+		6FEA7C66245668B00017C9CA /* YXSWindowPlayerControlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSWindowPlayerControlHelper.swift; sourceTree = "<group>"; };
 		78DA037DE3DFCFE843299175 /* Pods-Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.debug.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.debug.xcconfig"; sourceTree = "<group>"; };
 		E53D8AF1244E80C300590B5A /* PlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingViewController.h; sourceTree = "<group>"; };
 		E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentHomeController.swift; sourceTree = "<group>"; };
@@ -3885,25 +3887,25 @@
 		6F07FF5A2445D7FB0090975B /* CLPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				6F07FF5B2445D7FB0090975B /* CLGCDTimerManager.h */,
-				6F07FF5C2445D7FB0090975B /* CLSlider.m */,
-				6F07FF5D2445D7FB0090975B /* CLPlayerView.h */,
-				6F07FF5E2445D7FB0090975B /* SLVideoPlayController.h */,
-				6F07FF5F2445D7FB0090975B /* UINavigationController+CLPlayerRotation.h */,
-				6F07FF602445D7FB0090975B /* AILoadingView.m */,
-				6F07FF612445D7FB0090975B /* UIViewController+CLPlayerRotation.h */,
-				6F07FF622445D7FB0090975B /* UITabBarController+CLPlayerRotation.m */,
-				6F07FF632445D7FB0090975B /* CLPlayerMaskView.m */,
-				6F07FF642445D7FB0090975B /* UINavigationController+CLPlayerRotation.m */,
-				6F07FF652445D7FB0090975B /* SLVideoPlayController.m */,
-				6F07FF662445D7FB0090975B /* CLSlider.h */,
-				6F07FF672445D7FB0090975B /* CLPlayerView.m */,
-				6F07FF682445D7FB0090975B /* CLGCDTimerManager.m */,
-				6F07FF692445D7FB0090975B /* UIViewController+CLPlayerRotation.m */,
 				6F07FF6A2445D7FB0090975B /* AILoadingView.h */,
+				6F07FF602445D7FB0090975B /* AILoadingView.m */,
+				6F07FF5B2445D7FB0090975B /* CLGCDTimerManager.h */,
+				6F07FF682445D7FB0090975B /* CLGCDTimerManager.m */,
 				6F07FF6B2445D7FB0090975B /* CLPlayerMaskView.h */,
-				6F07FF6C2445D7FB0090975B /* UITabBarController+CLPlayerRotation.h */,
+				6F07FF632445D7FB0090975B /* CLPlayerMaskView.m */,
+				6F07FF5D2445D7FB0090975B /* CLPlayerView.h */,
+				6F07FF672445D7FB0090975B /* CLPlayerView.m */,
+				6F07FF662445D7FB0090975B /* CLSlider.h */,
+				6F07FF5C2445D7FB0090975B /* CLSlider.m */,
 				6F07FF6D2445D7FB0090975B /* Resource */,
+				6F07FF5E2445D7FB0090975B /* SLVideoPlayController.h */,
+				6F07FF652445D7FB0090975B /* SLVideoPlayController.m */,
+				6F07FF5F2445D7FB0090975B /* UINavigationController+CLPlayerRotation.h */,
+				6F07FF642445D7FB0090975B /* UINavigationController+CLPlayerRotation.m */,
+				6F07FF6C2445D7FB0090975B /* UITabBarController+CLPlayerRotation.h */,
+				6F07FF622445D7FB0090975B /* UITabBarController+CLPlayerRotation.m */,
+				6F07FF612445D7FB0090975B /* UIViewController+CLPlayerRotation.h */,
+				6F07FF692445D7FB0090975B /* UIViewController+CLPlayerRotation.m */,
 			);
 			path = CLPlayer;
 			sourceTree = "<group>";
@@ -5281,6 +5283,7 @@
 				6F87B88B244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift */,
 				E53D8AF5244E80C400590B5A /* YXSPlayListViewController.swift */,
 				6F0700872445D7FE0090975B /* YXSXMLY */,
+				6FEA7C66245668B00017C9CA /* YXSWindowPlayerControlHelper.swift */,
 			);
 			path = YXSBabyhear;
 			sourceTree = "<group>";
@@ -6243,6 +6246,7 @@
 				6FEA7C092452990D0017C9CA /* LFTipsGuideView.m in Sources */,
 				6F07050E2445D8050090975B /* YXSClassStarTeacherSingleHeaderView.swift in Sources */,
 				6F0703952445D8030090975B /* TUIRecordView.m in Sources */,
+				6FEA7C67245668B00017C9CA /* YXSWindowPlayerControlHelper.swift in Sources */,
 				6F07037D2445D8030090975B /* TCommonPendencyCellData.m in Sources */,
 				6F0704792445D8040090975B /* YXSTrackModel.swift in Sources */,
 				6F0703A52445D8030090975B /* TUIMessageController.m in Sources */,

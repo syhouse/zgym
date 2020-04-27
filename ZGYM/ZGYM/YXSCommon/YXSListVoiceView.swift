@@ -36,7 +36,7 @@ class YXSListVoiceView: YXSVoiceBaseView {
     deinit {
         YXSSSAudioListPlayer.sharedInstance.removerPlayer()
     }
-
+    
 }
 
 
@@ -87,6 +87,8 @@ class YXSSSAudioListPlayer: NSObject {
             listPlayer[id] = sudioPlayer
             startAnimation?()
         }
+        
+        YXSWindowPlayerControlHelper.shareHelper.pausePlayer()
     }
     
     ///停止播放player
@@ -97,6 +99,8 @@ class YXSSSAudioListPlayer: NSObject {
             player?.finish?()
         }
         removerPlayer()
+        
+        YXSWindowPlayerControlHelper.shareHelper.playingPlayer()
     }
     
     ///移除播放player

@@ -12,6 +12,8 @@
 #import "AFNetworking.h"
 #import "UIKit+AFNetworking.h"
 
+#import "XMSDK.h"
+
 #define DocumentPath [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
 
 @interface SLVideoPlayController ()
@@ -116,6 +118,7 @@
     [backButton setImage:[UIImage imageNamed:@"yxs_back_white"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(clickBackButton) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
