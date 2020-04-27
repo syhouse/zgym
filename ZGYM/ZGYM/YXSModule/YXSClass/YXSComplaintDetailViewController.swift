@@ -8,7 +8,6 @@
 
 import UIKit
 import NightNight
-import YBImageBrowser
 
 class YXSComplaintDetailViewController: YXSBaseViewController {
 

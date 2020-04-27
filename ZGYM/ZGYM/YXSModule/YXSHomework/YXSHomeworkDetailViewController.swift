@@ -60,8 +60,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         ///移到点击按钮返回事件中去了
-//        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
-//        YXSSSAudioPlayer.sharedInstance.stopVoice()
+        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
     }
     
     override func viewDidLoad() {
@@ -114,7 +113,6 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
 
         tableHeaderView.filterBtnView.jobTypeChankBlock = { [weak self](tag) in
             guard let weakSelf = self else {return}
-            YXSSSAudioListPlayer.sharedInstance.stopPlayer()
             switch tag {
             case 10001:
                 //全部作业

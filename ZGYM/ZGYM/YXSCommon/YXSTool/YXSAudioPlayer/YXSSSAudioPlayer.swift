@@ -99,6 +99,7 @@ class YXSSSAudioPlayer: NSObject {
     public func pauseVoice(){
         player?.pause()
         isPause = true
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     
     /// 恢复
@@ -110,6 +111,7 @@ class YXSSSAudioPlayer: NSObject {
             }
             player.play()
             isPause = false
+            YXSPlayerMediaSingleControlTool.share.pausePlayer()
         }
     }
     

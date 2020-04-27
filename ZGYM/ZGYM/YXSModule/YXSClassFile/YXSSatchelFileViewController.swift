@@ -10,7 +10,7 @@ import UIKit
 import NightNight
 import ObjectMapper
 import Photos
-import YBImageBrowser
+
 
 /// 老师-书包
 class YXSSatchelFileViewController: YXSClassFileViewController {    
@@ -421,12 +421,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 let item = fileList[indexPath.row]
                 
                 if item.fileType == "jpg" {
-                    let imgData = YBIBImageData()
-                    imgData.imageURL = URL(string: item.fileUrl ?? "")
-                    
-                    let browser: YBImageBrowser = YBImageBrowser()
-                    browser.dataSourceArray = [imgData]
-                    browser.show()
+                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], curruntIndex: 0)
                     
                 } else if item.fileType == "mp4" {
                     // 视频

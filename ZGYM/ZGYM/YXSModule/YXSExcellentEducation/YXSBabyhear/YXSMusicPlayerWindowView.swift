@@ -17,7 +17,7 @@ class YXSMusicPlayerWindowView: UIControl {
         UIUtil.RootController().view.addSubview(instanceView)
         instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT, width: SCREEN_WIDTH - 30, height: 49)
         UIView.animate(withDuration: 0.25, animations: {
-            instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 15 - kSafeBottomHeight, width: SCREEN_WIDTH - 30, height: 49)
+            instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 5 - kSafeBottomHeight, width: SCREEN_WIDTH - 30, height: 49)
             let track = XMSDKPlayer.shared()?.currentTrack()
             instanceView.titleLabel.text = track?.trackTitle
             instanceView.startVoiceAnimation()
@@ -65,7 +65,7 @@ class YXSMusicPlayerWindowView: UIControl {
     /// - Parameter isNavFirstVC: 是否是nav的第一个视图
     public static func setUpdateFrame(isNavFirstVC: Bool){
         if XMSDKPlayer.shared()?.playerState != .stop && !(UIUtil.TopViewController() is YXSPlayingViewController){
-            YXSMusicPlayerWindowView.instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 15 - kSafeBottomHeight - (isNavFirstVC ? 49 : 0), width: SCREEN_WIDTH - 30, height: 49)
+            YXSMusicPlayerWindowView.instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 5 - kSafeBottomHeight - (isNavFirstVC ? 49 : 0), width: SCREEN_WIDTH - 30, height: 49)
             if (XMSDKPlayer.shared()?.isPlaying())!{
                 instanceView.isPlayingMusic = true
             }else{
@@ -81,6 +81,14 @@ class YXSMusicPlayerWindowView: UIControl {
         let instanceView = YXSMusicPlayerWindowView.instanceView
         instanceView.removeFromSuperview()
         UIUtil.RootController().view.addSubview(instanceView)
+    }
+    
+    public static func cheakPlayerUI(){
+        if XMSDKPlayer.shared()?.isPlaying() ?? false{
+            instanceView.isPlayingMusic = true
+        }else{
+            instanceView.isPlayingMusic = false
+        }
     }
     
     private static let instanceView: YXSMusicPlayerWindowView = YXSMusicPlayerWindowView()
@@ -293,7 +301,7 @@ extension YXSMusicPlayerWindowView: XMTrackPlayerDelegate{
         titleLabel.text = track?.trackTitle
     }
     
-    func xmTrackPlayerDidEnd() {
+    func xmTrackPlayerDidPlaylistEnd() {
         YXSMusicPlayerWindowView.hidePlayerWindow()
     }
     

@@ -12,6 +12,7 @@
 #import "AFNetworking.h"
 #import "UIKit+AFNetworking.h"
 
+#import "ZGYM-Swift.h"
 #import "XMSDK.h"
 
 #define DocumentPath [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
@@ -118,17 +119,18 @@
     [backButton setImage:[UIImage imageNamed:@"yxs_back_white"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(clickBackButton) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.navigationController.navigationBar.hidden = NO;
+    [[YXSPlayerMediaSingleControlTool share] resumePlayer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
+    [[YXSPlayerMediaSingleControlTool share] pausePlayer];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

@@ -8,7 +8,6 @@
 
 import UIKit
 import SwiftyJSON
-import YBImageBrowser
 import NightNight
 
 class YXSProfileViewController: YXSBaseViewController, UITableViewDelegate, UITableViewDataSource, YXSSelectMediaHelperDelegate {
@@ -200,11 +199,7 @@ class YXSProfileViewController: YXSBaseViewController, UITableViewDelegate, UITa
             cell.cellStyle = .ImageViews
             cell.imgAvatar.sd_setImage(with: URL(string: dic["avatar"] ?? ""), placeholderImage:YXSPersonDataModel.sharePerson.personRole == .TEACHER ? kImageUserIconTeacherDefualtImage : kImageUserIconStudentDefualtImage)
             cell.avatarTap = { (avatar) in
-                let browser = YBImageBrowser()
-                let imgData = YBIBImageData()
-                imgData.image = {return avatar}
-                browser.dataSourceArray.append(imgData)
-                browser.show()
+                YXSShowBrowserHelper.showImage(images: [avatar], curruntIndex: 0)
             }
             
         } else {

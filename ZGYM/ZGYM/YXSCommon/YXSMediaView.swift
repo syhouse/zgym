@@ -8,7 +8,6 @@
 
 import UIKit
 import NightNight
-import YBImageBrowser
 
 /// 文本+音频+图片9宫格
 class YXSMediaView: UIView {
@@ -118,16 +117,12 @@ class YXSMediaView: UIView {
     
     // MARK: - Action
     func showImageBrowser(index: Int){
-        let browser = YBImageBrowser()
+        var urls = [URL]()
         for url in model?.images ?? [String](){
-            let imgData = YBIBImageData()
-            imgData.imageURL = URL.init(string: url)
-            browser.dataSourceArray.append(imgData)
+            urls.append(URL.init(string: url)!)
+            YXSShowBrowserHelper.showImage(urls: urls, curruntIndex: index)
         }
-        browser.currentPage = index
-
-//        browser.toolViewHandlers = [YXSPhotoBrowserTool.init()]
-        browser.show()
+        
     }
     
     func showVideoBrowser() {

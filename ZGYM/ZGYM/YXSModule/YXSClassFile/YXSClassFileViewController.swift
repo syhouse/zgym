@@ -10,7 +10,6 @@ import UIKit
 import NightNight
 import ObjectMapper
 import Photos
-import YBImageBrowser
 
 /// 班级文件
 class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelperDelegate {
@@ -580,12 +579,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 let item = fileList[indexPath.row]
                 
                 if item.fileType == "jpg" {
-                    let imgData = YBIBImageData()
-                    imgData.imageURL = URL(string: item.fileUrl ?? "")
-                    
-                    let browser: YBImageBrowser = YBImageBrowser()
-                    browser.dataSourceArray = [imgData]
-                    browser.show()
+                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], curruntIndex: 0)
                     
                 } else if item.fileType == "mp4" {
                     // 视频
