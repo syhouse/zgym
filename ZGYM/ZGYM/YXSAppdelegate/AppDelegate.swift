@@ -104,38 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         
         if url.absoluteString.contains(shareExtensionSchemes) {
             /// ShareExtension
-            let list = url.lastPathComponent.components(separatedBy: ",")
-            var uploadArr:[YXSUploadDataResourceModel] = [YXSUploadDataResourceModel]()
-            for sub in list {
-                let fileName = sub
-                let url = YXSFileManagerHelper.sharedInstance.getFullPathURL(lastPathComponent: fileName)
-                let size = YXSFileManagerHelper.sharedInstance.sizeMbOfFilePath(filePath: url)
-
-                let model = YXSUploadDataResourceModel()
-                
-                if fileName.pathExtension == "MOV" {
-                    let semaphore = DispatchSemaphore(value: 0)
-                    YXSFileUploadHelper.sharedInstance.video2Mp4(url: url) { (data, newUrl) in
-                        model.fileName = newUrl?.lastPathComponent
-                        model.dataSource = data
-                        uploadArr.append(model)
-                        semaphore.signal()
-                    }
-                    semaphore.wait()
-                    
-                } else {
-                    model.fileName = fileName
-                    model.dataSource = try? Data(contentsOf: url)
-                    uploadArr.append(model)
-                }
-            }
-            
-            YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, progress: nil, sucess: { (list) in
-                
-            }) { (msg, code) in
-                
-            }
-            
+            YXSShareExtensionHelper.sharedInstance.shareToSatchel(url: url, completionHandler: nil)
             return true
         }
         

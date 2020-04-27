@@ -97,6 +97,20 @@ class YXSSatchelUploadFileRequest: YXSBaseRequset {
         param = ["parentFolderId":parentFolderId,
                  "satchelFileList":satchelFileList]
     }
+    
+    init(parentFolderId: Int, satchelFileList: [YXSFileModel]){
+        super.init()
+        method = .post
+        host = fileHost
+        path = satchelUploadFile
+        
+        var dicArr = [[String: Any]]()
+        for sub in satchelFileList {
+            dicArr.append(sub.toJSON())
+        }
+        param = ["parentFolderId":parentFolderId,
+                 "satchelFileList":dicArr]
+    }
 }
 
 let satchelFilePageQuery = "/satchel/file-page-query"

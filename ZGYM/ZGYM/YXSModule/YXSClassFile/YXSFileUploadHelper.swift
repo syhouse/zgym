@@ -31,83 +31,6 @@ class YXSFileUploadHelper: NSObject {
             
         }, failureHandler: failureHandler)
     }
-    
-    // MARK: - GetUrl
-    /// 图片
-    @objc func getImageUrl(name: String)-> String{
-        let arr = name.components(separatedBy: ".")
-        if arr.count > 1 {
-            let strUrl = "image/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name)"
-            return strUrl
-            
-        } else {
-            let strUrl = "image/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name).jpg"
-            return strUrl
-        }
-
-    }
-    
-    /// 相册图片
-    @objc func getAlbumImageUrl(name: String, classId: Int, albumId: Int)-> String{
-        let arr = name.components(separatedBy: ".")
-        if arr.count > 1 {
-            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5())"
-            return strUrl
-            
-        } else {
-            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5()).jpg"
-            return strUrl
-        }
-
-    }
-    
-    /// 声音
-    @objc func getVoiceUrl(name: String)-> String {
-        let arr = name.components(separatedBy: ".")
-        if arr.count > 1 {
-            let strUrl = "voice/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name)"
-            return strUrl
-            
-        } else {
-            let strUrl = "voice/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name).mp3"
-            return strUrl
-        }
-
-    }
-    
-    /// 视频
-    @objc func getVideoUrl(name: String)-> String {
-        let arr = name.components(separatedBy: ".")
-        if arr.count > 1 {
-            let strUrl = "video/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name)"
-            return strUrl
-            
-        } else {
-            let strUrl = "video/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name).mp4"
-            return strUrl
-        }
-
-    }
-    
-    /// 相册视频
-    @objc func getAlbumVideoUrl(name: String, classId: Int, albumId: Int)-> String {
-        let arr = name.components(separatedBy: ".")
-        if arr.count > 1 {
-            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5())"
-            return strUrl
-            
-        } else {
-            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5()).mp4"
-            return strUrl
-        }
-
-    }
-    
-    /// 文件
-    @objc func getFileUrl(name: String)-> String {
-        let strUrl = "iOS/files/\(name)"
-        return strUrl
-    }
 
     // MARK: - Method
     func uploadDataSource(dataSource:[YXSUploadDataResourceModel], progress : ((_ progress: CGFloat)->())?, sucess:(([YXSFileModel])->())?, failureHandler: ((String, String) -> ())?) {
@@ -118,9 +41,12 @@ class YXSFileUploadHelper: NSObject {
         
         for sub in dataSource {
             
-            let conpArr = sub.fileName?.components(separatedBy: ".")
+            /// 文件名
+            let fileName = sub.fileName?.deletingPathExtension
             /// 文件后缀名
-            let extName = conpArr?.last?.lowercased()
+            let extName = sub.fileName?.pathExtension.lowercased()
+            /// 文件名(带后缀)
+            let fullName = "\(fileName ?? "").\(extName ?? "")"
             
             let model = YXSFileModel(JSON: ["":""])
             var path: String = ""
@@ -130,32 +56,59 @@ class YXSFileUploadHelper: NSObject {
                 group.enter()
                 queue.async { [weak self] in
                     guard let weakSelf = self else {return}
-                    path = weakSelf.getVideoUrl(name: sub.fileName ?? "")
+                    path = weakSelf.kHostFilePath+fullName//weakSelf.getVideoUrl(name: fullName)
                     
                     weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: sub.dataSource, uploadProgress: nil, completionHandler: { (result) in
-                        model?.fileUrl = result ?? ""
-                        model?.fileName = result.lastPathComponent
+                        model?.fileUrl = result
+                        model?.fileName = fullName
                         model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: sub.dataSource!))
-                        model?.fileType = result.pathExtension
+                        model?.fileType = extName
                         resultArr.append(model!)
                         group.leave()
                         
                     }, failureHandler: failureHandler)
                 }
                 
-                
-            } else if extName == "jpg" {
-                /// 直接上传
                 group.enter()
                 queue.async { [weak self] in
                     guard let weakSelf = self else {return}
-                    path = weakSelf.getImageUrl(name: sub.fileName ?? "")
+                    
+                    ///获取视频第一帧
+                    do {
+                        let name = "\(fileName ?? "")_1.jpg"
+                        //let path: String = weakSelf.getImageUrl(name: name)
+                        path = weakSelf.kHostFilePath+name
+                        let imgData = sub.bgImage?.jpegData(compressionQuality: 1)
+
+                        weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: imgData, uploadProgress: nil, completionHandler: { (result) in
+                            model?.bgUrl = result
+                            group.leave()
+                            
+                        }, failureHandler: failureHandler)
+                        
+                    } catch  {
+                        print("错误")
+                    }
+                }
+                
+            } else if extName == "m4a" {
+                /// 音频类型
+                
+            } else if extName == "pptx" || extName == "pdf" {
+                /// 文档类型
+                
+            } else if extName == "jpg" || extName == "png" || extName == "gif" || extName == "jpeg" || extName == "bmp"  {
+                /// 图片类型直接上传
+                group.enter()
+                queue.async { [weak self] in
+                    guard let weakSelf = self else {return}
+                    path = weakSelf.kHostFilePath+fullName//weakSelf.getImageUrl(name: fullName)
                     
                     weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: sub.dataSource, uploadProgress: nil, completionHandler: { (result) in
-                        model?.fileUrl = result ?? ""
-                        model?.fileName = result.lastPathComponent
+                        model?.fileUrl = result 
+                        model?.fileName = fullName
                         model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: sub.dataSource!))
-                        model?.fileType = result.pathExtension
+                        model?.fileType = extName
                         resultArr.append(model!)
                         group.leave()
                         
@@ -163,12 +116,11 @@ class YXSFileUploadHelper: NSObject {
                 }
 
             }
-
-            
-            group.notify(queue: queue) {
-                DispatchQueue.main.async {
-                    sucess?(resultArr)
-                }
+        }
+        
+        group.notify(queue: queue) {
+            DispatchQueue.main.async {
+                sucess?(resultArr)
             }
         }
     }
@@ -192,31 +144,34 @@ class YXSFileUploadHelper: NSObject {
         
         for asset in mediaAssets{
             
-            var model = YXSFileModel(JSON: ["":""])
+            let model = YXSFileModel(JSON: ["":""])
+            var path: String = ""
             
             if asset.mediaType == .image {
                 group.enter()
                 queue.async { [weak self] in
                     guard let weakSelf = self else {return}
                     
-                    let strArr = (asset.value(forKey: "filename") as? String ?? "").split(separator: ".")
-                    let name = String(strArr.first ?? "")
-                    var path: String = ""
+                    let tmpName = (asset.value(forKey: "filename") as? String ?? "")
+                    let fileName = tmpName.deletingPathExtension
+                    let extName = "jpg"//tmpName.pathExtension.lowercased()
+                    let fullName = "\(fileName).\(extName)"
+                    
                     if albumId == nil || classId == nil {
-                        path = weakSelf.getImageUrl(name: name)
+                        path = weakSelf.kHostFilePath+fullName//weakSelf.getImageUrl(name: name)
                         
                     } else {
-                        path = weakSelf.getAlbumImageUrl(name: name, classId: classId ?? 0, albumId: albumId ?? 0)
+                        path = weakSelf.kHostFilePath+fullName//weakSelf.getAlbumImageUrl(name: name, classId: classId ?? 0, albumId: albumId ?? 0)
                     }
                     
 
                     PHImageManager.default().requestImageData(for: asset, options: nil) { (imageData, dataUTI, orientation, info) in
                         
                         weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: imageData, uploadProgress: nil, completionHandler: { (result) in
-                            model?.fileUrl = result ?? ""
-                            model?.fileName = "\(name).\(result.pathExtension)"
+                            model?.fileUrl = result
+                            model?.fileName = fullName
                             model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: imageData!))
-                            model?.fileType = result.pathExtension
+                            model?.fileType = extName
                             resultArr.append(model!)
                             group.leave()
                             
@@ -232,27 +187,29 @@ class YXSFileUploadHelper: NSObject {
 
                     if let url = asset?.url {
                         /// 视频数据
-                        let strArr = asset?.url.lastPathComponent.split(separator: ".")
+                        let tmpName = asset?.url.lastPathComponent
+                        let fileName = tmpName?.deletingPathExtension
+                        let extName = tmpName?.pathExtension.lowercased()
+                        let fullName = "\(fileName ?? "").\(extName ?? "")"
                         
                         group.enter()
                         queue.async { [weak self] in
                             guard let weakSelf = self else {return}
-                            let name = String(strArr?.first ?? "")
-                            var path: String = ""
+
                             if albumId == nil || classId == nil {
-                                path = weakSelf.getVideoUrl(name: name)
+                                path = weakSelf.kHostFilePath+fullName//weakSelf.getVideoUrl(name: name)
                                 
                             } else {
-                                path = weakSelf.getAlbumVideoUrl(name: name, classId: classId ?? 0, albumId: albumId ?? 0)
+                                path = weakSelf.kHostFilePath+fullName//weakSelf.getAlbumVideoUrl(name: name, classId: classId ?? 0, albumId: albumId ?? 0)
                             }
                             let data = try? Data(contentsOf: asset!.url)
                             
                             weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: data, uploadProgress: nil, completionHandler: { (result) in
                                 
-                                model?.fileUrl = result ?? ""
-                                model?.fileName = "\(name).\(result.pathExtension)"
+                                model?.fileUrl = result
+                                model?.fileName = fullName
                                 model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: data!))
-                                model?.fileType = result.pathExtension
+                                model?.fileType = extName
                                 resultArr.append(model!)
                                 group.leave()
                                 
@@ -264,8 +221,8 @@ class YXSFileUploadHelper: NSObject {
                             guard let weakSelf = self else {return}
                             ///获取视频第一帧
                             do {
-                                let name = String(strArr?.first ?? "")+"_1"
-                                let path: String = weakSelf.getImageUrl(name: name)
+                                let name = "\(fileName ?? "")_1.jpg"
+                                path = weakSelf.kHostFilePath+name
                                 
                                 let img = weakSelf.getVideoFirstPicture(asset: asset!)
                                 let imgData = img?.jpegData(compressionQuality: 1)
@@ -301,7 +258,7 @@ class YXSFileUploadHelper: NSObject {
         uploadAlbumMedias(mediaAssets: mediaAssets, classId: nil, albumId: nil, progress: progress, sucess: sucess, failureHandler: failureHandler)
     }
     
-    // MARK: -Base
+    // MARK: - Base
     // uploadProgress: 当前上传段长度、当前已经上传总长度、一共需要上传的总长度
     func aliyunOSSUpload(objectKey: String, uploadingFileURL: URL? = nil, uploadingData: Data? = nil, uploadProgress: OSSNetworkingUploadProgressBlock?, completionHandler:(((_ resultUrl: String)->())?), failureHandler:((String, String) -> ())?) {
         if uploadingFileURL == nil && uploadingData == nil {
@@ -392,6 +349,13 @@ class YXSFileUploadHelper: NSObject {
         return nil
     }
     
+    @objc func getVideoFirstPicture(url: URL)-> UIImage? {
+        let asset = AVURLAsset(url: url)
+        return getVideoFirstPicture(asset: asset)
+    }
+    
+    
+    
     @objc func video2Mp4(url: URL, completion:((_ data:Data, _ newPath:URL?)->())?) {
         
         let avAsset = AVURLAsset.init(url: url, options: nil)
@@ -442,10 +406,90 @@ class YXSFileUploadHelper: NSObject {
             }
         })
     }
+    
+    // MARK: - GetUrl
+    /// 图片
+    let kHostFilePath = "\(YXSPersonDataModel.sharePerson.userModel.account ?? "")/ios/"
+//    @objc func getImageUrl(name: String)-> String{
+//        let arr = name.components(separatedBy: ".")
+//        if arr.count > 1 {
+//            let strUrl = "image/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name)"
+//            return strUrl
+//
+//        } else {
+//            let strUrl = "image/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name).jpg"
+//            return strUrl
+//        }
+//
+//    }
+//
+//    /// 相册图片
+//    @objc func getAlbumImageUrl(name: String, classId: Int, albumId: Int)-> String{
+//        let arr = name.components(separatedBy: ".")
+//        if arr.count > 1 {
+//            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5())"
+//            return strUrl
+//
+//        } else {
+//            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5()).jpg"
+//            return strUrl
+//        }
+//
+//    }
+//
+//    /// 声音
+//    @objc func getVoiceUrl(name: String)-> String {
+//        let arr = name.components(separatedBy: ".")
+//        if arr.count > 1 {
+//            let strUrl = "voice/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name)"
+//            return strUrl
+//
+//        } else {
+//            let strUrl = "voice/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name).mp3"
+//            return strUrl
+//        }
+//
+//    }
+//
+//    /// 视频
+//    @objc func getVideoUrl(name: String)-> String {
+//        let arr = name.components(separatedBy: ".")
+//        if arr.count > 1 {
+//            let strUrl = "video/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name)"
+//            return strUrl
+//
+//        } else {
+//            let strUrl = "video/iOS/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/\(name).mp4"
+//            return strUrl
+//        }
+//
+//    }
+//
+//    /// 相册视频
+//    @objc func getAlbumVideoUrl(name: String, classId: Int, albumId: Int)-> String {
+//        let arr = name.components(separatedBy: ".")
+//        if arr.count > 1 {
+//            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5())"
+//            return strUrl
+//
+//        } else {
+//            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5()).mp4"
+//            return strUrl
+//        }
+//
+//    }
+//
+//    /// 文件
+//    @objc func getFileUrl(name: String)-> String {
+//        let strUrl = "iOS/files/\(name)"
+//        return strUrl
+//    }
 }
 
 class YXSUploadDataResourceModel: NSObject {
     var dataSource: Data?
     /// 文件名 带后缀 例如IMG_02.jpg
     var fileName: String?
+    /// 视频/Gif的首图(选填)
+    var bgImage: UIImage? = UIImage(named: "defultImage")
 }
