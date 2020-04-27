@@ -384,8 +384,8 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             let item = folderList[indexPath.row]
             item.isEditing = isTbViewEditing
             let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
-            cell.model = item
             cell.lbTitle.text = item.folderName//"作业"
+            cell.model = item
             return cell
             
         } else {
@@ -393,9 +393,17 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             item.isEditing = isTbViewEditing
             let cell: YXSFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! YXSFileCell
             cell.lbTitle.text = item.fileName
-            cell.lbSubTitle.text = "\(item.fileSize ?? 0)KB | \(item.createTime?.yxs_DayTime() ?? "")" ///"老师名 | 2020-8-16"
-            let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
-            cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+            let fileSize: String = YXSFileManagerHelper.sharedInstance.stringSizeOfDataSrouce(fileSize: UInt64(item.fileSize ?? 0))
+            cell.lbSubTitle.text = "\(fileSize) | \(item.createTime?.yxs_DayTime() ?? "")" ///"老师名 | 2020-8-16"
+            if let url = URL(string: item.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
+                if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
+                    cell.imgIcon.image = img
+                    
+                } else {
+                    let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
+                    cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+                }
+            }
             cell.model = item
             return cell
         }

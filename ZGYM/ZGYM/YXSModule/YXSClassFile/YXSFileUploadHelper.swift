@@ -51,7 +51,7 @@ class YXSFileUploadHelper: NSObject {
             let model = YXSFileModel(JSON: ["":""])
             var path: String = ""
             
-            if extName == "mp4" {
+            if extName == "mp4" || extName == "mov" {
                 /// 视频需获取视频第一帧
                 group.enter()
                 queue.async { [weak self] in
@@ -91,21 +91,15 @@ class YXSFileUploadHelper: NSObject {
                     }
                 }
                 
-            } else if extName == "m4a" {
-                /// 音频类型
-                
-            } else if extName == "pptx" || extName == "pdf" {
-                /// 文档类型
-                
-            } else if extName == "jpg" || extName == "png" || extName == "gif" || extName == "jpeg" || extName == "bmp"  {
-                /// 图片类型直接上传
+            } else {
+                /// 直接上传
                 group.enter()
                 queue.async { [weak self] in
                     guard let weakSelf = self else {return}
                     path = weakSelf.kHostFilePath+fullName//weakSelf.getImageUrl(name: fullName)
                     
                     weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: sub.dataSource, uploadProgress: nil, completionHandler: { (result) in
-                        model?.fileUrl = result 
+                        model?.fileUrl = result
                         model?.fileName = fullName
                         model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: sub.dataSource!))
                         model?.fileType = extName
@@ -114,8 +108,32 @@ class YXSFileUploadHelper: NSObject {
                         
                     }, failureHandler: failureHandler)
                 }
-
             }
+                
+//            if extName == "m4a" || extName == "mp3" || extName == "wav" || extName == "ogg" || extName == "m4r" || extName == "acc" {
+//                /// 音频类型
+//
+//            } else if extName == "pptx" || extName == "pdf" {
+//                /// 文档类型
+//
+//            } else if extName == "jpg" || extName == "png" || extName == "gif" || extName == "jpeg" || extName == "bmp"  {
+//                /// 图片类型直接上传
+//                group.enter()
+//                queue.async { [weak self] in
+//                    guard let weakSelf = self else {return}
+//                    path = weakSelf.kHostFilePath+fullName//weakSelf.getImageUrl(name: fullName)
+//
+//                    weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: sub.dataSource, uploadProgress: nil, completionHandler: { (result) in
+//                        model?.fileUrl = result
+//                        model?.fileName = fullName
+//                        model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: sub.dataSource!))
+//                        model?.fileType = extName
+//                        resultArr.append(model!)
+//                        group.leave()
+//
+//                    }, failureHandler: failureHandler)
+//                }
+//            }
         }
         
         group.notify(queue: queue) {

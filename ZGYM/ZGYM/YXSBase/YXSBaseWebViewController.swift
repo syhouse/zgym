@@ -49,11 +49,15 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate {
     // MARK: - Setter
     var loadUrl: String? {
         didSet {
-            if let url = URL(string: self.loadUrl ?? "") {
-                let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 5)
-                webView.load(request)
-            } else {
-                MBProgressHUD.yxs_showMessage(message: "网页地址无效")
+            if let tmp = self.loadUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                if let url = URL(string: tmp) {
+                    let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 5)
+                    webView.load(request)
+                    
+                } else {
+                    MBProgressHUD.yxs_showMessage(message: "网页地址无效")
+                }
+                
             }
         }
     }

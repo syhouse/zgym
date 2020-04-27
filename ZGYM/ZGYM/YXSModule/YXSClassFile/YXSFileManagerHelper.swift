@@ -68,10 +68,16 @@ class YXSFileManagerHelper: NSObject {
         var fileSize : UInt64 = 0
     
         fileSize = UInt64(data.count)//attr[FileAttributeKey.size] as! UInt64
+        fileSize = fileSize/1024
+        return stringSizeOfDataSrouce(fileSize: fileSize)
+    }
+    
+    /// fileSize(KB)
+    @objc func stringSizeOfDataSrouce(fileSize: UInt64) -> String {
         
-        if UInt64(1024.0*1024.0) > fileSize {
+        if 1024 > fileSize {
             /// 返回kb
-            let kb = fileSize/1024
+            let kb = fileSize
             if kb > 999 {
                 return "999KB"
             } else {
@@ -80,7 +86,8 @@ class YXSFileManagerHelper: NSObject {
             
         } else {
             /// 返回MB
-            return "\(fileSize/1024/1024)MB"
+            let mb = CGFloat(fileSize)/1024.0
+            return String(format: "%.02fMB", mb)
         }
     }
     
@@ -133,7 +140,7 @@ class YXSFileManagerHelper: NSObject {
     
     
     /// 根据文件路径返回相对应的图标
-    @objc func getIconWithFileUrl(_ fileUrl: URL) -> UIImage {
+    @objc func getIconWithFileUrl(_ fileUrl: URL) -> UIImage? {
         let img = UIImage()
         
         let fileEx = fileUrl.pathExtension
@@ -150,7 +157,7 @@ class YXSFileManagerHelper: NSObject {
             
             /// 图片
             case "jpg":
-            return img
+            return nil
             
             /// 音频
             case "m4a","mp3","wav","ogg","m4r","acc":
@@ -158,9 +165,9 @@ class YXSFileManagerHelper: NSObject {
             
             /// 视频
             case "mp4","MP4","mov":
-            return img
+            return nil
         default:
-            return img
+            return nil
         }
     }
     
