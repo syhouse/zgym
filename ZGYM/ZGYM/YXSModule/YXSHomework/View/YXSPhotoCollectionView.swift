@@ -382,7 +382,7 @@ class YXSPhotoCollectionView: UIView {
         recordingStyle = .Recording
         changeUI()
         
-        YXSWindowPlayerControlHelper.shareHelper.pausePlayer()
+        YXSPlayerMediaSingleControlTool.share.pausePlayer()
     }
     
     fileprivate func stopCapture(){
@@ -393,7 +393,7 @@ class YXSPhotoCollectionView: UIView {
         timerTool.yxs_cancelTimer()
         changeUI()
     
-        YXSWindowPlayerControlHelper.shareHelper.playingPlayer()
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     
     //  切换动画

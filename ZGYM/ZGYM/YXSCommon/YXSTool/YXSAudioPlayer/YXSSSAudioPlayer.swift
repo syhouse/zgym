@@ -63,7 +63,7 @@ class YXSSSAudioPlayer: NSObject {
          isFinish = false
          
          NotificationCenter.default.addObserver(self, selector: #selector(videoPlayEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        YXSWindowPlayerControlHelper.shareHelper.pausePlayer()
+        YXSPlayerMediaSingleControlTool.share.pausePlayer()
     }
     
     
@@ -91,7 +91,7 @@ class YXSSSAudioPlayer: NSObject {
         player = nil
         isFinish = true
         
-        YXSWindowPlayerControlHelper.shareHelper.playingPlayer()
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     
     
@@ -119,7 +119,7 @@ class YXSSSAudioPlayer: NSObject {
         isPause = true
         finish?()
         
-        YXSWindowPlayerControlHelper.shareHelper.playingPlayer()
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
         
     // MARK: - Setter

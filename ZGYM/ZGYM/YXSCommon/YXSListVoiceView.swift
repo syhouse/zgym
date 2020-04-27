@@ -88,7 +88,7 @@ class YXSSSAudioListPlayer: NSObject {
             startAnimation?()
         }
         
-        YXSWindowPlayerControlHelper.shareHelper.pausePlayer()
+        YXSPlayerMediaSingleControlTool.share.pausePlayer()
     }
     
     ///停止播放player
@@ -100,7 +100,7 @@ class YXSSSAudioListPlayer: NSObject {
         }
         removerPlayer()
         
-        YXSWindowPlayerControlHelper.shareHelper.playingPlayer()
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     
     ///移除播放player

@@ -46,10 +46,10 @@ extension YXSRootNavController: UINavigationControllerDelegate{
         
         
         if let _ = toVC as? SLVideoPlayController{
-            YXSWindowPlayerControlHelper.shareHelper.pausePlayer()
+            YXSPlayerMediaSingleControlTool.share.pausePlayer()
         }
         if let _ = fromVC as? SLVideoPlayController{
-            YXSWindowPlayerControlHelper.shareHelper.playingPlayer()
+            YXSPlayerMediaSingleControlTool.share.resumePlayer()
         }
         
         return nil

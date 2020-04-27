@@ -1,5 +1,5 @@
 //
-//  YXSWindowPlayerControlHelper.swift
+//  YXSPlayerMediaSingleTool.swift
 //  ZGYM
 //
 //  Created by sy_mac on 2020/4/27.
@@ -8,8 +8,9 @@
 
 import UIKit
 
-class YXSWindowPlayerControlHelper: NSObject {
-    static let shareHelper: YXSWindowPlayerControlHelper = YXSWindowPlayerControlHelper()
+class YXSPlayerMediaSingleControlTool: NSObject {
+    static let share: YXSPlayerMediaSingleControlTool = YXSPlayerMediaSingleControlTool()
+    
     
     ///被强制停止
     var isPlayerBeForcedStop: Bool = false
@@ -23,7 +24,7 @@ class YXSWindowPlayerControlHelper: NSObject {
     }
     
     ///单独控制开始播放
-    public func playingPlayer(){
+    public func resumePlayer(){
         changePlayerStatus(play: true)
     }
     

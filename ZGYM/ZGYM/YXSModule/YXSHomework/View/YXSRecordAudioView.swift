@@ -344,12 +344,12 @@ class YXSRecordAudioView: UIView {
             status = .Recording
             startRecord()
             setRecordingUI()
-            YXSWindowPlayerControlHelper.shareHelper.pausePlayer()
+            YXSPlayerMediaSingleControlTool.share.pausePlayer()
         case .Recording:
             status = .redayShow
             stopRecord()
             setRedayShowUI()
-            YXSWindowPlayerControlHelper.shareHelper.playingPlayer()
+            YXSPlayerMediaSingleControlTool.share.resumePlayer()
         case .redayShow:
             status = .Showing
             play()

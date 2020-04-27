@@ -69,6 +69,8 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
         return vc
     }()
     
+    
+    /// 启动相机拍照
     func takePhoto(){
         let authStatus: AVAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
         if (authStatus == .restricted || authStatus == .denied) {
@@ -107,6 +109,7 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
                 imagePickerVc.sourceType = .camera
                 imagePickerVc.modalPresentationStyle = .overCurrentContext
                 UIUtil.RootController().present(self.imagePickerVc, animated: true, completion: nil)
+                YXSPlayerMediaSingleControlTool.share.pausePlayer()
             } else {
                 print("模拟器中无法打开照相机,请在真机中使用")
             }
@@ -161,6 +164,14 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
         UIUtil.RootController().present(vc, animated: true, completion: nil)
     }
     
+    
+    /// 选择图片
+    /// - Parameters:
+    ///   - selectedAssets: 展示当前选中的资源
+    ///   - mediaStyle: 选择模式  只图片 只视频等等
+    ///   - showTakePhoto: 是否展示拍照按钮
+    ///   - maxCount: 最大数量
+    ///   - presentVc: 从那个控制器presentVc
     public func pushImagePickerController( _ selectedAssets: [TZAssetModel] = [TZAssetModel](), mediaStyle: SLSelectMediaStyle = .all, showTakePhoto: Bool = true, maxCount:Int = 9,presentVc: UIViewController = UIUtil.RootController()){
         let imagePickerVc = TZImagePickerController(maxImagesCount: maxCount, columnNumber: 4, delegate: self, pushPhotoPickerVc: true)
         imagePickerVc!.preferredLanguage = "zh-Hans"
@@ -197,9 +208,12 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
         }
         imagePickerVc!.modalPresentationStyle = .fullScreen
         presentVc.present(imagePickerVc!, animated: true, completion: nil)
+        
+        YXSPlayerMediaSingleControlTool.share.pausePlayer()
     }
     
     
+    /// 展示裁剪框的选择图片
     public func pushImageAllCropPickerController(){
         let imagePickerVc = TZImagePickerController(maxImagesCount: 1, columnNumber: 4, delegate: self, pushPhotoPickerVc: true)
         imagePickerVc!.preferredLanguage = "zh-Hans"
@@ -227,6 +241,8 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
     
     func tz_imagePickerControllerDidCancel(_ picker: TZImagePickerController!) {
         print("cancel")
+        
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     
     // photos数组里的UIImage对象，默认是828像素宽，你可以通过设置photoWidth属性的值来改变它
@@ -235,6 +251,8 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
         delegate?.didSelectSourceAssets(assets: YXSMediaModel.getMediaModels(assets: assets as! [PHAsset]))
         
         delegate?.didSelectImages(images: photos ?? [UIImage]())
+        
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     
     func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingVideo coverImage: UIImage!, sourceAssets asset: PHAsset!) {
@@ -255,6 +273,8 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
         model.asset = asset
         self.delegate.didSelectMedia(asset: model)
 
+        
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     
     
@@ -302,10 +322,12 @@ extension YXSSelectMediaHelper: (UIImagePickerControllerDelegate & UINavigationC
             
         }
         
-        
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+        
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
 }
 

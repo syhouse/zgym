@@ -8,7 +8,7 @@
 
 import UIKit
 import AssetsLibrary
-import TZImagePickerController
+import Photos
 
 class YXSRecordVideoController: YXSBaseViewController {
      var selectComplete:((YXSMediaModel) -> Void)?

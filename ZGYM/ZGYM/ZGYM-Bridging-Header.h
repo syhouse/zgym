@@ -18,6 +18,8 @@
 #import "YXSAddressPickerModel.h"
 #import "YXSObjcTool.h"
 #import "YXSUnReadView.h"
+#import "TZImagePickerController/TZAssetModel.h"
+
 
 /// IM
 #import "TUIKit.h"
