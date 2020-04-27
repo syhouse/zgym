@@ -9,14 +9,14 @@
 import UIKit
 
 class YXSRootNavController: UINavigationController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.delegate = self
     }
     
-
+    
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         if self.viewControllers.count != 0 {
             viewController.hidesBottomBarWhenPushed = true
@@ -41,4 +41,18 @@ extension YXSRootNavController: UINavigationControllerDelegate{
         ///跳转到导航栏根视图
         YXSMusicPlayerWindowView.setUpdateFrame(isNavFirstVC: self.viewControllers.first == viewController)
     }
+    
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
+        
+        if let _ = toVC as? SLVideoPlayController{
+            YXSPlayerMediaSingleControlTool.share.pausePlayer()
+        }
+        if let _ = fromVC as? SLVideoPlayController{
+            YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        }
+        
+        return nil
+    }
+    
 }

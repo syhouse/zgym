@@ -9,7 +9,6 @@
 import UIKit
 import NightNight
 import YBImageBrowser
-import TZImagePickerController
 
 class YXSComplaintDetailViewController: YXSBaseViewController {
 
@@ -440,16 +439,7 @@ class SLComplaintImagesView: UIView,YXSSelectMediaHelperDelegate {
         listView.clickItemBlock = {[weak self](item) in
             guard let strongSelf = self else { return }
             strongSelf.isAdd = false
-//            if !strongSelf.isVedio{
-                strongSelf.showSelectMedia(false)
-//            }else{
-//                let browser = YBImageBrowser()
-//                let vedioData = YBIBVideoData()
-//                vedioData.videoPHAsset = item.model?.asset
-//                vedioData.autoPlayCount = 1
-//                browser.dataSourceArray.append(vedioData)
-//                browser.show()
-//            }
+            strongSelf.showSelectMedia(false)
         }
         return listView
     }()

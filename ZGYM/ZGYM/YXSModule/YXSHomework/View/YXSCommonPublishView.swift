@@ -8,7 +8,6 @@
 
 import UIKit
 import Photos
-import TZImagePickerController
 import YBImageBrowser
 import NightNight
 
@@ -394,7 +393,7 @@ class YXSCommonPublishView: UIView{
             }else{
                 //本地预览
                 if !(item.model?.isService ?? false){
-                    YXSShowBrowserHelper.showVedio(assets: item.model?.asset)
+                    YXSShowBrowserHelper.yxs_VedioBrowser(assets: item.model?.asset)
                 }else{//网络预览
                     UIUtil.pushOpenVideo(url: item.model?.serviceUrl ?? "")
                 }

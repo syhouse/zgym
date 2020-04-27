@@ -60,20 +60,43 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
     }
     
     
-    /// 展示本地视频资源
+    /// 展示相册视频资源
     /// - Parameter assets: assets
-    static func showVedio(assets: PHAsset?){
-       let browser = YBImageBrowser()
-        let vedioData = YBIBVideoData()
-        vedioData.videoPHAsset = assets
-        vedioData.autoPlayCount = 1
-        browser.dataSourceArray.append(vedioData)
-        browser.delegate = YXSShowBrowserHelper.helper
+    static func yxs_VedioBrowser(assets: PHAsset?, delegate: YBImageBrowserDelegate? = nil){
+        yxs_VedioBrowser(asset: assets,videoURL: nil, delegate: delegate)
+    }
+    /// 展示本地路径资源
+    /// - Parameter assets: assets
+    static func yxs_VedioBrowser(videoURL: URL?, delegate: YBImageBrowserDelegate? = nil){
+       yxs_VedioBrowser(asset: nil, videoURL: videoURL, delegate: delegate)
+    }
+    
+    private static func yxs_VedioBrowser(asset: PHAsset?, videoURL: URL?, delegate: YBImageBrowserDelegate? = nil){
+        let browser = YBImageBrowser()
+        let videoData = YBIBVideoData()
+        
+        if let asset = asset{
+            videoData.videoPHAsset = asset
+        }
+        
+        if let videoURL = videoURL{
+            videoData.videoURL = videoURL
+        }
+        
+        videoData.autoPlayCount = 1
+        browser.dataSourceArray.append(videoData)
+        browser.delegate = delegate == nil ? YXSShowBrowserHelper.helper : delegate
         browser.show()
     }
     
+    
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, beginTransitioningWithIsShow isShow: Bool) {
         UIApplication.shared.setStatusBarHidden(isShow, with: UIStatusBarAnimation.none)
+        if isShow{
+            YXSPlayerMediaSingleControlTool.share.pausePlayer()
+        }else{
+            YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        }
     }
 }
 

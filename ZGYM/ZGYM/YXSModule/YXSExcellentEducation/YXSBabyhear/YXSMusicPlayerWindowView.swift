@@ -50,6 +50,11 @@ class YXSMusicPlayerWindowView: UIControl {
             YXSMusicPlayerWindowView.instanceView.isHidden = true
         }else{
             YXSMusicPlayerWindowView.instanceView.isHidden = false
+            if (XMSDKPlayer.shared()?.isPlaying())!{
+                instanceView.isPlayingMusic = true
+            }else{
+                instanceView.isPlayingMusic = false
+            }
             if instanceView.superview == nil{
                 UIUtil.RootController().view.addSubview(instanceView)
             }
@@ -61,6 +66,11 @@ class YXSMusicPlayerWindowView: UIControl {
     public static func setUpdateFrame(isNavFirstVC: Bool){
         if XMSDKPlayer.shared()?.playerState != .stop && !(UIUtil.TopViewController() is YXSPlayingViewController){
             YXSMusicPlayerWindowView.instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 15 - kSafeBottomHeight - (isNavFirstVC ? 49 : 0), width: SCREEN_WIDTH - 30, height: 49)
+            if (XMSDKPlayer.shared()?.isPlaying())!{
+                instanceView.isPlayingMusic = true
+            }else{
+                instanceView.isPlayingMusic = false
+            }
             if instanceView.superview == nil{
                 UIUtil.RootController().view.addSubview(instanceView)
             }

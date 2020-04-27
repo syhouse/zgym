@@ -381,6 +381,8 @@ class YXSPhotoCollectionView: UIView {
         captureMovieFileOutput.startRecording(to: URL(fileURLWithPath: filePath), recordingDelegate: self)
         recordingStyle = .Recording
         changeUI()
+        
+        YXSPlayerMediaSingleControlTool.share.pausePlayer()
     }
     
     fileprivate func stopCapture(){
@@ -390,6 +392,8 @@ class YXSPhotoCollectionView: UIView {
         recordingStyle = .RecordingFinish
         timerTool.yxs_cancelTimer()
         changeUI()
+    
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     
     //  切换动画

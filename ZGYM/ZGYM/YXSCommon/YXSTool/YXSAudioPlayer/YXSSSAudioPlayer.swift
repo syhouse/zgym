@@ -63,6 +63,7 @@ class YXSSSAudioPlayer: NSObject {
          isFinish = false
          
          NotificationCenter.default.addObserver(self, selector: #selector(videoPlayEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        YXSPlayerMediaSingleControlTool.share.pausePlayer()
     }
     
     
@@ -89,12 +90,15 @@ class YXSSSAudioPlayer: NSObject {
         player?.pause()
         player = nil
         isFinish = true
+        
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
     
     
     /// 暂停播放
     public func pauseVoice(){
-        stopVoice()
+        player?.pause()
+        isPause = true
     }
     
     /// 恢复
@@ -106,7 +110,6 @@ class YXSSSAudioPlayer: NSObject {
             }
             player.play()
             isPause = false
-            
         }
     }
     
@@ -115,6 +118,8 @@ class YXSSSAudioPlayer: NSObject {
         isFinish = true
         isPause = true
         finish?()
+        
+        YXSPlayerMediaSingleControlTool.share.resumePlayer()
     }
         
     // MARK: - Setter

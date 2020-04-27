@@ -430,13 +430,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                     
                 } else if item.fileType == "mp4" {
                     // 视频
-                    let videoData: YBIBVideoData = YBIBVideoData()
-                    videoData.videoURL = URL(string: item.fileUrl ?? "")
-                    
-                    let browser: YBImageBrowser = YBImageBrowser()
-                    browser.dataSourceArray = [videoData]
-                    browser.show()
-                    
+                    YXSShowBrowserHelper.yxs_VedioBrowser(videoURL: URL(string: item.fileUrl ?? ""))
                 } else {
                     previewFile(fileModel: item)
                 }

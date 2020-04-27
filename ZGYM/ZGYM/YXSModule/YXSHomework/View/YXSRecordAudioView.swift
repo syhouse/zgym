@@ -302,19 +302,19 @@ class YXSRecordAudioView: UIView {
     
     private func play() {
         //            var path
-                    var playerUrl: URL
-                    if let path = audioModel.path{
-                        playerUrl = URL.init(fileURLWithPath: path)
-                    }else{
-                        playerUrl = URL.init(string: audioModel.servicePath ?? "")!
-                    }
-                    YXSSSAudioPlayer.sharedInstance.play(url: playerUrl, loop: 1, cacheAudio: true) {
-                        [weak self] in
-                        guard let strongSelf = self else { return }
-                        strongSelf.status = .redayShow
-                        strongSelf.setRedayShowUI()
-                    }
-           
+        var playerUrl: URL
+        if let path = audioModel.path{
+            playerUrl = URL.init(fileURLWithPath: path)
+        }else{
+            playerUrl = URL.init(string: audioModel.servicePath ?? "")!
+        }
+        YXSSSAudioPlayer.sharedInstance.play(url: playerUrl, loop: 1, cacheAudio: true) {
+            [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.status = .redayShow
+            strongSelf.setRedayShowUI()
+        }
+        
     }
     
     private func cleanPlayer(){
@@ -344,10 +344,12 @@ class YXSRecordAudioView: UIView {
             status = .Recording
             startRecord()
             setRecordingUI()
+            YXSPlayerMediaSingleControlTool.share.pausePlayer()
         case .Recording:
             status = .redayShow
             stopRecord()
             setRedayShowUI()
+            YXSPlayerMediaSingleControlTool.share.resumePlayer()
         case .redayShow:
             status = .Showing
             play()
@@ -430,7 +432,7 @@ class YXSRecordAudioView: UIView {
     lazy var bgWindow : UIControl! = {
         let view = UIControl()
         view.backgroundColor = UIColor(white: 0.1, alpha: 0.7)
-//        view.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
+        //        view.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
         return view
     }()
     

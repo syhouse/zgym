@@ -59,7 +59,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
+        ///移到点击按钮返回事件中去了
+//        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
 //        YXSSSAudioPlayer.sharedInstance.stopVoice()
     }
     
@@ -584,6 +585,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             YXSCommonAlertView.showAlert(title: "", message: "当前作业需要提交,是否提交作业", leftTitle: "退出", leftClick: { [weak self] in
                 guard let weakSelf = self else {return}
                 weakSelf.navigationController?.popViewController()
+                
+                YXSSSAudioListPlayer.sharedInstance.stopPlayer()
                 
                 }, rightTitle: "去提交", rightClick: { [weak self] in
                     guard let weakSelf = self else {return}
