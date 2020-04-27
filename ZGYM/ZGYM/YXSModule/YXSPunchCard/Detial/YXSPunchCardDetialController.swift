@@ -93,10 +93,6 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    }
-    
-    override func yxs_onBackClick() {
-        super.yxs_onBackClick()
         YXSSSAudioListPlayer.sharedInstance.stopPlayer()
     }
     

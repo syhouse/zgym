@@ -197,6 +197,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         
         ///如果xmly播放器存在  开启锁屏控制
         UIApplication.shared.endReceivingRemoteControlEvents()
+        
+        YXSMusicPlayerWindowView.cheakPlayerUI()
+        
+        if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
+            playerVc.cheakPlayerUI()
+        }
     }
     
     // MARK: -Other

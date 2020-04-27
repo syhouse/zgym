@@ -25,6 +25,8 @@ enum YXSSingleStudentListType: String{
     case studentPunchCardList
     ///学生打卡单个详情
     case detial
+    ///单人历史优秀打卡
+    case goodHistory
 }
 // MARK: - JXCategoryListContentViewDelegate
 class YXSPunchCardSingleStudentListController: YXSPunchCardSingleStudentBaseListController,JXCategoryListContentViewDelegate{
@@ -150,6 +152,8 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
             let detialVc = UIUtil.TopViewController() as? YXSPunchCardDetialController
             detialVc?.selectCalendarModel(calendarModel, isCurruntCalendarVC: false)
         }
+        
+        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
     }
     
     // MARK: -leftCycle
@@ -174,10 +178,6 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     }
     
     // MARK: - UI
-    override func yxs_onBackClick() {
-        super.yxs_onBackClick()
-        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
-    }
     
     // MARK: -更新日历的头部视图
     ///更新日历的头部视图
@@ -197,7 +197,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         }
     }
     
-    // MARK: -loadData
+    // MARK: - loadData
     override func yxs_refreshData() {
         curruntPage = 1
         loadData()
@@ -419,6 +419,10 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
                 strongSelf.setUnPunchCardGoodEvent(section)
             case .lookAllPunchCardCommint:
                 strongSelf.lookStudentAllPunchCardCommintEvent(section)
+            case .lookPunchCardGood:
+                strongSelf.lookPunchCardGoodEvent(section)
+            case .lookLastWeakClassStart:
+                strongSelf.lookClassStartRankEvent(section)
             }
         }
         
@@ -484,7 +488,7 @@ extension YXSPunchCardSingleStudentBaseListController: YXSRouterEventProtocol{
 }
 
 extension YXSPunchCardSingleStudentBaseListController{
-    
+    // MARK: - 修改打卡
     func dealPunchCardEvent(_ section: Int){
         let model = dataSource[section]
         let headerView = self.tableView.headerView(forSection: section)
@@ -509,6 +513,12 @@ extension YXSPunchCardSingleStudentBaseListController{
         }
     }
     
+    func pushPublishController(model: YXSPunchCardCommintListModel){
+        let vc = YXSPunchCardPublishController.init(changePunchCardModel: model)
+        navigationController?.pushViewController(vc)
+    }
+    
+    // MARK: - 撤回打卡
     func dealPunchRecallEvent(_ section: Int){
         YXSCommonAlertView.showAlert(title: "确定撤回打卡?", rightClick: {
             [weak self] in
@@ -517,12 +527,8 @@ extension YXSPunchCardSingleStudentBaseListController{
         })
     }
     
-    ///修改打卡
-    func pushPublishController(model: YXSPunchCardCommintListModel){
-        let vc = YXSPunchCardPublishController.init(changePunchCardModel: model)
-        navigationController?.pushViewController(vc)
-    }
-    
+
+    // MARK: - 删除评论
     func showDelectComment(_ commentModel: YXSPunchCardCommentModel,_ point: CGPoint, section: Int){
         var pointInView = point
         if let curruntIndexPath = self.curruntIndexPath{
@@ -539,6 +545,7 @@ extension YXSPunchCardSingleStudentBaseListController{
         }
     }
     
+    // MARK: - 去评论
     func showComment(_ commentModel: YXSPunchCardCommentModel? = nil, section: Int){
         if commentModel?.isMyComment ?? false{
             return
@@ -552,6 +559,76 @@ extension YXSPunchCardSingleStudentBaseListController{
         alter.textMaxCount = 400
     }
     
+    func setPunchCardGoodEvent(_ section: Int){
+            let model = dataSource[section]
+            if self.type == .calendar || self.type == .studentPunchCardList{
+                model.excellent = true
+            }else{
+                 self.dataSource.remove(at: section)
+            }
+            self.dealIsShowTime()
+            self.reloadTableView()
+            
+            YXSEducationClockInTeacherApprovalRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0).request({ (result) in
+                if self.type == .studentPunchCardList{
+                    self.navigationController?.yxs_existViewController(existClass: YXSPunchCardDetialController.self, complete: { (vc) in
+                        vc.pageController.yxs_punchCardRefresh(type: nil)
+                    })
+                }else{
+                    self.refreshBlock?(nil,self.type)
+                }
+            }) { (msg, code) in
+                //            friendCircleModel.isOnRequsetPraise = false
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
+        func setUnPunchCardGoodEvent(_ section: Int){
+            let model = dataSource[section]
+            if self.type == .calendar || self.type == .studentPunchCardList{
+                model.excellent = false
+            }else{
+                 self.dataSource.remove(at: section)
+            }
+            self.reloadTableView()
+            self.dealIsShowTime()
+            
+            YXSEducationClockInTeacherApprovalRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0).request({ (result) in
+                if self.type == .studentPunchCardList{
+                    self.navigationController?.yxs_existViewController(existClass: YXSPunchCardDetialController.self, complete: { (vc) in
+                        vc.pageController.yxs_punchCardRefresh(type: nil)
+                    })
+                }else{
+                    self.refreshBlock?(nil,self.type)
+                }
+                
+            }) { (msg, code) in
+                //            friendCircleModel.isOnRequsetPraise = false
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
+        
+        func lookStudentAllPunchCardCommintEvent(_ section: Int){
+            let model = dataSource[section]
+            let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0)
+            vc.title = model.realName
+            UIUtil.curruntNav().pushViewController(vc)
+        }
+        
+        func lookPunchCardGoodEvent(_ section: Int){
+            let model = dataSource[section]
+    //        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .goodHistory, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0)
+    //        vc.title = model.realName
+    //        UIUtil.curruntNav().pushViewController(vc)
+        }
+        
+        func lookClassStartRankEvent(_ section: Int){
+            let model = dataSource[section]
+    //        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0)
+    //        vc.title = model.realName
+    //        UIUtil.curruntNav().pushViewController(vc)
+        }
+    
+    // MARK: - loadEventData
     func loadCancelData(_ section: Int = 0){
         let listModel = dataSource[section]
         MBProgressHUD.yxs_showLoading()
@@ -618,60 +695,8 @@ extension YXSPunchCardSingleStudentBaseListController{
         
     }
     
-    func setPunchCardGoodEvent(_ section: Int){
-        let model = dataSource[section]
-        if self.type == .calendar || self.type == .studentPunchCardList{
-            model.excellent = true
-        }else{
-             self.dataSource.remove(at: section)
-        }
-        self.dealIsShowTime()
-        self.reloadTableView()
-        
-        YXSEducationClockInTeacherApprovalRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0).request({ (result) in
-            if self.type == .studentPunchCardList{
-                self.navigationController?.yxs_existViewController(existClass: YXSPunchCardDetialController.self, complete: { (vc) in
-                    vc.pageController.yxs_punchCardRefresh(type: nil)
-                })
-            }else{
-                self.refreshBlock?(nil,self.type)
-            }
-        }) { (msg, code) in
-            //            friendCircleModel.isOnRequsetPraise = false
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
-    }
-    func setUnPunchCardGoodEvent(_ section: Int){
-        let model = dataSource[section]
-        if self.type == .calendar || self.type == .studentPunchCardList{
-            model.excellent = false
-        }else{
-             self.dataSource.remove(at: section)
-        }
-        self.reloadTableView()
-        self.dealIsShowTime()
-        
-        YXSEducationClockInTeacherApprovalRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0).request({ (result) in
-            if self.type == .studentPunchCardList{
-                self.navigationController?.yxs_existViewController(existClass: YXSPunchCardDetialController.self, complete: { (vc) in
-                    vc.pageController.yxs_punchCardRefresh(type: nil)
-                })
-            }else{
-                self.refreshBlock?(nil,self.type)
-            }
-            
-        }) { (msg, code) in
-            //            friendCircleModel.isOnRequsetPraise = false
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
-    }
     
-    func lookStudentAllPunchCardCommintEvent(_ section: Int){
-        let model = dataSource[section]
-        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0)
-        vc.title = model.realName
-        UIUtil.curruntNav().pushViewController(vc)
-    }
+    
     // MARK: - 点赞
     func changePrise(_ section: Int){
         

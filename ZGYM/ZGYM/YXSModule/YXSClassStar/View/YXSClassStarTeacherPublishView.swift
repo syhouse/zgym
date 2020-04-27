@@ -282,7 +282,7 @@ class ClassStarTeacherPublishCollectionCell: UICollectionViewCell {
             animalScoreLabel.text = "\(model.scoreAnimalValue)"
             animalScoreLabel.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#E8534C")
         }
-        UIView.animate(withDuration: 2, animations: {
+        UIView.animate(withDuration: 2.5, animations: {
             self.maskScoreView.alpha = 0
         }) { (_) in
             self.model.isShowScoreAnimal = false
@@ -314,7 +314,7 @@ class ClassStarTeacherPublishCollectionCell: UICollectionViewCell {
     
     lazy var animalScoreLabel: HMBordelLabel = {
         let label = HMBordelLabel()
-        label.font = UIFont.systemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 19)
         return label
     }()
     

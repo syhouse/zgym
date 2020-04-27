@@ -8,23 +8,23 @@
 
 import UIKit
 
-class YXSPlayerMediaSingleControlTool: NSObject {
-    static let share: YXSPlayerMediaSingleControlTool = YXSPlayerMediaSingleControlTool()
+@objc class YXSPlayerMediaSingleControlTool: NSObject {
+    @objc static let share: YXSPlayerMediaSingleControlTool = YXSPlayerMediaSingleControlTool()
     
     
-    ///被强制停止
+    ///被强制停止(播放音频、播放视频 、 录音、、录视频、展示选择资源)
     var isPlayerBeForcedStop: Bool = false
     private override init(){
         
     }
     
-    ///单独控制暂停播放
-    public func pausePlayer(){
+    ///控制暂停播放
+    @objc public func pausePlayer(){
         changePlayerStatus(play: false)
     }
     
-    ///单独控制开始播放
-    public func resumePlayer(){
+    ///控制开始播放
+    @objc public func resumePlayer(){
         changePlayerStatus(play: true)
     }
     

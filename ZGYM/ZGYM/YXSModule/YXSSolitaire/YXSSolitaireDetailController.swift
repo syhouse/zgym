@@ -32,6 +32,11 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        YXSSSAudioPlayer.sharedInstance.stopVoice()
+    }
+    
     override func viewDidLoad() {
         self.hasRefreshHeader = false
         self.showBegainRefresh = false
@@ -131,11 +136,6 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
             }
         }
         
-    }
-    
-    override func yxs_onBackClick() {
-        super.yxs_onBackClick()
-        YXSSSAudioPlayer.sharedInstance.stopVoice()
     }
     
     // MARK: - Request

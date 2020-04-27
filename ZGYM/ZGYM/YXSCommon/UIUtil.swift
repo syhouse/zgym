@@ -803,6 +803,6 @@ extension UIUtil{
         //完成设置
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
         
-        SLLog(MPNowPlayingInfoCenter.default().nowPlayingInfo)
+//        SLLog(MPNowPlayingInfoCenter.default().nowPlayingInfo)
     }
 }

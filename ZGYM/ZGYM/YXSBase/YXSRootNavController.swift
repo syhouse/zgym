@@ -44,12 +44,14 @@ extension YXSRootNavController: UINavigationControllerDelegate{
     
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
-        
-        if let _ = toVC as? SLVideoPlayController{
-            YXSPlayerMediaSingleControlTool.share.pausePlayer()
+        ///到达收藏页面显示悬浮框
+        if let _ = toVC as? YXSMyCollectDetailsVC{
+            YXSMusicPlayerWindowView.setView(hide: false)
         }
-        if let _ = fromVC as? SLVideoPlayController{
-            YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        
+        ///回到我的页面 隐藏悬浮框
+        if let _ = toVC as? YXSMineViewController{
+            YXSMusicPlayerWindowView.setView(hide: true)
         }
         
         return nil

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import YBImageBrowser
 import NightNight
 
 let kFriendCircleInfoHeaderDetialEvent = "FriendCircleInfoHeaderDetialEvent"
@@ -43,9 +42,7 @@ class YXSFriendCircleInfoHeaderView: UIView {
         if model.avatar?.count ?? 0 > 0 {
             YXSShowBrowserHelper.showImage(urls: [URL.init(string: model.avatar ?? "")!], curruntIndex: nil)
         } else  {
-            YXSShowBrowserHelper.showImage(images: [{
-                return self.headerImageSection.rightImage.image
-                }], curruntIndex: nil)
+            YXSShowBrowserHelper.showImage(images: [self.headerImageSection.rightImage.image], curruntIndex: nil)
         }
     }
     

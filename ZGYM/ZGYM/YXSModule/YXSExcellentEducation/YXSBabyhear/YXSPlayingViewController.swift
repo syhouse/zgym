@@ -207,6 +207,15 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         })
     }
     
+    // MARK: - public
+    public func cheakPlayerUI(){
+        if XMSDKPlayer.shared()?.isPlaying() ?? false{
+            btnPlayPause.isSelected = true
+        }else{
+            btnPlayPause.isSelected = false
+        }
+    }
+    
     // MARK: - Request
     @objc func requestJudge(voiceId: Int) {
         YXSEducationBabyVoiceCollectionJudgeRequest(voiceId: voiceId).request({ [weak self](json) in
