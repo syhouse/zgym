@@ -42,13 +42,15 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
     }
     
     var clockId: Int?
+    var classId: Int?
     var isMyPublish: Bool = false
     /// 打卡消息详情
     /// - Parameters:
     ///   - clockId: 打卡id
-    convenience init(clockId: Int,isMyPublish: Bool) {
+    convenience init(clockId: Int, classId: Int,isMyPublish: Bool) {
         self.init(type: .punchCard)
         self.clockId = clockId
+        self.classId = classId
         self.isMyPublish = isMyPublish
     }
     
@@ -173,7 +175,7 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
         switch type {
         case .punchCard:
             let model = punchCardSource[indexPath.row]
-            vc = YXSPunchCardSingleStudentBaseListController.init(clockInId: clockId ?? 0, clockInCommitId: model.clockInCommitId ?? 0, isMyPublish: isMyPublish)
+            vc = YXSPunchCardSingleStudentBaseListController.init(clockInId: clockId ?? 0, clockInCommitId: model.clockInCommitId ?? 0, isMyPublish: isMyPublish, classId: classId ?? 0)
         case .friends:
             let model = dataSource[indexPath.row]
             vc = YXSFriendsCircleController.init(classCircleId: model.classCircleId)

@@ -97,7 +97,7 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
         shareExtension_Cancel()
     }
     
-    @objc func saveAction() {
+    @objc func saveAction(index:Int) {
         
         /// 写入存储
         var filesName = [String]()
@@ -120,8 +120,14 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
         }
         
         let tmp = filesName.joined(separator: ",")
+        let type = index == 0 ? "satchel" : "class"
+        let dic = ["type":type, "files":tmp]
+        
+        let data = try? JSONSerialization.data(withJSONObject: dic, options: [])
+        let str = String(data: data!, encoding: String.Encoding.utf8) ?? ""
+        
         /// 打开主APP
-        shareExtension_OpenContainerApp(filesName: tmp)
+        shareExtension_OpenContainerApp(filesName: str)
     }
     
     // MARK: - Delegate
@@ -140,7 +146,7 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        saveAction()
+        saveAction(index: indexPath.row)
     }
     
     // MARK: - Other

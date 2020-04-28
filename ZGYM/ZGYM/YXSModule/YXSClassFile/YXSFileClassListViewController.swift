@@ -12,10 +12,12 @@ import UIKit
 class YXSFileClassListViewController: YXSBaseTableViewController {
 
     var dataSource: [YXSClassModel] = [YXSClassModel]()
+    var completionHandler: ((_ selectedIndex:Int)->())?
     
-    init(dataSource:[YXSClassModel]) {
+    init(dataSource:[YXSClassModel], completionHandler:((_ selectedIndex:Int)->())?) {
         super.init()
         self.dataSource = dataSource
+        self.completionHandler = completionHandler
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -51,9 +53,7 @@ class YXSFileClassListViewController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let classModel = dataSource[indexPath.row]
-        let vc = YXSClassFileViewController(classId: classModel.id ?? 0, parentFolderId: -1)
-        navigationController?.pushViewController(vc)
+        completionHandler?(indexPath.row)
     }
     
     /*

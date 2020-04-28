@@ -254,6 +254,7 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
     
     lazy var nameFieldLabel: HMRightTextFieldLabel = {
         let nameFieldLabel = HMRightTextFieldLabel()
+        nameFieldLabel.contentField.placeholder = "请输入名称(10个字符内)"
         nameFieldLabel.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
         return nameFieldLabel
     }()

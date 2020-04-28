@@ -257,6 +257,9 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         }
         request.request({ (model: YXSPunchCardModel) in
             self.punchModel = model
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT{
+                self.punchModel.classId = self.classId
+            }
             self.punchModel.childrenId = self.childId
             self.group.leave()
         }) { (msg, code) in
@@ -445,7 +448,7 @@ extension YXSPunchCardDetialController: YXSRouterEventProtocol{
             vc.title = "打卡排行榜"
             self.navigationController?.pushViewController(vc)
         case kFriendsCircleMessageViewGoMessageEvent:
-            let vc = YXSCommonMessageListController.init(clockId: punchModel.clockInId ?? 0, isMyPublish: punchModel.promulgator ?? false)
+            let vc = YXSCommonMessageListController.init(clockId: punchModel.clockInId ?? 0, classId: punchModel.classId ?? 0,  isMyPublish: punchModel.promulgator ?? false)
             vc.loadSucess = {
                 [weak self] in
                 guard let strongSelf = self else { return }

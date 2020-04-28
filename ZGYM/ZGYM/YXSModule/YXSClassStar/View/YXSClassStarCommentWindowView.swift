@@ -125,7 +125,7 @@ class YXSClassStarCommentWindowView: UIView {
     }
     
     @objc func editItem(){
-        let newModel = ClassStarCommentTotalModel.init(titles: model.titles, dataSource: [model.dataSource[0], model.dataSource[1]],classId:model.classId,stage: model.stage)
+        let newModel = ClassStarCommentTotalModel.init(titles: model.titles, dataSource: model.stage == StageType.KINDERGARTEN ? [model.dataSource[0]] : [model.dataSource[0], model.dataSource[1]],classId:model.classId,stage: model.stage)
         if model.stage == .KINDERGARTEN{
             newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Delect, title: "删除"), at: 0)
             newModel.dataSource[0].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Add, title: "添加"), at: 0)

@@ -382,8 +382,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 dicArr.append(sub.toJSON())
             }
             YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: dicArr).request({ (json) in
-                weakSelf.loadData()
-
+                DispatchQueue.main.async {
+                    weakSelf.loadData()
+                }
+                
             }) { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)
             }

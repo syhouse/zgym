@@ -104,7 +104,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         
         if url.absoluteString.contains(shareExtensionSchemes) {
             /// ShareExtension
-            YXSShareExtensionHelper.sharedInstance.shareToSatchel(url: url, completionHandler: nil)
+//            YXSShareExtensionHelper.sharedInstance.shareToSatchel(url: url, completionHandler: nil)
+            YXSShareExtensionHelper.sharedInstance.shareExtensoin(url: url, completionHandler: nil)
             return true
         }
         

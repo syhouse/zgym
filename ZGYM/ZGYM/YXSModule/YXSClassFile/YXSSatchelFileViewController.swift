@@ -11,7 +11,6 @@ import NightNight
 import ObjectMapper
 import Photos
 
-
 /// 老师-书包
 class YXSSatchelFileViewController: YXSClassFileViewController {    
     
@@ -355,7 +354,9 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 dicArr.append(sub.toJSON())
             }
             YXSSatchelUploadFileRequest(parentFolderId: weakSelf.parentFolderId, satchelFileList: dicArr).request({ (json) in
-                weakSelf.loadData()
+                DispatchQueue.main.async {
+                    weakSelf.loadData()
+                }
 
             }) { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)

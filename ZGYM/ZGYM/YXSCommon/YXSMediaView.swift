@@ -120,9 +120,9 @@ class YXSMediaView: UIView {
         var urls = [URL]()
         for url in model?.images ?? [String](){
             urls.append(URL.init(string: url)!)
-            YXSShowBrowserHelper.showImage(urls: urls, curruntIndex: index)
+            
         }
-        
+        YXSShowBrowserHelper.showImage(urls: urls, curruntIndex: index)
     }
     
     func showVideoBrowser() {

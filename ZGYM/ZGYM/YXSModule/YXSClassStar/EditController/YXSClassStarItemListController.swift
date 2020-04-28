@@ -83,7 +83,7 @@ class ClassStarCommentItemCell: UICollectionViewCell {
         }
         titleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(iconImageView.snp_bottom).offset(7)
-            make.centerX.equalTo(contentView)
+            make.left.right.equalTo(0)
         }
         scoreLabel.snp.makeConstraints { (make) in
             make.right.equalTo(iconImageView).offset(1)

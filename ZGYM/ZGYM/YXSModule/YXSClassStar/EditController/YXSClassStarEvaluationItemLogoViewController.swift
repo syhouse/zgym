@@ -17,7 +17,8 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     var curruntIconUrl: String?{
         didSet{
             if let curruntIconUrl = curruntIconUrl{
-                logoImageView.sd_setImage(with: URL.init(string: curruntIconUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!), placeholderImage: kImageDefualtImage)
+                logoImageView.sd_setImage(with: URL.init(string: curruntIconUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!), placeholderImage:
+                    kImageDefualtImage)
             }
             
         }
