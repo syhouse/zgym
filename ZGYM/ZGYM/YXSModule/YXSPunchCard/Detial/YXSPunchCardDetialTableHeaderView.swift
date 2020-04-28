@@ -222,7 +222,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         if hasClassStart{
             
         }else{
-            if model.excellentCount ?? 0 > 0{
+            if model.excellentCount ?? 0 > 0 && model.isShowLookGoodButton{
                 goodPunchCardLabelBtn.isHidden = false
                 goodPunchCardLabelBtn.title = "优秀打卡+\(model.excellentCount ?? 0)"
                 goodPunchCardLabelBtn.snp.makeConstraints { (make) in

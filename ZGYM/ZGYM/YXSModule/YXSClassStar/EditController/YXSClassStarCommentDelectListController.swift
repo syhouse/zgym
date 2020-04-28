@@ -91,6 +91,7 @@ class YXSClassStarCommentDelectListController: YXSBaseTableViewController{
                     if model.isSelected == false{
                         newArrays.append(model)
                     }
+                    model.isShowEdit = false
                 }
                 delectItems = self.selectItems
                 self.dataSource = newArrays
@@ -267,7 +268,6 @@ class ClassStarCommentDelectListCell: MGSwipeTableCell {
         UIUtil.yxs_setLabelAttributed(titleLabel, text: ["\(model.scoreDescribe ?? "")  ", "\(model.evaluationItem ?? "")"], colors: [kBlueColor,UIColor.yxs_hexToAdecimalColor(hex: "#575A60")])
         selectButton.isHidden = !model.isShowEdit
         selectButton.isSelected = model.isSelected
-        
     }
     
     // MARK: -getter&setter

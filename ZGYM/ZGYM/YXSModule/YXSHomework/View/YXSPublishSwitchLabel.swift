@@ -94,7 +94,7 @@ deinit {
 
     // MARK: -action
     @objc func greetingTextFieldChanged(obj:Notification) {
-        self.greetingTextFieldChanged(obj: obj, length: 10)
+        self.greetingTextFieldChanged(obj: obj, charslength: 10)
     }
     
     lazy var titleLabel: YXSLabel = {
@@ -106,21 +106,10 @@ deinit {
     }()
     
     lazy var contentField: YXSQSTextField = {
-        let contentField = UIUtil.yxs_getTextField(UIEdgeInsets.init(top: 0, left: 5, bottom: 0, right: 0), placeholder: "请输入名称(5个字内)", placeholderColor: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), mixedTextColor:MixedColor(normal: kTextMainBodyColor, night: UIColor.white))
+        let contentField = UIUtil.yxs_getTextField(UIEdgeInsets.init(top: 0, left: 5, bottom: 0, right: 0), placeholder: "请输入名称(10个字符内)", placeholderColor: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), mixedTextColor:MixedColor(normal: kTextMainBodyColor, night: UIColor.white))
         contentField.textAlignment = .right
         return contentField
     }()
 
     
-}
-extension HMRightTextFieldLabel: UITextFieldDelegate{
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let text: NSString = textField.text! as NSString
-        let newStr = text.replacingCharacters(in: range, with: string)
-        if newStr.yxs_numberOfChars() > 10{
-            return false
-        }
-        return true
-        
-    }
 }

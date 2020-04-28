@@ -27,23 +27,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C2E269E6-6F69-4944-AD12-241F7D880BA2"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            condition = "section == dataSource.count - 1 || section == dataSource.count - 2"
-            continueAfterRunningActions = "No"
-            filePath = "ZGYM/YXSModule/YXSPunchCard/Detial/YXSPunchCardSingleStudentListController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "399"
-            endingLineNumber = "399"
-            landmarkName = "YXSPunchCardSingleStudentBaseListController"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "C11F5FE3-A3A8-481D-AC8E-C60B799744E3"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -51,8 +34,8 @@
             filePath = "ZGYM/YXSModule/YXSPunchCard/Detial/YXSPunchCardDetialController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "373"
-            endingLineNumber = "373"
+            startingLineNumber = "376"
+            endingLineNumber = "376"
             landmarkName = "scrollViewDidScroll(_:)"
             landmarkType = "7">
          </BreakpointContent>

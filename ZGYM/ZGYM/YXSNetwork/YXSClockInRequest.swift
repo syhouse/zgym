@@ -533,3 +533,18 @@ class YXSEducationClockInSingleCommitDetailRequest: YXSBaseRequset {
                  "clockInCommitId": clockInCommitId]
     }
 }
+
+// MARK: 优秀打卡评论列表（家长-我的）
+let clockInMyExcellentCommentsList = "/clockIn/myExcellentCommentsList"
+class YXSEducationClockInMyExcellentCommentsListRequest: YXSBaseRequset {
+    init(childrenId: Int, classId : Int, currentPage: Int, pageSize: Int = kPageSize) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = clockInMyExcellentCommentsList
+        param = ["childrenId": childrenId,
+                 "classId": classId,
+                 "currentPage": currentPage,
+                 "pageSize": pageSize]
+    }
+}
