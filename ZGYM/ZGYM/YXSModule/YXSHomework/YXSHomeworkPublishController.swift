@@ -147,6 +147,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
         contentView.addSubview(homeworkLookSwitch)
         contentView.addSubview(dateSection)
         contentView.addSubview(topSwitch)
+        contentView.addSubview(synClassFileSwitch)
         
         selectClassView.snp.makeConstraints { (make) in
             make.top.equalTo(10)
@@ -181,6 +182,11 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
         topSwitch.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
             make.top.equalTo(commentlookSwitch.snp_bottom)
+            make.height.equalTo(49)
+        }
+        synClassFileSwitch.snp.makeConstraints { (make) in
+            make.left.right.equalTo(0)
+            make.top.equalTo(topSwitch.snp_bottom)
             make.bottom.equalTo(-kSafeBottomHeight - 18.5)
             make.height.equalTo(49)
         }
@@ -189,6 +195,8 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
         topSwitch.swt.isOn = publishModel.isTop
         homeworkLookSwitch.swt.isOn = publishModel.homeworkAllowLook
         commentlookSwitch.swt.isOn = publishModel.homeworkCommentAllowLook
+        synClassFileSwitch.swt.isOn = publishModel.isSynClassFile
+        
         if publishModel.homeworkDateIsUnlimited {
             dateSection.rightLabel.text = "不限时"
         } else {
@@ -315,7 +323,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
                 shareText = content.mySubString(to: 40)
             }
             MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
-            YXSEducationHomeworkPublishRequest.init(classIdList: classIdList, content: content, audioUrl: audioUrl, teacherName: yxs_user.name ?? "", audioDurationList: audioDurationList, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video,bgUrl: bgUrl, imageUrl: picture,link: publishModel.publishLink ?? "", onlineCommit: onlineSwitch.isSelect ? 1 : 0, isTop: topSwitch.isSelect ? 1 : 0,endTime: publishModel.homeworkDate?.toString(format: DateFormatType.custom(kCommonDateFormatString)), homeworkVisible: homeworkLookSwitch.isSelect ? 1 : 0, remarkVisible: commentlookSwitch.isSelect ? 1 : 0,fileList:fileList).request({ (result) in
+            YXSEducationHomeworkPublishRequest.init(classIdList: classIdList, content: content, audioUrl: audioUrl, teacherName: yxs_user.name ?? "", audioDurationList: audioDurationList, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video,bgUrl: bgUrl, imageUrl: picture,link: publishModel.publishLink ?? "", onlineCommit: onlineSwitch.isSelect ? 1 : 0, isTop: topSwitch.isSelect ? 1 : 0,endTime: publishModel.homeworkDate?.toString(format: DateFormatType.custom(kCommonDateFormatString)), homeworkVisible: homeworkLookSwitch.isSelect ? 1 : 0, remarkVisible: commentlookSwitch.isSelect ? 1 : 0,fileList:fileList,synchClassFile: synClassFileSwitch.isSelect ? 1:0).request({ (result) in
                 MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
                 MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
                 self.yxs_remove()
@@ -371,6 +379,12 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
         let topSwitch = YXSPublishSwitchLabel()
         topSwitch.titleLabel.text = "是否置顶"
         return topSwitch
+    }()
+    
+    lazy var synClassFileSwitch: YXSPublishSwitchLabel = {
+        let synClassFileSwitch = YXSPublishSwitchLabel()
+        synClassFileSwitch.titleLabel.text = "文件自动同步至班级文件"
+        return synClassFileSwitch
     }()
     
     lazy var dateSection: SLTipsRightLabelSection = {

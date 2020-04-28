@@ -44,7 +44,7 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
         contentView.addSubview(selectClassView)
         contentView.addSubview(needReceiptSwitch)
         contentView.addSubview(topSwitch)
-
+        contentView.addSubview(synClassFileSwitch)
         
         selectClassView.snp.makeConstraints { (make) in
             make.top.equalTo(10)
@@ -65,12 +65,18 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
         needReceiptSwitch.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
             make.top.equalTo(topSwitch.snp_bottom)
+            make.height.equalTo(49)
+        }
+        synClassFileSwitch.snp.makeConstraints { (make) in
+            make.left.right.equalTo(0)
+            make.top.equalTo(needReceiptSwitch.snp_bottom)
             make.bottom.equalTo(-kSafeBottomHeight - 18.5)
             make.height.equalTo(49)
         }
         
         needReceiptSwitch.swt.isOn = publishModel.needReceipt
         topSwitch.swt.isOn = publishModel.isTop
+        synClassFileSwitch.swt.isOn = publishModel.isSynClassFile
     }
     
     // MARK: -loadData
@@ -116,7 +122,7 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
             picture = pictures.joined(separator: ",")
         }
         MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
-        YXSEducationNoticePublishRequest.init(classIdList: classIdList, content: content, audioUrl: audioUrl, teacherName: yxs_user.name ?? "", audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video,bgUrl: bgUrl, imageUrl: picture,link: publishModel.publishLink ?? "", onlineCommit: needReceiptSwitch.isSelect ? 1 : 0, isTop: topSwitch.isSelect ? 1 : 0).request({ (json) in
+        YXSEducationNoticePublishRequest.init(classIdList: classIdList, content: content, audioUrl: audioUrl, teacherName: yxs_user.name ?? "", audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video,bgUrl: bgUrl, imageUrl: picture,link: publishModel.publishLink ?? "", onlineCommit: needReceiptSwitch.isSelect ? 1 : 0, isTop: topSwitch.isSelect ? 1 : 0,fileList: fileList,synchClassFile: synClassFileSwitch.isSelect ? 1:0).request({ (json) in
             MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
             MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
             self.yxs_remove()
@@ -149,6 +155,12 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
         let topSwitch = YXSPublishSwitchLabel()
         topSwitch.titleLabel.text = "是否置顶"
         return topSwitch
+    }()
+    
+    lazy var synClassFileSwitch: YXSPublishSwitchLabel = {
+        let synClassFileSwitch = YXSPublishSwitchLabel()
+        synClassFileSwitch.titleLabel.text = "文件自动同步至班级文件"
+        return synClassFileSwitch
     }()
 }
 

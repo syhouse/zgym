@@ -56,7 +56,7 @@ class YXSEducationNoticeQueryNoticeByIdRequest: YXSBaseRequset {
 // MARK: -发布通知
 let noticePublish = "/notice/publish"
 class YXSEducationNoticePublishRequest: YXSBaseRequset {
-    init(classIdList: [Int], content:String = "", audioUrl: String = "", teacherName: String, audioDuration: Int = 0,videoUrl: String = "",bgUrl: String = "",imageUrl: String = "",link: String = "",onlineCommit: Int ,isTop: Int) {
+    init(classIdList: [Int], content:String = "", audioUrl: String = "", teacherName: String, audioDuration: Int = 0,videoUrl: String = "",bgUrl: String = "",imageUrl: String = "",link: String = "",onlineCommit: Int ,isTop: Int, fileList:[[String: Any]],synchClassFile: Int = 0) {
         super.init()
         method = .post
         host = homeHost
@@ -71,7 +71,9 @@ class YXSEducationNoticePublishRequest: YXSBaseRequset {
                  "link": link,
                  "imageUrl": imageUrl,
                  "onlineCommit":onlineCommit,
-                 "isTop": isTop]
+                 "isTop": isTop,
+                 "fileList":fileList,
+                 "synchClassFile":synchClassFile]
     }
 }
 

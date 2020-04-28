@@ -88,6 +88,9 @@ class YXSPublishModel: NSObject, NSCoding {
     /// 作业是否可见
     var homeworkAllowLook: Bool = false
     
+    /// 附件是否同步至班级文件
+    var isSynClassFile: Bool = false
+    
     /// 点评是否相互可见
     var homeworkCommentAllowLook: Bool = false
     

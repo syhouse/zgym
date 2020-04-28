@@ -14,7 +14,7 @@ import ObjectMapper
 let homeworkPublish = "/homework/publish"
 class YXSEducationHomeworkPublishRequest: YXSBaseRequset {
     
-    init(classIdList: [Int], content:String = "", audioUrl: String = "", teacherName: String, audioDurationList: String,audioDuration: Int = 0,videoUrl: String = "",bgUrl: String = "",imageUrl: String = "",link: String = "",onlineCommit: Int ,isTop: Int, endTime: String?, homeworkVisible: Int, remarkVisible: Int, fileList: [[String: Any]]) {
+    init(classIdList: [Int], content:String = "", audioUrl: String = "", teacherName: String, audioDurationList: String,audioDuration: Int = 0,videoUrl: String = "",bgUrl: String = "",imageUrl: String = "",link: String = "",onlineCommit: Int ,isTop: Int, endTime: String?, homeworkVisible: Int, remarkVisible: Int, fileList: [[String: Any]],synchClassFile: Int = 0) {
         super.init()
         method = .post
         host = homeHost
@@ -33,7 +33,8 @@ class YXSEducationHomeworkPublishRequest: YXSBaseRequset {
                  "isTop": isTop,
         "homeworkVisible": homeworkVisible,
         "remarkVisible": remarkVisible,
-        "fileList":fileList]
+        "fileList":fileList,
+        "synchClassFile":synchClassFile]
         if let endTime = endTime{
             param?["endTime"] = endTime
         }
