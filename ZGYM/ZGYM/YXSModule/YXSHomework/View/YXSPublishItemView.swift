@@ -44,10 +44,11 @@ public enum PublishViewButtonEvent{
 
 private let publishViewButtonOrginTag = 303
 class SLPublishViewButtonView: UIView{
-    init(isFriend: Bool = false) {
+    var publishType: YXSHomeType = .homework
+    init(isFriend: Bool = false,type:YXSHomeType = .homework) {
         self.isFriend = isFriend
+        self.publishType = type
         super.init(frame: CGRect.zero)
-        
         for index in 0..<buttons.count{
             let button = YXSButton()
             if NightNight.theme == .night{
@@ -119,7 +120,9 @@ class SLPublishViewButtonView: UIView{
             var lists = [[kImageKey: "yxs_publish_image", kActionKey: PublishViewButtonEvent.image],[kImageKey: "yxs_publish_vedio", kActionKey: PublishViewButtonEvent.vedio]]
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER && !isFriend{
                 lists.append([kImageKey: "yxs_publish_link", kActionKey: PublishViewButtonEvent.link])
-                lists.append([kImageKey: "yxs_publish_accessory", kActionKey: PublishViewButtonEvent.accessory])
+                if self.publishType == .homework || self.publishType == .notice {
+                    lists.append([kImageKey: "yxs_publish_accessory", kActionKey: PublishViewButtonEvent.accessory])
+                }
             }
             if !isFriend{
                 lists.insert([kImageKey: "yxs_publish_audio", kActionKey: PublishViewButtonEvent.audio], at: 0)
@@ -157,8 +160,16 @@ class YXSPublishFileView: UIView {
     func setModel(model:YXSFileModel){
         self.model = model
         self.titleLbl.setTitle(model.fileName, for: .normal)
-        let strIcon = model.bgUrl?.count ?? 0 > 0 ? model.bgUrl : model.fileUrl
-        self.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+        if let url = URL(string: model.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
+            if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
+                self.imgIcon.image = img
+                
+            } else {
+                let strIcon = model.bgUrl?.count ?? 0 > 0 ? model.bgUrl : model.fileUrl
+                self.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+            }
+        }
+//        self.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
     }
     
     func createUI() {

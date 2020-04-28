@@ -27,7 +27,7 @@ class YXSFriendPublishController: YXSCommonPublishBaseController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.publishType = .friendCicle
         if medias.count != 0 {
             var publishMedias = [SLPublishMediaModel]()
             for model in medias{

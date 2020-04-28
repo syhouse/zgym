@@ -59,7 +59,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
         super.viewDidLoad()
         
         title = "作业"
-        
+        self.publishType = .homework
         YXSPersonDataModel.sharePerson.personRole == .PARENT ? yxs_setPartentUI() : yxs_setTeacherUI()
         
     }
