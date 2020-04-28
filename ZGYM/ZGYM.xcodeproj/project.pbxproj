@@ -2304,14 +2304,14 @@
 			isa = PBXGroup;
 			children = (
 				6F0700672445D7FE0090975B /* Model */,
+				6F07006C2445D7FE0090975B /* View */,
 				6F0700712445D7FE0090975B /* YXSChoseFileViewController.swift */,
 				6F0700722445D7FE0090975B /* YXSClassFileViewController.swift */,
+				560B20B224501597003D8A19 /* YXSFileClassListViewController.swift */,
 				6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */,
+				560B20B0244995A9003D8A19 /* YXSFileUploadHelper.swift */,
 				6F0700652445D7FE0090975B /* YXSMoveToViewController.swift */,
 				6F0700662445D7FE0090975B /* YXSSatchelFileViewController.swift */,
-				6F07006C2445D7FE0090975B /* View */,
-				560B20B0244995A9003D8A19 /* YXSFileUploadHelper.swift */,
-				560B20B224501597003D8A19 /* YXSFileClassListViewController.swift */,
 			);
 			path = YXSClassFile;
 			sourceTree = "<group>";
