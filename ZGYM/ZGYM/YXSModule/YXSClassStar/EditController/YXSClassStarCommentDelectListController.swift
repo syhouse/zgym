@@ -32,7 +32,6 @@ class YXSClassStarCommentDelectListController: YXSBaseTableViewController{
         fatalError("init(coder:) has not been implemented")
     }
     
-    var rightButton: YXSButton!
     var selectItems:[YXSClassStarCommentItemModel]{
         get{
             var items = [YXSClassStarCommentItemModel]()
@@ -59,18 +58,15 @@ class YXSClassStarCommentDelectListController: YXSBaseTableViewController{
         }
         tableView.register(ClassStarCommentDelectListCell.self, forCellReuseIdentifier: "ClassStarCommentDelectListCell")
         
-
-        rightButton = yxs_setRightButton(title: "批量删除",titleColor: NightNight.theme == .night ? UIColor.white : UIColor.yxs_hexToAdecimalColor(hex: "#575A60"))
-        rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        rightButton.addTarget(self, action: #selector(rightClick), for: .touchUpInside)
-        rightButton.setTitle("删除", for: .selected)
+        let rightItem = UIBarButtonItem(customView: rightButton)
+        navigationItem.rightBarButtonItem = rightItem
         
         let backButton = yxs_setNavLeftTitle(title: "取消")
         backButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         backButton.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: UIColor.white), forState: .normal)
     }
     
-    // MARK: -loadData
+    // MARK: - loadData
     func loadDelectData(_ indexPath: IndexPath? ){
         var evaluationIds = [Int]()
         
@@ -117,6 +113,7 @@ class YXSClassStarCommentDelectListController: YXSBaseTableViewController{
             }
             
             self.rightButton.isSelected = false
+            self.updateEditItem()
             self.tableView.reloadData()
         }) { (msg, code) in
             MBProgressHUD.hide(for: self.view, animated: true)
@@ -124,7 +121,7 @@ class YXSClassStarCommentDelectListController: YXSBaseTableViewController{
         }
     }
     
-    // MARK: -tableviewDelegate
+    // MARK: - tableviewDelegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -154,8 +151,12 @@ class YXSClassStarCommentDelectListController: YXSBaseTableViewController{
     }
     
     func updateEditItem(){
-        let count = selectItems.count
-        rightButton.setTitle(count  == 0 ? "删除" :"删除(\(count))", for: .selected)
+        if rightButton.isSelected{
+            let count = selectItems.count
+            rightButton.setTitle(count  == 0 ? "删除" :"删除(\(count))", for: .normal)
+        }else{
+            rightButton.setTitle("批量删除", for: .normal)
+        }
     }
     
     // MARK: -action
@@ -187,6 +188,18 @@ class YXSClassStarCommentDelectListController: YXSBaseTableViewController{
             tableView.reloadData()
         }
     }
+    
+    // MARK: - getter&setter
+    lazy var rightButton: UIButton = {
+        self.navigationItem.rightBarButtonItem = nil
+        let button = YXSButton(frame: CGRect(x: 0, y: 0, width: 60, height: 40))
+        button.setTitleColor(NightNight.theme == .night ? UIColor.white : UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), for: .normal)
+        button.setTitle("批量删除", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -20)
+        button.addTarget(self, action: #selector(rightClick), for: .touchUpInside)
+        return button
+    }()
     
 }
 

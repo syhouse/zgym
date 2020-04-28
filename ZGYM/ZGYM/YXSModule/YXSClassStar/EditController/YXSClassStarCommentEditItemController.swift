@@ -52,7 +52,7 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
         if let itemModel = itemModel{
             nameFieldLabel.contentField.text = itemModel.evaluationItem
             buttonView.selectIndex = (Int(abs(itemModel.score ?? 1)) ) - 1
-            allSwitch.swt.isSelected = (itemModel.type ?? "") == "20"
+            allSwitch.swt.isOn = (itemModel.type ?? "") == "20"
             logoImageView.sd_setImage(with: URL.init(string: (curruntItemUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!),placeholderImage: kImageDefualtImage, completed: nil)
         }
         
@@ -152,7 +152,7 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
         
         MBProgressHUD.showAdded(to: self.view, animated: true)
         
-        YXSEducationFEvaluationListSaveOrUpdateRequest.init(id: itemModel?.id,classId: classId, category: index == 0 ? 10 : 20, evaluationItem: nameFieldLabel.contentField.text!, evaluationUrl: evaluationUrl, evaluationType: selectTypeModel.code ?? 0, score: buttonView.score, type: allSwitch.isSelect ? 30 : 20,stage: stage).request({ (item: YXSClassStarCommentItemModel) in
+        YXSEducationFEvaluationListSaveOrUpdateRequest.init(id: itemModel?.id,classId: classId, category: index == 0 ? 10 : 20, evaluationItem: nameFieldLabel.contentField.text!, evaluationUrl: evaluationUrl, evaluationType: selectTypeModel.code ?? 0, score: buttonView.score, type: allSwitch.swt.isOn ? 20 : 30,stage: stage).request({ (item: YXSClassStarCommentItemModel) in
             MBProgressHUD.hide(for: self.view, animated: true)
             
             //新增item 插入到第一条

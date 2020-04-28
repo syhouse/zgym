@@ -38,8 +38,10 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
         layout.minimumInteritemSpacing = 28
         layout.sectionInset = UIEdgeInsets.init(top: 30, left: 15, bottom: 0, right: 15)
         layout.itemSize = CGSize.init(width: 68, height: 68)
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         self.layout =  layout
+        
+        hasRefreshHeader = false
         
         super.viewDidLoad()
         
@@ -58,9 +60,6 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
         loadData()
         
         collectionView.register(YXSItemUrlCell.self, forCellWithReuseIdentifier: "YXSItemUrlCell")
-        collectionView.isPagingEnabled = true
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.bounces = false
         initUI()
     }
     

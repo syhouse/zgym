@@ -18,8 +18,8 @@ class ShareTableViewCell: UITableViewCell {
         self.contentView.addSubview(imgRightArrow)
         
         lbTitle.snp.makeConstraints({ (make) in
-            make.centerY.equalTo(contentView.snp.centerY)
-            make.left.equalTo(15)
+            make.centerY.equalTo(contentView.snp_centerY)
+            make.left.equalTo(0)
         })
         
 //        imgRightArrow.backgroundColor = UIColor.red
@@ -28,6 +28,10 @@ class ShareTableViewCell: UITableViewCell {
             make.right.equalTo(-15)
             make.width.equalTo(9)
             make.height.equalTo(14)
+            
+//            make.left.equalTo(lbTitle.snp_right).offset(10)
+//            make.right.equalTo(0)
+//            make.width.height.equalTo(19)
         })
     }
     
@@ -37,7 +41,8 @@ class ShareTableViewCell: UITableViewCell {
     
     lazy var lbTitle: UILabel = {
         let lb = UILabel()
-        lb.font = UIFont.systemFont(ofSize: 13)
+        lb.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#333333")
+        lb.font = UIFont.systemFont(ofSize: 16)
         return lb
     }()
     

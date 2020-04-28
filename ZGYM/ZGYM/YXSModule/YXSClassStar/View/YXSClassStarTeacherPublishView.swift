@@ -65,7 +65,7 @@ class YXSClassStarTeacherPublishView: UIView {
     }
     
     @objc func dropClick(){
-        YXSHomeListSelectView.showAlert(offset: CGPoint.init(x: 8, y: 45 + kSafeTopHeight), selects: selectModels) { [weak self](selectModel,selectModels) in
+        YXSHomeListSelectView.showAlert(offset: CGPoint.init(x: SCREEN_WIDTH - 8 - 143, y: 64 + kSafeTopHeight + 30), selects: selectModels) { [weak self](selectModel,selectModels) in
             guard let strongSelf = self else { return }
             strongSelf.selectModels = selectModels
             strongSelf.topDropView.title = "\(selectModel.text)(\(strongSelf.items.count - 1))"

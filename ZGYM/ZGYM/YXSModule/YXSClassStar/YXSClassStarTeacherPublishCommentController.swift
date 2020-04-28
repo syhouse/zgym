@@ -292,10 +292,8 @@ class YXSClassStarTeacherPublishCommentController: YXSBaseViewController {
                 }
             }
         }else{
+            lists.append(item)
             for (index,model) in alertModel.dataSource[defultIndex].enumerated(){
-                if index == 2{
-                    lists.append(item)
-                }
                 lists.append(model)
             }
         }

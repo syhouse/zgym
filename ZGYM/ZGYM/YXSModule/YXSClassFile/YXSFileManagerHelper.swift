@@ -8,6 +8,8 @@
 
 import UIKit
 import MobileCoreServices
+import Photos
+
 /// 开发者账号AppGroup标识
 public let suitName = "group.com.youxueye.HNUMEducation.Share"
 /// ShareExtenstion URL Schemes
@@ -139,11 +141,11 @@ class YXSFileManagerHelper: NSObject {
     }
     
     
-    /// 根据文件路径返回相对应的图标
+    /// 根据文件本地路径返回相对应的图标
     @objc func getIconWithFileUrl(_ fileUrl: URL) -> UIImage? {
         let img = UIImage()
         
-        let fileEx = fileUrl.pathExtension
+        let fileEx = fileUrl.pathExtension.lowercased()
         switch fileEx {
             /// 办公
             case "pptx":
@@ -158,14 +160,12 @@ class YXSFileManagerHelper: NSObject {
             /// 图片
             case "jpg":
             return nil
-            
             /// 音频
             case "m4a","mp3","wav","ogg","m4r","acc":
             return img
-            
             /// 视频
             case "mp4","MP4","mov":
-            return nil
+                return getIconWithFileUrl(fileUrl)
         default:
             return nil
         }
@@ -194,6 +194,24 @@ class YXSFileManagerHelper: NSObject {
         }
         
         return img
+    }
+    
+    // MARK: - 获取视频第一帧
+    @objc func getVideoFirstPicture(asset: AVAsset)-> UIImage? {
+        let gen = AVAssetImageGenerator(asset: asset)
+        gen.appliesPreferredTrackTransform = true
+        let time = CMTimeMakeWithSeconds(0.0, preferredTimescale: 1)
+        var actualTime : CMTime = CMTimeMakeWithSeconds(0, preferredTimescale: 0)
+        if let image = try? gen.copyCGImage(at: time, actualTime: &actualTime) {
+            let img: UIImage = UIImage.init(cgImage: image)
+            return img
+        }
+        return nil
+    }
+    
+    @objc func getVideoFirstPicture(url: URL)-> UIImage? {
+        let asset = AVURLAsset(url: url)
+        return getVideoFirstPicture(asset: asset)
     }
     
     // MARK: - Converter
