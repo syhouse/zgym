@@ -109,7 +109,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         view.addSubview(lbCurrentDuration)
         view.addSubview(lbTotalDuration)
         
-        view.addSubview(imgWaterMark)
+        view.addSubview(labelWaterMark)
         view.addSubview(imgCover)
         view.insertSubview(customBorderView, belowSubview: imgCover)
         view.bringSubviewToFront(customNav)
@@ -201,9 +201,9 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             make.centerY.equalTo(imgCover.snp_centerY)
         })
         
-        imgWaterMark.snp.makeConstraints({ (make) in
-            make.bottom.equalTo(imgCover.snp_bottom)
-            make.right.equalTo(-15)
+        labelWaterMark.snp.makeConstraints({ (make) in
+            make.bottom.equalTo(customBorderView.snp_bottom).offset(35)
+            make.centerX.equalTo(customBorderView)
         })
     }
     
@@ -550,10 +550,12 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }()
     
     /// 水印喜马拉雅
-    lazy var imgWaterMark: UIImageView = {
-        let img = UIImageView()
-        img.image = UIImage(named: "sl_player_mark")
-        return img
+    lazy var labelWaterMark: YXSLabel = {
+        let label = YXSLabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#ABB2BE"), night: UIColor.yxs_hexToAdecimalColor(hex: "#ABB2BE"))
+        label.text = "内容来自喜马拉雅APP"
+        return label
     }()
     
     lazy var btnPlayerMode: YXSButton = {
