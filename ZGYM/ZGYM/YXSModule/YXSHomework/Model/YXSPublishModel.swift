@@ -28,10 +28,10 @@ class YXSPublishModel: NSObject, NSCoding {
     var noComment: Bool = false
     ///发布资源类型
     var publishSource = [PublishSource]()
-    //是否是朋友圈发布
+    ///是否是朋友圈发布
     var isFriendCiclePublish: Bool = false
     
-    //缓存文件类型
+    ///缓存文件类型
     var sourceDirectory = YXSCacheDirectory.HomeWork
     
     var publishLink: String!
@@ -40,6 +40,11 @@ class YXSPublishModel: NSObject, NSCoding {
     
     var localIdentifiers: [String]!
     
+    var publishFileLists: [YXSFileModel] = [YXSFileModel]()
+    /// 选择的附件
+//    var publishFileFirst: YXSFileModel?
+//    var publishFileSecond: YXSFileModel?
+//    var publishFileThird: YXSFileModel?
     
     /// 打卡天数
     var punchCardDay: YXSPunchCardDay!

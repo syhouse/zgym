@@ -8,6 +8,8 @@
 
 import UIKit
 import NightNight
+import SwiftyJSON
+import ObjectMapper
 
 class YXSHomeworkPublishController: YXSCommonPublishBaseController {
     // MARK: -leftCycle
@@ -218,6 +220,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
     
     // MARK: -loadData
     override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
+        var fileList = [[String: Any]]()
         var classIdList = [Int]()
         let content:String = publishModel.publishText!
         var picture: String = ""
@@ -232,6 +235,13 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
                 classIdList.append(model.id ?? 0)
             }
         }
+        if publishModel.publishFileLists.count > 0 {
+            for item in publishModel.publishFileLists {
+                let fileRequset = YXSHomeworkFileRequest.init(fileModel:item)
+                fileList.append(fileRequset.toJSON())
+            }
+        }
+        
         if let mediaInfos = mediaInfos{
             for model in mediaInfos{
                 if let type = model[typeKey] as? SourceNameType{
@@ -305,7 +315,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
                 shareText = content.mySubString(to: 40)
             }
             MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
-            YXSEducationHomeworkPublishRequest.init(classIdList: classIdList, content: content, audioUrl: audioUrl, teacherName: yxs_user.name ?? "", audioDurationList: audioDurationList, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video,bgUrl: bgUrl, imageUrl: picture,link: publishModel.publishLink ?? "", onlineCommit: onlineSwitch.isSelect ? 1 : 0, isTop: topSwitch.isSelect ? 1 : 0,endTime: publishModel.homeworkDate?.toString(format: DateFormatType.custom(kCommonDateFormatString)), homeworkVisible: homeworkLookSwitch.isSelect ? 1 : 0, remarkVisible: commentlookSwitch.isSelect ? 1 : 0).request({ (result) in
+            YXSEducationHomeworkPublishRequest.init(classIdList: classIdList, content: content, audioUrl: audioUrl, teacherName: yxs_user.name ?? "", audioDurationList: audioDurationList, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video,bgUrl: bgUrl, imageUrl: picture,link: publishModel.publishLink ?? "", onlineCommit: onlineSwitch.isSelect ? 1 : 0, isTop: topSwitch.isSelect ? 1 : 0,endTime: publishModel.homeworkDate?.toString(format: DateFormatType.custom(kCommonDateFormatString)), homeworkVisible: homeworkLookSwitch.isSelect ? 1 : 0, remarkVisible: commentlookSwitch.isSelect ? 1 : 0,fileList:fileList).request({ (result) in
                 MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
                 MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
                 self.yxs_remove()

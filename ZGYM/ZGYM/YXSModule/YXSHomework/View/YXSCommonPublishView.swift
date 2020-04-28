@@ -42,6 +42,9 @@ class YXSCommonPublishView: UIView{
            addSubview(textCountlabel)
            addSubview(buttonView)
            addSubview(linkView)
+            addSubview(fileFirstView)
+            addSubview(fileSecondView)
+            addSubview(fileThirdView)
            mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight20232F)
            textView.snp.makeConstraints { (make) in
                make.left.equalTo(0)
@@ -180,18 +183,19 @@ class YXSCommonPublishView: UIView{
                 frame.origin.y = textHeight + 50
             }
             listView.frame = frame
-            
+            var last: UIView = listView
             if publishModel.publishLink == nil{
                 linkView.isHidden = true
                 
-                buttonView.snp.remakeConstraints { (make) in
-                    make.top.equalTo(listView.itemListH + frame.origin.y + 20)
-                    make.left.right.equalTo(0)
-                    make.bottom.equalTo(-20)
-                    make.height.equalTo(29)
-                }
+//                buttonView.snp.remakeConstraints { (make) in
+//                    make.top.equalTo(last.itemListH + frame.origin.y + 20)
+//                    make.left.right.equalTo(0)
+//                    make.bottom.equalTo(-20)
+//                    make.height.equalTo(29)
+//                }
                 
             }else{
+                last = linkView
                 linkView.isHidden = false
                 linkView.btnLink.setTitle(publishModel.publishLink, for: .normal)
                 linkView.snp.remakeConstraints { (make) in
@@ -200,13 +204,88 @@ class YXSCommonPublishView: UIView{
                     make.right.equalTo(-15)
                     make.height.equalTo(44)
                 }
+
+            }
+            if publishModel.publishFileLists.count > 0 {
+                for index in 0..<publishModel.publishFileLists.count{
+                    switch index {
+                    case 0:
+                        
+                        fileFirstView.isHidden = false
+                        fileFirstView.setModel(model: publishModel.publishFileLists[index])
+                        if last is YXSFriendDragListView {
+                            fileFirstView.snp.remakeConstraints { (make) in
+                                make.top.equalTo(listView.itemListH + frame.origin.y + 20)
+                                make.left.equalTo(15)
+                                make.right.equalTo(-15)
+                                make.height.equalTo(44)
+                            }
+                        } else {
+                            fileFirstView.snp.remakeConstraints { (make) in
+                                make.top.equalTo(linkView.snp_bottom).offset(10)
+                                make.left.equalTo(15)
+                                make.right.equalTo(-15)
+                                make.height.equalTo(44)
+                            }
+                        }
+                        fileSecondView.isHidden = true
+                        fileThirdView.isHidden = true
+                        last = fileFirstView
+                    case 1:
+                        fileSecondView.isHidden = false
+                        fileSecondView.setModel(model: publishModel.publishFileLists[index])
+                        fileSecondView.snp.remakeConstraints { (make) in
+                            make.top.equalTo(fileFirstView.snp_bottom).offset(10)
+                            make.left.equalTo(15)
+                            make.right.equalTo(-15)
+                            make.height.equalTo(44)
+                        }
+                        fileThirdView.isHidden = true
+                        last = fileSecondView
+                    case 2:
+                        
+                        fileThirdView.isHidden = false
+                        fileThirdView.setModel(model: publishModel.publishFileLists[index])
+                        fileThirdView.snp.remakeConstraints { (make) in
+                            make.top.equalTo(fileSecondView.snp_bottom).offset(10)
+                            make.left.equalTo(15)
+                            make.right.equalTo(-15)
+                            make.height.equalTo(44)
+                        }
+                        last = fileThirdView
+                        
+                    default:
+                        print("")
+                    }
+                }
                 buttonView.snp.remakeConstraints { (make) in
-                    make.top.equalTo(linkView.snp_bottom).offset(15.5)
+                    make.top.equalTo(last.snp_bottom).offset(15.5)
                     make.left.right.equalTo(0)
                     make.bottom.equalTo(-20)
                     make.height.equalTo(29)
                 }
+            } else {
+                fileFirstView.isHidden = true
+                fileSecondView.isHidden = true
+                fileThirdView.isHidden = true
+                if last is YXSFriendDragListView {
+                    buttonView.snp.remakeConstraints { (make) in
+                        make.top.equalTo(listView.itemListH + frame.origin.y + 20)
+                        make.left.right.equalTo(0)
+                        make.bottom.equalTo(-20)
+                        make.height.equalTo(29)
+                    }
+                } else {
+                    buttonView.snp.remakeConstraints { (make) in
+                        make.top.equalTo(linkView.snp_bottom).offset(15.5)
+                        make.left.right.equalTo(0)
+                        make.bottom.equalTo(-20)
+                        make.height.equalTo(29)
+                    }
+                }
+                
             }
+            
     
             if publishModel.audioModels.count != 0{
                 if publishModel.audioModels.count == audioMaxCount{
@@ -228,7 +307,9 @@ class YXSCommonPublishView: UIView{
             if publishModel.audioModels.count == 0 && assets.count == 0{
                 publishModel.publishSource.append(.none)
             }
-            
+            if publishModel.publishFileLists.count == 3 {
+                self.publishModel.publishSource.append(.fileMax)
+            }
             buttonView.changeButtonStates(publishModel.publishSource)
         }else{
             textCountlabel.snp.remakeConstraints { (make) in
@@ -281,6 +362,20 @@ class YXSCommonPublishView: UIView{
                 strongSelf.publishModel.publishLink = link
                 strongSelf.updateUI()
             }
+        case .accessory:
+            let vc = YXSSelectAccessoryVC.init(maxSelectCount: 3 - publishModel.publishFileLists.count) { [weak self](list) in
+                guard let strongSelf = self else { return }
+                if let selectList = list, selectList.count > 0 {
+                    strongSelf.publishModel.publishFileLists += selectList
+                    strongSelf.updateUI()
+                }
+            }
+            vc.modalPresentationStyle = .fullScreen
+            let nav = UINavigationController.init(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            UIUtil.RootController().present(nav, animated: true, completion: nil)
+//            UIUtil.curruntNav().pushViewController(vc)
+
         case .vedio:
             let vc = YXSRecordVideoController.init(complete: { [weak self](asset) in
                 guard let strongSelf = self else { return }
@@ -422,6 +517,39 @@ class YXSCommonPublishView: UIView{
         }
         linkView.isHidden = true
         return linkView
+    }()
+    
+    lazy var fileFirstView: YXSPublishFileView = {
+        
+        let fileView = YXSPublishFileView.init (closeCompletion: { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.publishModel.publishFileLists.remove(at: 0)
+            strongSelf.updateUI()
+        })
+        fileView.tag = 10001
+        fileView.isHidden = true
+        return fileView
+    }()
+    lazy var fileSecondView: YXSPublishFileView = {
+        let fileView = YXSPublishFileView.init (closeCompletion: { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.publishModel.publishFileLists.remove(at: 1)
+            strongSelf.updateUI()
+        })
+        fileView.tag = 10002
+        fileView.isHidden = true
+        return fileView
+    }()
+    
+    lazy var fileThirdView: YXSPublishFileView = {
+        let fileView = YXSPublishFileView.init (closeCompletion: { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.publishModel.publishFileLists.remove(at: 2)
+            strongSelf.updateUI()
+        })
+        fileView.tag = 10003
+        fileView.isHidden = true
+        return fileView
     }()
 }
 
