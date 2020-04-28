@@ -75,6 +75,7 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
     
     // MARK: -loadData
     override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
+        var fileList = [[String: Any]]()
         var classIdList = [Int]()
         let content:String = publishModel.publishText!
         var picture: String = ""
@@ -85,6 +86,13 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
         if let classs = publishModel.classs{
             for model in classs{
                 classIdList.append(model.id ?? 0)
+            }
+        }
+        
+        if publishModel.publishFileLists.count > 0 {
+            for item in publishModel.publishFileLists {
+                let fileRequset = YXSHomeworkFileRequest.init(fileModel:item)
+                fileList.append(fileRequset.toJSON())
             }
         }
         

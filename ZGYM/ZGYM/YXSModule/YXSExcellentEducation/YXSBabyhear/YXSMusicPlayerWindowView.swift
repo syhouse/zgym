@@ -46,7 +46,8 @@ class YXSMusicPlayerWindowView: UIControl {
     
     ///更新播放窗口是否需要隐藏
     public static func setView(hide: Bool){
-        if XMSDKPlayer.shared()?.playerState == .stop || hide{
+        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
+        if isPlayerStop || hide{
             YXSMusicPlayerWindowView.instanceView.isHidden = true
         }else{
             YXSMusicPlayerWindowView.instanceView.isHidden = false
@@ -64,7 +65,8 @@ class YXSMusicPlayerWindowView: UIControl {
     ///更新播放窗口frame
     /// - Parameter isNavFirstVC: 是否是nav的第一个视图
     public static func setUpdateFrame(isNavFirstVC: Bool){
-        if XMSDKPlayer.shared()?.playerState != .stop && !(UIUtil.TopViewController() is YXSPlayingViewController){
+        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
+        if !isPlayerStop && !(UIUtil.TopViewController() is YXSPlayingViewController){
             YXSMusicPlayerWindowView.instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 5 - kSafeBottomHeight - (isNavFirstVC ? 49 : 0), width: SCREEN_WIDTH - 30, height: 49)
             if (XMSDKPlayer.shared()?.isPlaying())!{
                 instanceView.isPlayingMusic = true

@@ -31,17 +31,25 @@ import UIKit
     
     
     private func changePlayerStatus(play: Bool){
-        if play{
-            if isPlayerBeForcedStop{
-                XMSDKPlayer.shared()?.resumeTrackPlay()
-                isPlayerBeForcedStop = false
-            }
-        }else{
-            if XMSDKPlayer.shared()?.isPlaying() ?? false{
-                XMSDKPlayer.shared()?.pauseTrackPlay()
-                isPlayerBeForcedStop = true
+        DispatchQueue.main.async {
+            if play{
+                if self.isPlayerBeForcedStop{
+                    XMSDKPlayer.shared()?.resumeTrackPlay()
+                    
+                    /// 有时候调用 resumeTrackPlay 无效  why?
+                    XMSDKPlayer.shared()?.pauseTrackPlay()
+                    XMSDKPlayer.shared()?.resumeTrackPlay()
+                    self.isPlayerBeForcedStop = false
+                }
+            }else{
+                
+                if XMSDKPlayer.shared()?.isPlaying() ?? false{
+                    XMSDKPlayer.shared()?.pauseTrackPlay()
+                    self.isPlayerBeForcedStop = true
+                }
             }
         }
+        
     }
 
 }

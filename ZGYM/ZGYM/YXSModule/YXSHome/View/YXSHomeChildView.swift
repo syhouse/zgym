@@ -108,6 +108,14 @@ class YXSHomeChildView: UIControl {
                         make.size.equalTo(CGSize.init(width: 32, height: 14))
                         make.top.equalTo(nameLabel.snp_bottom).offset(3)
                     }
+                    switch model.stage {
+                    case .KINDERGARTEN:
+                        curruntLabel.text = "幼儿"
+                    case .PRIMARY_SCHOOL:
+                        curruntLabel.text = "小学"
+                    case .MIDDLE_SCHOOL:
+                        curruntLabel.text = "中学"
+                    }
                 }else{
                     childView.isSelect = false
                     imageSize = CGSize.init(width: 36, height: 36)
@@ -177,7 +185,6 @@ class YXSHomeChildView: UIControl {
         label.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
         label.backgroundColor = kRedMainColor
         label.cornerRadius = 7
-        label.text = "当前"
         label.textAlignment = .center
         return label
     }()

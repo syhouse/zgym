@@ -10,8 +10,15 @@ import UIKit
 import WebKit
 import NightNight
 
-class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate {
+class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKScriptMessageHandler, WKUIDelegate {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        print(message)//WKScriptMessage对象
+        print(message.name) //name : nativeMethod
+        print(message.body) //js回传参数
+    }
+    
 
+    var scriptKey: String = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         view.mixedBackgroundColor = MixedColor(normal: 0xffffff, night: 0x181A23)
@@ -24,6 +31,19 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate {
         self.webView.snp.makeConstraints({ (make) in
             make.edges.equalTo(0)
         })
+        
+        
+    }
+    
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        
+    }
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+        
+    }
+    
+    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+        completionHandler(self.scriptKey)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -91,6 +111,7 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate {
     // MARK: - LazyLoad
     lazy private var webView: WKWebView = {
         let web = WKWebView()
+        web.uiDelegate = self
         web.mixedBackgroundColor = MixedColor(normal: 0xffffff, night: 0x181A23)
 //        web.backgroundColor = UIColor.white
         return web

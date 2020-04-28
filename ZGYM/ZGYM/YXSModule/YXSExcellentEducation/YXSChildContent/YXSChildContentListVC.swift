@@ -107,13 +107,15 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-//        if dataSource.count > indexPath.row {
-//            let model = dataSource[indexPath.row]
-//            let vc = YXSSynClassFolderVC.init(folderId: model.id!, title: model.folderName ?? "")
-//            vc.refreshPlayBlock = { ()in
-//            }
-//            self.navigationController?.pushViewController(vc)
-//        }
+        if dataSource.count > indexPath.row {
+            let model = dataSource[indexPath.row]
+            let vc = YXSBaseWebViewController()
+//            vc.loadUrl = "http://192.168.10.157/yehw/index.html"
+            vc.loadUrl = "http://www.ym698.com/yehw/"
+            let dic = ["id":model.id ?? 0, "token":YXSPersonDataModel.sharePerson.token ?? ""] as [String : Any]
+            vc.scriptKey = dic.jsonString() ?? ""
+            self.navigationController?.pushViewController(vc)
+        }
     }
     
     // MARK: -列表为空

@@ -113,6 +113,9 @@ class YXSPunchCardCommintListModel : NSObject, NSCoding, Mappable{
     ///展示查看全部打卡
     var isShowLookStudentAllButton: Bool = true
     
+    ///展示历史优秀打卡
+    var isShowLookGoodButton: Bool = true
+    
     ///headerView高度
     var headerHeight: CGFloat{
         get{
