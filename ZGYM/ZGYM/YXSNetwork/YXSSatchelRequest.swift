@@ -128,7 +128,7 @@ class YXSSatchelFilePageQueryRequest: YXSBaseRequset {
 }
 
 /// 书包所有文档类型文件查询(doc,xls,ppt,pdf)
-let satchelDocFilePageQuery = "satchel/doc-file-page-query"
+let satchelDocFilePageQuery = "/satchel/doc-file-page-query"
 class YXSSatchelDocFilePageQueryRequest: YXSBaseRequset {
     init(currentPage: Int){
         super.init()

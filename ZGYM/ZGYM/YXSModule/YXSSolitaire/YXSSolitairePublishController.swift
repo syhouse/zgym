@@ -37,7 +37,7 @@ class YXSSolitairePublishController: YXSCommonPublishBaseController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "接龙"
-        
+        self.publishType = .solitaire
         setTeacherUI()
         
         if classId != nil{

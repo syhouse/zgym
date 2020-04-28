@@ -20,7 +20,7 @@ class YXSCommonPublishView: UIView{
     
     /// 音频最大数量
     public var audioMaxCount: Int
-    
+    var publishType: YXSHomeType = .homework
     /// 输入文本长度限制
     public var limitTextLength: Int{
         didSet{
@@ -30,9 +30,10 @@ class YXSCommonPublishView: UIView{
     }
     
     // MARK: - init
-       init(publishModel: YXSPublishModel,isShowMedia: Bool = true,limitTextLength: Int = 1000,audioMaxCount: Int = 1) {
+    init(publishModel: YXSPublishModel,isShowMedia: Bool = true,limitTextLength: Int = 1000,audioMaxCount: Int = 1,type:YXSHomeType = .homework) {
            self.publishModel = publishModel
            self.isShowMedia = isShowMedia
+        self.publishType = type
            self.limitTextLength = limitTextLength
            self.audioMaxCount = audioMaxCount
            super.init(frame: CGRect.zero)
@@ -497,7 +498,7 @@ class YXSCommonPublishView: UIView{
     }()
     
     private lazy var buttonView: SLPublishViewButtonView = {
-        let buttonView = SLPublishViewButtonView.init(isFriend: publishModel.isFriendCiclePublish)
+        let buttonView = SLPublishViewButtonView.init(isFriend: publishModel.isFriendCiclePublish, type: self.publishType)
         buttonView.buttonClickBlock = {[weak self](event) in
             guard let strongSelf = self else { return }
             strongSelf.dealButtonViewEvent(event)
