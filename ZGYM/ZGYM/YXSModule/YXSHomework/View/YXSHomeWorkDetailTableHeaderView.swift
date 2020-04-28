@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import NightNight
 import SwiftyJSON
+import YBImageBrowser
 
 /// 筛选作业类型
 enum SLJopType{
@@ -32,6 +33,9 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             addSubview(readCommitPanel)
             addSubview(mediaView)
             addSubview(linkView)
+            addSubview(fileFirstView)
+            addSubview(fileSecondView)
+            addSubview(fileThirdView)
             addSubview(filterBtnView)
         } else {
 //            addSubview(topHeaderView)
@@ -39,6 +43,9 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             addSubview(dateView)
             addSubview(mediaView)
             addSubview(linkView)
+            addSubview(fileFirstView)
+            addSubview(fileSecondView)
+            addSubview(fileThirdView)
             addSubview(filterBtnView)
         }
         addSubview(messageView)
@@ -100,9 +107,30 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
                 make.right.equalTo(-15)
                 make.height.equalTo(44)
             })
+            
+            fileFirstView.snp.makeConstraints({ (make) in
+                make.top.equalTo(self.linkView.snp_bottom).offset(10)
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.height.equalTo(44)
+            })
+            
+            fileSecondView.snp.makeConstraints({ (make) in
+                make.top.equalTo(self.fileFirstView.snp_bottom).offset(10)
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.height.equalTo(44)
+            })
+            
+            fileThirdView.snp.makeConstraints({ (make) in
+                make.top.equalTo(self.fileSecondView.snp_bottom).offset(10)
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.height.equalTo(44)
+            })
 
             filterBtnView.snp.makeConstraints({ (make) in
-                make.top.equalTo(self.linkView.snp_bottom).offset(10)
+                make.top.equalTo(self.fileThirdView.snp_bottom).offset(10)
                 make.left.right.bottom.equalTo(0)
                 make.height.equalTo(70)
                 make.bottom.equalTo(0)
@@ -140,6 +168,27 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
                 make.height.equalTo(44)
             })
 
+            fileFirstView.snp.makeConstraints({ (make) in
+                make.top.equalTo(self.linkView.snp_bottom).offset(10)
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.height.equalTo(44)
+            })
+            
+            fileSecondView.snp.makeConstraints({ (make) in
+                make.top.equalTo(self.fileFirstView.snp_bottom).offset(10)
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.height.equalTo(44)
+            })
+            
+            fileThirdView.snp.makeConstraints({ (make) in
+                make.top.equalTo(self.fileSecondView.snp_bottom).offset(10)
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.height.equalTo(44)
+            })
+            
             filterBtnView.snp.makeConstraints({ (make) in
                 make.top.equalTo(self.linkView.snp_bottom).offset(10)
                 make.left.right.bottom.equalTo(0)
@@ -300,6 +349,65 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             } else {
                 linkView.isHidden = false
             }
+            
+            if self.model?.fileList.count ?? 0 > 0 {
+                for index in 0..<(self.model?.fileList.count)!{
+                    switch index {
+                    case 0:
+                        fileFirstView.isHidden = false
+                        fileFirstView.setModel(model: (self.model?.fileList[index])!)
+                        fileSecondView.isHidden = true
+                        fileThirdView.isHidden = true
+                        fileSecondView.snp.updateConstraints({ (make) in
+                            make.top.equalTo(self.fileFirstView.snp_bottom).offset(0)
+                            make.height.equalTo(0)
+                        })
+                        fileThirdView.snp.updateConstraints({ (make) in
+                            make.top.equalTo(self.fileSecondView.snp_bottom).offset(0)
+                            make.height.equalTo(0)
+                        })
+                    case 1:
+                        fileSecondView.isHidden = false
+                        fileThirdView.isHidden = true
+                        fileSecondView.setModel(model: (self.model?.fileList[index])!)
+                        fileSecondView.snp.updateConstraints({ (make) in
+                            make.top.equalTo(self.fileFirstView.snp_bottom).offset(10)
+                            make.height.equalTo(44)
+                        })
+                        fileThirdView.snp.updateConstraints({ (make) in
+                            make.top.equalTo(self.fileSecondView.snp_bottom).offset(0)
+                            make.height.equalTo(0)
+                        })
+                    case 2:
+                        fileThirdView.isHidden = false
+                        fileThirdView.setModel(model: (self.model?.fileList[index])!)
+                        fileThirdView.snp.updateConstraints({ (make) in
+                            make.top.equalTo(self.fileSecondView.snp_bottom).offset(10)
+                            make.height.equalTo(44)
+                        })
+                    default:
+                        print("")
+                    }
+                }
+            } else {
+                fileFirstView.isHidden = true
+                fileSecondView.isHidden = true
+                fileThirdView.isHidden = true
+                fileFirstView.snp.updateConstraints({ (make) in
+                    make.top.equalTo(self.linkView.snp_bottom).offset(0)
+                    make.height.equalTo(0)
+                })
+                fileSecondView.snp.updateConstraints({ (make) in
+                    make.top.equalTo(self.fileFirstView.snp_bottom).offset(0)
+                    make.height.equalTo(0)
+                })
+                fileThirdView.snp.updateConstraints({ (make) in
+                    make.top.equalTo(self.fileSecondView.snp_bottom).offset(0)
+                    make.height.equalTo(0)
+                })
+            }
+            
+            
             if self.model?.onlineCommit == 0 {
                 filterBtnView.snp.updateConstraints { (make) in
                     make.height.equalTo(1)
@@ -326,6 +434,31 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
 
     @objc func contactClick(sender:YXSButton) {
         contactClickBlock?()
+    }
+    
+    func clickFileShow(model:YXSFileModel) {
+        if model.fileType == "jpg" {
+            let imgData = YBIBImageData()
+            imgData.imageURL = URL(string: model.fileUrl ?? "")
+            
+            let browser: YBImageBrowser = YBImageBrowser()
+            browser.dataSourceArray = [imgData]
+            browser.show()
+            
+        } else if model.fileType == "mp4" {
+            // 视频
+            let videoData: YBIBVideoData = YBIBVideoData()
+            videoData.videoURL = URL(string: model.fileUrl ?? "")
+            
+            let browser: YBImageBrowser = YBImageBrowser()
+            browser.dataSourceArray = [videoData]
+            browser.show()
+            
+        } else {
+            let wk = YXSBaseWebViewController()
+            wk.loadUrl = model.fileUrl
+            UIUtil.curruntNav().pushViewController(wk)
+        }
     }
 
     // MARK: - LazyLoad
@@ -360,6 +493,38 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
         let link = YXSLinkView()
         link.isHidden = true
         return link
+    }()
+    
+    lazy var fileFirstView: YXSPublishFileView = {
+        let fileView = YXSPublishFileView.init(clickCompletion: { [weak self](model) in
+            guard let strongSelf = self else { return }
+            strongSelf.clickFileShow(model: model)
+        })
+        fileView.closeImgIcon.isHidden = true
+        fileView.tag = 10001
+        fileView.isHidden = true
+        return fileView
+    }()
+    lazy var fileSecondView: YXSPublishFileView = {
+        let fileView = YXSPublishFileView.init(clickCompletion: { [weak self](model) in
+            guard let strongSelf = self else { return }
+            strongSelf.clickFileShow(model: model)
+        })
+        fileView.closeImgIcon.isHidden = true
+        fileView.tag = 10002
+        fileView.isHidden = true
+        return fileView
+    }()
+    
+    lazy var fileThirdView: YXSPublishFileView = {
+        let fileView = YXSPublishFileView.init(clickCompletion: { [weak self](model) in
+            guard let strongSelf = self else { return }
+            strongSelf.clickFileShow(model: model)
+        })
+        fileView.closeImgIcon.isHidden = true
+        fileView.tag = 10003
+        fileView.isHidden = true
+        return fileView
     }()
 
     lazy var contactTeacher: SLAvatarContactView = {

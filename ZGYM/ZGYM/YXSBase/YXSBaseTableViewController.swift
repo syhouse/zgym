@@ -34,13 +34,22 @@ class YXSBaseTableViewController: YXSBaseScrollViewController {
     var loadMore: Bool = false{
         didSet{
             if self.loadMore{
+                if showFooterNoMoreDataView{
+                    self.tableView.tableFooterView = nil
+                }
                 self.tableView.mj_footer = tableRefreshFooter
             }else{
                 self.tableView.mj_footer = nil
+                if showFooterNoMoreDataView{
+                    self.tableView.tableFooterView = noMoreDataFooterView
+                }
 //                self.scrollView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
             }
         }
     }
+    
+    ///是否展示底部没有更多的footerView
+    var showFooterNoMoreDataView: Bool = false
     
     func getTableView() -> UITableView{
         let tableView = UITableView(frame: CGRect.zero, style: tableViewIsGroup ? UITableView.Style.grouped : UITableView.Style.plain)
@@ -64,6 +73,11 @@ class YXSBaseTableViewController: YXSBaseScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    lazy var noMoreDataFooterView: YXSXMCommonFooterView = {
+        let footerView = YXSXMCommonFooterView.init(frame: CGRect.init(x: 0, y: 0, width: self.tableView.width, height: 35))
+        return footerView
+    }()
     
 }
 

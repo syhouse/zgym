@@ -98,8 +98,9 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "打卡"
+        self.publishType = .punchCard
         updateUI()
-        publishView = YXSCommonPublishView.init(publishModel: publishModel,isShowMedia: YXSPersonDataModel.sharePerson.personRole == .TEACHER ? false : true, limitTextLength: 800)
+        publishView = YXSCommonPublishView.init(publishModel: publishModel,isShowMedia: YXSPersonDataModel.sharePerson.personRole == .TEACHER ? false : true, limitTextLength: 800,type: .punchCard)
         
         YXSPersonDataModel.sharePerson.personRole == .PARENT ? setPartentUI() : setTeacherUI()
         subjectField.text = publishModel.subjectText

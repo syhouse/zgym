@@ -24,6 +24,7 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
         super.viewDidLoad()
         title = "通知"
         setTeacherUI()
+        self.publishType = .notice
     }
     
     // MARK: -UI

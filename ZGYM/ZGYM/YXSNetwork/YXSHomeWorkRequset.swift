@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import ObjectMapper
 
 // MARK: - 作业
 // MARK: -homeworkPublish
 let homeworkPublish = "/homework/publish"
 class YXSEducationHomeworkPublishRequest: YXSBaseRequset {
     
-    init(classIdList: [Int], content:String = "", audioUrl: String = "", teacherName: String, audioDurationList: String,audioDuration: Int = 0,videoUrl: String = "",bgUrl: String = "",imageUrl: String = "",link: String = "",onlineCommit: Int ,isTop: Int, endTime: String?, homeworkVisible: Int, remarkVisible: Int) {
+    init(classIdList: [Int], content:String = "", audioUrl: String = "", teacherName: String, audioDurationList: String,audioDuration: Int = 0,videoUrl: String = "",bgUrl: String = "",imageUrl: String = "",link: String = "",onlineCommit: Int ,isTop: Int, endTime: String?, homeworkVisible: Int, remarkVisible: Int, fileList: [[String: Any]]) {
         super.init()
         method = .post
         host = homeHost
@@ -31,11 +32,38 @@ class YXSEducationHomeworkPublishRequest: YXSBaseRequset {
                  "onlineCommit":onlineCommit,
                  "isTop": isTop,
         "homeworkVisible": homeworkVisible,
-        "remarkVisible": remarkVisible]
+        "remarkVisible": remarkVisible,
+        "fileList":fileList]
         if let endTime = endTime{
             param?["endTime"] = endTime
         }
     }
+}
+
+class YXSHomeworkFileRequest: NSObject,Mappable {
+    required init?(map: Map) {}
+    
+    func mapping(map: Map) {
+        fileId <- map["fileId"]
+        fileName <- map["fileName"]
+        fileSize <- map["fileSize"]
+        fileType <- map["fileType"]
+        fileUrl <- map["fileUrl"]
+    }
+    
+    init(fileModel:YXSFileModel) {
+        super.init()
+        fileId = fileModel.id
+        fileName = fileModel.fileName
+        fileSize = fileModel.fileSize
+        fileType = fileModel.fileType
+        fileUrl = fileModel.fileUrl
+    }
+    var fileId: Int?
+    var fileName: String?
+    var fileSize: Int?
+    var fileType: String?
+    var fileUrl: String?
 }
 
 // MARK: -作业已读请求参数

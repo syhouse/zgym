@@ -610,6 +610,7 @@
 		6F07FE0E2445D7E80090975B /* YXSBaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE0D2445D7E80090975B /* YXSBaseTabBarController.swift */; };
 		6F4918FE242B591A00DCA713 /* ZGYMREADME.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */; };
 		6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */ = {isa = PBXBuildFile; fileRef = 6F5720BE24493CAC00E1F301 /* 打包注意 */; };
+		6F641E3C2456E4020049D295 /* YXSXMCommonFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F641E3B2456E4020049D295 /* YXSXMCommonFooterView.swift */; };
 		6F6511D42445DC820024A5DA /* ImSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; };
 		6F6511D52445DC820024A5DA /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F8272B5245171C900918757 /* YXSClassStarCommentItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8272B4245171C900918757 /* YXSClassStarCommentItemController.swift */; };
@@ -803,6 +804,8 @@
 		E58F17182452C67A00A6AC18 /* YXSChildContentListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F17172452C67A00A6AC18 /* YXSChildContentListModel.swift */; };
 		E58F171A2452CA3300A6AC18 /* YXSChildContentListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F17192452CA3300A6AC18 /* YXSChildContentListVC.swift */; };
 		E58F171F2452CB6200A6AC18 /* YXSChildContentListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F171E2452CB6200A6AC18 /* YXSChildContentListCell.swift */; };
+		E59D7C3D24555D6A00471A21 /* YXSSelectAccessoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D7C3C24555D6A00471A21 /* YXSSelectAccessoryVC.swift */; };
+		E59D7C3F24566B9D00471A21 /* YXSSelectAccessoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D7C3E24566B9D00471A21 /* YXSSelectAccessoryCell.swift */; };
 		E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */; };
 		E5F41C59244D52B5007F27AC /* YXSExcellentEducationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */; };
 		E5F41C5D244D7744007F27AC /* YXSSynClassHomeListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */; };
@@ -1733,6 +1736,7 @@
 		6F07FFE92445D7FC0090975B /* YXSSatchelRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSatchelRequest.swift; sourceTree = "<group>"; };
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
 		6F5720BE24493CAC00E1F301 /* 打包注意 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "打包注意"; sourceTree = "<group>"; };
+		6F641E3B2456E4020049D295 /* YXSXMCommonFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSXMCommonFooterView.swift; sourceTree = "<group>"; };
 		6F6511D62446937D0024A5DA /* 优学业.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "优学业.entitlements"; sourceTree = "<group>"; };
 		6F8272B4245171C900918757 /* YXSClassStarCommentItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarCommentItemController.swift; sourceTree = "<group>"; };
 		6F87B88B244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSRemoteControlInfoHelper.swift; sourceTree = "<group>"; };
@@ -2064,6 +2068,8 @@
 		E58F17172452C67A00A6AC18 /* YXSChildContentListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentListModel.swift; sourceTree = "<group>"; };
 		E58F17192452CA3300A6AC18 /* YXSChildContentListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentListVC.swift; sourceTree = "<group>"; };
 		E58F171E2452CB6200A6AC18 /* YXSChildContentListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentListCell.swift; sourceTree = "<group>"; };
+		E59D7C3C24555D6A00471A21 /* YXSSelectAccessoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSelectAccessoryVC.swift; sourceTree = "<group>"; };
+		E59D7C3E24566B9D00471A21 /* YXSSelectAccessoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSelectAccessoryCell.swift; sourceTree = "<group>"; };
 		E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationVC.swift; sourceTree = "<group>"; };
 		E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationCell.swift; sourceTree = "<group>"; };
 		E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassHomeListVC.swift; sourceTree = "<group>"; };
@@ -2831,6 +2837,7 @@
 				6F0701832445D7FF0090975B /* YXSSelectClassController.swift */,
 				6F0701842445D7FF0090975B /* YXSHomeworkReadListViewController.swift */,
 				6F0701852445D7FF0090975B /* YXSRecordVideoController.swift */,
+				E59D7C3C24555D6A00471A21 /* YXSSelectAccessoryVC.swift */,
 			);
 			path = YXSHomework;
 			sourceTree = "<group>";
@@ -2873,6 +2880,7 @@
 				6F07017C2445D7FF0090975B /* YXSPublishSwitchLabel.swift */,
 				6F07017D2445D7FF0090975B /* YXSSelectClassCell.swift */,
 				6F07017E2445D7FF0090975B /* YXSHomeworkCommitListCell.swift */,
+				E59D7C3E24566B9D00471A21 /* YXSSelectAccessoryCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -5286,6 +5294,7 @@
 		E5F41C5A244D7374007F27AC /* YXSBabyhear */ = {
 			isa = PBXGroup;
 			children = (
+				6F641E3B2456E4020049D295 /* YXSXMCommonFooterView.swift */,
 				E53D8AF1244E80C300590B5A /* PlayingViewController.h */,
 				E53D8AF3244E80C300590B5A /* PlayingViewController.m */,
 				E53D8AF4244E80C400590B5A /* YXSContentDetialController.swift */,
@@ -5642,6 +5651,7 @@
 				6F0705F12445D8060090975B /* LFPreviewBarCell.m in Sources */,
 				6F07048B2445D8040090975B /* YXSClassDetailModel.swift in Sources */,
 				6F07039D2445D8030090975B /* TUIJoinGroupMessageCell.m in Sources */,
+				E59D7C3F24566B9D00471A21 /* YXSSelectAccessoryCell.swift in Sources */,
 				6F0705F52445D81A0090975B /* ZGYMEducation.xcdatamodel in Sources */,
 				6FEA7C102452990D0017C9CA /* SPDropMainMenu.m in Sources */,
 				6FEA7C032452990D0017C9CA /* LFDrawView.m in Sources */,
@@ -5899,6 +5909,7 @@
 				6F07039F2445D8030090975B /* TUIImageMessageCell.m in Sources */,
 				E53D8AFE244E80C400590B5A /* YXSContentListViewController.swift in Sources */,
 				6F0705022445D8050090975B /* YXSClassStarCommentEditItemListController.swift in Sources */,
+				6F641E3C2456E4020049D295 /* YXSXMCommonFooterView.swift in Sources */,
 				6F0705692445D8060090975B /* LBXScanViewStyle.swift in Sources */,
 				6F0705282445D8050090975B /* YXSHomeworkListCell.swift in Sources */,
 				6F0703862445D8030090975B /* TUIVoiceMessageCellData.m in Sources */,
@@ -6264,6 +6275,7 @@
 				6F07037D2445D8030090975B /* TCommonPendencyCellData.m in Sources */,
 				6F0704792445D8040090975B /* YXSTrackModel.swift in Sources */,
 				6F0703A52445D8030090975B /* TUIMessageController.m in Sources */,
+				E59D7C3D24555D6A00471A21 /* YXSSelectAccessoryVC.swift in Sources */,
 				6F0703412445D8020090975B /* UINavigationController+YXSCommon.swift in Sources */,
 				E58F16DB245149D400A6AC18 /* YXSAvatarView.swift in Sources */,
 				6F07038A2445D8030090975B /* TUIGroupPendencyViewModel.m in Sources */,
@@ -6622,7 +6634,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6663,7 +6675,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

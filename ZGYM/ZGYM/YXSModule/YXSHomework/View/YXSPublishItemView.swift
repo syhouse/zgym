@@ -29,10 +29,13 @@ public enum PublishSource: Int{
     case audio
     //当前已是最大音频
     case audioMax
+    ///当前已是最大文件
+    case fileMax
 }
 
 //button 点击事件
 public enum PublishViewButtonEvent{
+    case accessory//附件
     case link//连接
     case audio//音频
     case image//图片
@@ -41,10 +44,11 @@ public enum PublishViewButtonEvent{
 
 private let publishViewButtonOrginTag = 303
 class SLPublishViewButtonView: UIView{
-    init(isFriend: Bool = false) {
+    var publishType: YXSHomeType = .homework
+    init(isFriend: Bool = false,type:YXSHomeType = .homework) {
         self.isFriend = isFriend
+        self.publishType = type
         super.init(frame: CGRect.zero)
-        
         for index in 0..<buttons.count{
             let button = YXSButton()
             if NightNight.theme == .night{
@@ -80,7 +84,11 @@ class SLPublishViewButtonView: UIView{
                         button.isEnabled = false
                     }
                 }
-                
+                if sourceTypes.contains(.fileMax) {
+                    if event == .accessory {
+                        button.isEnabled = false
+                    }
+                }
                 if sourceTypes.contains(.audio){
                     if event == .vedio{
                         button.isEnabled = false
@@ -112,6 +120,9 @@ class SLPublishViewButtonView: UIView{
             var lists = [[kImageKey: "yxs_publish_image", kActionKey: PublishViewButtonEvent.image],[kImageKey: "yxs_publish_vedio", kActionKey: PublishViewButtonEvent.vedio]]
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER && !isFriend{
                 lists.append([kImageKey: "yxs_publish_link", kActionKey: PublishViewButtonEvent.link])
+                if self.publishType == .homework || self.publishType == .notice {
+                    lists.append([kImageKey: "yxs_publish_accessory", kActionKey: PublishViewButtonEvent.accessory])
+                }
             }
             if !isFriend{
                 lists.insert([kImageKey: "yxs_publish_audio", kActionKey: PublishViewButtonEvent.audio], at: 0)
@@ -131,6 +142,96 @@ class SLPublishViewButtonView: UIView{
     }
 }
 
+class YXSPublishFileView: UIView {
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    private var clickCompletion:((_ model:YXSFileModel)->())?
+    private var closeCompletion:(()->())?
+    var model: YXSFileModel?
+    init(clickCompletion:((_ model:YXSFileModel)->())? = nil,closeCompletion:(()->())? = nil) {
+        super.init(frame: CGRect.zero)
+        self.clickCompletion = clickCompletion
+        self.closeCompletion = closeCompletion
+        createUI()
+        
+    }
+    
+    func setModel(model:YXSFileModel){
+        self.model = model
+        self.titleLbl.setTitle(model.fileName, for: .normal)
+        if let url = URL(string: model.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
+            if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
+                self.imgIcon.image = img
+                
+            } else {
+                let strIcon = model.bgUrl?.count ?? 0 > 0 ? model.bgUrl : model.fileUrl
+                self.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+            }
+        }
+//        self.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+    }
+    
+    func createUI() {
+        
+        self.clipsToBounds = true
+        self.cornerRadius = 2.5
+        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9"), night: kNight282C3B)
+        self.addSubview(self.imgIcon)
+        self.addSubview(self.closeImgIcon)
+        self.addSubview(self.titleLbl)
+        
+        self.imgIcon.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(self.snp_centerY)
+            make.left.equalTo(14.5)
+            make.size.equalTo(CGSize.init(width: 30, height: 30))
+        })
+        
+        self.closeImgIcon.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(self.snp_centerY)
+            make.right.equalTo(-10.5)
+            make.size.equalTo(CGSize.init(width: 23, height: 23))
+        })
+        
+        self.titleLbl.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(self.snp_centerY)
+            make.left.equalTo(self.imgIcon.snp_right).offset(10)
+            make.right.equalTo(self.closeImgIcon.snp_left).offset(-8)
+        })
+    }
+    
+    // MARK: - Action
+    @objc func close() {
+        closeCompletion?()
+    }
+    
+    @objc func titleClick(sender: YXSButton) {
+        clickCompletion?(self.model!)
+    }
+    
+    // MARK: - LazyLoad
+    lazy var titleLbl: YXSButton = {
+        let btn = YXSButton()
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+        btn.titleLabel?.lineBreakMode = .byTruncatingTail
+        btn.contentHorizontalAlignment = .left
+        btn.setMixedTitleColor(MixedColor(normal: k222222Color, night: kNightFFFFFF), forState: .normal)
+        btn.addTarget(self, action: #selector(titleClick(sender:)), for: .touchUpInside)
+        return btn
+    }()
+    
+    lazy var imgIcon: UIImageView = {
+        let imgIcon = UIImageView()
+        return imgIcon
+    }()
+    
+    lazy var closeImgIcon: YXSButton = {
+        let img = YXSButton()
+        img.setImage(UIImage(named: "yxs_publish_delect_gray"), for: .normal)
+        img.addTarget(self, action: #selector(close), for: .touchUpInside)
+        return img
+    }()
+}
 
 class SLPublishLinkView: UIView {
     

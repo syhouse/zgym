@@ -24,6 +24,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     /// 本地缓存文件类型
     var sourceDirectory: YXSCacheDirectory = .HomeWork
     
+    var publishType: YXSHomeType = .homework
     /// 班级列表
     var classDataSource: [YXSClassModel]?
     
@@ -310,7 +311,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     }()
     
     lazy var publishView: YXSCommonPublishView = {
-        let publishView = YXSCommonPublishView.init(publishModel: publishModel, audioMaxCount: audioMaxCount)
+        let publishView = YXSCommonPublishView.init(publishModel: publishModel, audioMaxCount: audioMaxCount,type: self.publishType)
         publishView.updateContentOffSet = {
             [weak self](offsetY) in
             guard let strongSelf = self else { return }

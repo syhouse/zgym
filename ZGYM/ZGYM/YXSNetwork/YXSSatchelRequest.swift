@@ -127,6 +127,20 @@ class YXSSatchelFilePageQueryRequest: YXSBaseRequset {
     }
 }
 
+/// 书包所有文档类型文件查询(doc,xls,ppt,pdf)
+let satchelDocFilePageQuery = "/satchel/doc-file-page-query"
+class YXSSatchelDocFilePageQueryRequest: YXSBaseRequset {
+    init(currentPage: Int){
+        super.init()
+        method = .post
+        host = fileHost
+        path = satchelDocFilePageQuery
+        param = ["currentPage":currentPage,
+                 "pageSize":20]
+    }
+}
+
+
 /// 书包文件夹分页查询
 let satchelFolderPageQuery = "/satchel/folder-page-query"
 class YXSSatchelFolderPageQueryRequest: YXSBaseRequset {
