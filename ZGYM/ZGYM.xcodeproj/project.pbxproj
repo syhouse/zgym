@@ -19,9 +19,10 @@
 		560B20CE24518C41003D8A19 /* YXSCustomShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20CA24518C40003D8A19 /* YXSCustomShareViewController.swift */; };
 		560B20CF24518C41003D8A19 /* right_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 560B20CB24518C40003D8A19 /* right_arrow.png */; };
 		560B20D024518C41003D8A19 /* ShareTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20CC24518C40003D8A19 /* ShareTableViewCell.swift */; };
-		560B20D2245192B9003D8A19 /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
 		560B20D3245193D9003D8A19 /* YXSFileItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07006B2445D7FE0090975B /* YXSFileItemModel.swift */; };
 		560B20D72456803E003D8A19 /* YXSShareExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20D62456803E003D8A19 /* YXSShareExtensionHelper.swift */; };
+		561011702457CAFD007EF91D /* UIColor+YXSHexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE202445D7F20090975B /* UIColor+YXSHexColor.swift */; };
+		561011732457D862007EF91D /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
 		6F0703262445D8020090975B /* Date+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE102445D7F20090975B /* Date+YXSCategory.swift */; };
 		6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE112445D7F20090975B /* String+YXSCategory.swift */; };
 		6F0703282445D8020090975B /* UITextField+YXSPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE122445D7F20090975B /* UITextField+YXSPlaceholder.swift */; };
@@ -5608,10 +5609,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				561011702457CAFD007EF91D /* UIColor+YXSHexColor.swift in Sources */,
 				560B20D3245193D9003D8A19 /* YXSFileItemModel.swift in Sources */,
-				560B20D2245192B9003D8A19 /* YXSFileManagerHelper.swift in Sources */,
 				560B20CE24518C41003D8A19 /* YXSCustomShareViewController.swift in Sources */,
 				560B20D024518C41003D8A19 /* ShareTableViewCell.swift in Sources */,
+				561011732457D862007EF91D /* YXSFileManagerHelper.swift in Sources */,
 				560B20CD24518C41003D8A19 /* UIViewController+ShareExtension.swift in Sources */,
 				560B20BD24518AC3003D8A19 /* ShareViewController.swift in Sources */,
 			);

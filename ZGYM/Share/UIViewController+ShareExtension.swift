@@ -76,7 +76,7 @@ extension UIViewController {
             }
             
             // element 就是分享内容的 URL，可以在此保存备用。
-            if YXSFileManagerHelper.sharedInstance.sizeMbOfFilePath(filePath: element) > 50 * 1024 {
+            if YXSFileManagerHelper.sharedInstance.sizeMbOfFilePath(filePath: element) > maxFileSize {
                 failureHandler("文件不得大于50MB")
                 
             } else {

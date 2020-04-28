@@ -23,6 +23,26 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
             
             if !list.isEmpty {
                 weakSelf.listUrl = list
+                
+                let firstUrl = list.first
+                let arr = firstUrl?.lastPathComponent.components(separatedBy: ".")
+                let fileName = arr?.first
+                let extName = arr?.last?.lowercased()
+                let fullName = "\(fileName ?? "").\(extName ?? "")"
+                weakSelf.lbTitle.text = fullName
+                
+                if let url = firstUrl {
+                    if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
+                        weakSelf.imgThumbnail.image = img
+                        
+                    } else {
+                        if let url = firstUrl {
+                            if let data = try? Data(contentsOf: url) {
+                                weakSelf.imgThumbnail.image = UIImage(data: data)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -40,28 +60,27 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
         
         panelView.snp.makeConstraints({ (make) in
             make.centerY.equalTo(view.snp.centerY)
-            make.left.equalTo(30)
-            make.right.equalTo(-30)
+            make.left.equalTo(52)
+            make.right.equalTo(-52)
         })
         
         imgThumbnail.snp.makeConstraints({ (make) in
-            make.top.equalTo(0)
-            make.left.equalTo(0)
-            make.right.equalTo(0)
-            make.height.equalTo(60)
+            make.top.equalTo(29)
+            make.centerX.equalTo(panelView.snp_centerX)
+            make.width.height.equalTo(50)
         })
         
         lbTitle.snp.makeConstraints({ (make) in
-            make.top.equalTo(imgThumbnail.snp.bottom).offset(5)
-            make.left.equalTo(15)
-            make.right.equalTo(-15)
+            make.top.equalTo(imgThumbnail.snp.bottom).offset(12)
+            make.left.equalTo(22)
+            make.right.equalTo(-22)
         })
         
         tableView.snp.makeConstraints({ (make) in
-            make.top.equalTo(lbTitle.snp.bottom).offset(5)
-            make.left.equalTo(0).offset(0)
-            make.right.equalTo(0).offset(0)
-            make.height.equalTo(180)
+            make.top.equalTo(lbTitle.snp.bottom).offset(25)
+            make.left.equalTo(lbTitle.snp_left).offset(0)
+            make.right.equalTo(lbTitle.snp_right).offset(0)
+            make.height.equalTo(60)
         })
         
         btnCancel.snp.makeConstraints({ (make) in
@@ -107,9 +126,9 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
     
     // MARK: - Delegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 30
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -124,10 +143,12 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
         saveAction()
     }
     
+    // MARK: - Other
+    
     // MARK: - LazyLoad
     lazy var panelView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 5
+        view.layer.cornerRadius = 15
         view.clipsToBounds = true
         view.backgroundColor = UIColor.white
         return view
@@ -135,6 +156,8 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
     
     lazy var imgThumbnail: UIImageView = {
         let img = UIImageView()
+        img.layer.cornerRadius = 8
+        img.clipsToBounds = true
         return img
     }()
 
@@ -142,7 +165,8 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
         let lb = UILabel()
         lb.text = ""
         lb.textAlignment = .center
-        lb.font = UIFont.systemFont(ofSize: 14)
+        lb.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#000000")
+        lb.font = UIFont.systemFont(ofSize: 16)
         return lb
     }()
     
@@ -158,15 +182,14 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
     lazy var btnCancel: UIButton = {
         let btn = UIButton()
         btn.setTitle("取消", for: .normal)
-        btn.setTitleColor(UIColor.blue, for: .normal)
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        btn.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         btn.addTarget(self, action: #selector(cancelClick(sender:)), for: .touchUpInside)
         return btn
     }()
     
     lazy var dataSource: NSArray = {
-//        return ["用私聊发送", "添加到我的书包", "添加到班级文件"]
-        return ["添加到我的书包"]
+        return ["添加到书包", "添加到班级文件"]
     }()
 
     /*
