@@ -152,26 +152,20 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
             let item = fileList[indexPath.row]//[indexPath.row]
             let cell: YXSFileAbleSlectedCell = tableView.dequeueReusableCell(withIdentifier: "SLFileAbleSlectedCell") as! YXSFileAbleSlectedCell
             cell.lbTitle.text = item.fileName
-            cell.lbSubTitle.text = "\(item.fileSize ?? 0)KB"
+            let fileSize: String = YXSFileManagerHelper.sharedInstance.stringSizeOfDataSrouce(fileSize: UInt64(item.fileSize ?? 0))
+            cell.lbSubTitle.text = fileSize
             cell.lbThirdTitle.text = "\(item.createTime?.yxs_DayTime() ?? "")"
-            let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
-            cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
-            cell.model = item
             
-//            cell.lbTitle.text = //"十万个为什么.pdf"
-//            cell.lbSubTitle.text = "56M"
-//            cell.lbThirdTitle.text = "05/02"
-//            switch indexPath.row {
-//                case 0:
-//                    cell.imgIcon.image = UIImage(named: "yxs_file_excel")
-//                case 1:
-//                    cell.imgIcon.image = UIImage(named: "yxs_file_pdf")
-//                case 2:
-//                    cell.imgIcon.image = UIImage(named: "yxs_file_ppt")
-//                default:
-//                    cell.imgIcon.image = UIImage(named: "yxs_file_word")
-//            }
-
+            if let url = URL(string: item.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
+                if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
+                    cell.imgIcon.image = img
+                    
+                } else {
+                    let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
+                    cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+                }
+            }
+            cell.model = item
             return cell
         }
     }

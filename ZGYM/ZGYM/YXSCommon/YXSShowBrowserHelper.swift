@@ -22,7 +22,7 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
     ///   - images: UIImage
     ///   - assets: 相册assets
     ///   - curruntIndex: 当前index
-    static func showImage(urls: [URL]? = nil, images: [YBIBImageBlock]? = nil, assets: [PHAsset]? = nil, curruntIndex: Int?){
+    static func showImage(urls: [URL]? = nil, images: [UIImage?]? = nil, assets: [PHAsset]? = nil, curruntIndex: Int?){
         let browser = YBImageBrowser()
         if let urls = urls{
             for url in urls{
@@ -36,7 +36,7 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
         if let images = images{
             for image in images{
                 let imgData = YBIBImageData()
-                imgData.image = image
+                imgData.image = {return image}
                 browser.dataSourceArray.append(imgData)
             }
             

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import YBImageBrowser
 
 let kMaxImageCount = 9
 let kImageOrginTag = 10001
@@ -98,28 +97,20 @@ class YXSNineMediaView: UIView{
     @objc func imageClick(_ tap: UITapGestureRecognizer){
         let index = (tap.view?.tag ?? kImageOrginTag) - kImageOrginTag
         if let medias = medias{
-            let browser = YBImageBrowser()
             var urls = [URL]()
-            var images = [YBIBImageBlock]()
+            var images = [UIImage?]()
             for model in medias{
                 if model.type == .serviceVedio{
                     UIUtil.pushOpenVideo(url: model.url ?? "")
                     return
                 }else{
-                    let imgData = YBIBImageData()
                     if model.type == .serviceImg {
                         urls.append(URL.init(string: model.url ?? "")!)
                     }else{
-                        images.append { () -> UIImage? in
-                            return UIImage.init(named: model.url ?? "")
-                        }
+                        images.append(UIImage.init(named: model.url ?? ""))
                     }
-                    
-                    browser.dataSourceArray.append(imgData)
                 }
-                
             }
-            
             YXSShowBrowserHelper.showImage(urls: urls, images: images, curruntIndex: index)
         }
     }

@@ -8,7 +8,6 @@
 
 import UIKit
 import NightNight
-import YBImageBrowser
 
 class YXSProfileChildrenViewController: YXSProfileViewController {
     var sucess: ((_ studentId: String?) ->())?

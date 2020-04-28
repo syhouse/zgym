@@ -93,6 +93,7 @@ class YXSBaseFileCell: YXSBaseTableViewCell {
     lazy var lbTitle: YXSLabel = {
         let lb = YXSLabel()
         lb.mixedTextColor = MixedColor(normal: k131313Color, night: kNightFFFFFF)
+        lb.lineBreakMode = .byTruncatingMiddle
         lb.font = UIFont.systemFont(ofSize: 16)
         return lb
     }()

@@ -24,6 +24,10 @@ enum YXSPunchCardHeaderBlockType: Int {
     case dealPunCard
     ///查看全部打卡
     case lookAllPunchCardCommint
+    ///查看优秀打卡
+    case lookPunchCardGood
+    ///查看上周班级之星
+    case lookLastWeakClassStart
 }
 
 class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
@@ -47,10 +51,12 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         contentView.addSubview(timeLabel)
         contentView.addSubview(commentButton)
         contentView.addSubview(praiseButton)
+        contentView.addSubview(goodPunchCardLabelBtn)
+        contentView.addSubview(classStartLabelBtn)
         
         contentView.addSubview(favView)
         contentView.addSubview(lookAllButton)
-        contentView.addSubview(finishView)
+        contentView.addSubview(goodImageView)
         contentView.addSubview(goodControl)
         contentView.addSubview(lineView)
         contentView.addSubview(voiceView)
@@ -70,15 +76,20 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(nameLabel.snp_bottom).offset(9)
         }
         
+        lookAllButton.snp.makeConstraints { (make) in
+            make.left.equalTo(timeLabel.snp_right).offset(1)
+            make.centerY.equalTo(timeLabel)
+        }
+        
         contentLabel.snp.makeConstraints { (make) in
             make.left.equalTo(15)
             make.width.equalTo(SCREEN_WIDTH - 30)
             make.top.equalTo(headerImageView.snp_bottom).offset(14)
         }
         
-        finishView.snp.makeConstraints { (make) in
+        goodImageView.snp.makeConstraints { (make) in
             make.size.equalTo(CGSize.init(width: 50.5, height: 45))
-            make.right.equalTo(-111.5)
+            make.right.equalTo(timeLabel.snp_right)
             make.top.equalTo(headerImageView)
         }
         
@@ -88,16 +99,11 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(headerImageView)
         }
         
-        praiseButton.snp.makeConstraints { (make) in
-            make.centerY.equalTo(lookAllButton)
-            make.size.equalTo(CGSize.init(width: 40, height: 25))
-            make.right.equalTo(-15)
-        }
         
         commentButton.snp.makeConstraints { (make) in
-            make.centerY.equalTo(lookAllButton)
-            make.size.equalTo(CGSize.init(width: 36, height: 36))
-            make.right.equalTo(praiseButton.snp_left).offset(-12)
+            make.centerY.equalTo(praiseButton)
+            make.size.equalTo(CGSize.init(width: 18, height: 16))
+            make.right.equalTo(praiseButton.snp_left).offset(-31.5)
         }
         
         lineView.snp.makeConstraints { (make) in
@@ -143,10 +149,11 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         favView.isHidden = true
         
         goodControl.isHidden = true
-        finishView.isHidden = true
+        goodImageView.isHidden = true
         lineView.isHidden = true
         symbolView.isHidden = true
         voiceView.isHidden = true
+        goodPunchCardLabelBtn.isHidden = true
         
         lookAllButton.isHidden = !model.isShowLookStudentAllButton
         
@@ -161,7 +168,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         
         //其他老师&家长展示盖章
         if !model.isMyPublish && (model.excellent ?? false){
-            finishView.isHidden = false
+            goodImageView.isHidden = false
         }
         
         goodControl.isHidden = !model.isMyPublish
@@ -190,7 +197,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         headerImageView.sd_setImage(with: URL.init(string: model.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
         nameLabel.text = "\(model.realName ?? "")\((model.relationship ?? "").yxs_RelationshipValue())"
         let timeText: String? = model.patchCardTime == nil ? model.createTime : model.patchCardTime
-        UIUtil.yxs_setLabelAttributed(timeLabel, text: [timeText?.yxs_Time() ?? "","  已坚持\(model.clockInTotalCount ?? 0)天"])
+        UIUtil.yxs_setLabelAttributed(timeLabel, text: [timeText?.yxs_Time() ?? "","  已坚持\(model.clockInTotalCount ?? 0)天"," | "], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),UIColor.yxs_hexToAdecimalColor(hex: "#C3C4C7")])
         
         UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowContentAll &&  model.needShowAllButton)
         contentLabel.numberOfLines = model.isShowContentAll ? 0 : 3
@@ -210,6 +217,22 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
             showAllButton.isHidden = true
             showAllButton.snp.removeConstraints()
         }
+        
+        let hasClassStart = false
+        if hasClassStart{
+            
+        }else{
+            if model.excellentCount ?? 0 > 0{
+                goodPunchCardLabelBtn.isHidden = false
+                goodPunchCardLabelBtn.title = "优秀打卡+\(model.excellentCount ?? 0)"
+                goodPunchCardLabelBtn.snp.makeConstraints { (make) in
+                    make.left.equalTo(15)
+                    make.centerY.equalTo(praiseButton)
+                    make.height.equalTo(26)
+                }
+            }
+        }
+        
 
         if model.hasVoice{
             voiceView.id = "\(type.rawValue)\(model.clockInCommitId ?? 0)"
@@ -251,10 +274,10 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         }
         
         
-        lookAllButton.snp.remakeConstraints { (make) in
-            make.top.equalTo(last.snp_bottom).offset(10)
-            make.left.equalTo(contentLabel)
-            make.size.equalTo(CGSize.init(width: 100.5, height: 26))
+        praiseButton.snp.remakeConstraints { (make) in
+            make.top.equalTo(last.snp_bottom).offset(15)
+            make.right.equalTo(-14.5)
+            make.size.equalTo(CGSize.init(width: 17.5, height: 16))
             
         }
         
@@ -264,7 +287,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
                 favs.append(prise.userName ?? "")
             }
             favView.snp.remakeConstraints { (make) in
-                make.top.equalTo(lookAllButton.snp_bottom).offset(2.5)
+                make.top.equalTo(praiseButton.snp_bottom).offset(7.5)
                 make.left.equalTo(contentLabel)
                 make.width.equalTo(SCREEN_WIDTH - 30)
             }
@@ -298,6 +321,14 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
             headerBlock?(.setPunchCardGood)
         }
         
+    }
+    
+    @objc func lookClassStartDetial(){
+        headerBlock?(.lookLastWeakClassStart)
+    }
+    
+    @objc func lookGoodPunchCardDetial(){
+        headerBlock?(.lookPunchCardGood)
     }
     
     /// 头像点击
@@ -348,12 +379,35 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
     }()
     lazy var lookAllButton: YXSButton = {
         let button = YXSButton()
-        button.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F7F8FB")
-        button.cornerRadius = 13
-        button.setTitle("查看全部打卡 ", for: .normal)
+        button.setTitle("全部打卡 ", for: .normal)
         button.setTitleColor(kBlueColor, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         button.addTarget(self, action: #selector(lookAllClick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
+        return button
+    }()
+    
+    lazy var classStartLabelBtn: YXSCustomImageControl = {
+        let button = YXSCustomImageControl.init(imageSize: CGSize.init(width: 18, height: 20), position: .left, padding: 3.5, insets: UIEdgeInsets.init(top: 0, left: 6.5, bottom: 0, right: 7))
+        button.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F7F8FB")
+        button.cornerRadius = 13
+        button.setTitle("上周班级之星", for: .normal)
+        button.textColor = UIColor.yxs_hexToAdecimalColor(hex: "CB3226")
+        button.locailImage = ""
+        button.font = UIFont.systemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(lookClassStartDetial), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var goodPunchCardLabelBtn: YXSCustomImageControl = {
+        let button = YXSCustomImageControl.init(imageSize: CGSize.init(width: 18, height: 20), position: .left, padding: 3.5, insets: UIEdgeInsets.init(top: 0, left: 6.5, bottom: 0, right: 7))
+        button.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F7F8FB")
+        button.cornerRadius = 13
+        button.setTitle("优秀打卡+8", for: .normal)
+        button.textColor = UIColor.yxs_hexToAdecimalColor(hex: "CB3226")
+        button.locailImage = "yxs_punch_good_select"
+        button.font = UIFont.systemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(lookGoodPunchCardDetial), for: .touchUpInside)
         return button
     }()
     
@@ -369,6 +423,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         button.setImage(UIImage.init(named: "yxs_friend_circle_prise_select"), for: .selected)
         button.setImage(UIImage.init(named: "yxs_friend_circle_prise_nomal"), for: .normal)
         button.addTarget(self, action: #selector(praiseClick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets.init(top: 7.5, left: 7.5, bottom: 7.5, right: 7.5)
         return button
     }()
     
@@ -406,7 +461,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         return symbolView
     }()
     
-    lazy var finishView: UIImageView = {
+    lazy var goodImageView: UIImageView = {
         let imageView = UIImageView.init(image: UIImage.init(named: "yxs_punch_good_finish"))
         return imageView
     }()

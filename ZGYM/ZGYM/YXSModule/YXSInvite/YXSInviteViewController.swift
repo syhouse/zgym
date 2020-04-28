@@ -8,8 +8,6 @@
 
 import UIKit
 
-import YBImageBrowser
-
 class YXSInviteViewController: YXSBaseViewController {
 
     private var gradeNum: String?
@@ -255,13 +253,7 @@ class YXSInviteViewController: YXSBaseViewController {
     }
     
     @objc func showBigImage(){
-        let browser = YBImageBrowser()
-        let imgData = YBIBImageData()
-        imgData.image = {
-            return self.imgQRCode.image ?? UIImage()
-        }
-        browser.dataSourceArray.append(imgData)
-        browser.show()
+        YXSShowBrowserHelper.showImage(images: [self.imgQRCode.image], curruntIndex: 0)
     }
     
    @objc private func saveImage(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: AnyObject) {
