@@ -9,6 +9,7 @@
 import Foundation
 import NightNight
 import ObjectMapper
+import AVKit
 
 class YXSSynClassFolderVC:YXSBaseTableViewController {
     var refreshPlayBlock:(() -> ())?
@@ -126,9 +127,20 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
         if dataSource.count > indexPath.row {
             let model = dataSource[indexPath.row]
             self.addPlayCountRequest(model: model)
-            let vc = YXSBaseWebViewController()
-            vc.loadUrl = model.resourceUrl
-            self.navigationController?.pushViewController(vc)
+//            let vc = YXSBaseWebViewController()
+//            vc.loadUrl = model.resourceUrl
+//            self.navigationController?.pushViewController(vc)
+            let url = URL.init(string: model.resourceUrl ?? "")
+            let avPlayer = AVPlayer.init(url: url!)
+            let vc = YXSPlayerVC.init(player: avPlayer)
+            vc.modalPresentationStyle = .fullScreen
+//            let nav = UINavigationController.init(rootViewController: vc)
+//            nav.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true, completion: nil)
+//            let vc = AVPlayerViewController.init()
+//            vc.player = avPlayer
+            
+//            self.navigationController?.pushViewController(vc)
         }
         
     }
