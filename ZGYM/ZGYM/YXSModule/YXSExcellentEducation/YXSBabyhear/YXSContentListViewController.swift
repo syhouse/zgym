@@ -19,7 +19,7 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     ///是否有顶部header
     var showHeader: Bool
     var cycleSource: [YXSBannerModel] = [YXSBannerModel]()
-
+    
     init(id: Int, showHeader: Bool = false) {
         self.id = id
         self.showHeader = showHeader
@@ -31,10 +31,6 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
         layout.sectionInset = UIEdgeInsets.init(top: 10, left: 15, bottom: 0, right: 15)
         let itemW = (SCREEN_WIDTH - CGFloat(15*2) - 2*16.5)/3
         layout.itemSize = CGSize.init(width: itemW, height: itemW + 30)
-//        if showHeader {
-//            layout.headerReferenceSize = CGSize.init(width: SCREEN_WIDTH, height: 175*SCREEN_SCALE + 55)
-//        }
-        
         self.layout = layout
     }
     required init?(coder aDecoder: NSCoder) {
@@ -44,7 +40,7 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         collectionView.snp.remakeConstraints { (make) in
             make.left.right.equalTo(0)
             make.top.equalTo(0)
@@ -52,11 +48,13 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
         }
         collectionView.register(YXSContentListCell.self, forCellWithReuseIdentifier: "YXSContentListCell")
         collectionView.register(YXSContentListHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSContentListHeaderView")
-//        collectionView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: kSafeBottomHeight, right: 0)
+        collectionView.register(YXSXMCommonFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "YXSXMCommonFooterView")
+        //        collectionView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: kSafeBottomHeight, right: 0)
         if showHeader{
             self.layout.headerReferenceSize = CGSize.init(width: SCREEN_WIDTH, height: 175*SCREEN_SCALE + 55)
+        }else{
+            self.layout.headerReferenceSize = CGSize.init(width: SCREEN_WIDTH, height: 35)
         }
-        loadBannerData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,33 +67,68 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     
     override func yxs_refreshData() {
         self.curruntPage = 1
-        yxs_loadData()
+        loadData()
     }
     
     override func yxs_loadNextPage() {
-        yxs_loadData()
+        loadData()
     }
     
-    func yxs_loadData() {
+    let group = DispatchGroup()
+    let queue = DispatchQueue.global()
+    var isFirst: Bool = true
+    func loadData(){
+        if showHeader && isFirst{
+            group.enter()
+            queue.async {
+                DispatchQueue.main.async {
+                    self.loadBannerData()
+                }
+            }
+        }
+        
+        group.enter()
+        queue.async {
+            DispatchQueue.main.async {
+                self.yxs_loadListData()
+            }
+        }
+        
+        group.notify(queue: queue) {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+                self.yxs_endingRefresh()
+            }
+        }
+    }
+    
+    func yxs_loadListData() {
         YXSEducationXMLYOperationColumnsListRequest.init(page: curruntPage, id: id).requestCollection({ (list:[YXSColumnContentModel], pageCount) in
-            self.yxs_endingRefresh()
             if self.curruntPage == 1{
                 self.dataSource.removeAll()
             }
             self.dataSource += list
             self.loadMore = pageCount != self.dataSource.count
-            self.collectionView.reloadData()
+            if self.loadMore{
+                self.layout.footerReferenceSize = CGSize.init(width: SCREEN_WIDTH, height: 0)
+            }else{
+                self.layout.footerReferenceSize = CGSize.init(width: SCREEN_WIDTH, height: 35)
+            }
+            self.group.leave()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
-            self.yxs_endingRefresh()
+            self.group.leave()
         }
     }
     
     func loadBannerData(){
         YXSEducationXMLYOperationBannersRequest.init(page: 1).requestCollection({ (list:[YXSBannerModel], pageCount) in
             self.cycleSource = list
+            self.isFirst = false
+            self.group.leave()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
+            self.group.leave()
         }
     }
     
@@ -114,14 +147,14 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
     }
-
-
+    
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "YXSContentListCell", for: indexPath) as! YXSContentListCell
         cell.setCellModel(self.dataSource[indexPath.row])
         return cell
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let model = self.dataSource[indexPath.row]
         let vc = YXSContentDetialController.init(id: model.id ?? 0)
@@ -131,23 +164,27 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSContentListHeaderView", for: indexPath) as! YXSContentListHeaderView
-            headerView.cycleScrollView.delegate = self
-            if self.cycleSource.count > 0 {
-                var array = [String]()
-                for model in cycleSource{
-                    array.append(model.bannerCoverUrl ?? "")
+            if showHeader{
+                headerView.cycleScrollView.delegate = self
+                if self.cycleSource.count > 0 {
+                    var array = [String]()
+                    for model in cycleSource{
+                        array.append(model.bannerCoverUrl ?? "")
+                    }
+                    headerView.cycleScrollView.serverImgArray = array
                 }
-                headerView.cycleScrollView.serverImgArray = array
             }
+            headerView.showHeaderView = showHeader
             return headerView
         }else{
-            return UICollectionReusableView.init()
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "YXSXMCommonFooterView", for: indexPath) as! YXSXMCommonFooterView
+            return footerView
         }
-
     }
     
+    
 }
-    // MARK: - getter&setter
+// MARK: - getter&setter
 
 extension YXSContentListViewController: WRCycleScrollViewDelegate{
     func cycleScrollViewDidSelect(at index: Int, cycleScrollView: WRCycleScrollView) {
@@ -169,17 +206,31 @@ class YXSContentListHeaderView: UICollectionReusableView{
         addSubview(cycleScrollView)
         addSubview(titleLabel)
         addSubview(desLabel)
-        cycleScrollView.snp.makeConstraints { (make) in
-            make.left.right.top.equalTo(0)
-            make.height.equalTo(175*SCREEN_SCALE)
-        }
-        titleLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(14.5)
-            make.top.equalTo(cycleScrollView.snp_bottom).offset(19)
-        }
-        desLabel.snp.makeConstraints { (make) in
-            make.right.equalTo(-17)
-            make.centerY.equalTo(titleLabel)
+    }
+    
+    var showHeaderView: Bool = false{
+        didSet{
+            if showHeaderView{
+                cycleScrollView.isHidden = false
+                cycleScrollView.snp.remakeConstraints { (make) in
+                    make.left.right.top.equalTo(0)
+                    make.height.equalTo(175*SCREEN_SCALE)
+                }
+                titleLabel.snp.remakeConstraints { (make) in
+                    make.left.equalTo(14.5)
+                    make.top.equalTo(cycleScrollView.snp_bottom).offset(19)
+                }
+                desLabel.snp.remakeConstraints { (make) in
+                    make.right.equalTo(-17)
+                    make.centerY.equalTo(titleLabel)
+                }
+            }else{
+                cycleScrollView.isHidden = true
+                desLabel.snp.remakeConstraints { (make) in
+                    make.left.equalTo(15)
+                    make.top.equalTo(17)
+                }
+            }
         }
     }
     
@@ -192,8 +243,8 @@ class YXSContentListHeaderView: UICollectionReusableView{
         let view = WRCycleScrollView(frame: frame)
         view.pageControlAliment = .CenterBottom
         view.defaultPageDotImage = UIImage.yxs_image(with: UIColor.yxs_hexToAdecimalColor(hex: "f5f5f5"),size: CGSize.init(width: 5, height: 5))
-            view.currentPageDotImage = UIImage.yxs_image(with: UIColor.yxs_hexToAdecimalColor(hex: "#EA6959"),size: CGSize.init(width: 5, height: 5))
-            view.pageControlPointSpace = 2.5
+        view.currentPageDotImage = UIImage.yxs_image(with: UIColor.yxs_hexToAdecimalColor(hex: "#EA6959"),size: CGSize.init(width: 5, height: 5))
+        view.pageControlPointSpace = 2.5
         return view
     }()
     
@@ -209,7 +260,7 @@ class YXSContentListHeaderView: UICollectionReusableView{
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#ABB2BE")
-        label.text = "以下内容来自喜马拉雅"
+        label.text = "内容来自喜马拉雅APP"
         return label
     }()
 }
@@ -237,7 +288,7 @@ class YXSContentListCell: UICollectionViewCell {
             make.left.right.equalTo(0)
             make.top.equalTo(imageView.snp_bottom).offset(5)
         }
-    
+        
     }
     
     func setCellModel(_ model: YXSColumnContentModel){

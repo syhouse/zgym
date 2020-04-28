@@ -25,6 +25,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
         super.init()
         showBegainRefresh = false
         hasRefreshHeader = false
+        showFooterNoMoreDataView = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -63,7 +64,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
         loadData()
     }
     
-    var headerHeight: CGFloat = 241 + kSafeTopHeight
+    var headerHeight: CGFloat = 220 + kSafeTopHeight
     func loadData(){
         YXSEducationXMLYAlbumsBrowseDetialRequest.init(album_id: id, page: curruntPage).request({ (result: YXSAlbumsBrowseModel) in
             self.yxs_endingRefresh()
@@ -81,7 +82,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
             self.yxs_tableHeaderView.yxs_setHeaderModel(result)
             self.yxs_tableHeaderView.layoutIfNeeded()
             self.headerHeight = self.yxs_tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-            self.yxs_tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: self.headerHeight > (241 + kSafeTopHeight) ? self.headerHeight : 241 + kSafeTopHeight )
+            self.yxs_tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: self.headerHeight)
             self.tableView.tableHeaderView = self.yxs_tableHeaderView
             self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.white)
             self.tableView.reloadData()
@@ -177,7 +178,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
     
     // MARK: - getter&setter
     lazy var yxs_tableHeaderView: YXSContentDetialHeaderView = {
-        let tableHeaderView = YXSContentDetialHeaderView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 241 + kSafeTopHeight))
+        let tableHeaderView = YXSContentDetialHeaderView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: headerHeight))
         return tableHeaderView
     }()
     var rightButton: UIButton!
@@ -312,7 +313,7 @@ class YXSContentDetialHeaderView: UIView {
         })
         
         addSubview(imageView)
-        addSubview(xmlyImageView)
+        addSubview(xmlyLogoLabel)
         addSubview(titleLabel)
         
         
@@ -321,14 +322,14 @@ class YXSContentDetialHeaderView: UIView {
             make.left.equalTo(imageView.snp_right).offset(16.5)
             make.right.equalTo(-16)
             make.top.equalTo(imageView).offset(7.5)
+            make.bottom.equalTo(-97.5).priorityHigh()
         }
         imageView.snp.makeConstraints { (make) in
             make.size.equalTo(CGSize.init(width: 104*SCREEN_SCALE, height: 104*SCREEN_SCALE))
             make.left.equalTo(15)
             make.top.equalTo(95.5 + kSafeTopHeight)
         }
-        xmlyImageView.snp.makeConstraints { (make) in
-            make.size.equalTo(CGSize.init(width: 62, height: 10))
+        xmlyLogoLabel.snp.makeConstraints { (make) in
             make.right.equalTo(-15)
             make.top.equalTo(titleLabel.snp_bottom).offset(31)
             make.bottom.equalTo(-34.5).priorityHigh()
@@ -365,9 +366,12 @@ class YXSContentDetialHeaderView: UIView {
         return label
     }()
     
-    lazy var xmlyImageView: UIImageView = {
-        let timeIcon = UIImageView.init(image: UIImage.init(named: "yxs_xmly_logo"))
-        return timeIcon
+    lazy var xmlyLogoLabel: YXSLabel = {
+        let label = YXSLabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#ABB2BE"), night: UIColor.yxs_hexToAdecimalColor(hex: "#ABB2BE"))
+        label.text = "内容来自喜马拉雅APP"
+        return label
     }()
     
     /// 背景图

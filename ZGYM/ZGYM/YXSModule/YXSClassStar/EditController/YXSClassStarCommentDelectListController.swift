@@ -183,6 +183,7 @@ class YXSClassStarCommentDelectListController: YXSBaseTableViewController{
                 model.isShowEdit = true
                 model.isSelected = false
             }
+            updateEditItem()
             tableView.reloadData()
         }
     }
