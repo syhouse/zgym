@@ -25,6 +25,7 @@
  UIView+CallUp              拨打电话
  yxs_getVediUrlImage            拼接缩略图(NSString扩展)
  pushChatVC                 单聊
+ YXSFileUploadHelper        上传文件到阿里云
  
  YXSCountDownTool 倒计时工具
  YXSLocalMessageHelper  优盟业务红点
