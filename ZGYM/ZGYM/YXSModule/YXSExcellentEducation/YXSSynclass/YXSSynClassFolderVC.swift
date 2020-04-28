@@ -134,13 +134,7 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
             let avPlayer = AVPlayer.init(url: url!)
             let vc = YXSPlayerVC.init(player: avPlayer)
             vc.modalPresentationStyle = .fullScreen
-//            let nav = UINavigationController.init(rootViewController: vc)
-//            nav.modalPresentationStyle = .fullScreen
             self.present(vc, animated: true, completion: nil)
-//            let vc = AVPlayerViewController.init()
-//            vc.player = avPlayer
-            
-//            self.navigationController?.pushViewController(vc)
         }
         
     }
