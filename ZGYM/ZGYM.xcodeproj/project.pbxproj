@@ -803,6 +803,8 @@
 		E58F17182452C67A00A6AC18 /* YXSChildContentListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F17172452C67A00A6AC18 /* YXSChildContentListModel.swift */; };
 		E58F171A2452CA3300A6AC18 /* YXSChildContentListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F17192452CA3300A6AC18 /* YXSChildContentListVC.swift */; };
 		E58F171F2452CB6200A6AC18 /* YXSChildContentListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F171E2452CB6200A6AC18 /* YXSChildContentListCell.swift */; };
+		E59D7C3D24555D6A00471A21 /* YXSSelectAccessoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D7C3C24555D6A00471A21 /* YXSSelectAccessoryVC.swift */; };
+		E59D7C3F24566B9D00471A21 /* YXSSelectAccessoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D7C3E24566B9D00471A21 /* YXSSelectAccessoryCell.swift */; };
 		E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */; };
 		E5F41C59244D52B5007F27AC /* YXSExcellentEducationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */; };
 		E5F41C5D244D7744007F27AC /* YXSSynClassHomeListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */; };
@@ -2065,6 +2067,8 @@
 		E58F17172452C67A00A6AC18 /* YXSChildContentListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentListModel.swift; sourceTree = "<group>"; };
 		E58F17192452CA3300A6AC18 /* YXSChildContentListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentListVC.swift; sourceTree = "<group>"; };
 		E58F171E2452CB6200A6AC18 /* YXSChildContentListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSChildContentListCell.swift; sourceTree = "<group>"; };
+		E59D7C3C24555D6A00471A21 /* YXSSelectAccessoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSelectAccessoryVC.swift; sourceTree = "<group>"; };
+		E59D7C3E24566B9D00471A21 /* YXSSelectAccessoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSelectAccessoryCell.swift; sourceTree = "<group>"; };
 		E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationVC.swift; sourceTree = "<group>"; };
 		E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationCell.swift; sourceTree = "<group>"; };
 		E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassHomeListVC.swift; sourceTree = "<group>"; };
@@ -2832,6 +2836,7 @@
 				6F0701832445D7FF0090975B /* YXSSelectClassController.swift */,
 				6F0701842445D7FF0090975B /* YXSHomeworkReadListViewController.swift */,
 				6F0701852445D7FF0090975B /* YXSRecordVideoController.swift */,
+				E59D7C3C24555D6A00471A21 /* YXSSelectAccessoryVC.swift */,
 			);
 			path = YXSHomework;
 			sourceTree = "<group>";
@@ -2874,6 +2879,7 @@
 				6F07017C2445D7FF0090975B /* YXSPublishSwitchLabel.swift */,
 				6F07017D2445D7FF0090975B /* YXSSelectClassCell.swift */,
 				6F07017E2445D7FF0090975B /* YXSHomeworkCommitListCell.swift */,
+				E59D7C3E24566B9D00471A21 /* YXSSelectAccessoryCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -5643,6 +5649,7 @@
 				6F0705F12445D8060090975B /* LFPreviewBarCell.m in Sources */,
 				6F07048B2445D8040090975B /* YXSClassDetailModel.swift in Sources */,
 				6F07039D2445D8030090975B /* TUIJoinGroupMessageCell.m in Sources */,
+				E59D7C3F24566B9D00471A21 /* YXSSelectAccessoryCell.swift in Sources */,
 				6F0705F52445D81A0090975B /* ZGYMEducation.xcdatamodel in Sources */,
 				6FEA7C102452990D0017C9CA /* SPDropMainMenu.m in Sources */,
 				6FEA7C032452990D0017C9CA /* LFDrawView.m in Sources */,
@@ -6266,6 +6273,7 @@
 				6F07037D2445D8030090975B /* TCommonPendencyCellData.m in Sources */,
 				6F0704792445D8040090975B /* YXSTrackModel.swift in Sources */,
 				6F0703A52445D8030090975B /* TUIMessageController.m in Sources */,
+				E59D7C3D24555D6A00471A21 /* YXSSelectAccessoryVC.swift in Sources */,
 				6F0703412445D8020090975B /* UINavigationController+YXSCommon.swift in Sources */,
 				E58F16DB245149D400A6AC18 /* YXSAvatarView.swift in Sources */,
 				6F07038A2445D8030090975B /* TUIGroupPendencyViewModel.m in Sources */,

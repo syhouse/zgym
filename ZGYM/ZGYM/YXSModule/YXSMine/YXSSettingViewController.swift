@@ -163,14 +163,20 @@ class YXSSettingViewController: YXSBaseViewController, UITableViewDelegate, UITa
         if !yxs_user.hasSetPassword! {
             let tmp: YXSInputAlertView = YXSInputAlertView.showIn(target: self.view) { (text, sender) in
                 if sender.titleLabel?.text == "确认" && text.count > 0 {
-                    MBProgressHUD.yxs_showLoading()
-                    YXSEducationUserSetPasswordRequest(password: text).request({ (json) in
-                        MBProgressHUD.yxs_hideHUD()
-                        YXSPersonDataModel.sharePerson.userLogout()
+                    if text.isPassword {
+                        MBProgressHUD.yxs_showLoading()
+                        YXSEducationUserSetPasswordRequest(password: text).request({ (json) in
+                            MBProgressHUD.yxs_hideHUD()
+                            YXSPersonDataModel.sharePerson.userLogout()
 
-                    }) { (msg, code) in
-                        MBProgressHUD.yxs_showMessage(message: msg)
+                        }) { (msg, code) in
+                            MBProgressHUD.yxs_showMessage(message: msg)
+                        }
+                        
+                    } else {
+                        MBProgressHUD.yxs_showMessage(message: "请输入6位以上数字字母密码")
                     }
+                    
                 } else if sender.titleLabel?.text == "确认" {
                     MBProgressHUD.yxs_showMessage(message: "密码不能为空", inView: self.view)
                 }

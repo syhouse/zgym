@@ -40,7 +40,24 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
     }
     var createTime : String?
     var endTime : String?
+    var fileJson: String? {
+        didSet {
+            let list = Mapper<YXSHomeworkFileRequest>().mapArray(JSONString: fileJson ?? "") ?? [YXSHomeworkFileRequest]()
+            fileList.removeAll()
+            for item in list {
+                let file = YXSFileModel.init(JSON: ["":""])
+                file?.id = item.fileId
+                file?.fileName = item.fileName
+                file?.fileSize = item.fileSize
+                file?.fileType = item.fileType
+                file?.fileUrl = item.fileUrl
+                fileList.append(file!)
+            }
+//            fileList = list
+        }
+    }
     
+    var fileList: [YXSFileModel] = [YXSFileModel]()
     var endTimeIsUnlimited: Bool {
         get {
             //超过3个月为不限时
@@ -451,6 +468,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         messageUserType <- map["messageUserType"]
         backImageUrl <- map["backImageUrl"]
         relationship <- map["relationship"]
+        fileJson <- map["fileJson"]
     }
 
     /**
@@ -505,6 +523,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         messageUserType = aDecoder.decodeObject(forKey: "messageUserType") as? String
         backImageUrl = aDecoder.decodeObject(forKey: "backImageUrl") as? String
         relationship = aDecoder.decodeObject(forKey: "relationship") as? String
+        fileJson = aDecoder.decodeObject(forKey: "fileJson") as? String
     }
 
     /**
@@ -650,6 +669,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         if relationship != nil {
             aCoder.encode(relationship, forKey: "relationship")
+        }
+        if fileJson != nil {
+            aCoder.encode(fileJson, forKey: "fileJson")
         }
     }
 }
