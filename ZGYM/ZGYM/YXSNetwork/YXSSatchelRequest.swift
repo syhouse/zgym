@@ -253,6 +253,22 @@ class YXSFileUploadFileRequest: YXSBaseRequset {
             "folderId":folderId,
                  "classFileList":classFileList]
     }
+    
+    init(classId: Int, folderId: Int, classFileList: [YXSFileModel]){
+        super.init()
+        method = .post
+        host = fileHost
+        path = fileUploadFile
+        
+        var dicArr = [[String: Any]]()
+        for sub in classFileList {
+            dicArr.append(sub.toJSON())
+        }
+        param = [
+            "classId":classId,
+            "folderId":folderId,
+                 "classFileList":dicArr]
+    }
 }
 
 let filePageQuery = "/file/page-query"

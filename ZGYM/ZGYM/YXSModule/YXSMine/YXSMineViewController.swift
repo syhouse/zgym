@@ -198,7 +198,11 @@ class YXSMineViewController: YXSBaseTableViewController{
             list += joinClassList
             
             if list.count > 1 {
-                let vc = YXSFileClassListViewController(dataSource: list)
+                let vc = YXSFileClassListViewController(dataSource: list) { (idx) in
+                    let classModel = list[idx]
+                    let vc = YXSClassFileViewController(classId: classModel.id ?? 0, parentFolderId: -1)
+                    weakSelf.navigationController?.pushViewController(vc)
+                }
                 weakSelf.navigationController?.pushViewController(vc)
                 
             } else if list.count == 1 {
@@ -365,7 +369,7 @@ class YXSMineViewController: YXSBaseTableViewController{
         var section3 = [["title":"夜间模式", "imgName":"yxs_mine_theme", "action":""]]
 
         #if DEBUG
-        var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"书包", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
+        var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"我的文件", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
         #else
         var section4 = [["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
         #endif

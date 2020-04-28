@@ -165,7 +165,7 @@ class YXSFileManagerHelper: NSObject {
             return img
             /// 视频
             case "mp4","MP4","mov":
-                return getIconWithFileUrl(fileUrl)
+                return getVideoFirstPicture(url: fileUrl)//getIconWithFileUrl(fileUrl)
         default:
             return nil
         }
