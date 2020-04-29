@@ -94,7 +94,7 @@ deinit {
 
     // MARK: -action
     @objc func greetingTextFieldChanged(obj:Notification) {
-        self.greetingTextFieldChanged(obj: obj, charslength: 10)
+        self.greetingTextFieldChanged(obj: obj, length: 10)
     }
     
     lazy var titleLabel: YXSLabel = {

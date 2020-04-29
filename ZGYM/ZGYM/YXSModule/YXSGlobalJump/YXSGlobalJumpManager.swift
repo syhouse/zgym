@@ -139,7 +139,7 @@ class YXSGlobalJumpManager: NSObject {
         case 100:
             //打卡 优化 判断当前vc是不是YXSPunchCardSingleStudentBaseListController 并且clockInId和clockInCommitId一致 一致的话刷新当前页面
             let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
-            let vc = YXSPunchCardSingleStudentBaseListController.init(clockInId: model.callbackRequestParameter?.clockInId ?? 0, clockInCommitId: model.callbackRequestParameter?.clockInCommitId ?? 0, isMyPublish: false, classId: model.classId ?? 0)
+            let vc = YXSPunchCardSingleStudentBaseListController.init(clockInId: model.callbackRequestParameter?.clockInId ?? 0, clockInCommitId: model.callbackRequestParameter?.clockInCommitId ?? 0, isMyPublish: false, classId: model.classId ?? 0, top3Model: nil)
             visibleVC?.navigationController?.pushViewController(vc)
             hasJumpEnd = true
             break

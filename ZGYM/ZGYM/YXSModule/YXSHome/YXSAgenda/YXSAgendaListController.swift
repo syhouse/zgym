@@ -151,10 +151,10 @@ class YXSAgendaListController: YXSBaseTableViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let listModel = yxs_dataSource[indexPath.row]
         ///老师身份展示所有数量
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER && listModel.allCount == 0{
+        if listModel.eventType == .punchCard && listModel.allCount == 0{
             return
             ///家长身份展示今日待办数量
-        }else if YXSPersonDataModel.sharePerson.personRole == .PARENT && listModel.count == 0{
+        }else if listModel.count == 0{
             return
         }
         switch listModel.eventType {

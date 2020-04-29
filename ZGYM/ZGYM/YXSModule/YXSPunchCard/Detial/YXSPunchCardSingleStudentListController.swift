@@ -80,39 +80,46 @@ class YXSPunchCardSingleStudentListController: YXSPunchCardSingleStudentBaseList
 }
 
 class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
+    public var top3Model: YXSClassStarMapTop3?{
+        didSet{
+            tableView.reloadData()
+        }
+    }
+    
     // MARK: - property
-    var classId: Int
-    var clockInId: Int
-    var childrenId: Int?
-    var clockInCommitId: Int?
-    let punchCardModel: YXSPunchCardModel?
+    private var classId: Int
+    private var clockInId: Int
+    private var childrenId: Int?
+    private var clockInCommitId: Int?
+    private let punchCardModel: YXSPunchCardModel?
     /// 是否是我发布
-    let isMyPublish: Bool
+    private let isMyPublish: Bool
     
     /// 列表类型
     let type: YXSSingleStudentListType
     
     
     /// 日历model
-    var calendarModel: YXSCalendarModel?
+    private var calendarModel: YXSCalendarModel?
     
     /// 是否可以滚动
-    var canScroll = true
+    fileprivate var canScroll = true
     
-    var dataSource: [YXSPunchCardCommintListModel] = [YXSPunchCardCommintListModel]()
+    private var dataSource: [YXSPunchCardCommintListModel] = [YXSPunchCardCommintListModel]()
     
     /// 当前操作的 IndexPath
-    var curruntIndexPath: IndexPath!
+    private var curruntIndexPath: IndexPath!
     
     
     /// 初始化page list vc
-    init(punchCardModel: YXSPunchCardModel?, isMyPublish: Bool, type: YXSSingleStudentListType) {
+    init(punchCardModel: YXSPunchCardModel?, isMyPublish: Bool, type: YXSSingleStudentListType, top3Model: YXSClassStarMapTop3?) {
         self.punchCardModel = punchCardModel
         self.clockInId = punchCardModel?.clockInId ?? 0
         self.isMyPublish = isMyPublish
         self.classId = punchCardModel?.classId ?? 0
         self.childrenId = punchCardModel?.childrenId
         self.type = type
+        self.top3Model = top3Model
         super.init()
         tableViewIsGroup = true
         showBegainRefresh = false
@@ -121,24 +128,24 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     
     /// 单个提交详情
     /// - Parameters:
-    convenience init(clockInId: Int, clockInCommitId: Int, isMyPublish: Bool, classId: Int) {
-        self.init(punchCardModel: nil, isMyPublish: isMyPublish, type: .detial)
+    convenience init(clockInId: Int, clockInCommitId: Int, isMyPublish: Bool, classId: Int, top3Model: YXSClassStarMapTop3?) {
+        self.init(punchCardModel: nil, isMyPublish: isMyPublish, type: .detial, top3Model: top3Model)
         self.clockInCommitId = clockInCommitId
         self.clockInId = clockInId
         self.classId = classId
         self.title = "详情"
     }
     /// 指定孩子查询
-    convenience init(isMyPublish: Bool, type: YXSSingleStudentListType,clockInId: Int, childrenId: Int, classId: Int) {
-        self.init(punchCardModel: nil, isMyPublish: isMyPublish, type: type)
+    convenience init(isMyPublish: Bool, type: YXSSingleStudentListType,clockInId: Int, childrenId: Int, classId: Int, top3Model: YXSClassStarMapTop3?) {
+        self.init(punchCardModel: nil, isMyPublish: isMyPublish, type: type, top3Model: top3Model)
         self.childrenId = childrenId
         self.clockInId = clockInId
         self.classId = classId
     }
     
     /// 指定孩子历史优秀
-    convenience init(isMyPublish: Bool, childrenId: Int, classId: Int) {
-        self.init(punchCardModel: nil, isMyPublish: isMyPublish, type: .goodHistory)
+    convenience init(isMyPublish: Bool, childrenId: Int, classId: Int, top3Model: YXSClassStarMapTop3?) {
+        self.init(punchCardModel: nil, isMyPublish: isMyPublish, type: .goodHistory, top3Model: top3Model)
         self.childrenId = childrenId
         self.classId = classId
     }
@@ -184,6 +191,10 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         addNotification()
         
         self.dataSource = YXSCacheHelper.yxs_getCachePunchCardTaskStudentCommintList(clockInId: clockInId, childrenId:childrenId, type: type)
+        
+        if top3Model == nil{
+            yxs_loadClassStarTopHistoryData()
+        }
     }
     
     // MARK: - UI
@@ -285,6 +296,14 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
             }
         }
         
+    }
+    
+    @objc func yxs_loadClassStarTopHistoryData(){
+        YXSEducationClassStarTopHistoryRequest.init(classId: classId).request({ (top3Model: YXSClassStarMapTop3) in
+            self.top3Model = top3Model
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     // MARK: -action
@@ -411,6 +430,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let model = dataSource[section]
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SLPunchCardDetialTableHeaderView") as! YXSPunchCardDetialTableHeaderView
+        model.top3Model = top3Model
         model.isShowLookStudentAllButton = !(type == .myPunchCard || type == .studentPunchCardList)
         model.isShowLookGoodButton = type != .goodHistory
         headerView.setModel(model, type: self.type)
@@ -621,14 +641,15 @@ extension YXSPunchCardSingleStudentBaseListController{
         
         func lookStudentAllPunchCardCommintEvent(_ section: Int){
             let model = dataSource[section]
-            let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0, classId: classId)
+            let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0, classId: classId, top3Model: top3Model)
             vc.title = model.realName
             UIUtil.curruntNav().pushViewController(vc)
         }
         
         func lookPunchCardGoodEvent(_ section: Int){
             let model = dataSource[section]
-            let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, childrenId: model.childrenId ?? 0, classId: classId)
+            let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, childrenId: model.childrenId ?? 0, classId: classId, top3Model: top3Model)
+            vc.title = "\(model.realName ?? "")"
             UIUtil.curruntNav().pushViewController(vc)
         }
         
