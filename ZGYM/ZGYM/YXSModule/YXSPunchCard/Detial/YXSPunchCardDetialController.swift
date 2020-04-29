@@ -171,6 +171,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         headerView.layoutIfNeeded()
         
         pageController.punchModel = punchModel
+        pageController.topHistoryModel = topHistoryModel
 
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
            if let calendarModel = punchCardFooter.calendarModel{

@@ -179,7 +179,7 @@ extension YXSPunchCardDetialPageController: JXCategoryListContainerViewDelegate,
     
     func listContainerView(_ listContainerView: JXCategoryListContainerView!, initListFor index: Int) -> JXCategoryListContentViewDelegate! {
         //         self.navView.categoryView.delegate = self
-        let vc = YXSPunchCardSingleStudentListController.init(punchCardModel: punchModel,isMyPublish: isMyPublish, type: listVCTypes[index], topHistoryModel: nil)
+        let vc = YXSPunchCardSingleStudentListController.init(punchCardModel: punchModel,isMyPublish: isMyPublish, type: listVCTypes[index], topHistoryModel: topHistoryModel)
         vc.refreshBlock = {
             [weak self] (changeModel, curruntType)in
             guard let strongSelf = self else { return }

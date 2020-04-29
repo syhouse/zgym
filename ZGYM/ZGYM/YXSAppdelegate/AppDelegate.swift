@@ -183,7 +183,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         
         
         ///如果xmly播放器存在  开启锁屏控制
-        if XMSDKPlayer.shared()?.playerState != .stop{
+        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
+        if !isPlayerStop{
             UIUtil.configNowPlayingCenterUI()
             UIApplication.shared.beginReceivingRemoteControlEvents()
         }
@@ -328,7 +329,9 @@ extension AppDelegate{
         }
         window?.rootViewController = curruntRootVc
         
-        if XMSDKPlayer.shared()?.playerState != .stop{
+        
+        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
+        if !isPlayerStop{
             YXSMusicPlayerWindowView.updateSuperView()
         }
         
