@@ -56,11 +56,10 @@ class YXSClassStartTeacherDetailStudentEmptyHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var model: YXSChildrenModel!
-    func setHeaderModel(_ model: YXSChildrenModel, dateType: DateType){
+    func setHeaderModel( avatar: String?, childrenName: String, dateType: DateType){
         titleLabel.text = "\(NSUtil.yxs_getDateText(dateType: dateType))暂无点评"
-        nameLabel.text = model.realName
-        iconImageView.sd_setImage(with: URL.init(string: model.avatar ?? ""),placeholderImage: kImageUserIconStudentDefualtImage, completed: nil)
+        nameLabel.text = childrenName
+        iconImageView.sd_setImage(with: URL.init(string: avatar ?? ""),placeholderImage: kImageUserIconStudentDefualtImage, completed: nil)
         UIUtil.yxs_setLabelAttributed(commentLabel, text: ["全国已有", "200万", "名学生正在使用此功能，班级之星是学生德育培养的重要辅助功能，赶快去提醒老师使用吧！"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#BABDC2"),kBlueColor, UIColor.yxs_hexToAdecimalColor(hex: "#BABDC2")])
         
         let height = UIUtil.yxs_getTextHeigh(textStr: "全国已有" + "200万" + "名学生正在使用此功能，班级之星是学生德育培养的重要辅助功能，赶快去提醒老师使用吧！", font: UIFont.systemFont(ofSize: 14), width: SCREEN_WIDTH - 94)

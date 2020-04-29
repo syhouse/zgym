@@ -278,6 +278,28 @@ class YXSEducationClassStarParentClassChildrenTopRequest: YXSBaseRequset {
     }
 }
 
+
+// MARK: -学生排名榜（家长）
+let classStarClassChildrenTopNoUser = "/classStar/classChildrenTopNoUser"
+class YXSEducationClassStarClassChildrenTopNoUserRequest: YXSBaseRequset {
+//    排序方式（1 姓氏排序 2 总分数排序 默认为：2）
+    init(childrenId: Int, classId: Int,startTime: String? = nil, endTime: String? = nil) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = classStarParentClassChildrenTop
+        param = ["classId": classId,
+                 "childrenId": childrenId]
+        if let startTime = startTime{
+            param?["startTime"] = startTime
+        }
+        
+        if let endTime = endTime{
+            param?["endTime"] = endTime
+        }
+    }
+}
+
 // MARK: -今日考评项列表
 let classStarEvaluationListTodayList = "/evaluationList/todayList"
 class YXSEducationClassStarEvaluationListTodayListRequest: YXSBaseRequset {
@@ -317,7 +339,6 @@ class YXSEducationClassStarTopHistoryRequest: YXSBaseRequset{
         method = .post
         host = homeHost
         path = classStarTopHistory
-        destinationJsonPaths = ["mapTop3"]
         param = ["classId": classId]
     }
 }

@@ -117,11 +117,11 @@ class YXSPunchCardCommintListModel : NSObject, NSCoding, Mappable{
     var isShowLookGoodButton: Bool = true
     
     ///班级之星排行
-    var top3Model: YXSClassStarMapTop3?
+    var topHistoryModel: YXSClassStarTopHistoryModel?
     
     var myClassStartRank: Int?{
         get{
-            if let top3Model = top3Model{
+            if let top3Model = topHistoryModel?.mapTop3{
                 if let lists = top3Model.first{
                     for model in lists{
                         if childrenId == model.childrenId{
