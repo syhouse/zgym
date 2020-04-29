@@ -141,7 +141,7 @@ class YXSFileManagerHelper: NSObject {
     }
     
     
-    /// 根据文件本地路径返回相对应的图标
+    /// 根据文件本地路径返回相对应的图标 注意:返回空的处理
     @objc func getIconWithFileUrl(_ fileUrl: URL) -> UIImage? {
         let img = UIImage()
         
@@ -159,6 +159,7 @@ class YXSFileManagerHelper: NSObject {
             
             /// 图片
             case "jpg":
+                
             return nil
             /// 音频
             case "m4a","mp3","wav","ogg","m4r","acc":
