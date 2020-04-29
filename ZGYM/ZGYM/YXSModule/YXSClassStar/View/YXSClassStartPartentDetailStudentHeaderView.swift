@@ -11,7 +11,15 @@ import NightNight
 
 class YXSClassStartPartentDetailStudentHeaderView: UIView {
     let stage: StageType
-    var childrenModel: YXSChildrenModel?
+    var classId: Int?
+    var childrenId: Int?
+    var childrenName: String?
+    ///是否是查看别人孩子
+    var isLookOtherStudent: Bool = false{
+        didSet{
+            shareButton.isHidden = isLookOtherStudent
+        }
+    }
     init(frame: CGRect, stage: StageType) {
         self.stage = stage
         super.init(frame: frame)
@@ -80,7 +88,7 @@ class YXSClassStartPartentDetailStudentHeaderView: UIView {
     
     @objc func shareClick(){
         if model != nil{
-            UIUtil.yxs_shareLink(requestModel: HMRequestShareModel.init(classStarId: childrenModel?.classId ?? 0, childrenId:childrenModel?.id ?? 0, dateType: dateType), shareModel: YXSShareModel.init(title: "班级之星", descriptionText: "\(NSUtil.yxs_getDateText(dateType: dateType))班级之星已出炉,快来看看\(childrenModel?.realName ?? "")的表现吧~", link: ""))
+            UIUtil.yxs_shareLink(requestModel: HMRequestShareModel.init(classStarId: classId ?? 0, childrenId: childrenId ?? 0, dateType: dateType), shareModel: YXSShareModel.init(title: "班级之星", descriptionText: "\(NSUtil.yxs_getDateText(dateType: dateType))班级之星已出炉,快来看看\(childrenName ?? "")的表现吧~", link: ""))
         }
     }
     
@@ -98,6 +106,8 @@ class YXSClassStartPartentDetailStudentHeaderView: UIView {
         firstRankView.setViewModel(model.mapTop3?.first, model.currentChildren, index: 1, stage: stage)
         secendRankView.setViewModel(model.mapTop3?.secend, model.currentChildren, index: 2, stage: stage)
         thridRankView.setViewModel(model.mapTop3?.thrid, model.currentChildren, index: 3, stage: stage)
+        
+        bottomView.isLookOtherStudent = isLookOtherStudent
         bottomView.setViewModel(model, dateType: dateType)
     }
     
@@ -275,6 +285,8 @@ class ClassStartPartentRankView: UIView {
 
 class ClassStartPartentBottomView: UIView {
     let stage: StageType
+    ///是否是查看别人孩子
+    var isLookOtherStudent: Bool = false
     init(frame: CGRect,stage: StageType) {
         self.stage = stage
         super.init(frame: CGRect.zero)
@@ -343,9 +355,9 @@ class ClassStartPartentBottomView: UIView {
 
             }
             if let rankText = rankText{
-                UIUtil.yxs_setLabelAttributed(titleLabel, text: ["恭喜！\(model.currentChildren?.childrenName ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))荣获\(rankText)", "\n您的孩子\(NSUtil.yxs_getDateText(dateType: dateType))在班级表现非常榜"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
+                UIUtil.yxs_setLabelAttributed(titleLabel, text: ["恭喜！\(model.currentChildren?.childrenName ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))荣获\(rankText)", "\n\(isLookOtherStudent ? "" : "您的孩子")\(NSUtil.yxs_getDateText(dateType: dateType))在班级表现非常榜"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
             }else{
-                UIUtil.yxs_setLabelAttributed(titleLabel, text: ["孩子名\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
+                UIUtil.yxs_setLabelAttributed(titleLabel, text: ["孩子名\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n\(isLookOtherStudent ? "" : "您的孩子")\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
             }
         }
         

@@ -41,7 +41,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
     
     ///请求班级之星排行榜
     private var loadClassStartHistoryRequest: Bool = true
-    private var top3Model: YXSClassStarMapTop3?
+    private var topHistoryModel: YXSClassStarTopHistoryModel?
     
     public var messageModel: YXSPunchCardMessageTipsModel?
     
@@ -279,9 +279,9 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
     }
     
     @objc func yxs_loadClassStarTopHistoryData(){
-        YXSEducationClassStarTopHistoryRequest.init(classId: classId).request({ (top3Model: YXSClassStarMapTop3) in
+        YXSEducationClassStarTopHistoryRequest.init(classId: classId).request({ (topHistoryModel: YXSClassStarTopHistoryModel) in
             self.loadClassStartHistoryRequest = false
-            self.top3Model = top3Model
+            self.topHistoryModel = topHistoryModel
             self.group.leave()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -469,7 +469,7 @@ extension YXSPunchCardDetialController: YXSRouterEventProtocol{
             vc.title = "打卡排行榜"
             self.navigationController?.pushViewController(vc)
         case kFriendsCircleMessageViewGoMessageEvent:
-            let vc = YXSCommonMessageListController.init(clockId: punchModel.clockInId ?? 0, classId: punchModel.classId ?? 0,  isMyPublish: punchModel.promulgator ?? false, top3Model: top3Model)
+            let vc = YXSCommonMessageListController.init(clockId: punchModel.clockInId ?? 0, classId: punchModel.classId ?? 0,  isMyPublish: punchModel.promulgator ?? false, topHistoryModel: topHistoryModel)
             vc.loadSucess = {
                 [weak self] in
                 guard let strongSelf = self else { return }
