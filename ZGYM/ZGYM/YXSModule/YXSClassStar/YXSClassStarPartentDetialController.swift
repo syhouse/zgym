@@ -35,17 +35,47 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     var startTime: String?
     var endTime: String?
     
-    var childrenModel: YXSChildrenModel
-    /// 初始化
-    /// - Parameter childrenModel: 初始化需要孩子model 用户数据里面找
-    init(childrenModel: YXSChildrenModel, startTime: String? = nil, endTime: String? = nil) {
-        self.childrenModel = childrenModel
+    ///查看其他孩子
+    var isLookOtherStudent: Bool = false
+    
+    ///班级id
+    var classId: Int
+    var childrenName: String
+    var childrenId: Int
+    var avar: String
+    var stage: StageType
+    
+    
+    ///初始化
+    /// - Parameters:
+    ///   - classId: 班级id
+    ///   - childrenName: 孩子名称
+    ///   - childrenId: 孩子id
+    ///   - avar: 头像
+    ///   - stage: 学段
+    ///   - startTime: startTime
+    ///   - endTime: endTime
+    ///   - isLookOtherStudent: 是否是查看别人孩子的班级之星排名
+    init(classId: Int, childrenName: String, childrenId: Int, avar: String, stage: StageType, startTime: String? = nil, endTime: String? = nil, isLookOtherStudent: Bool = false){
+        self.classId = classId
+        self.childrenName = childrenName
+        self.childrenId = childrenId
+        self.avar = avar
         self.startTime = startTime
         self.endTime = endTime
+        self.stage = stage
+        self.isLookOtherStudent = isLookOtherStudent
         super.init()
         tableViewIsGroup = true
         showBegainRefresh = false
         hasRefreshHeader = false
+    }
+    
+    /// 初始化
+    /// - Parameter childrenModel: 初始化需要孩子model 用户数据里面找
+    convenience init(childrenModel: YXSChildrenModel, startTime: String? = nil, endTime: String? = nil) {
+        self.init(classId: childrenModel.classId ?? 0, childrenName: childrenModel.realName ?? "", childrenId: childrenModel.id ?? 0, avar: childrenModel.avatar ?? "", stage: childrenModel.stage, startTime: startTime, endTime: endTime)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -54,7 +84,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        customNav.title = "\(childrenModel.realName ?? "")的班级表现"
+        customNav.title = "\(childrenName)的班级表现"
         
         tableView.register(YXSClassStarTeacherSingleCell.self, forCellReuseIdentifier: "YXSClassStarTeacherSingleCell")
         tableView.register(ClassStarTeacherRemindCell.self, forCellReuseIdentifier: "ClassStarTeacherRemindCell")
@@ -63,6 +93,10 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
         tableView.sectionHeaderHeight = 0
         
         loadClassChildrensData()
+        
+        if isLookOtherStudent{
+            self.rightControl.isHidden = true
+        }
     }
     
     // MARK: -UI
@@ -70,7 +104,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
         if isEmptyUI{
             tableView.rowHeight = 64
             
-            tableHeaderEmptyView.setHeaderModel(childrenModel, dateType: self.dateType)
+            tableHeaderEmptyView.setHeaderModel(avatar: avar, childrenName: childrenName, dateType: self.dateType)
             view.backgroundColor = UIColor.white
             tableView.backgroundColor = UIColor.white
             tableView.sectionHeaderHeight = 0
@@ -136,7 +170,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     }
     func loadClassChildrensData(){
         let curruntType = startTime == nil ? self.dateType : nil
-        YXSEducationClassStarParentClassChildrenTopRequest.init(childrenId: childrenModel.id ?? 0,classId: childrenModel.classId ?? 0, dateType: curruntType, startTime: startTime, endTime: endTime).request({ (partentModel: YXSClassStarPartentModel) in
+        YXSEducationClassStarParentClassChildrenTopRequest.init(childrenId:  childrenId,classId: classId, dateType: curruntType, startTime: startTime, endTime: endTime).request({ (partentModel: YXSClassStarPartentModel) in
             self.partentModel = partentModel
             MBProgressHUD.hide(for: self.view, animated: true)
             if self.partentModel.mapTop3?.first == nil{
@@ -156,7 +190,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     
     func loadListData(){
         let curruntType = startTime == nil ? self.dateType : nil
-        YXSEducationClassStarTeacherEvaluationHistoryListPageRequest.init(category: Int(selectTypeModel.paramsKey),childrenId:childrenModel.id ?? 0,classId: childrenModel.classId ?? 0, currentPage: curruntPage,dateType: curruntType, startTime: startTime, endTime: endTime).requestCollection({ (list:[YXSClassStarHistoryModel]) in
+        YXSEducationClassStarTeacherEvaluationHistoryListPageRequest.init(category: Int(selectTypeModel.paramsKey),childrenId:childrenId,classId: classId, currentPage: curruntPage,dateType: curruntType, startTime: startTime, endTime: endTime).requestCollection({ (list:[YXSClassStarHistoryModel]) in
             MBProgressHUD.hide(for: self.view, animated: true)
             if self.curruntPage == 1{
                 self.dataSource.removeAll()
@@ -173,7 +207,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     }
     
     func loadTeacherListData(){
-        YXSEducationTeacherTeacherBaseInfoRequest.init(childrenId: childrenModel.id ?? 0, classId: childrenModel.classId ?? 0).requestCollection({ (items:[YXSClassStartTeacherModel]) in
+        YXSEducationTeacherTeacherBaseInfoRequest.init(childrenId: childrenId, classId: classId).requestCollection({ (items:[YXSClassStartTeacherModel]) in
              MBProgressHUD.hide(for: self.view, animated: true)
             self.teacherLists = items
             self.updateUI()
@@ -185,7 +219,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     }
     
     func loadReminderRequest(teacherLists: [YXSClassStartTeacherModel]){
-        UIUtil.yxs_loadClassStartReminderRequest(teacherLists: teacherLists,childrenId: childrenModel.id ?? 0, classId: childrenModel.classId ?? 0)
+        UIUtil.yxs_loadClassStartReminderRequest(teacherLists: teacherLists,childrenId: childrenId, classId: classId)
     }
     
     // MARK: -action
@@ -233,8 +267,11 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     
     // MARK: - getter&setter
     lazy var tableHeaderView: YXSClassStartPartentDetailStudentHeaderView = {
-        let tableHeaderView = YXSClassStartPartentDetailStudentHeaderView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 0), stage: childrenModel.stage)
-        tableHeaderView.childrenModel = childrenModel
+        let tableHeaderView = YXSClassStartPartentDetailStudentHeaderView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 0), stage: stage)
+        tableHeaderView.classId = classId
+        tableHeaderView.childrenId = childrenId
+        tableHeaderView.childrenName = childrenName
+        tableHeaderView.isLookOtherStudent = isLookOtherStudent
         return tableHeaderView
     }()
     lazy var tableHeaderEmptyView: YXSClassStartTeacherDetailStudentEmptyHeaderView = {

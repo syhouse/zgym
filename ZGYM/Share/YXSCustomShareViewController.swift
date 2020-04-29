@@ -38,7 +38,11 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
                     } else {
                         if let url = firstUrl {
                             if let data = try? Data(contentsOf: url) {
-                                weakSelf.imgThumbnail.image = UIImage(data: data)
+                                if let img = UIImage(data: data) {
+                                    
+                                    let newImg = weakSelf.resizeImage(image: img, newSize: CGSize(width: 50.0, height: 50.0))
+                                    weakSelf.imgThumbnail.image = newImg
+                                }
                             }
                         }
                     }
@@ -80,7 +84,7 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
             make.top.equalTo(lbTitle.snp.bottom).offset(25)
             make.left.equalTo(lbTitle.snp_left).offset(0)
             make.right.equalTo(lbTitle.snp_right).offset(0)
-            make.height.equalTo(60)
+            make.height.equalTo(80)
         })
         
         btnCancel.snp.makeConstraints({ (make) in
@@ -132,7 +136,7 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
     
     // MARK: - Delegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 30
+        return 40
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -150,6 +154,15 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     // MARK: - Other
+    func resizeImage(image: UIImage, newSize: CGSize) -> UIImage {
+        UIGraphicsBeginImageContext(newSize)
+        image.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+        
+        guard let newImage = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
     
     // MARK: - LazyLoad
     lazy var panelView: UIView = {
@@ -182,6 +195,7 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
         tbv.bounces = false
         tbv.delegate = self
         tbv.dataSource = self
+        tbv.backgroundColor = UIColor.white
         return tbv
     }()
     
@@ -195,7 +209,7 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
     }()
     
     lazy var dataSource: NSArray = {
-        return ["添加到书包", "添加到班级文件"]
+        return ["添加到我的文件", "添加到班级文件"]
     }()
 
     /*

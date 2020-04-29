@@ -92,7 +92,7 @@ extension UIImage {
      *  压缩上传图片到指定字节
      *
      *  image     压缩的图片
-     *  maxLength 压缩后最大字节大小
+     *  maxLength 压缩后最大字节大小(byte)
      *
      *  return 压缩后图片的二进制
      */

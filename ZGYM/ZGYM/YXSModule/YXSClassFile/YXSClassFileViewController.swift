@@ -187,7 +187,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             endEditing()
             
         } else {
-            let lists = [YXSCommonBottomParams.init(title: "从相册选择", event: "album"),YXSCommonBottomParams.init(title: "从书包选择", event: "bag"),YXSCommonBottomParams.init(title: "新建文件夹", event: "createFolder")]
+            let lists = [YXSCommonBottomParams.init(title: "从相册选择", event: "album"),YXSCommonBottomParams.init(title: "从我的文件选择", event: "bag"),YXSCommonBottomParams.init(title: "新建文件夹", event: "createFolder")]
             
             YXSCommonBottomAlerView.showIn(buttons: lists) { [weak self](model) in
                 guard let strongSelf = self else { return }
@@ -211,8 +211,18 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
     
     @objc func selectedFromBagClick() {
-        let vc = YXSChoseFileViewController { (choseFileList) in
+        let vc = YXSChoseFileViewController { [weak self](choseFileList, vc) in
+            guard let weakSelf = self else {return}
             
+            YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: choseFileList).request({ (json) in
+                DispatchQueue.main.async {
+                    weakSelf.loadData()
+                    vc.navigationController?.popViewController()
+                }
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
         }
         navigationController?.pushViewController(vc)
     }

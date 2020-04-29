@@ -44,10 +44,8 @@ class YXSHomeController: YXSHomeBaseController {
         }
     }
     
-    ///当前是首次启动vc
-    var isFirstLuanchHomeVc: Bool = true
-    ///收否x收到IM消息 需要刷新接口
-    var isNeedReloadDataForIMMessage: Bool = false
+    ///聊天推送刷新 延迟1.5秒钟 统一刷新
+    var isChateWaitRefreshData: Bool = false
     
     // MARK: - init
     override init() {
@@ -88,14 +86,6 @@ class YXSHomeController: YXSHomeBaseController {
         
         //引导
         ysx_showGuide()
-        
-        ///首次启动可能收到大量IM消息推送过来  接收几秒钟后统一刷新一次接口
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-            self.isFirstLuanchHomeVc = false
-            if self.isNeedReloadDataForIMMessage{
-                self.reloadMessageData()
-            }
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -515,9 +505,12 @@ extension YXSHomeController{
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.init(rawValue: model.serviceType ?? 0) ?? .homework])
             }
         }
-        ///b不是首次启动
-        if !isFirstLuanchHomeVc{
-            yxs_loadData()
+        if !isChateWaitRefreshData{
+            isChateWaitRefreshData = true
+            ///首次启动可能收到大量IM消息推送过来  接收几秒钟后统一刷新一次接口
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                self.yxs_loadData()
+            }
         }
         
     }

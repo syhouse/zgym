@@ -88,11 +88,11 @@ class YXSPunchCardDetialPageController: YXSBaseViewController{
         }
     }
     
-    public var top3Model: YXSClassStarMapTop3?{
+    public var topHistoryModel: YXSClassStarTopHistoryModel?{
         didSet{
-            if let top3Model = top3Model{
+            if let topHistoryModel = topHistoryModel{
                 for vc in vcs{
-                    vc.top3Model = top3Model
+                    vc.topHistoryModel = topHistoryModel
                 }
             }
         }
@@ -179,7 +179,7 @@ extension YXSPunchCardDetialPageController: JXCategoryListContainerViewDelegate,
     
     func listContainerView(_ listContainerView: JXCategoryListContainerView!, initListFor index: Int) -> JXCategoryListContentViewDelegate! {
         //         self.navView.categoryView.delegate = self
-        let vc = YXSPunchCardSingleStudentListController.init(punchCardModel: punchModel,isMyPublish: isMyPublish, type: listVCTypes[index], top3Model: nil)
+        let vc = YXSPunchCardSingleStudentListController.init(punchCardModel: punchModel,isMyPublish: isMyPublish, type: listVCTypes[index], topHistoryModel: topHistoryModel)
         vc.refreshBlock = {
             [weak self] (changeModel, curruntType)in
             guard let strongSelf = self else { return }
