@@ -349,16 +349,6 @@ class YXSMineViewController: YXSBaseTableViewController{
     
     
     // MARK: - LazyLoad
-//    lazy var dataSource: [[String:String]] = {
-//        var arr: [[String: String]]!
-////        ["title":"系统通知", "imgName":"yxs_mine_notice", "action":"systemMessageClick"],
-//        arr = [["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"], ["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"],["title":"夜间模式", "imgName":"yxs_mine_theme", "action":""]]
-////        arr = [["title":"问题反馈", "imgName":"yxs_mine_feedback", "action":"feedbackClick"], ["title":"隐私政策", "imgName":"yxs_mine_privacy", "action":"privacyPolicyClick"], ["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
-//
-//        return arr
-//    }()
-  
-    
     lazy var dataSource: Array<Any> = {
 //        var arr: [[String: String]]!
         var arr:[Any] = [Any]()
@@ -372,7 +362,7 @@ class YXSMineViewController: YXSBaseTableViewController{
         var section3 = [["title":"夜间模式", "imgName":"yxs_mine_theme", "action":""]]
         arr.append(section3)
         
-        #if DEBUG
+    
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
             var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"我的文件", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
             arr.append(section4)
@@ -381,10 +371,11 @@ class YXSMineViewController: YXSBaseTableViewController{
             var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
             arr.append(section4)
         }
-//        var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"我的文件", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
-        #else
-        var section4 = [["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
-        #endif
+
+        return arr
+        
+//        var section4 = [["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
+        
 //        var section4 = [["title":"常见问题", "imgName":"yxs_mine_question_red", "action":"questionClick"],["title":"设置", "imgName":"yxs_mine_setting_red", "action":"settingClick"]]
         
 //        #if DEBUG
@@ -394,8 +385,7 @@ class YXSMineViewController: YXSBaseTableViewController{
 //        #endif
         
 //        arr = [["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"], ["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"],["title":"夜间模式", "imgName":"yxs_mine_theme", "action":""]]
-        return arr//[section1, section2, section3, section4]
-        
+//        return arr//[section1, section2, section3, section4]
     }()
     
     lazy var headerImageV: UIImageView = {
