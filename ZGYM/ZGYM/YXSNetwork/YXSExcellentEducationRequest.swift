@@ -98,6 +98,9 @@ class YXSEducationChildContentPageListRequest: YXSBaseRequset {
                 print("")
             }
         }
+        if stage?.count ?? 0 <= 0 {
+            stage = "PRIMARY_SCHOOL"
+        }
         if type <= 0 {
             param = ["current": current,
                      "size":size,

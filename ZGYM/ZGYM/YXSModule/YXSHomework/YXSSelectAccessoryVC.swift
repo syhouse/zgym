@@ -10,13 +10,13 @@ import Foundation
 import NightNight
 import ObjectMapper
 
-class YXSSelectAccessoryVC: YXSBaseTableViewController {
+class YXSSelectAccessoryVC: YXSBaseTableViewController, UISearchBarDelegate {
     
+    var isSearching: Bool = false
     var parentFolderId: Int = -1
-    /// 文件夹列表
-    var folderList: [YXSFolderModel] = [YXSFolderModel]()
     /// 文件列表
     var fileList: [YXSFileModel] = [YXSFileModel]()
+    var searchFileList: [YXSFileModel] = [YXSFileModel]()
 
 //    var completionHandler:((_ selectedFileList: [YXSFileModel])->())?
     /// 已选择的文件
@@ -43,16 +43,15 @@ class YXSSelectAccessoryVC: YXSBaseTableViewController {
         self.title = "选择附件"
         view.mixedBackgroundColor = MixedColor(normal: kNightFFFFFF, night: kNightBackgroundColor)
         tableView.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
-        view.addSubview(btnSearch)
+//        view.addSubview(btnSearch)
+        view.addSubview(searchBar)
         view.addSubview(bottomView)
-        btnSearch.snp.makeConstraints({ (make) in
-            make.top.equalTo(0)
-            make.left.equalTo(15)
-            make.right.equalTo(-15)
+        searchBar.snp.makeConstraints({ (make) in
+            make.top.left.right.equalTo(0)
             make.height.equalTo(44)
         })
         tableView.snp.remakeConstraints({ (make) in
-            make.top.equalTo(btnSearch.snp_bottom)
+            make.top.equalTo(searchBar.snp_bottom)
             make.left.equalTo(0)
             make.right.equalTo(0)
             make.bottom.equalTo(bottomView.snp_top)
@@ -81,17 +80,31 @@ class YXSSelectAccessoryVC: YXSBaseTableViewController {
         loadData()
     }
     
-    func loadData() {
-        YXSSatchelDocFilePageQueryRequest(currentPage: self.curruntPage).request({ [weak self](json) in
+    func loadData(searchString:String = "") {
+        YXSSatchelDocFilePageQueryRequest(currentPage: self.curruntPage,keyword: searchString).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             weakSelf.yxs_endingRefresh()
             let list = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
-            if weakSelf.curruntPage == 1{
-                weakSelf.fileList.removeAll()
+            for item in list {
+                let arr = weakSelf.selectFiles.filter {$0.id == item.id}
+                if arr.first?.id == item.id {
+                    item.isSelected = true
+                }
             }
-            weakSelf.fileList += list
+
+            if weakSelf.isSearching {
+                if weakSelf.curruntPage == 1{
+                    weakSelf.searchFileList.removeAll()
+                }
+                weakSelf.searchFileList += list
+            } else {
+                if weakSelf.curruntPage == 1{
+                    weakSelf.fileList.removeAll()
+                }
+                weakSelf.fileList += list
+            }
             weakSelf.loadMore = json["hasNext"].boolValue
-            weakSelf.fileList = list
+            
             weakSelf.tableView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()
@@ -163,71 +176,67 @@ class YXSSelectAccessoryVC: YXSBaseTableViewController {
     }
     
     // MARK: - Delegate
+    // MARK: UITableViewDelegate, UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return folderList.count
+        if isSearching {
+            return searchFileList.count
         } else {
             return fileList.count
         }
-    }
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
+        
+            
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let item = folderList[indexPath.row]
-            let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
-            cell.model = item
-            cell.lbTitle.text = item.folderName//"作业"
-            return cell
-            
+        let cell: YXSFileAbleSlectedCell = tableView.dequeueReusableCell(withIdentifier: "YXSFileAbleSlectedCell") as! YXSFileAbleSlectedCell
+        var item: YXSFileModel?
+        if isSearching {
+            item = searchFileList[indexPath.row]
         } else {
-            let item = fileList[indexPath.row]//[indexPath.row]
-            let cell: YXSFileAbleSlectedCell = tableView.dequeueReusableCell(withIdentifier: "YXSFileAbleSlectedCell") as! YXSFileAbleSlectedCell
-            cell.lbTitle.text = item.fileName
-            let fileSize: String = YXSFileManagerHelper.sharedInstance.stringSizeOfDataSrouce(fileSize: UInt64(item.fileSize ?? 0))
-            cell.lbSubTitle.text = fileSize
-            cell.lbThirdTitle.text = "\(item.createTime?.yxs_DayTime() ?? "")"
-            
-            if let url = URL(string: item.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
-                if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
-                    cell.imgIcon.image = img
-                    
-                } else {
-                    let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
-                    cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
-                }
+            item = fileList[indexPath.row]
+        }
+        
+        
+        cell.lbTitle.text = item?.fileName
+        let fileSize: String = YXSFileManagerHelper.sharedInstance.stringSizeOfDataSrouce(fileSize: UInt64(item?.fileSize ?? 0))
+        cell.lbSubTitle.text = fileSize
+        cell.lbThirdTitle.text = "\(item?.createTime?.yxs_DayTime() ?? "")"
+        
+        if let url = URL(string: item?.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
+            if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
+                cell.imgIcon.image = img
+                
+            } else {
+                let strIcon = item?.bgUrl?.count ?? 0 > 0 ? item?.bgUrl : item?.fileUrl
+                cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
             }
-            cell.model = item
-            return cell
         }
-    }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0  {
-            return CGFloat.leastNormalMagnitude
-            
-        } else {
-            
-            return folderList.count == 0 ? CGFloat.leastNormalMagnitude : 10
-        }
+        cell.model = item
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            let item = folderList[indexPath.row]
-            let vc = YXSSelectAccessoryVC(parentFolderId: item.id ?? -1,priorList: selectFiles,maxSelectCount: self.maxSelectCount) { [weak self](selectList)in
-                guard let weakSelf = self else { return }
-                if let list = selectList, list.count > 0 {
-                    weakSelf.selectFiles = list
-                    weakSelf.refreshBottomView()
+        if isSearching {
+            let item = searchFileList[indexPath.row]
+            if !(item.isSelected ?? false) {
+                if selectFiles.count >= self.maxSelectCount {
+                    MBProgressHUD.yxs_showMessage(message: "最多只能选择\(self.maxSelectCount)个文件")
+                    return
                 }
             }
-            navigationController?.pushViewController(vc)
+            item.isSelected = item.isSelected == true ? false : true
+            tableView.reloadRows(at: [indexPath], with: .none)
+            if item.isSelected ?? false {
+                
+                selectFiles = selectFiles.filter {$0.id != item.id}
+                selectFiles.append(item)
+            } else {
+                selectFiles = selectFiles.filter {$0.id != item.id}
+            }
         } else {
             let item = fileList[indexPath.row]
             if !(item.isSelected ?? false) {
@@ -245,8 +254,24 @@ class YXSSelectAccessoryVC: YXSBaseTableViewController {
             } else {
                 selectFiles = selectFiles.filter {$0.id != item.id}
             }
-            self.refreshBottomView()
         }
+        
+        self.refreshBottomView()
+    }
+    
+    // MARK: UISearchBarDelegate
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        isSearching = false
+        searchFileList.removeAll()
+        loadData()
+        print("取消")
+    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        isSearching = true
+        loadData(searchString: searchBar.text ?? "")
+        print("搜索")
     }
     
     // MARK: - EmptyView
@@ -279,6 +304,14 @@ class YXSSelectAccessoryVC: YXSBaseTableViewController {
         btn.layer.cornerRadius = 22
         btn.addTarget(self, action: #selector(searchClick(sender:)), for: .touchUpInside)
         return btn
+    }()
+    
+    lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar.init(frame: CGRect.zero)
+        searchBar.showsCancelButton = true
+        searchBar.delegate = self
+        searchBar.placeholder = "输入文件名称搜索"
+        return searchBar
     }()
     
     lazy var bottomView: UIView = {
