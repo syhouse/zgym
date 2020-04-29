@@ -25,7 +25,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        self.title = "书包"
+        self.title = "我的文件"
 
         // Do any additional setup after loading the view.
         view.addSubview(btnSearch)

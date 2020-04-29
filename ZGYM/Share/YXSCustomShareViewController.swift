@@ -195,7 +195,7 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
     }()
     
     lazy var dataSource: NSArray = {
-        return ["添加到书包", "添加到班级文件"]
+        return ["添加到我的文件", "添加到班级文件"]
     }()
 
     /*

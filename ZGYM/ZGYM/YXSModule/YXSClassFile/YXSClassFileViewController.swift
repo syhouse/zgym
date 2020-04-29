@@ -187,7 +187,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             endEditing()
             
         } else {
-            let lists = [YXSCommonBottomParams.init(title: "从相册选择", event: "album"),YXSCommonBottomParams.init(title: "从书包选择", event: "bag"),YXSCommonBottomParams.init(title: "新建文件夹", event: "createFolder")]
+            let lists = [YXSCommonBottomParams.init(title: "从相册选择", event: "album"),YXSCommonBottomParams.init(title: "从我的文件选择", event: "bag"),YXSCommonBottomParams.init(title: "新建文件夹", event: "createFolder")]
             
             YXSCommonBottomAlerView.showIn(buttons: lists) { [weak self](model) in
                 guard let strongSelf = self else { return }
