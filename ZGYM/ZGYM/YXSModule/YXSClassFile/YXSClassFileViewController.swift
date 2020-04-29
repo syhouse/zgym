@@ -211,8 +211,18 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
     
     @objc func selectedFromBagClick() {
-        let vc = YXSChoseFileViewController { (choseFileList) in
+        let vc = YXSChoseFileViewController { [weak self](choseFileList, vc) in
+            guard let weakSelf = self else {return}
             
+            YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: choseFileList).request({ (json) in
+                DispatchQueue.main.async {
+                    weakSelf.loadData()
+                    vc.navigationController?.popViewController()
+                }
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
         }
         navigationController?.pushViewController(vc)
     }

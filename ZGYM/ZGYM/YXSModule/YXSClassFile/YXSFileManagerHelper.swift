@@ -74,7 +74,7 @@ class YXSFileManagerHelper: NSObject {
         return stringSizeOfDataSrouce(fileSize: fileSize)
     }
     
-    /// fileSize(KB)
+    /// 参数:fileSize(KB)
     @objc func stringSizeOfDataSrouce(fileSize: UInt64) -> String {
         
         if 1024 > fileSize {

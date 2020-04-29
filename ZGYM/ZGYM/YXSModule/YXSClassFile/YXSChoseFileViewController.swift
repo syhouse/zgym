@@ -21,11 +21,10 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     /// 选中的文件集合
     var selectedFileList: [YXSFileModel] = [YXSFileModel]()
     ///
-    var completionHandler:((_ selectedFileList: [YXSFileModel])->())?
+    var completionHandler:((_ selectedFileList: [YXSFileModel], _ vc: YXSChoseFileViewController)->())?
     
-    init(parentFolderId: Int = -1, selectedFileList: [YXSFileModel] = [YXSFileModel](), completionHandler:(((_ selectedFileList: [YXSFileModel])->())?)) {
+    init(parentFolderId: Int = -1, selectedFileList: [YXSFileModel] = [YXSFileModel](), completionHandler:((_ selectedFileList: [YXSFileModel], _ vc: YXSChoseFileViewController)->())?) {
         super.init()
-        
         self.completionHandler = completionHandler
         self.parentFolderId = parentFolderId
         self.selectedFileList = selectedFileList
@@ -68,6 +67,19 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     }
     
     @objc func loadData() {
+        
+        YXSSatchelDocFilePageQueryRequest(currentPage: self.curruntPage).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            let hasNext = json["hasNext"]
+            
+            weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+//            self.tableView.reloadData()
+            weakSelf.tableView.reloadData()
+            
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+        return
         
         let workingGroup = DispatchGroup()
         let workingQueue = DispatchQueue(label: "request_queue")
@@ -117,38 +129,38 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     /// 选中的文件总大小 kb
     var totalSize: UInt = 0 {
         didSet {
-            bottomView.lbSize.text = "已选择：\(self.totalSize)KB"
+            bottomView.lbSize.text = YXSFileManagerHelper.sharedInstance.stringSizeOfDataSrouce(fileSize: UInt64(self.totalSize))
             bottomView.btnDone.setTitle("确定(\(selectedFileList.count))", for: .normal)
         }
     }
     
     // MARK: - Action
     @objc func doneClick(sender: YXSButton) {
-        completionHandler?(selectedFileList)
+        completionHandler?(selectedFileList, self)
     }
     
     // MARK: - Delegate
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return folderList.count
-        } else {
+//        if section == 0 {
+//            return folderList.count
+//        } else {
             return fileList.count
-        }
+//        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let item = folderList[indexPath.row]
-            let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
-            cell.model = item
-            cell.lbTitle.text = item.folderName
-            return cell
-            
-        } else {
+//        if indexPath.section == 0 {
+//            let item = folderList[indexPath.row]
+//            let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
+//            cell.model = item
+//            cell.lbTitle.text = item.folderName
+//            return cell
+//
+//        } else {
             let item = fileList[indexPath.row]//[indexPath.row]
             let cell: YXSFileAbleSlectedCell = tableView.dequeueReusableCell(withIdentifier: "SLFileAbleSlectedCell") as! YXSFileAbleSlectedCell
             cell.lbTitle.text = item.fileName
@@ -167,7 +179,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
             }
             cell.model = item
             return cell
-        }
+//        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -179,13 +191,13 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-           let folderItem = folderList[indexPath.row]
-            let vc = YXSChoseFileViewController(parentFolderId: folderItem.id ?? 0, selectedFileList: selectedFileList, completionHandler: completionHandler)
-            vc.totalSize = totalSize
-            navigationController?.pushViewController(vc)
-            
-        } else {
+//        if indexPath.section == 0 {
+//           let folderItem = folderList[indexPath.row]
+//            let vc = YXSChoseFileViewController(parentFolderId: folderItem.id ?? 0, selectedFileList: selectedFileList, completionHandler: completionHandler)
+//            vc.totalSize = totalSize
+//            navigationController?.pushViewController(vc)
+//
+//        } else {
             let cell: YXSFileAbleSlectedCell = tableView.cellForRow(at: indexPath) as! YXSFileAbleSlectedCell
             cell.btnSelect.isSelected = !cell.btnSelect.isSelected
             
@@ -207,7 +219,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
                     }
                 }
             }
-        }
+//        }
     }
     
     /*
@@ -255,7 +267,7 @@ class SLChoseFileBottomView: UIView {
     // MARK: - LazyLoad
     lazy var lbSize: YXSLabel = {
         let lb = YXSLabel()
-        lb.text = "已选择：110KB"
+        lb.text = "已选择：0KB"
         lb.textColor = k222222Color
         lb.font = UIFont.systemFont(ofSize: 13)
         return lb
