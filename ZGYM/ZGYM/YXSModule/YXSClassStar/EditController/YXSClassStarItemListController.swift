@@ -125,6 +125,7 @@ class ClassStarCommentItemCell: UICollectionViewCell {
     lazy var titleLabel: YXSLabel = {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 15)
+        label.textAlignment = .center
         label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNight898F9A)
         return label
     }()
