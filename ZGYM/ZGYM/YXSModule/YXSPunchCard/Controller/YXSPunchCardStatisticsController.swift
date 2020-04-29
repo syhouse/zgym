@@ -92,7 +92,7 @@ class YXSPunchCardStatisticsController: YXSBaseTableViewController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = yxs_dataSource[indexPath.row]
-        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: yxs_punchCardModel.promulgator ?? false, type: .studentPunchCardList,clockInId: yxs_punchCardModel.clockInId ?? 0, childrenId: model.childrenId ?? 0, classId: yxs_punchCardModel.classId ?? 0)
+        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: yxs_punchCardModel.promulgator ?? false, type: .studentPunchCardList,clockInId: yxs_punchCardModel.clockInId ?? 0, childrenId: model.childrenId ?? 0, classId: yxs_punchCardModel.classId ?? 0, top3Model: nil)
         vc.title = model.realName
         self.navigationController?.pushViewController(vc)
     }

@@ -116,6 +116,42 @@ class YXSPunchCardCommintListModel : NSObject, NSCoding, Mappable{
     ///展示历史优秀打卡
     var isShowLookGoodButton: Bool = true
     
+    ///班级之星排行
+    var top3Model: YXSClassStarMapTop3?
+    
+    var myClassStartRank: Int?{
+        get{
+            if let top3Model = top3Model{
+                if let lists = top3Model.first{
+                    for model in lists{
+                        if childrenId == model.childrenId{
+                            return 1
+                        }
+                    }
+                }
+                
+                if let lists = top3Model.secend{
+                    for model in lists{
+                        if childrenId == model.childrenId{
+                            return 2
+                        }
+                    }
+                }
+                
+                if let lists = top3Model.thrid{
+                    for model in lists{
+                        if childrenId == model.childrenId{
+                            return 3
+                        }
+                    }
+                }
+            }
+            
+            return nil
+        }
+    }
+    
+    
     ///headerView高度
     var headerHeight: CGFloat{
         get{

@@ -154,7 +154,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         symbolView.isHidden = true
         voiceView.isHidden = true
         goodPunchCardLabelBtn.isHidden = true
-        
+        classStartLabelBtn.isHidden = true
         lookAllButton.isHidden = !model.isShowLookStudentAllButton
         
         ///是否展示修改按钮
@@ -218,21 +218,45 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
             showAllButton.snp.removeConstraints()
         }
         
-        let hasClassStart = false
-        if hasClassStart{
+        if let myClassStartRank = model.myClassStartRank{
+            classStartLabelBtn.isHidden = false
+            switch myClassStartRank {
+            case 1:
+                classStartLabelBtn.locailImage = "yxs_punch_detial_first"
+                case 2:
+                classStartLabelBtn.locailImage = "yxs_punch_detial_secend"
+                case 3:
+                classStartLabelBtn.locailImage = "yxs_punch_detial_thrid"
+            default:
+                break
+            }
+            classStartLabelBtn.snp.remakeConstraints { (make) in
+                make.left.equalTo(15)
+                make.centerY.equalTo(praiseButton)
+                make.height.equalTo(26)
+            }
             
+            
+            if model.excellentCount ?? 0 > 0 && model.isShowLookGoodButton{
+                goodPunchCardLabelBtn.isHidden = false
+                goodPunchCardLabelBtn.title = "优秀打卡+\(model.excellentCount ?? 0)"
+                goodPunchCardLabelBtn.snp.remakeConstraints { (make) in
+                    make.left.equalTo(classStartLabelBtn.snp_right).offset(15)
+                    make.centerY.equalTo(praiseButton)
+                    make.height.equalTo(26)
+                }
+            }
         }else{
             if model.excellentCount ?? 0 > 0 && model.isShowLookGoodButton{
                 goodPunchCardLabelBtn.isHidden = false
                 goodPunchCardLabelBtn.title = "优秀打卡+\(model.excellentCount ?? 0)"
-                goodPunchCardLabelBtn.snp.makeConstraints { (make) in
+                goodPunchCardLabelBtn.snp.remakeConstraints { (make) in
                     make.left.equalTo(15)
                     make.centerY.equalTo(praiseButton)
                     make.height.equalTo(26)
                 }
             }
         }
-        
 
         if model.hasVoice{
             voiceView.id = "\(type.rawValue)\(model.clockInCommitId ?? 0)"
@@ -393,7 +417,6 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         button.cornerRadius = 13
         button.setTitle("上周班级之星", for: .normal)
         button.textColor = UIColor.yxs_hexToAdecimalColor(hex: "CB3226")
-        button.locailImage = ""
         button.font = UIFont.systemFont(ofSize: 14)
         button.addTarget(self, action: #selector(lookClassStartDetial), for: .touchUpInside)
         return button

@@ -87,6 +87,17 @@ class YXSPunchCardDetialPageController: YXSBaseViewController{
             yxs_punchCardRefresh(type: nil)
         }
     }
+    
+    public var top3Model: YXSClassStarMapTop3?{
+        didSet{
+            if let top3Model = top3Model{
+                for vc in vcs{
+                    vc.top3Model = top3Model
+                }
+            }
+        }
+    }
+    
     private var isMyPublish: Bool{
         return punchModel.promulgator ?? false
     }
@@ -168,7 +179,7 @@ extension YXSPunchCardDetialPageController: JXCategoryListContainerViewDelegate,
     
     func listContainerView(_ listContainerView: JXCategoryListContainerView!, initListFor index: Int) -> JXCategoryListContentViewDelegate! {
         //         self.navView.categoryView.delegate = self
-        let vc = YXSPunchCardSingleStudentListController.init(punchCardModel: punchModel,isMyPublish: isMyPublish, type: listVCTypes[index])
+        let vc = YXSPunchCardSingleStudentListController.init(punchCardModel: punchModel,isMyPublish: isMyPublish, type: listVCTypes[index], top3Model: nil)
         vc.refreshBlock = {
             [weak self] (changeModel, curruntType)in
             guard let strongSelf = self else { return }

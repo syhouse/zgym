@@ -130,13 +130,14 @@ class YXSSatchelFilePageQueryRequest: YXSBaseRequset {
 /// 书包所有文档类型文件查询(doc,xls,ppt,pdf)
 let satchelDocFilePageQuery = "/satchel/doc-file-page-query"
 class YXSSatchelDocFilePageQueryRequest: YXSBaseRequset {
-    init(currentPage: Int){
+    init(currentPage: Int,keyword: String = ""){
         super.init()
         method = .post
         host = fileHost
         path = satchelDocFilePageQuery
         param = ["currentPage":currentPage,
-                 "pageSize":20]
+                 "pageSize":20,
+                 "keyword":keyword]
     }
 }
 

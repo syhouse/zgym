@@ -39,6 +39,10 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
     ///请求互动消息
     private var loadMessageRequest: Bool = true
     
+    ///请求班级之星排行榜
+    private var loadClassStartHistoryRequest: Bool = true
+    private var top3Model: YXSClassStarMapTop3?
+    
     public var messageModel: YXSPunchCardMessageTipsModel?
     
     let queue = DispatchQueue.global()
@@ -225,6 +229,12 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
             
         }
         
+        if loadClassStartHistoryRequest{
+            group.enter()
+            DispatchQueue.main.async {
+                self.yxs_loadClassStarTopHistoryData()
+            }
+        }
         
         if loadMessageRequest{
             group.enter()
@@ -268,12 +278,23 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         }
     }
     
+    @objc func yxs_loadClassStarTopHistoryData(){
+        YXSEducationClassStarTopHistoryRequest.init(classId: classId).request({ (top3Model: YXSClassStarMapTop3) in
+            self.loadClassStartHistoryRequest = false
+            self.top3Model = top3Model
+            self.group.leave()
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+            self.group.leave()
+        }
+    }
     
     @objc func yxs_loadMessageData(){
         YXSEducationClockInUnreadNoticeCountRequest.init(clockInId: clockInId).request({ (model: YXSPunchCardMessageTipsModel) in
             self.messageModel = model
             self.group.leave()
         }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
             self.group.leave()
         }
     }
@@ -448,7 +469,7 @@ extension YXSPunchCardDetialController: YXSRouterEventProtocol{
             vc.title = "打卡排行榜"
             self.navigationController?.pushViewController(vc)
         case kFriendsCircleMessageViewGoMessageEvent:
-            let vc = YXSCommonMessageListController.init(clockId: punchModel.clockInId ?? 0, classId: punchModel.classId ?? 0,  isMyPublish: punchModel.promulgator ?? false)
+            let vc = YXSCommonMessageListController.init(clockId: punchModel.clockInId ?? 0, classId: punchModel.classId ?? 0,  isMyPublish: punchModel.promulgator ?? false, top3Model: top3Model)
             vc.loadSucess = {
                 [weak self] in
                 guard let strongSelf = self else { return }

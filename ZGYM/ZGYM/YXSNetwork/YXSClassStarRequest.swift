@@ -300,7 +300,7 @@ class YXSEducationClassStarEvaluationListTodayListRequest: YXSBaseRequset {
 
 // MARK: -考评项列表图像
 let classStarEvaluationListListImage = "/evaluationList/listImage"
-class YXSEducationClassStarEvaluationListListImageRequest: YXSBaseRequset {
+class YXSEducationClassStarEvaluationListListImageRequest: YXSBaseRequset{
     override init() {
         super.init()
         method = .post
@@ -308,3 +308,17 @@ class YXSEducationClassStarEvaluationListListImageRequest: YXSBaseRequset {
         path = classStarEvaluationListListImage
     }
 }
+
+// MARK: -排名榜历史
+let classStarTopHistory = "/classStar/topHistory"
+class YXSEducationClassStarTopHistoryRequest: YXSBaseRequset{
+    init(classId: Int) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = classStarTopHistory
+        destinationJsonPaths = ["mapTop3"]
+        param = ["classId": classId]
+    }
+}
+
