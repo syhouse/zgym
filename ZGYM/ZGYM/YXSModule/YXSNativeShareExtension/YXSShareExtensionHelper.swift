@@ -90,8 +90,9 @@ class YXSShareExtensionHelper: NSObject {
         YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, progress: nil, sucess: { (list) in
             YXSSatchelUploadFileRequest(parentFolderId: -1, satchelFileList: list).request({ (json) in
                 DispatchQueue.main.async {
-                    vc.loadData()
                     MBProgressHUD.yxs_hideHUDInView(view: vc.view)
+                    MBProgressHUD.yxs_showMessage(message: "上传成功")
+                    vc.loadData()
                 }
                 
             }) { (msg, code) in
@@ -120,6 +121,7 @@ class YXSShareExtensionHelper: NSObject {
                 YXSFileUploadFileRequest(classId: classModel.id ?? 0, folderId: -1, classFileList: list).request({ (json) in
                     DispatchQueue.main.async {
                         MBProgressHUD.yxs_hideHUDInView(view: vc.view)
+                        MBProgressHUD.yxs_showMessage(message: "上传成功")
                         vc.loadData()
                     }
 

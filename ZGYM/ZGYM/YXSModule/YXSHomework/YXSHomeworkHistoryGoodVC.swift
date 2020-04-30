@@ -265,8 +265,8 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
             headerView.hmModel = self.detailModel
             model.isShowLookGoodButton = false
             headerView.model = model
-//            let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
-//            headerView.yxs_addLine(position: .top, color: cl, lineHeight: 0.5)
+            let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
+            headerView.yxs_addLine(position: .top, color: cl, lineHeight: 0.5)
             headerView.reviewControlBlock = { [weak self](model)in
                 guard let weakSelf = self else {return}
                 let vc = YXSHomeworkCommentController()

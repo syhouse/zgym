@@ -306,7 +306,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             if tmpFolderList.count == 1 {
                 name = tmpFolderList.first?.folderName ?? ""
             } else if tmpFileList.count == 1 {
-                name = tmpFileList.first?.fileName ?? ""
+                name = tmpFileList.first?.fileName?.deletingPathExtension ?? ""
             }
             view.tfInput.text = name
         }
@@ -395,6 +395,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: dicArr).request({ (json) in
                 DispatchQueue.main.async {
                     MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+                    MBProgressHUD.yxs_showMessage(message: "上传成功")
                     weakSelf.loadData()
                 }
                 
