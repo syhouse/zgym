@@ -163,33 +163,39 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     /// 初始化设置已提交列表
     var committedListStr : String?{
         didSet{
-            let jsonData:Data = (committedListStr ?? "").data(using: .utf8)!
-            let array = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
-            var list = [Int]()
-            if let array = array as? [Any]{
-                for item in array{
-                    if item is Int{
-                        list.append(item as! Int)
+            if let committedListStr = committedListStr{
+                let jsonData:Data = committedListStr.data(using: .utf8)!
+                let array = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+                var list = [Int]()
+                if let array = array as? [Any]{
+                    for item in array{
+                        if item is Int{
+                            list.append(item as! Int)
+                        }
                     }
                 }
+                committedList = list
             }
-            committedList = list
+            
         }
     }
     /// 初始化设置已点评列表
     var remarkListStr : String?{
         didSet{
-            let jsonData:Data = (remarkListStr ?? "").data(using: .utf8)!
-            let array = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
-            var list = [Int]()
-            if let array = array as? [Any]{
-                for item in array{
-                    if item is Int{
-                        list.append(item as! Int)
+            if let remarkListStr = remarkListStr{
+                let jsonData:Data = remarkListStr.data(using: .utf8)!
+                let array = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+                var list = [Int]()
+                if let array = array as? [Any]{
+                    for item in array{
+                        if item is Int{
+                            list.append(item as! Int)
+                        }
                     }
                 }
+                remarkList = list
             }
-            remarkList = list
+
         }
     }
     

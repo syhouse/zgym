@@ -197,7 +197,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         headerImageView.sd_setImage(with: URL.init(string: model.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
         nameLabel.text = "\(model.realName ?? "")\((model.relationship ?? "").yxs_RelationshipValue())"
         let timeText: String? = model.patchCardTime == nil ? model.createTime : model.patchCardTime
-        UIUtil.yxs_setLabelAttributed(timeLabel, text: [timeText?.yxs_Time() ?? "","  已坚持\(model.clockInTotalCount ?? 0)天"," | "], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),UIColor.yxs_hexToAdecimalColor(hex: "#C3C4C7")])
+        UIUtil.yxs_setLabelAttributed(timeLabel, text: [timeText?.yxs_Time() ?? "","  已坚持\(model.clockInTotalCount ?? 0)天","\(model.isShowLookStudentAllButton ? " | " : "")"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),UIColor.yxs_hexToAdecimalColor(hex: "#C3C4C7")])
         
         UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowContentAll &&  model.needShowAllButton)
         contentLabel.numberOfLines = model.isShowContentAll ? 0 : 3
