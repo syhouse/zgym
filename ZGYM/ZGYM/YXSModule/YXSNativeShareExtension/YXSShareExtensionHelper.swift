@@ -86,41 +86,50 @@ class YXSShareExtensionHelper: NSObject {
             }
         }
         
+        MBProgressHUD.yxs_showLoading(inView: vc.view)
         YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, progress: nil, sucess: { (list) in
             YXSSatchelUploadFileRequest(parentFolderId: -1, satchelFileList: list).request({ (json) in
                 DispatchQueue.main.async {
                     vc.loadData()
+                    MBProgressHUD.yxs_hideHUDInView(view: vc.view)
                 }
                 
             }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: vc.view)
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
             
         }) { (msg, code) in
+            MBProgressHUD.yxs_hideHUDInView(view: vc.view)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     
     // MARK: - 添加到班级文件
     @objc func shareToClassFile(files:[String], completionHandler:((()->())?)) {
+        /// 请求班级列表 并push进选中的班级文件列表
         requestClassList { [weak self](vc, classModel) in
             guard let weakSelf = self else {return}
             
             let dataSrouceArr = weakSelf.files2UploadDatas(files: files)
             
+            MBProgressHUD.yxs_showLoading(inView: vc.view)
             YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: dataSrouceArr, progress: { (progress) in
                 
             }, sucess: { (list) in
                 YXSFileUploadFileRequest(classId: classModel.id ?? 0, folderId: -1, classFileList: list).request({ (json) in
                     DispatchQueue.main.async {
+                        MBProgressHUD.yxs_hideHUDInView(view: vc.view)
                         vc.loadData()
                     }
 
                 }) { (msg, code) in
+                    MBProgressHUD.yxs_hideHUDInView(view: vc.view)
                     MBProgressHUD.yxs_showMessage(message: msg)
                 }
                 
             }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: vc.view)
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
         }
