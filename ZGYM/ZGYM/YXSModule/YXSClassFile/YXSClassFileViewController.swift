@@ -382,6 +382,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             tmpArr.append(sub.asset)
         }
         
+        MBProgressHUD.yxs_showLoading(inView: self.view)
         uploadHelper.uploadMedias(mediaAssets: tmpArr, progress: { (progress) in
             
         }, sucess: { [weak self](list) in
@@ -393,14 +394,19 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             }
             YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: dicArr).request({ (json) in
                 DispatchQueue.main.async {
+                    MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
                     weakSelf.loadData()
                 }
                 
             }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
             
-        }) { (msg, code) in
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+            
+            MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }

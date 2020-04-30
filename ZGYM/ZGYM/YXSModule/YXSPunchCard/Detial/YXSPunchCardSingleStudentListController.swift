@@ -242,6 +242,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
                 self.dealIsShowTime()
                 self.reloadTableView()
             }) { (msg, code) in
+                self.dataSource.removeAll()
                 MBProgressHUD.yxs_showMessage(message: msg)
                 self.yxs_endingRefresh()
                 self.reloadTableView()
