@@ -165,6 +165,22 @@ class YXSEducationHomeworkQueryHomeworkCommitByIdRequest: YXSBaseRequset {
     }
 }
 
+// MARK: -分页查询孩子历史优秀
+let homeworkQueryHistoryGood = "/homework/page-query-history-good"
+class YXSEducationHomeworkQueryHistoryGoodRequest: YXSBaseRequset {
+    init(childrenId: Int, classId: Int, currentPage: Int = 1) {
+        super.init()
+        method = .post
+        host = homeHost
+        isLoadCache = false
+        path = homeworkQueryHistoryGood
+        param = ["childrenId":childrenId,
+                 "classId": classId,
+                 "currentPage":currentPage,
+                 "pageSize":20]
+    }
+}
+
 // MARK: - 阅读和提交列表请求参数
 let homeworkQueryCommitReadInfo = "/homework/query-commit-read-info"
 /// gradeId（班级id）

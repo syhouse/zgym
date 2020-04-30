@@ -378,6 +378,83 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: text.removeSpace() , attributes: attributes,width: SCREEN_WIDTH - 30, numberOfLines: 3) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 4)  ? true : false
     }
+    
+    var goodMap: [String: Int]?
+    
+    func getChildGoodCount(id:Int) -> Int {
+        let key = String(id)
+        if goodMap?.has(key: key) ?? false {
+            return goodMap?[key] ?? 0
+        } else {
+            return 0
+        }
+    }
+    
+    ///展示历史优秀作业
+    var isShowLookGoodButton: Bool = true
+    
+    ///班级之星排行
+    var topHistoryModel: YXSClassStarTopHistoryModel?
+    
+    func getMyClassStartRank(id:Int) -> Int {
+        if let top3Model = topHistoryModel?.mapTop3{
+            if let lists = top3Model.first{
+                for model in lists{
+                    if id == model.childrenId{
+                        return 1
+                    }
+                }
+            }
+            
+            if let lists = top3Model.secend{
+                for model in lists{
+                    if id == model.childrenId{
+                        return 2
+                    }
+                }
+            }
+            
+            if let lists = top3Model.thrid{
+                for model in lists{
+                    if id == model.childrenId{
+                        return 3
+                    }
+                }
+            }
+        }
+        return 0
+    }
+//    var myClassStartRank: Int?{
+//        get{
+//            if let top3Model = topHistoryModel?.mapTop3{
+//                if let lists = top3Model.first{
+//                    for model in lists{
+//                        if childrenId == model.childrenId{
+//                            return 1
+//                        }
+//                    }
+//                }
+//                
+//                if let lists = top3Model.secend{
+//                    for model in lists{
+//                        if childrenId == model.childrenId{
+//                            return 2
+//                        }
+//                    }
+//                }
+//                
+//                if let lists = top3Model.thrid{
+//                    for model in lists{
+//                        if childrenId == model.childrenId{
+//                            return 3
+//                        }
+//                    }
+//                }
+//            }
+//            
+//            return nil
+//        }
+//    }
 
     var remarkFrameModel:YXSFriendsCircleFrameModel!
 
@@ -469,6 +546,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         backImageUrl <- map["backImageUrl"]
         relationship <- map["relationship"]
         fileJson <- map["fileJson"]
+        goodMap <- map["goodMap"]
     }
 
     /**
@@ -524,6 +602,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         backImageUrl = aDecoder.decodeObject(forKey: "backImageUrl") as? String
         relationship = aDecoder.decodeObject(forKey: "relationship") as? String
         fileJson = aDecoder.decodeObject(forKey: "fileJson") as? String
+        goodMap = aDecoder.decodeObject(forKey: "goodMap") as? [String : Int]
     }
 
     /**
@@ -672,6 +751,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         if fileJson != nil {
             aCoder.encode(fileJson, forKey: "fileJson")
+        }
+        if goodMap != nil {
+            aCoder.encode(goodMap, forKey: "goodMap")
         }
     }
 }

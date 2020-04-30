@@ -14,11 +14,20 @@ let kHomeworkPictureGraffitiNextEvent = "HomeworkPictureGraffitiNextEvent"
 
 // MARK: - public   0 评论 1点赞 1 显示所有 2修改 3撤回
 enum HomeworkCommentCellBlockType: Int {
+    /// 评论
     case comment
+    /// 点赞
     case praise
+    /// 显示所有
     case showAll
+    /// 修改
     case change
+    /// 撤回
     case recall
+    /// 查看历史优秀作业
+    case lookHomeWorkGood
+    /// 查看上周班级之星
+    case lookLastWeakClassStart
 }
 
 class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
@@ -31,6 +40,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
     public var cellBlock: ((HomeworkCommentCellBlockType,_ model:YXSHomeworkDetailModel) -> ())?
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+        self.contentView.mixedBackgroundColor = MixedColor.init(normal: UIColor.white, night: kNightBackgroundColor)
         addSubview(imgAvatar)
         addSubview(lbName)
         addSubview(lbTime)
@@ -39,7 +49,9 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         addSubview(contentLabel)
         addSubview(nineMediaView)
         addSubview(voiceView)
-//        addSubview(mediaView)
+
+        addSubview(classStartLabelBtn)
+        addSubview(goodHomeworkLabelBtn)
         addSubview(reviewControl)
         addSubview(commentButton)
         addSubview(praiseButton)
@@ -104,21 +116,19 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(imgAvatar.snp_bottom).offset(15)
         }
         
+        classStartLabelBtn.snp.makeConstraints { (make) in
+            make.left.equalTo(15)
+            make.centerY.equalTo(reviewControl)
+            make.width.equalTo(115)
+            make.height.equalTo(26)
+        }
+        
+        goodHomeworkLabelBtn.snp.makeConstraints { (make) in
+            make.left.equalTo(classStartLabelBtn.snp_right).offset(10)
+            make.centerY.equalTo(reviewControl)
+            make.height.equalTo(26)
+        }
 
-//        reviewControl.snp.makeConstraints({ (make) in
-//            make.top.equalTo(mediaView.snp_bottom).offset(20)
-//            make.right.equalTo(-15)
-//            make.width.equalTo(100)
-//            make.height.equalTo(26)
-//        })
-
-//        lbTime.snp.makeConstraints({ (make) in
-////            make.bottom.equalTo(imgAvatar.snp_bottom)
-//            make.centerY.equalTo(reviewControl)
-//            make.height.equalTo(20)
-//            make.left.equalTo(15)
-//            make.right.equalTo(reviewControl.snp_left).offset(-10)
-//        })
         praiseButton.snp.makeConstraints { (make) in
             make.right.equalTo(-15)
             make.centerY.equalTo(reviewControl)
@@ -158,7 +168,6 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         } else {
             favView.y = reviewControl.tz_bottom + 12.5
         }
-        
     }
 //    override func didMoveToSuperview() {
 //        super.didMoveToSuperview()
@@ -177,7 +186,8 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             voiceView.isHidden = true
             reviewControl.isHidden = true
             finishView.isHidden = true
-            
+            classStartLabelBtn.isHidden = true
+            goodHomeworkLabelBtn.isHidden = true
             ///是否展示修改按钮
             if self.model?.isRemark == 1 {
                 homeWorkChangeButton.isHidden = true
@@ -208,6 +218,39 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
 //            } else {
 //                bottomLine.isHidden = false
 //            }
+            
+            if let myClassStartRank = self.hmModel?.getMyClassStartRank(id: self.model?.childrenId ?? 0), myClassStartRank > 0 {
+                classStartLabelBtn.isHidden = false
+                switch myClassStartRank {
+                case 1:
+                    classStartLabelBtn.locailImage = "yxs_punch_detial_first"
+                    case 2:
+                    classStartLabelBtn.locailImage = "yxs_punch_detial_secend"
+                    case 3:
+                    classStartLabelBtn.locailImage = "yxs_punch_detial_thrid"
+                default:
+                    break
+                }
+                classStartLabelBtn.snp.updateConstraints { (make) in
+                    make.width.equalTo(115)
+                }
+                goodHomeworkLabelBtn.snp.updateConstraints { (make) in
+                    make.left.equalTo(classStartLabelBtn.snp_right).offset(10)
+                }
+            } else {
+                classStartLabelBtn.isHidden = true
+                classStartLabelBtn.snp.updateConstraints { (make) in
+                    make.width.equalTo(0)
+                }
+                goodHomeworkLabelBtn.snp.updateConstraints { (make) in
+                    make.left.equalTo(classStartLabelBtn.snp_right).offset(0)
+                }
+            }
+            let goodCount: Int = self.hmModel?.getChildGoodCount(id: self.model?.childrenId ?? 0) ?? 0
+            if  goodCount > 0 && self.model?.isShowLookGoodButton ?? true {
+                goodHomeworkLabelBtn.isHidden = false
+                goodHomeworkLabelBtn.title = "优秀打卡+\(goodCount)"
+            }
             
             imgAvatar.sd_setImage(with: URL(string: self.model?.childHeadPortrait ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
             var text = self.model?.childrenName
@@ -415,6 +458,14 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
     @objc func homeWorkChangeClick(sender: UIButton) {
         homeWorkChangeBlock?(sender,self.model!)
     }
+    
+    @objc func lookGoodHomeWorkDetial(){
+        cellBlock?(.lookHomeWorkGood,self.model!)
+    }
+    
+    @objc func lookClassStartDetial(){
+        cellBlock?(.lookLastWeakClassStart,self.model!)
+    }
 
     // MARK: - LazyLoad
     lazy var imgAvatar: UIImageView = {
@@ -481,6 +532,29 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         })
         voiceView.minWidth = 120
         return voiceView
+    }()
+    
+    lazy var classStartLabelBtn: YXSCustomImageControl = {
+        let button = YXSCustomImageControl.init(imageSize: CGSize.init(width: 18, height: 20), position: .left, padding: 3.5, insets: UIEdgeInsets.init(top: 0, left: 6.5, bottom: 0, right: 7))
+        button.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F7F8FB")
+        button.cornerRadius = 13
+        button.setTitle("上周班级之星", for: .normal)
+        button.textColor = UIColor.yxs_hexToAdecimalColor(hex: "CB3226")
+        button.font = UIFont.systemFont(ofSize: 13)
+        button.addTarget(self, action: #selector(lookClassStartDetial), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var goodHomeworkLabelBtn: YXSCustomImageControl = {
+        let button = YXSCustomImageControl.init(imageSize: CGSize.init(width: 18, height: 20), position: .left, padding: 3.5, insets: UIEdgeInsets.init(top: 0, left: 6.5, bottom: 0, right: 7))
+        button.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F7F8FB")
+        button.cornerRadius = 13
+        button.setTitle("优秀作业+8", for: .normal)
+        button.textColor = UIColor.yxs_hexToAdecimalColor(hex: "CB3226")
+        button.locailImage = "yxs_punch_good_select"
+        button.font = UIFont.systemFont(ofSize: 13)
+        button.addTarget(self, action: #selector(lookGoodHomeWorkDetial), for: .touchUpInside)
+        return button
     }()
     
     lazy var finishView: UIImageView = {

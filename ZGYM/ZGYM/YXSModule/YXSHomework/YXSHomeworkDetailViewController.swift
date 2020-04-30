@@ -37,6 +37,12 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         }
     }
     
+    public var topHistoryModel: YXSClassStarTopHistoryModel?{
+        didSet{
+            tableView.reloadData()
+        }
+    }
+    
     var dataSource: [YXSHomeworkDetailModel] = [YXSHomeworkDetailModel]()
     var curruntPage: Int = 1
     var isGood: Int = -1
@@ -179,6 +185,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         }
         
         layout()
+        yxs_loadClassStarTopHistoryData()
         refreshData()
         
         NotificationCenter.default.addObserver(self, selector: #selector(homeworkCommitSuccess(obj:)), name: NSNotification.Name(rawValue: kParentSubmitSucessNotification), object: nil)
@@ -362,6 +369,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     @objc func refreshUnreadMessage() {
         YXSEducationHomeworkQueryHomeworkByIdRequest(childrenId: homeModel.childrenId ?? 0, homeworkCreateTime: homeModel.createTime ?? "", homeworkId: homeModel.serviceId ?? 0).request({ [weak self](model: YXSHomeworkDetailModel) in
             guard let weakSelf = self else {return}
+            model.topHistoryModel = weakSelf.topHistoryModel
             weakSelf.model = model
             
             weakSelf.tableHeaderView.model = model
@@ -389,6 +397,15 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
 //        }
     }
     
+    @objc func yxs_loadClassStarTopHistoryData(){
+        YXSEducationClassStarTopHistoryRequest.init(classId: self.homeModel.classId ?? 0).request({ (topHistoryModel: YXSClassStarTopHistoryModel) in
+            self.topHistoryModel = topHistoryModel
+            self.model?.topHistoryModel = topHistoryModel
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
+    
     // MARK: - Request
     @objc func refreshData() {
         MBProgressHUD.yxs_showLoading(ignore: true)
@@ -396,8 +413,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         YXSEducationHomeworkQueryHomeworkByIdRequest(childrenId: homeModel.childrenId ?? 0, homeworkCreateTime: homeModel.createTime ?? "", homeworkId: homeModel.serviceId ?? 0).request({ [weak self](model: YXSHomeworkDetailModel) in
             guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUD()
+            model.topHistoryModel = weakSelf.topHistoryModel
             weakSelf.model = model
-            
             weakSelf.tableHeaderView.model = model
             if YXSPersonDataModel.sharePerson.personRole == .PARENT && weakSelf.homeModel.isRead != 1{
                 /// 标记页面已读
@@ -950,6 +967,11 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     }) { (msg, code) in
                         MBProgressHUD.yxs_showMessage(message: msg)
                     }
+                    break
+                case .lookHomeWorkGood:
+                    let vc = YXSHomeworkHistoryGoodVC.init(hmModel: weakSelf.homeModel, deModel: weakSelf.model!,childid: model.childrenId ?? 0)
+                    vc.title = model.childrenName
+                    weakSelf.navigationController?.pushViewController(vc)
                     break
                 default:
                     break

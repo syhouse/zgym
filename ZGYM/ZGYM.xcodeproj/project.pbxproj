@@ -749,6 +749,7 @@
 		E53D8B05244EC86100590B5A /* YXSSynClassFolderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8B04244EC86100590B5A /* YXSSynClassFolderVC.swift */; };
 		E53D8B07244ED0F400590B5A /* YXSSynClassFolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8B06244ED0F400590B5A /* YXSSynClassFolderCell.swift */; };
 		E53D8B09244ED3EF00590B5A /* YXSSynClassFolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8B08244ED3EF00590B5A /* YXSSynClassFolderModel.swift */; };
+		E583E153245A827E00A1CD65 /* YXSHomeworkHistoryGoodVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E583E152245A827E00A1CD65 /* YXSHomeworkHistoryGoodVC.swift */; };
 		E58F16DB245149D400A6AC18 /* YXSAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F1694245149D400A6AC18 /* YXSAvatarView.swift */; };
 		E58F16DC245149D400A6AC18 /* YXSRouterEventProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F1695245149D400A6AC18 /* YXSRouterEventProtocol.swift */; };
 		E58F16DD245149D400A6AC18 /* YXSVoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58F1696245149D400A6AC18 /* YXSVoiceView.swift */; };
@@ -2009,6 +2010,7 @@
 		E53D8B04244EC86100590B5A /* YXSSynClassFolderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassFolderVC.swift; sourceTree = "<group>"; };
 		E53D8B06244ED0F400590B5A /* YXSSynClassFolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassFolderCell.swift; sourceTree = "<group>"; };
 		E53D8B08244ED3EF00590B5A /* YXSSynClassFolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassFolderModel.swift; sourceTree = "<group>"; };
+		E583E152245A827E00A1CD65 /* YXSHomeworkHistoryGoodVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSHomeworkHistoryGoodVC.swift; sourceTree = "<group>"; };
 		E58F1694245149D400A6AC18 /* YXSAvatarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSAvatarView.swift; sourceTree = "<group>"; };
 		E58F1695245149D400A6AC18 /* YXSRouterEventProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSRouterEventProtocol.swift; sourceTree = "<group>"; };
 		E58F1696245149D400A6AC18 /* YXSVoiceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVoiceView.swift; sourceTree = "<group>"; };
@@ -2829,6 +2831,7 @@
 			isa = PBXGroup;
 			children = (
 				6F07015C2445D7FF0090975B /* YXSHomeworkMessageVC.swift */,
+				E583E152245A827E00A1CD65 /* YXSHomeworkHistoryGoodVC.swift */,
 				6F07015D2445D7FF0090975B /* YXSHomeworkCommentController.swift */,
 				6F07015E2445D7FF0090975B /* YXSHomeworkCommitDetailViewController.swift */,
 				6F07015F2445D7FF0090975B /* YXSHomeworkDetailViewController.swift */,
@@ -6171,6 +6174,7 @@
 				6F0703B02445D8030090975B /* TNaviBarIndicatorView.m in Sources */,
 				6F0704CD2445D8050090975B /* YXSPunchCardDetialHeaderView.swift in Sources */,
 				E58F16DE245149D400A6AC18 /* YXSGuideViewWindow.swift in Sources */,
+				E583E153245A827E00A1CD65 /* YXSHomeworkHistoryGoodVC.swift in Sources */,
 				6F0703AF2445D8030090975B /* TUIMessageDataProviderService.m in Sources */,
 				6F0703BC2445D8030090975B /* TCContext.m in Sources */,
 				6F0705352445D8050090975B /* YXSSelectClassView.swift in Sources */,

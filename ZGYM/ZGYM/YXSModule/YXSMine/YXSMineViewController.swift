@@ -290,8 +290,8 @@ class YXSMineViewController: YXSBaseTableViewController{
         
         cell.lbTitle.text = dic["title"]
         let imgName = dic["imgName"] ?? ""
-        cell.imgView.image = UIImage(named: imgName)
-//        cell.imgView.mixedImage = MixedImage(normal: UIImage(named: imgName+"_white")!, night: UIImage(named: imgName)!)
+//        cell.imgView.image = UIImage(named: imgName)
+        cell.imgView.mixedImage = MixedImage(normal: UIImage(named: imgName+"_white")!, night: UIImage(named: imgName)!)
         return cell
     }
     
