@@ -364,11 +364,11 @@ class YXSMineViewController: YXSBaseTableViewController{
         
     
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"我的文件", "imgName":"yxs_mine_setting", "action":"fileBagClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
+            var section4 = [["title":"班级文件", "imgName":"yxs_mine_classfile", "action":"classFileClick"],["title":"我的文件", "imgName":"yxs_mine_myfile", "action":"fileBagClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
             arr.append(section4)
             
         } else {
-            var section4 = [["title":"班级文件", "imgName":"yxs_mine_setting", "action":"classFileClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
+            var section4 = [["title":"班级文件", "imgName":"yxs_mine_classfile", "action":"classFileClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
             arr.append(section4)
         }
 

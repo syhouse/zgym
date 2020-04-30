@@ -143,23 +143,22 @@ class YXSFileManagerHelper: NSObject {
     
     /// 根据文件本地路径返回相对应的图标 注意:返回空的处理
     @objc func getIconWithFileUrl(_ fileUrl: URL) -> UIImage? {
-        let img = UIImage()
+        let img = UIImage(named: "defultImage")//UIImage()
         
         let fileEx = fileUrl.pathExtension.lowercased()
         switch fileEx {
             /// 办公
             case "pptx":
-                return UIImage(named: "yxs_file_ppt")!
-            case "docx":
-                return UIImage(named: "yxs_file_word")!
+                return UIImage(named: "yxs_file_ppt") ?? UIImage(named: "defultImage")
+            case "docx","doc":
+                return UIImage(named: "yxs_file_word") ?? UIImage(named: "defultImage")
             case "xlsx":
-                return UIImage(named: "yxs_file_excel")!
+                return UIImage(named: "yxs_file_excel") ?? UIImage(named: "defultImage")
             case "pdf":
-                return UIImage(named: "yxs_file_pdf")!
+                return UIImage(named: "yxs_file_pdf") ?? UIImage(named: "defultImage")
             
             /// 图片
             case "jpg":
-                
             return nil
             /// 音频
             case "m4a","mp3","wav","ogg","m4r","acc":
@@ -168,7 +167,7 @@ class YXSFileManagerHelper: NSObject {
             case "mp4","MP4","mov":
                 return getVideoFirstPicture(url: fileUrl)//getIconWithFileUrl(fileUrl)
         default:
-            return nil
+            return img
         }
     }
     

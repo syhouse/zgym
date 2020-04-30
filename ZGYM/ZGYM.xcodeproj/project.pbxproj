@@ -23,6 +23,7 @@
 		560B20D72456803E003D8A19 /* YXSShareExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20D62456803E003D8A19 /* YXSShareExtensionHelper.swift */; };
 		561011702457CAFD007EF91D /* UIColor+YXSHexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE202445D7F20090975B /* UIColor+YXSHexColor.swift */; };
 		561011732457D862007EF91D /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
+		56101176245AA399007EF91D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F07FDE82445D7290090975B /* Assets.xcassets */; };
 		6F0703262445D8020090975B /* Date+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE102445D7F20090975B /* Date+YXSCategory.swift */; };
 		6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE112445D7F20090975B /* String+YXSCategory.swift */; };
 		6F0703282445D8020090975B /* UITextField+YXSPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE122445D7F20090975B /* UITextField+YXSPlaceholder.swift */; };
@@ -5462,6 +5463,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				560B20CF24518C41003D8A19 /* right_arrow.png in Resources */,
+				56101176245AA399007EF91D /* Assets.xcassets in Resources */,
 				560B20C024518AC3003D8A19 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -36,13 +36,11 @@ class YXSCustomShareViewController: UIViewController, UITableViewDelegate, UITab
                         weakSelf.imgThumbnail.image = img
                         
                     } else {
-                        if let url = firstUrl {
-                            if let data = try? Data(contentsOf: url) {
-                                if let img = UIImage(data: data) {
-                                    
-                                    let newImg = weakSelf.resizeImage(image: img, newSize: CGSize(width: 50.0, height: 50.0))
-                                    weakSelf.imgThumbnail.image = newImg
-                                }
+                        if let data = try? Data(contentsOf: url) {
+                            if let img = UIImage(data: data) {
+                                
+                                let newImg = weakSelf.resizeImage(image: img, newSize: CGSize(width: 50.0, height: 50.0))
+                                weakSelf.imgThumbnail.image = newImg
                             }
                         }
                     }
