@@ -121,7 +121,8 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         self.punchModel = YXSCacheHelper.yxs_getCachePunchCardDetailTask(clockInId: clockInId, childrenId: childId)
         if self.punchModel.clockInId == nil{
             self.punchModel.clockInId = clockInId
-            self.punchModel.childrenId = self.childId
+            self.punchModel.childrenId = childId
+            self.punchModel.classId = classId
         }
         
         configUI()

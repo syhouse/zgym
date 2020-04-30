@@ -43,13 +43,14 @@ class YXSSSAudioPlayer: NSObject {
         self.sourceUrl = url
         self.finish = finish
         self.loop = loop
-        let session = AVAudioSession()
-         do{
-             try session.setCategory(AVAudioSession.Category.playback,options: [.mixWithOthers])
-             try session.setActive(true)
-         }catch{
-             SLLog(error)
-         }
+        
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch let error as NSError {
+            SLLog(error.localizedDescription)
+            return
+        }
+        
          playerItem = AVPlayerItem(url: url)
          //如果要切换视频需要调AVPlayer的replaceCurrentItemWithPlayerItem:方法
          if player?.currentItem != nil {
