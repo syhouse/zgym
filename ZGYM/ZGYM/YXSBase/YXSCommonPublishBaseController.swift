@@ -47,8 +47,8 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         }
     }
     
-    /// 朋友圈选择班级
-    var isFriendSelectClass: Bool = false
+    /// 朋友圈发布
+    var isFriendCircle: Bool = false
     
     /// 只能选择单个班级
     var isSelectSingleClass: Bool = false
@@ -144,7 +144,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
             curruntClassId = yxs_user.gradeIds?.first ?? 0
         }
         
-        yxs_loadPublishClassListData(isFriendSelectClass) { (classes) in
+        yxs_loadPublishClassListData(isFriendCircle) { (classes) in
             var selectClasses = [YXSClassModel]()
             for classModel in classes{
                 if classModel.id == curruntClassId{
@@ -207,6 +207,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
             }else{//修改的服务器资源
                 if model.type == .video{
                     mediaInfos.append([typeKey: SourceNameType.video,urlKey: model.serviceUrl ?? ""])
+                    
                     mediaInfos.append([typeKey: SourceNameType.firstVideo,urlKey: model.showImageUrl ?? ""])
                 }else{
                     mediaInfos.append([typeKey: SourceNameType.image,urlKey: model.serviceUrl ?? ""])
@@ -221,7 +222,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         }
         
         if localAudio.count != 0{
-            YXSUploadSourceHelper().uploadAudios(mediaModels: publishModel.audioModels, progress: {
+            YXSUploadSourceHelper().uploadAudios(mediaModels: publishModel.audioModels, uploadPath:  isFriendCircle ? YXSUploadSourceHelper.classCircleDoucmentPath : YXSUploadSourceHelper.expiresVoiceDoucmentPath, progress: {
                 (progress)in
                 DispatchQueue.main.async {
                     self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int(progress * 100 * CGFloat(localAudio.count)/CGFloat(localAudio.count + localMeidaInfos.count))))%)"
@@ -252,7 +253,25 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     @objc func cheakLoadImageData(mediaInfos medias: [[String: Any]], localMeidaInfos: [[String: Any]], residueProgess: CGFloat){
         var mediaInfos = medias
         if localMeidaInfos.count > 0{
-            YXSUploadSourceHelper().uploadMedia(mediaInfos: localMeidaInfos, progress: {
+            var uploadPaths = [String]()
+            for info in localMeidaInfos{
+                if (info[typeKey] as? SourceNameType) == SourceNameType.image{
+                    if isFriendCircle{
+                        uploadPaths.append(YXSUploadSourceHelper.classCircleDoucmentPath)
+                    }else{
+                        uploadPaths.append(YXSUploadSourceHelper.expiresImgDoucmentPath)
+                    }
+                }else{
+                    if isFriendCircle{
+                        uploadPaths.append(YXSUploadSourceHelper.classCircleDoucmentPath)
+                    }else{
+                        uploadPaths.append(YXSUploadSourceHelper.expiresVideoDoucmentPath)
+                    }
+                    
+                }
+            }
+            
+            YXSUploadSourceHelper().uploadMedia(mediaInfos: localMeidaInfos, uploadPaths: uploadPaths, progress: {
                 (progress)in
                 DispatchQueue.main.async {
                     self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int((residueProgess*progress + (1.0 - residueProgess)) * 100)))%)"
@@ -282,7 +301,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
             strongSelf.selectClassView.setViewModel(selectClasss)
             strongSelf.loadClassCountData()
         }
-        vc.isFriendSelectClass = isFriendSelectClass
+        vc.isFriendSelectClass = isFriendCircle
         vc.isSelectSingleClass = isSelectSingleClass
         navigationController?.pushViewController(vc)
     }

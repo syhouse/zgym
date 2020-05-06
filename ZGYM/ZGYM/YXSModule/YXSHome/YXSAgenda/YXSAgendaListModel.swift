@@ -32,14 +32,14 @@ class  YXSAgendaListModel : NSObject{
     var image: String  = ""
     var title: String  = ""
     var eventType: YXSHomeType = .homework
-    var desTitle:String{
-        get{
-            if allCount > 0{
-                return "\(allCount)项任务进行中"
-            }else{
-                return ""
-            }
-        }
-    }
+//    var desTitle:String{
+//        get{
+//            if allCount > 0{
+//                return "\(allCount)项任务进行中"
+//            }else{
+//                return ""
+//            }
+//        }
+//    }
 
 }

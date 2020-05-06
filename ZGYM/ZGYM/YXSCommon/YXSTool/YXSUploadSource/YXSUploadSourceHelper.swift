@@ -13,7 +13,7 @@ import ObjectMapper
 import Photos
 
 
-let productPrefix = sericeType == ServiceType.ServiceTest ? "test-environment/": "product-environment/"
+let productPrefix = sericeType == ServiceType.ServiceTest ? "test-env/": "product-env/"
 
 //拍15s   大小50M以内 时长3min
 //视频大小
@@ -45,7 +45,7 @@ class SLUploadSourceModel: NSObject{
     
     
     //上传图片 视频资源model
-    init(model: YXSMediaModel? = nil, audioModel: SLAudioModel? = nil, type: SourceNameType, path: String? = nil) {
+    init(model: YXSMediaModel? = nil, audioModel: SLAudioModel? = nil, type: SourceNameType, path: String) {
         self.model = model
         self.audioModel = audioModel
         self.type = type
@@ -56,25 +56,7 @@ class SLUploadSourceModel: NSObject{
         if type != .voice && model == nil{
             assert(false, "媒体资源不能为空")
         }
-        
-        if let path = path{
-            self.path = path
-        }else{
-            switch type {
-            case .avatar,.image:
-                self.path = NSUtil.getPath(sourceType: type, fileName: self.model.fileName.MD5(), fileType: "jpg")
-            case .voice:
-                self.path = NSUtil.getPath(sourceType: type, fileName: (self.audioModel.fileName ?? "").MD5(), fileType: "mp3")
-            case .video:
-                self.path = NSUtil.getPath(sourceType: type, fileName: self.model.fileName.MD5(), fileType: "mp4")
-            case .firstVideo:
-                self.path = NSUtil.getPath(sourceType: .video, fileName: self.model.fileName.MD5() + "_1", fileType: "jpg")
-            case .album:
-                assert(false, "相册资源请指定路径")
-                self.path = ""
-            }
-            
-        }
+        self.path = path
         super.init()
     }
 }
@@ -82,15 +64,27 @@ class SLUploadSourceModel: NSObject{
 
 /// 上传资源类型(存放在阿里云不同文件夹)
 enum SourceNameType:String {
-    case avatar//头像
     case voice//音频
     case image//图片
     case video//视频
     case firstVideo//视频第一帧
-    case album//相册
 }
 
 class YXSUploadSourceHelper: NSObject {
+    static let avatarDoucmentPath = "\(productPrefix)avatar/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/"
+    static let classCircleDoucmentPath = "\(productPrefix)class-circle/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/"
+    static let expiresImgDoucmentPath = "\(productPrefix)img/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/"
+    static let expiresVoiceDoucmentPath = "\(productPrefix)voice/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/"
+    static let expiresVideoDoucmentPath = "\(productPrefix)video/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/"
+    
+    static let starDoucmentPath = "\(productPrefix)star/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/"
+    static func albumDoucmentPath(classId: Int, albumId: Int) -> String{
+        return "\(productPrefix)album/ios/\(classId)/\(albumId)/"
+    }
+    
+    static func curriculumDoucmentPath(classId: Int) -> String{
+        return "\(productPrefix)curriculum/ios/\(classId)/"
+    }
     
     //现在一次请求 生成一个token
     private var ossClient: OSSClient?
@@ -110,22 +104,29 @@ class YXSUploadSourceHelper: NSObject {
     
     /// 上传图片
     /// - Parameter mediaModel: YXSMediaModel
-    /// - Parameter sourceNameType: 默认图片
+    ///   - uploadPath: 上传路径 除文件名称类型
     /// - Parameter sucess: 成功后回调图片地址
     /// - Parameter failureHandler: 失败错误信息
-    func uploadImage(mediaModel:YXSMediaModel,sourceNameType: SourceNameType = .image, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
-        uploadMedia(mediaInfos: [[modelKey:mediaModel, typeKey: sourceNameType]], sucess: { (urls) in
+    func uploadImage(mediaModel:YXSMediaModel, uploadPath: String, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
+        uploadMedia(mediaInfos: [[modelKey:mediaModel, typeKey: SourceNameType.image]], uploadPaths: [uploadPath],  sucess: { (urls) in
             sucess?((urls.first?[urlKey] as? String) ?? "")
         }, failureHandler: failureHandler)
     }
     
-    //上传多张图片
-    func uploadImages(mediaModels:[YXSMediaModel],sourceNameType: SourceNameType,progress : ((_ progress: CGFloat)->())? = nil, sucess:(([String])->())?,failureHandler: ((String, String) -> ())?){
+    
+    /// 上传多张图片
+    /// - Parameters:
+    ///   - mediaModels: 图片models
+    ///   - uploadPaths: 上传路径 除文件名称类型
+    ///   - progress: 进度
+    ///   - sucess: 成功
+    ///   - failureHandler: 失败
+    func uploadImages(mediaModels:[YXSMediaModel], uploadPaths: [String],progress : ((_ progress: CGFloat)->())? = nil, sucess:(([String])->())?,failureHandler: ((String, String) -> ())?){
         var infos = [[String: Any]]()
         for model in mediaModels{
-            infos.append([typeKey: sourceNameType,modelKey: model])
+            infos.append([typeKey: SourceNameType.image,modelKey: model])
         }
-        uploadMedia(mediaInfos: infos,progress: progress, sucess: { (urls) in
+        uploadMedia(mediaInfos: infos, uploadPaths: uploadPaths, progress: progress, sucess: { (urls) in
             var paths = [String]()
             for url in urls{
                 paths.append((url[urlKey] as? String) ?? "")
@@ -134,24 +135,50 @@ class YXSUploadSourceHelper: NSObject {
         }, failureHandler: failureHandler)
     }
     
-    func uploadVedio(mediaModel:YXSMediaModel,progress : ((_ progress: CGFloat)->())? = nil,sourceNameType: SourceNameType = SourceNameType.video, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
-        uploadMedia(mediaInfos: [[modelKey:mediaModel, typeKey: sourceNameType]],progress: progress, sucess: { (urls) in
+    
+    /// 上传多张图片
+    /// - Parameters:
+    ///   - mediaModels: 多张图片资源类型
+    ///   - uploadPaths: 上传路径 除文件名称类型
+    ///   - progress: 进度
+    ///   - sucess: 成功
+    ///   - failureHandler: 失败
+    
+    
+    /// 上传视频
+    /// - Parameters:
+    ///   - mediaModel: 视频model
+    ///   - uploadPath: 上传路径 除文件名称类型
+    func uploadVedio(mediaModel:YXSMediaModel, uploadPath: String, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
+        uploadMedia(mediaInfos: [[modelKey:mediaModel, typeKey: SourceNameType.video]], uploadPaths: [uploadPath],progress: progress, sucess: { (urls) in
             sucess?((urls.first?[urlKey] as? String) ?? "")
         }, failureHandler: failureHandler)
     }
     
-    func uploadAudio(mediaModel:SLAudioModel, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
-        uploadMedia(mediaInfos: [[modelKey:mediaModel, typeKey: SourceNameType.voice]],progress: progress, sucess: { (urls) in
+    
+    /// 上传音频
+    /// - Parameters:
+    ///   - mediaModel: 音频model
+    ///   - uploadPath: 上传路径 除文件名称类型
+    func uploadAudio(mediaModel:SLAudioModel, uploadPath: String, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
+        uploadMedia(mediaInfos: [[modelKey:mediaModel, typeKey: SourceNameType.voice]], uploadPaths: [uploadPath],progress: progress, sucess: { (urls) in
             sucess?((urls.first?[urlKey] as? String) ?? "")
         }, failureHandler: failureHandler)
     }
     
-    func uploadAudios(mediaModels:[SLAudioModel], progress : ((_ progress: CGFloat)->())? = nil,sucess:(([String])->())?,failureHandler: ((String, String) -> ())?){
+    
+    /// 上传多个音频
+    /// - Parameters:
+    ///   - mediaModels: 音频models
+    ///   - uploadPath: 上传路径 除文件名称类型
+    func uploadAudios(mediaModels:[SLAudioModel], uploadPath: String, progress : ((_ progress: CGFloat)->())? = nil,sucess:(([String])->())?,failureHandler: ((String, String) -> ())?){
+        var uploadPaths:[String] = [String] ()
         var infos = [[String: Any]]()
         for model in mediaModels{
             infos.append([typeKey: SourceNameType.voice,modelKey: model])
+            uploadPaths.append(uploadPath)
         }
-        uploadMedia(mediaInfos: infos,progress: progress, sucess: { (urls) in
+        uploadMedia(mediaInfos: infos, uploadPaths: uploadPaths,progress: progress, sucess: { (urls) in
             var paths = [String]()
             for url in urls{
                 paths.append((url[urlKey] as? String) ?? "")
@@ -161,7 +188,10 @@ class YXSUploadSourceHelper: NSObject {
     }
     
     /// 上传多个媒体文件
-    func uploadMedias(mediaModels:[YXSMediaModel], progress : ((_ progress: CGFloat)->())? = nil, sucess:(([String])->())?,failureHandler: ((String, String) -> ())?){
+    /// - Parameters:
+    ///   - mediaModels: 媒体models
+    ///   - uploadPaths: 上传路径 除文件名称类型
+    func uploadMedias(mediaModels:[YXSMediaModel], uploadPaths: [String], progress : ((_ progress: CGFloat)->())? = nil, sucess:(([String])->())?,failureHandler: ((String, String) -> ())?){
         var infos = [[String: Any]]()
         for model in mediaModels{
             if model.asset.mediaType == .image {
@@ -174,7 +204,7 @@ class YXSUploadSourceHelper: NSObject {
                 infos.append([typeKey: SourceNameType.voice, modelKey: model])
             }
         }
-        uploadMedia(mediaInfos: infos,progress: progress, sucess: { (urls) in
+        uploadMedia(mediaInfos: infos, uploadPaths: uploadPaths,progress: progress, sucess: { (urls) in
             var paths = [String]()
             for url in urls{
                 paths.append((url[urlKey] as? String) ?? "")
@@ -183,12 +213,19 @@ class YXSUploadSourceHelper: NSObject {
         }, failureHandler: failureHandler)
     }
     
-    //上传资源
-    func uploadMedia(mediaInfos: [[String: Any]] ,progress progressBlock : ((_ progress: CGFloat)->())? = nil, sucess:(([[String: Any]])->())?,failureHandler: ((String, String) -> ())?) {
+    
+    /// 上传媒体文件
+    /// - Parameters:
+    ///   - mediaInfos: 媒体model
+    ///   - uploadPaths: 上传路径 除文件名称类型
+    ///   - progressBlock: 上传进度
+    ///   - sucess: 成功
+    ///   - failureHandler: 失败
+    func uploadMedia(mediaInfos: [[String: Any]] , uploadPaths: [String],progress progressBlock : ((_ progress: CGFloat)->())? = nil, sucess:(([[String: Any]])->())?,failureHandler: ((String, String) -> ())?) {
         if oSSAuth == nil{
             YXSEducationOssAuthTokenRequest().request({ (model: YXSOSSAuthModel) in
                 self.oSSAuth = model
-                self.uploadMedia(mediaInfos: mediaInfos, progress: progressBlock,sucess: sucess,failureHandler: failureHandler)
+                self.uploadMedia(mediaInfos: mediaInfos, uploadPaths: uploadPaths, progress: progressBlock,sucess: sucess,failureHandler: failureHandler)
             }, failureHandler: failureHandler)
             return
         }
@@ -219,41 +256,43 @@ class YXSUploadSourceHelper: NSObject {
                 }
             }
             
+//            else if sourceType == .album{
+//                if let classId = info[classIdKey] as? Int, let albumId = info[albumIdKey] as? Int{
+//                    if mediaModel.type == .video{
+//                        let newModel = SLUploadSourceModel.init(model: mediaModel, type: SourceNameType.album,path:
+//                            "\(sourceType.rawValue)/\(classId )/\(albumId)/+\(mediaModel.fileName.MD5())_1.jpg")
+//                        newModel.index = index
+//                        uploadModels.append(newModel)
+//
+//                        let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType,path: "\(sourceType.rawValue)/\(classId )/\(albumId)/+\(mediaModel.fileName.MD5()).mp4")
+//                        curruntModel.index = index
+//                        uploadModels.append(curruntModel)
+//
+//                    }else{
+//                        let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType,path: "\(sourceType.rawValue)/\(classId )/\(albumId)/+\(mediaModel.fileName.MD5()).jpg")
+//                        curruntModel.index = index
+//                        uploadModels.append(curruntModel)
+//                    }
+//                }else{
+//                    assert(false, "相册资源必须传classId和albumId")
+//                }
+//
+//            }
+            ///组装model与路径
             if  sourceType == .video{
-                let newModel = SLUploadSourceModel.init(model: mediaModel, type: SourceNameType.firstVideo)
+                let newModel = SLUploadSourceModel.init(model: mediaModel, type: SourceNameType.firstVideo, path: uploadPaths[index] + mediaModel.fileName.MD5() + "_1.jpg")
                 newModel.index = index
                 uploadModels.append(newModel)
                 
-                let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType)
+                let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType, path: uploadPaths[index] + mediaModel.fileName.MD5() + ".mp4")
                 curruntModel.index = index
                 uploadModels.append(curruntModel)
-            }else if sourceType == .album{
-                if let classId = info[classIdKey] as? Int, let albumId = info[albumIdKey] as? Int{
-                    if mediaModel.type == .video{
-                        let newModel = SLUploadSourceModel.init(model: mediaModel, type: SourceNameType.album,path:
-                            "\(sourceType.rawValue)/\(classId )/\(albumId)/+\(mediaModel.fileName.MD5())_1.jpg")
-                        newModel.index = index
-                        uploadModels.append(newModel)
-                        
-                        let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType,path: "\(sourceType.rawValue)/\(classId )/\(albumId)/+\(mediaModel.fileName.MD5()).mp4")
-                        curruntModel.index = index
-                        uploadModels.append(curruntModel)
-                        
-                    }else{
-                        let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType,path: "\(sourceType.rawValue)/\(classId )/\(albumId)/+\(mediaModel.fileName.MD5()).jpg")
-                        curruntModel.index = index
-                        uploadModels.append(curruntModel)
-                    }
-                }else{
-                    assert(false, "相册资源必须传classId和albumId")
-                }
-                
             }else if sourceType == .voice{
-                let curruntModel = SLUploadSourceModel.init(audioModel: audioModel, type: sourceType)
+                let curruntModel = SLUploadSourceModel.init(audioModel: audioModel, type: sourceType, path: uploadPaths[index] + (audioModel.fileName ?? "").MD5() + ".mp3")
                 curruntModel.index = index
                 uploadModels.append(curruntModel)
-            }else{
-                let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType)
+            }else if sourceType == .image{
+                let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType, path: uploadPaths[index] + mediaModel.fileName.MD5() + ".jpg")
                 curruntModel.index = index
                 uploadModels.append(curruntModel)
             }
@@ -268,15 +307,13 @@ class YXSUploadSourceHelper: NSObject {
         for uploadModel in uploadModels{
             let ossPutObj: OSSPutObjectRequest = OSSPutObjectRequest()
             //path为上传到阿里云的路径
-            var path: String = productPrefix
             group.enter()
             queue.async {
                 let sourceType: SourceNameType = uploadModel.type
                 switch sourceType {
-                case .image,.avatar,.firstVideo:
+                case .image,.firstVideo:
                     let data = uploadModel.model.showImg?.yxs_compressImage(image: uploadModel.model.showImg!, maxLength: imageMax)
                     ossPutObj.uploadingData = data
-                    path += uploadModel.path
                 case .video:
                     let semaphore = DispatchSemaphore(value: 0)
                     PHImageManager.default().requestExportSession(forVideo: uploadModel.model.asset, options: nil, exportPreset: AVAssetExportPresetMediumQuality) { (exportSession, info) in
@@ -293,37 +330,12 @@ class YXSUploadSourceHelper: NSObject {
                         }
                     }
                     semaphore.wait()
-                    path += uploadModel.path
                 case .voice:
                     ossPutObj.uploadingFileURL = URL.init(string: uploadModel.audioModel.path ?? "")!
-                    path += uploadModel.path
-                case .album:
-                    if uploadModel.model.type == .video{
-                        let semaphore = DispatchSemaphore(value: 0)
-                        PHImageManager.default().requestExportSession(forVideo: uploadModel.model.asset, options: nil, exportPreset: AVAssetExportPresetMediumQuality) { (exportSession, info) in
-                            //将asset转换为AVAssetExportSession对象,用AVAssetExportSession转化为Data
-                            HMVideoCompression().compressVideo(exportSession) { (data) in
-                                if data.count > 0 {//做判断,判断是否转化成功
-                                    //进行视频上传
-                                    ossPutObj.uploadingData = data
-                                }else{
-                                    failureHandlerMsg = "视频资源请传mediaModel"
-                                    
-                                }
-                                semaphore.signal()
-                            }
-                        }
-                        semaphore.wait()
-                        path += uploadModel.path
-                    }else{
-                        let data = uploadModel.model.showImg?.yxs_compressImage(image: uploadModel.model.showImg!, maxLength: imageMax)
-                        ossPutObj.uploadingData = data
-                        path += uploadModel.path
-                    }
                 }
                 
                 ossPutObj.bucketName = self.oSSAuth.bucket
-                ossPutObj.objectKey = path
+                ossPutObj.objectKey = uploadModel.path
                 
                 ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
                     progress += (CGFloat(bytesSent)/CGFloat(totalBytesExpectedToSend))/CGFloat(count)
@@ -342,7 +354,7 @@ class YXSUploadSourceHelper: NSObject {
                             var point: NSString = (self.oSSAuth.endpoint ?? "") as NSString
                             point = point.replacingOccurrences(of: "http://", with: "") as NSString
                             point = point.replacingOccurrences(of: "https://", with: "") as NSString
-                            let picUrlStr = "http://\(self.oSSAuth.bucket ?? "").\(point)/\(path)"
+                            let picUrlStr = "http://\(self.oSSAuth.bucket ?? "").\(point)/\(uploadModel.path)"
                             urls.append([typeKey: sourceType, urlKey: picUrlStr,"index" : uploadModel.index])
                         }else{
                             failureHandlerMsg = "链接拼接失败"

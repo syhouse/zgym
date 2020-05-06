@@ -195,6 +195,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
             if self.curruntPage == 1{
                 self.dataSource.removeAll()
             }
+            self.loadMore = list.count == kPageSize
             self.dataSource += list
             self.yxs_endingRefresh()
             self.updateUI()

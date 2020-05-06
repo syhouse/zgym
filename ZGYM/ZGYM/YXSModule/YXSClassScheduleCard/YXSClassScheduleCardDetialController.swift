@@ -125,7 +125,7 @@ class YXSClassScheduleCardDetialController: YXSBaseViewController{
     }
     
     func yxs_loadSourceData(_ mediaModel: YXSMediaModel){
-        YXSUploadSourceHelper().uploadImage(mediaModel: mediaModel, sucess: { (url) in
+        YXSUploadSourceHelper().uploadImage(mediaModel: mediaModel, uploadPath: YXSUploadSourceHelper.curriculumDoucmentPath(classId: yxs_classId ?? 0), sucess: { (url) in
             self.yxs_loadPublishData(url)
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)

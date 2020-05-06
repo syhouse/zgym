@@ -111,7 +111,7 @@ extension UIImage {
         
         while (data?.count ?? 0) > maxLength && compress > 0.01 {
             compress -= 0.02
-            data = newImage.jpegData(compressionQuality: compress)
+            data = image.jpegData(compressionQuality: compress)
         }
         
         return data
@@ -168,7 +168,6 @@ extension UIImage {
         
         guard let newImage = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
         UIGraphicsEndImageContext()
-        
         return newImage
     }
     

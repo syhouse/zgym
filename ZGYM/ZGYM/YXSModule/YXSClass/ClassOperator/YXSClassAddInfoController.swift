@@ -260,10 +260,10 @@ class YXSClassAddInfoController: YXSBaseViewController {
     // MARK: -private
     @objc func requestUploadImage(asset: YXSMediaModel) {
         MBProgressHUD.yxs_showLoading(inView: self.view)
-        YXSUploadSourceHelper().uploadImage(mediaModel: asset, sucess: {(successUrl) in
+        YXSUploadSourceHelper().uploadImage(mediaModel: asset, uploadPath: YXSUploadSourceHelper.avatarDoucmentPath, sucess: {(successUrl) in
             MBProgressHUD.yxs_hideHUDInView(view: self.view)
             self.headerUrl = successUrl
-            self.avarSection.imgAvatar.image = asset.showImg
+            self.avarSection.imgAvatar.image = asset.thumbnailImage
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }

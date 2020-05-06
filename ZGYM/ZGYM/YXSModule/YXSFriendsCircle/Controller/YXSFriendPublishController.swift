@@ -18,7 +18,7 @@ class YXSFriendPublishController: YXSCommonPublishBaseController {
         super.init(nil)
         saveDirectory = "friend"
         sourceDirectory = .friend
-        isFriendSelectClass = true
+        isFriendCircle = true
     }
     
     required init?(coder aDecoder: NSCoder) {
