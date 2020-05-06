@@ -678,8 +678,6 @@ class YXSFileUploadHelper: NSObject {
     }
     
     // MARK: - GetUrl
-    let kHostFilePath = "\(YXSPersonDataModel.sharePerson.userModel.account ?? "")/ios/"
-    
     /// 临时图片
     @objc func getTmpImgUrl(fullName: String)-> String{
         let name = fullName.deletingPathExtension

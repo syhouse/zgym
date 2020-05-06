@@ -162,7 +162,8 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     }
     
     @objc func searchClick(sender: YXSButton) {
-        
+        let vc = YXSSearchFileViewController()
+        self.navigationController?.pushViewController(vc)
     }
     
     @objc override func addFileClick() {

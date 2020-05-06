@@ -116,14 +116,15 @@ class YXSSatchelUploadFileRequest: YXSBaseRequset {
 let satchelFilePageQuery = "/satchel/file-page-query"
 /// 书包文件分页查询
 class YXSSatchelFilePageQueryRequest: YXSBaseRequset {
-    init(currentPage: Int, parentFolderId: Int){
+    init(currentPage: Int, parentFolderId: Int, keyword: String = ""){
         super.init()
         method = .post
         host = fileHost
         path = satchelFilePageQuery
         param = ["currentPage":currentPage,
                  "pageSize":20,
-                 "parentFolderId":parentFolderId]
+                 "parentFolderId":parentFolderId,
+                 "keyword":keyword]
     }
 }
 
