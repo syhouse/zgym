@@ -383,7 +383,8 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         }
         
         MBProgressHUD.yxs_showLoading(inView: self.view)
-        uploadHelper.uploadMedias(mediaAssets: tmpArr, progress: { (progress) in
+
+        uploadHelper.uploadPHAssetDataSource(mediaAssets: tmpArr, storageType: .classFile, classId: self.classId, progress: { (progress) in
             
         }, sucess: { [weak self](list) in
             guard let weakSelf = self else {return}
@@ -400,16 +401,46 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 }
                 
             }) { (msg, code) in
+                DispatchQueue.main.async {
+                    MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
+            }
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+            DispatchQueue.main.async {
                 MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
-            
-        }) { [weak self](msg, code) in
-            guard let weakSelf = self else {return}
-            
-            MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
-            MBProgressHUD.yxs_showMessage(message: msg)
+
         }
+//        uploadHelper.uploadMedias(mediaAssets: tmpArr, progress: { (progress) in
+//            
+//        }, sucess: { [weak self](list) in
+//            guard let weakSelf = self else {return}
+//            
+//            var dicArr = [[String: Any]]()
+//            for sub in list {
+//                dicArr.append(sub.toJSON())
+//            }
+//            YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: dicArr).request({ (json) in
+//                DispatchQueue.main.async {
+//                    MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+//                    MBProgressHUD.yxs_showMessage(message: "上传成功")
+//                    weakSelf.loadData()
+//                }
+//                
+//            }) { (msg, code) in
+//                MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+//                MBProgressHUD.yxs_showMessage(message: msg)
+//            }
+//            
+//        }) { [weak self](msg, code) in
+//            guard let weakSelf = self else {return}
+//            
+//            MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+//            MBProgressHUD.yxs_showMessage(message: msg)
+//        }
     }
     
     // MARK: - Other
