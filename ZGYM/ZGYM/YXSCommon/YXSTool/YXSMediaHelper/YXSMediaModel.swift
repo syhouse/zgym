@@ -17,8 +17,19 @@ class YXSMediaModel: NSObject, NSCoding {
     var type: PHAssetMediaType = .image
     
     //图片先设置image
-    var showImg: UIImage?
+    var showImg: UIImage?{
+        didSet{
+            if let showImg = showImg{
+                let newSize = showImg.yxs_scaleImage(image: showImg, imageLength: 500)
+                thumbnailImage = showImg.yxs_resizeImage(image: showImg, newSize: newSize)
+            }
+            
+        }
+    }
     var videoUrl: URL?
+    
+    //thumbnailImage
+    var thumbnailImage: UIImage?
 
     
     /// 相册资源
@@ -30,7 +41,17 @@ class YXSMediaModel: NSObject, NSCoding {
                     DispatchQueue.global().async {
                         UIUtil.PHAssetToImage(self.asset){
                             (result) in
-                            self.showImg = result
+                            let data = result.jpegData(compressionQuality: 1.0)
+                            //检查原图
+                            if data?.count ?? 0 <= imageMax{
+                               self.showImg = result
+                            }else{
+                                let newSize = result.yxs_scaleImage(image: result, imageLength: 2600)
+                                self.showImg = result.yxs_resizeImage(image: result, newSize: newSize)
+                            }
+                            let newSize = result.yxs_scaleImage(image: result, imageLength: 500)
+                            self.thumbnailImage = result.yxs_resizeImage(image: result, newSize: newSize)
+
                         }
                     }
                 }else if type == .video{

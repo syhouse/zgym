@@ -57,15 +57,15 @@ class YXSFriendDragItem: UIImageView {
                         self.sd_setImage(with: URL.init(string: model.serviceUrl ?? ""),placeholderImage: kImageDefualtImage)
                     }
                 }else{
-                    if let showImg = model.showImg{
-                        image = showImg
+                    if let thumbnailImage = model.thumbnailImage{
+                        image = thumbnailImage
                     }else{
                         UIUtil.PHAssetToImage(model.asset){
                             (result) in
-                            self.image = result
+                            let newSize = result.yxs_scaleImage(image: result, imageLength: 300)
+                            self.image = result.yxs_resizeImage(image: result, newSize: newSize)
                         }
                     }
-                    
                 }
                 if  model.type == PHAssetMediaType.video{
                     playerView.isHidden = false

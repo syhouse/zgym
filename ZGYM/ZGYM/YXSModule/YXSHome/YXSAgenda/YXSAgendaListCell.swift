@@ -55,6 +55,7 @@ class YXSAgendaListCell: UITableViewCell {
         titlelabel.text = model.title
         
         var rightText = ""
+        
         switch model.eventType {
         case .punchCard:
             rightText = YXSPersonDataModel.sharePerson.personRole == .PARENT ? "项待打卡" : "项打卡待查看"
@@ -70,14 +71,13 @@ class YXSAgendaListCell: UITableViewCell {
         
         if model.count > 0{
             redLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kNightLightForegroundColor)
-            redLabel.text = model.eventType == .punchCard ? "\(model.allCount)\(rightText)" : "\(model.count)\(rightText)"
+            redLabel.text = (model.eventType == .punchCard && YXSPersonDataModel.sharePerson.personRole != .TEACHER) ? "\(model.allCount)\(rightText)" : "\(model.count)\(rightText)"
         }else{
             redLabel.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightLightForegroundColor)
             redLabel.backgroundColor = UIColor.clear
             redLabel.text = "暂无"
         }
         
-        desLabel.isHidden = true
         titlelabel.snp.remakeConstraints { (make) in
             make.left.equalTo(iconImageView.snp_right).offset(14.5)
             make.centerY.equalTo(bgContainView)
