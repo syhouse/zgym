@@ -71,7 +71,7 @@ class YXSAgendaListCell: UITableViewCell {
         
         if model.count > 0{
             redLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kNightLightForegroundColor)
-            redLabel.text = (model.eventType == .punchCard && YXSPersonDataModel.sharePerson.personRole != .TEACHER) ? "\(model.allCount)\(rightText)" : "\(model.count)\(rightText)"
+            redLabel.text = "\(model.count)\(rightText)"
         }else{
             redLabel.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightLightForegroundColor)
             redLabel.backgroundColor = UIColor.clear

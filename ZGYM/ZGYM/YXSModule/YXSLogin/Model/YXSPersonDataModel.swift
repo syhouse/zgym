@@ -118,6 +118,7 @@ enum StageType: String {
         XMSDKPlayer.shared()?.stopTrackPlay()
         XMSDKPlayer.shared()?.stopLivePlay()
         
+        UIApplication.shared.endReceivingRemoteControlEvents()
         try? FileManager.default.removeItem(atPath: YXSPersonDataModel.personDataPath)
         let appdelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
         appdelegate?.showTabRoot()
