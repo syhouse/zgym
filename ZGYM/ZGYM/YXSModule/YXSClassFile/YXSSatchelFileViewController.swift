@@ -164,7 +164,11 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             }
         }
         alert.lbTitle.text = "提示"
-        alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        if folderIdList.count > 0 {
+            alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        } else {
+            alert.lbContent.text = "确定要删除文件吗?"
+        }
         alert.btnDone.setTitle("删除", for: .normal)
     }
     
