@@ -489,7 +489,7 @@ extension UIUtil{
         YXSEducationClassCircleMessageTipsRequest().request({ (result: YXSFriendsTipsModel) in
             YXSPersonDataModel.sharePerson.friendsTips = result
             if result.count ?? 0 > 0 {
-                RootController().yxs_showBadgeOnItem(index: 1, count: result.count!)
+//                RootController().yxs_showBadgeOnItem(index: 1, count: result.count!)
                 completion?()
             }
         }, failureHandler: nil)

@@ -93,6 +93,10 @@ class YXSMusicPlayerWindowView: UIControl {
         }
     }
     
+    public static func curruntWindowView() -> YXSMusicPlayerWindowView{
+        return instanceView
+    }
+    
     private static let instanceView: YXSMusicPlayerWindowView = YXSMusicPlayerWindowView()
     private var curruntTime: UInt = 0
     

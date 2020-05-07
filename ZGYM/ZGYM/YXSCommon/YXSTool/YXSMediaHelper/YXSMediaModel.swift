@@ -28,7 +28,7 @@ class YXSMediaModel: NSObject, NSCoding {
     }
     var videoUrl: URL?
     
-    //thumbnailImage
+    //缩略图用于展示
     var thumbnailImage: UIImage?
 
     
