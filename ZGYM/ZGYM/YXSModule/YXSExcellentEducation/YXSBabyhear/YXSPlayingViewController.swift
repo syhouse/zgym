@@ -55,15 +55,14 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         
         ///注意顺序
         YXSMusicPlayerWindowView.hidePlayerWindow()
-        
-        self.becomeFirstResponder()
+        UIApplication.shared.beginReceivingRemoteControlEvents()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        ///注意顺序
         
-        self.resignFirstResponder()
+        UIApplication.shared.endReceivingRemoteControlEvents()
+        
         YXSMusicPlayerWindowView.showPlayerWindow(curruntTime: curruntTime)
     }
     
@@ -603,33 +602,4 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }
     */
 
-}
-
-// MARK: - 锁屏控制
-extension YXSPlayingViewController{
-    
-    override var canBecomeFirstResponder: Bool {
-         get {
-             return true
-         }
-     }
-     
-     override func remoteControlReceived(with event: UIEvent?) {
-         if event?.type == UIEvent.EventType.remoteControl{
-             switch event?.subtype {
-             case .remoteControlPause:
-                 btnPlayPause.isSelected = !btnPlayPause.isSelected
-                 self.pause()
-             case .remoteControlPlay:
-                 btnPlayPause.isSelected = !btnPlayPause.isSelected
-                 self.resume()
-             case .remoteControlNextTrack:
-                 self.playNextTrack(sender: YXSButton())
-             case .remoteControlPreviousTrack:
-                 self.playPreTrack(sender: YXSButton())
-             default:
-                 break
-             }
-         }
-     }
 }

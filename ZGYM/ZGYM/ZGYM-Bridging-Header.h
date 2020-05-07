@@ -51,8 +51,6 @@
 #import "XMReqMgr.h"
 #import "XMSDK.h"
 
-#import "PlayingViewController.h"
-
 ///仅在DEBUG下使用
 #ifdef DEBUG
 #import <FLEX/FLEXManager.h>

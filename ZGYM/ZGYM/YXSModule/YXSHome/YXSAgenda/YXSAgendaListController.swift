@@ -76,11 +76,6 @@ class YXSAgendaListController: YXSBaseTableViewController {
                 for redModel in list{
                     if serviceIds[index] == redModel.serviceType{
                         model.count = redModel.count ?? 0
-                        if let allCount = redModel.allCount{
-                            model.allCount = allCount
-                        }else{
-                            model.allCount = model.count
-                        }
                         break
                     }
                 }
@@ -113,17 +108,7 @@ class YXSAgendaListController: YXSBaseTableViewController {
             if let type =  userInfo[kEventKey] as? YXSHomeType{
                 for model in yxs_dataSource{
                     if model.eventType == type{
-                        if type == .punchCard{
-                            model.count -= 1
-                            if let hasFinish = userInfo[kValueKey] as? Bool{
-                                if hasFinish{
-                                    model.allCount -= 1
-                                }
-                            }
-                        }else{
-                            model.count -= 1
-                            model.allCount -= 1
-                        }
+                        model.count -= 1
                         break
                     }
                 }

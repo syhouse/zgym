@@ -97,6 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         
         // MARK: - xmly
         registerXMLY()
+        UIApplication.shared.beginReceivingRemoteControlEvents()
         return true
     }
     
@@ -114,6 +115,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
             return qqShare
         }
         return WXApi.handleOpen(url, delegate: YXSShareTool.shareTool)
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        UIApplication.shared.endReceivingRemoteControlEvents()
     }
     
     //微信UniversalLink需要
@@ -164,17 +169,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     func applicationWillResignActive(_ application: UIApplication) {
         ///如果xmly播放器存在  开启锁屏控制
         let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
-        if !isPlayerStop{
-            ///当前播放控制器成为第一响应者
-            if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
-                playerVc.becomeFirstResponder()
-            }else{
-                YXSMusicPlayerWindowView.curruntWindowView().becomeFirstResponder()
-            }
-            
-            UIUtil.configNowPlayingCenterUI()
-            UIApplication.shared.beginReceivingRemoteControlEvents()
-        }
+        UIUtil.configNowPlayingCenterUI()
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -206,7 +201,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         })
         
         ///结束锁屏控制
-        UIApplication.shared.endReceivingRemoteControlEvents()
+//        UIApplication.shared.endReceivingRemoteControlEvents()
         
         YXSMusicPlayerWindowView.cheakPlayerUI()
         
