@@ -1235,7 +1235,7 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
             localMeidaInfos.append([typeKey: SourceNameType.image,modelKey: mediaModel])
         
             if localMeidaInfos.count > 0{
-                YXSUploadSourceHelper().uploadMedia(mediaInfos: localMeidaInfos, progress: {
+                YXSUploadSourceHelper().uploadMedia(mediaInfos: localMeidaInfos, uploadPaths: [YXSUploadSourceHelper.expiresImgDoucmentPath], progress: {
                     (progress)in
                     DispatchQueue.main.async {
                         self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int((1.0*progress + (1.0 - 1.0)) * 100)))%)"

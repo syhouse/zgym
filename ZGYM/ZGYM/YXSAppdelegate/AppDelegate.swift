@@ -161,6 +161,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         print("did Fail To Register For Remote Notifications With Error: \(error)")
     }
     
+    func applicationWillResignActive(_ application: UIApplication) {
+        ///如果xmly播放器存在  开启锁屏控制
+        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
+        if !isPlayerStop{
+            ///当前播放控制器成为第一响应者
+            if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
+                playerVc.becomeFirstResponder()
+            }else{
+                YXSMusicPlayerWindowView.curruntWindowView().becomeFirstResponder()
+            }
+            
+            UIUtil.configNowPlayingCenterUI()
+            UIApplication.shared.beginReceivingRemoteControlEvents()
+        }
+    }
+    
     func applicationDidEnterBackground(_ application: UIApplication) {
         var bgTaskID: UIBackgroundTaskIdentifier!
         bgTaskID = application.beginBackgroundTask(expirationHandler: {
@@ -180,14 +196,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         }, fail: { (code, msg) in
             SLLog("Fail----->: \(code)->\(msg ?? "")")
         })
-        
-        
-        ///如果xmly播放器存在  开启锁屏控制
-        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
-        if !isPlayerStop{
-            UIUtil.configNowPlayingCenterUI()
-            UIApplication.shared.beginReceivingRemoteControlEvents()
-        }
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -197,7 +205,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
             SLLog("Fail----->: \(code)->\(msg ?? "")")
         })
         
-        ///如果xmly播放器存在  开启锁屏控制
+        ///结束锁屏控制
         UIApplication.shared.endReceivingRemoteControlEvents()
         
         YXSMusicPlayerWindowView.cheakPlayerUI()

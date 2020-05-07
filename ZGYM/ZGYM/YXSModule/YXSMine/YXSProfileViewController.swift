@@ -48,7 +48,7 @@ class YXSProfileViewController: YXSBaseViewController, UITableViewDelegate, UITa
     
     @objc func requestUploadImage(asset: YXSMediaModel) {
         MBProgressHUD.yxs_showLoading(inView: self.view)
-        YXSUploadSourceHelper().uploadImage(mediaModel: asset, sucess: { [weak self](successUrl) in
+        YXSUploadSourceHelper().uploadImage(mediaModel: asset, uploadPath: YXSUploadSourceHelper.avatarDoucmentPath, sucess: { [weak self](successUrl) in
             guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
             weakSelf.requestsEditProfile(parameter: ["avatar":successUrl]) {

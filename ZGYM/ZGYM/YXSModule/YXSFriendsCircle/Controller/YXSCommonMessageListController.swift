@@ -106,7 +106,7 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
                 self.dataSource = list
                 self.tableView.reloadData()
                 YXSPersonDataModel.sharePerson.friendsTips = nil
-                self.yxs_showBadgeOnItem(index: 1, count: 0)
+//                self.yxs_showBadgeOnItem(index: 1, count: 0)
                 self.loadSucess?()
             }) { (msg, code) in
                 MBProgressHUD.hide(for: self.view, animated: true)

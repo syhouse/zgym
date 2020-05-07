@@ -109,13 +109,13 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             }
         }
         MBProgressHUD.yxs_showLoading(message: "上传中", inView: self.navigationController!.view)
-        YXSUploadSourceHelper().uploadMedia(mediaInfos: mediaInfos, sucess: { (infos) in
-            SLLog(infos)
-            self.loadUploadAlbumRequest(mediaInfos: infos)
-        }) { (msg, code) in
-            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
+//        YXSUploadSourceHelper().uploadMedia(mediaInfos: mediaInfos, uploadPaths: <#[String]#>, sucess: { (infos) in
+//            SLLog(infos)
+//            self.loadUploadAlbumRequest(mediaInfos: infos)
+//        }) { (msg, code) in
+//            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+//            MBProgressHUD.yxs_showMessage(message: msg)
+//        }
     }
 
     func loadUploadAlbumRequest(mediaInfos: [[String: Any]]){

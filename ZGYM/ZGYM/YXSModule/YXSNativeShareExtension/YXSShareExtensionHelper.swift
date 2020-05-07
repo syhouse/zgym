@@ -87,7 +87,7 @@ class YXSShareExtensionHelper: NSObject {
         }
         
         MBProgressHUD.yxs_showLoading(inView: vc.view)
-        YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, progress: nil, sucess: { (list) in
+        YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, storageType: .satchel, progress: nil, sucess: { (list) in
             YXSSatchelUploadFileRequest(parentFolderId: -1, satchelFileList: list).request({ (json) in
                 DispatchQueue.main.async {
                     MBProgressHUD.yxs_hideHUDInView(view: vc.view)
@@ -115,7 +115,7 @@ class YXSShareExtensionHelper: NSObject {
             let dataSrouceArr = weakSelf.files2UploadDatas(files: files)
             
             MBProgressHUD.yxs_showLoading(inView: vc.view)
-            YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: dataSrouceArr, progress: { (progress) in
+            YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: dataSrouceArr, storageType: .classFile, progress: { (progress) in
                 
             }, sucess: { (list) in
                 YXSFileUploadFileRequest(classId: classModel.id ?? 0, folderId: -1, classFileList: list).request({ (json) in

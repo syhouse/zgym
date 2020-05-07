@@ -176,6 +176,8 @@ class YXSHomeController: YXSHomeBaseController {
                 }
                 self.tableHeaderView.setHeaderModel(self.yxs_weathModel,agendaCount: self.yxs_agendaCount)
                 self.yxs_endingRefresh()
+                
+                self.isChateWaitRefreshData = false
             }
         }
     }
@@ -509,7 +511,7 @@ extension YXSHomeController{
             isChateWaitRefreshData = true
             ///首次启动可能收到大量IM消息推送过来  接收几秒钟后统一刷新一次接口
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
-                self.yxs_loadData()
+                self.yxs_refreshListWithOutUserData()
             }
         }
         
