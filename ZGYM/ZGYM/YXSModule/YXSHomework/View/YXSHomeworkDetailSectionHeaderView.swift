@@ -249,7 +249,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             let goodCount: Int = self.hmModel?.getChildGoodCount(id: self.model?.childrenId ?? 0) ?? 0
             if  goodCount > 0 && self.model?.isShowLookGoodButton ?? true {
                 goodHomeworkLabelBtn.isHidden = false
-                goodHomeworkLabelBtn.title = "优秀打卡+\(goodCount)"
+                goodHomeworkLabelBtn.title = "优秀作业+\(goodCount)"
             }
             
             imgAvatar.sd_setImage(with: URL(string: self.model?.childHeadPortrait ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
@@ -526,7 +526,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
     }()
     
     lazy var voiceView: YXSListVoiceView = {
-        let voiceView = YXSListVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30 - 41, height: 36), complete: {
+        let voiceView = YXSListVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 36), complete: {
             [weak self] (url, duration)in
             guard let strongSelf = self else { return }
         })

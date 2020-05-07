@@ -71,6 +71,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
     }
     
     var id : Int?
+    var homeworkId: Int?
     var imageUrl : String? {
         didSet{
             showImages = nil
@@ -547,6 +548,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         relationship <- map["relationship"]
         fileJson <- map["fileJson"]
         goodMap <- map["goodMap"]
+        homeworkId <- map["homeworkId"]
     }
 
     /**
@@ -603,6 +605,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         relationship = aDecoder.decodeObject(forKey: "relationship") as? String
         fileJson = aDecoder.decodeObject(forKey: "fileJson") as? String
         goodMap = aDecoder.decodeObject(forKey: "goodMap") as? [String : Int]
+        homeworkId = aDecoder.decodeObject(forKey: "homeworkId") as? Int
     }
 
     /**
@@ -754,6 +757,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         if goodMap != nil {
             aCoder.encode(goodMap, forKey: "goodMap")
+        }
+        if homeworkId != nil {
+            aCoder.encode(homeworkId, forKey: "homeworkId")
         }
     }
 }

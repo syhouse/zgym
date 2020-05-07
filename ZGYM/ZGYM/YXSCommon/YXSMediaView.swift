@@ -28,6 +28,8 @@ class YXSMediaView: UIView {
     /// 视频
     var videoTouchedHandler:((_ videoUlr: String)->())?
     
+    var voiceMax: CGFloat = 60.0
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -52,7 +54,7 @@ class YXSMediaView: UIView {
         voiceView.snp.makeConstraints({ (make) in
             make.top.equalTo(lbContent.snp_bottom).offset(18)
             make.left.equalTo(0)
-            make.width.equalTo(162)
+            make.width.equalTo(SCREEN_WIDTH - 30)
             make.height.equalTo(36)
         })
         
@@ -145,6 +147,7 @@ class YXSMediaView: UIView {
             guard let weakSelf = self else {return}
             weakSelf.voiceTouchedHandler?(voiceUrl, duration)
         }
+        vv.maxTime = self.voiceMax
         return vv
     }()
     
