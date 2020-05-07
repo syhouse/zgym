@@ -58,9 +58,13 @@ class SLAudioModel: NSObject, NSCoding{
 }
 
 enum RecordStatus{
+    ///准备录音
     case redayRecord
+    ///录音中
     case Recording
+    ///录音结束准备预览当前录音
     case redayShow
+    ///正在播放当前录音
     case Showing
 }
 
@@ -135,6 +139,12 @@ class YXSRecordAudioView: UIView {
             audioModel = SLAudioModel()
             setRedayStartUI()
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     private func setRedayStartUI(){
@@ -298,6 +308,12 @@ class YXSRecordAudioView: UIView {
         audioModel.time = timerTool.keepTime
         
         timerTool.yxs_cancelTimer()
+    }
+    
+    @objc private func didEnterBackground(){
+        if status == .Recording{
+            playerClick()
+        }
     }
     
     private func play() {

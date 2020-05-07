@@ -299,7 +299,7 @@ class YXSPunchSucessBgView: UIImageView{
         yxs_scanImageView.snp.makeConstraints { (make) in
             make.right.equalTo(-16)
             make.centerY.equalTo(yxs_midWhiteView)
-            make.size.equalTo(CGSize.init(width: 78, height: 78))
+            make.size.equalTo(CGSize.init(width: 90, height: 90))
         }
     }
     

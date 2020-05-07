@@ -189,8 +189,8 @@ class YXSContentDetialController: YXSBaseTableViewController {
         
         rightButton = UIButton()
         rightButton.addTarget(self, action: #selector(loadCollectionData(sender:)), for: .touchUpInside)
-        rightButton.setImage(UIImage(named: "yxs_xmly_no_fav"), for: .normal)
-        rightButton.setImage(UIImage(named: "yxs_xmly_has_fav"), for: .selected)
+        rightButton.setMixedImage(MixedImage(normal: "yxs_xmly_no_fav", night: "yxs_xmly_no_fav"), forState: .normal)
+        rightButton.setMixedImage(MixedImage(normal: "yxs_xmly_has_fav", night: "yxs_xmly_has_fav"), forState: .selected)
         customNav.addSubview(rightButton)
         rightButton.snp.makeConstraints { (make) in
             make.right.equalTo(-8.5)
@@ -202,9 +202,15 @@ class YXSContentDetialController: YXSBaseTableViewController {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > headerHeight - (64 + kSafeTopHeight) {//64 + kSafeTopHeight{
-            customNav.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
+            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+            customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+            rightButton.setMixedImage(MixedImage(normal: "yxs_xmly_no_fav_black", night: "yxs_xmly_no_fav"), forState: .normal)
+            customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "yxs_back_white"), forState: .normal)
         }else{
             customNav.backgroundColor = UIColor.clear
+            customNav.titleLabel.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+            customNav.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
+            rightButton.setImage(UIImage(named: "yxs_xmly_no_fav"), for: .normal)
         }
     }
 }
