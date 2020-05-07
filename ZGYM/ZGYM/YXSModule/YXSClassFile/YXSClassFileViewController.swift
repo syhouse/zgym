@@ -469,6 +469,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     @objc func previewFile(fileModel: YXSFileModel) {
         let wk = YXSBaseWebViewController()
         wk.loadUrl = fileModel.fileUrl
+        wk.title = fileModel.fileName
         navigationController?.pushViewController(wk)
     }
     

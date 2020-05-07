@@ -120,6 +120,14 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
         self.navigationController?.popViewController()
     }
     
+    /// 预览文件
+    @objc func previewFile(fileModel: YXSFileModel) {
+        let wk = YXSBaseWebViewController()
+        wk.loadUrl = fileModel.fileUrl
+        wk.title = fileModel.fileName
+        navigationController?.pushViewController(wk)
+    }
+    
     // MARK: - Delegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return fileList.count
@@ -164,9 +172,7 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
             YXSShowBrowserHelper.yxs_VedioBrowser(videoURL: URL(string: item.fileUrl ?? ""))
             
         } else {
-            let wk = YXSBaseWebViewController()
-            wk.loadUrl = item.fileUrl
-            navigationController?.pushViewController(wk)
+            previewFile(fileModel: item)
         }
     }
 
