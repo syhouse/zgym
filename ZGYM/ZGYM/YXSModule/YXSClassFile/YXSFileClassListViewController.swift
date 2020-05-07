@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NightNight
 
 /// 班级列表（当用户有多个班级时候呈现）
 class YXSFileClassListViewController: YXSBaseTableViewController {
@@ -32,6 +33,7 @@ class YXSFileClassListViewController: YXSBaseTableViewController {
         
         super.viewDidLoad()
         title = "班级列表"
+        tableView.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
         
         // Do any additional setup after loading the view.
         tableView.register(YXSFileClassListCell.classForCoder(), forCellReuseIdentifier: "YXSFileClassListCell")

@@ -28,35 +28,39 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         self.title = "我的文件"
 
         // Do any additional setup after loading the view.
-        view.addSubview(btnSearch)
-        view.addSubview(btnAddFileFromComputer)
-        btnSearch.snp.makeConstraints({ (make) in
-            make.top.equalTo(0)
-            make.left.equalTo(15)
-            make.right.equalTo(-15)
-            make.height.equalTo(44)
-        })
+//        view.addSubview(btnSearch)
+//        view.addSubview(btnAddFileFromComputer)
+//        btnSearch.snp.makeConstraints({ (make) in
+//            make.top.equalTo(0)
+//            make.left.equalTo(15)
+//            make.right.equalTo(-15)
+//            make.height.equalTo(44)
+//        })
         
-        btnAddFileFromComputer.snp.remakeConstraints({ (make) in
-            make.top.equalTo(btnSearch.snp_bottom).offset(14)
-            make.left.equalTo(0)
-            make.right.equalTo(0)
-            make.height.equalTo(30)
-        })
+//        btnAddFileFromComputer.snp.remakeConstraints({ (make) in
+//            make.top.equalTo(btnSearch.snp_bottom).offset(14)
+//            make.left.equalTo(0)
+//            make.right.equalTo(0)
+//            make.height.equalTo(30)
+//        })
         
-        tableView.snp.remakeConstraints({ (make) in
-            make.top.equalTo(btnAddFileFromComputer.snp_bottom).offset(0)
-            make.left.equalTo(0)
-            make.right.equalTo(0)
-            make.bottom.equalTo(0)
-        })
+//        tableView.snp.remakeConstraints({ (make) in
+////            make.top.equalTo(btnAddFileFromComputer.snp_bottom).offset(0)
+//            make.top.equalTo(btnSearch.snp_bottom).offset(14)
+//            make.left.equalTo(0)
+//            make.right.equalTo(0)
+//            make.bottom.equalTo(0)
+//        })
     }
     
     
     // MARK: - Request
     override func yxs_refreshData() {
         loadData()
-        yxs_endingRefresh()
+    }
+    
+    override func yxs_loadNextPage() {
+        loadData()
     }
     
     @objc override func loadData() {
@@ -71,9 +75,10 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         workingGroup.enter()
         workingQueue.async {
             // 出组
-            YXSSatchelFolderPageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+            YXSSatchelFolderPageQueryRequest(currentPage: 1, parentFolderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"]
+//                let hasNext = json["hasNext"].boolValue
+//                weakSelf.loadMore = hasNext
                 
                 tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
                 workingGroup.leave()
@@ -89,7 +94,8 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             // 出组
             YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"]
+                let hasNext = json["hasNext"].boolValue
+                weakSelf.loadMore = hasNext
                 
                 tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
                 workingGroup.leave()
@@ -123,10 +129,16 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                         }
                     }
                 }
+                
+                if self.curruntPage == 1{
+                    self.fileList.removeAll()
+                }
+                
                 self.folderList = tmpFolderList
-                self.fileList = tmpFileList
+                self.fileList += tmpFileList
                 
                 self.tableView.reloadData()
+                self.yxs_endingRefresh()
             }
         }
     }
@@ -152,7 +164,11 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             }
         }
         alert.lbTitle.text = "提示"
-        alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        if folderIdList.count > 0 {
+            alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        } else {
+            alert.lbContent.text = "确定要删除文件吗?"
+        }
         alert.btnDone.setTitle("删除", for: .normal)
     }
     
@@ -161,7 +177,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         
     }
     
-    @objc func searchClick(sender: YXSButton) {
+    @objc override func searchClick(sender: YXSButton) {
         let vc = YXSSearchFileViewController(searchType: .satchel)
         self.navigationController?.pushViewController(vc)
     }
@@ -216,6 +232,11 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             let view = YXSInputAlertView2.showIn(target: self.view) { [weak self](result, btn) in
                 guard let weakSelf = self else {return}
                 if btn.titleLabel?.text == "确定" {
+                    
+                    if result.isBlank {
+                        MBProgressHUD.yxs_showMessage(message: "名称不能为空", inView: weakSelf.view)
+                        return
+                    }
                     
                     if tmpFolderList.count == 1 {
                         /// 文件夹更名
@@ -282,6 +303,11 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             /// 取消编辑
             weakSelf.endEditing()
 
+            /// 当前目录移动到当前目录 不刷新界面
+            if oldParentFolderId == parentFolderId {
+                return
+            }
+            
             /// 更新界面
             weakSelf.folderList = weakSelf.getUnselectedFolerList()
             weakSelf.fileList = weakSelf.getUnselectedFileList()
@@ -293,41 +319,27 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     }
     
     @objc override func deleteBtnClick(sender: YXSButton) {
-
         let tmpFolderList = getSelectedFolerList()
         let tmpFileList = getSelectedFileList()
         
         if tmpFolderList.count > 0 || tmpFileList.count > 0 {
-            let alert = YXSConfirmationAlertView.showIn(target: self.view) { [weak self](sender, view) in
-            guard let weakSelf = self else {return}
-                if sender.titleLabel?.text == "删除" {
-                    
-                    var tmpFolderIdArr = [Int]()
-                    var tmpFileIdIdArr = [Int]()
-                    for (index, value) in tmpFolderList.enumerated() {
-                        tmpFolderIdArr.append(value.id ?? 0)
-                    }
-                    
-                    for (index, value) in tmpFileList.enumerated() {
-                        tmpFileIdIdArr.append(value.id ?? 0)
-                    }
-                    
-                    weakSelf.batchDeleteRequest(fileIdList: tmpFileIdIdArr, folderIdList: tmpFolderIdArr) { [weak self] in
-                        guard let weakSelf = self else {return}
-                        weakSelf.folderList = weakSelf.getUnselectedFolerList()
-                        weakSelf.fileList = weakSelf.getUnselectedFileList()
-                        weakSelf.tableView.reloadData()
-                    }
-                    view.close()
-                    weakSelf.endEditing()
-                    
-                } else {
-                    /// 取消
-                }
+
+            var tmpFolderIdArr = [Int]()
+            var tmpFileIdIdArr = [Int]()
+            for (index, value) in tmpFolderList.enumerated() {
+                tmpFolderIdArr.append(value.id ?? 0)
             }
-            alert.lbTitle.text = "提示"
-            alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
-            alert.btnDone.setTitle("删除", for: .normal)
+
+            for (index, value) in tmpFileList.enumerated() {
+                tmpFileIdIdArr.append(value.id ?? 0)
+            }
+
+            batchDeleteRequest(fileIdList: tmpFileIdIdArr, folderIdList: tmpFolderIdArr) { [weak self] in
+                guard let weakSelf = self else {return}
+                weakSelf.folderList = weakSelf.getUnselectedFolerList()
+                weakSelf.fileList = weakSelf.getUnselectedFileList()
+                weakSelf.tableView.reloadData()
+            }
         }
     }
     
@@ -537,20 +549,20 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     }
     
     // MARK: - LazyLoad
-    lazy var btnSearch: YXSButton = {
-        let btn = YXSButton()
-        btn.setImage(UIImage(named: "yxs_chat_search"), for: .normal)
-        btn.setTitle("搜索", for: .normal)
-        btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        btn.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNight2C3144)
-        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .normal)
-        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .highlighted)
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        btn.clipsToBounds = true
-        btn.layer.cornerRadius = 22
-        btn.addTarget(self, action: #selector(searchClick(sender:)), for: .touchUpInside)
-        return btn
-    }()
+//    lazy var btnSearch: YXSButton = {
+//        let btn = YXSButton()
+//        btn.setImage(UIImage(named: "yxs_chat_search"), for: .normal)
+//        btn.setTitle("搜索", for: .normal)
+//        btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+//        btn.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNight2C3144)
+//        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .normal)
+//        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .highlighted)
+//        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+//        btn.clipsToBounds = true
+//        btn.layer.cornerRadius = 22
+//        btn.addTarget(self, action: #selector(searchClick(sender:)), for: .touchUpInside)
+//        return btn
+//    }()
     
     lazy var btnAddFileFromComputer: YXSButton = {
         let btn = YXSButton()

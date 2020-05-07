@@ -22,3 +22,52 @@ extension AppDelegate: XMReqDelegate{
         XMReqMgr.sharedInstance()?.delegate = self
     }
 }
+
+
+// MARK: - 锁屏控制
+extension AppDelegate{
+    
+    override var canBecomeFirstResponder: Bool {
+        get {
+            return true
+        }
+    }
+    
+    override func remoteControlReceived(with event: UIEvent?) {
+        if event?.type == UIEvent.EventType.remoteControl{
+            switch event?.subtype {
+            case .remoteControlPause:
+                if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
+                    playerVc.btnPlayPause.isSelected = !playerVc.btnPlayPause.isSelected
+                    playerVc.pause()
+                }else{
+                    YXSMusicPlayerWindowView.curruntWindowView().playerClick()
+                }
+                UIUtil.configNowPlayingIsPause(isPlaying: false)
+            case .remoteControlPlay:
+                if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
+                    playerVc.btnPlayPause.isSelected = !playerVc.btnPlayPause.isSelected
+                    playerVc.resume()
+                }else{
+                    YXSMusicPlayerWindowView.curruntWindowView().playerClick()
+                }
+                UIUtil.configNowPlayingIsPause(isPlaying: true)
+            case .remoteControlNextTrack:
+                if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
+                    playerVc.playNextTrack(sender: YXSButton())
+                }else{
+                    YXSMusicPlayerWindowView.curruntWindowView().playerNextClick()
+                }
+            case .remoteControlPreviousTrack:
+                if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
+                    playerVc.playNextTrack(sender: YXSButton())
+                }else{
+                    XMSDKPlayer.shared()?.playPrevTrack()
+                    YXSMusicPlayerWindowView.curruntWindowView().isPlayingMusic = true
+                }
+            default:
+                break
+            }
+        }
+    }
+}

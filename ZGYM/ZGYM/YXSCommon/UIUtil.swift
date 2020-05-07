@@ -769,6 +769,12 @@ extension UIUtil{
 // MARK: - 锁屏播放控制
 extension UIUtil{
     static func configNowPlayingCenterUI(){
+        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
+        if isPlayerStop{
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+            return
+        }
+        
         if let image = SDImageCache.shared.imageFromCache(forKey: YXSRemoteControlInfoHelper.imageUrl){
             UIUtil.configNowPlayingCenter(title: YXSRemoteControlInfoHelper.title, author: YXSRemoteControlInfoHelper.author, curruntTime: YXSRemoteControlInfoHelper.curruntTime, totalTIme: YXSRemoteControlInfoHelper.totalTime, image: image)
         }else{
@@ -788,8 +794,14 @@ extension UIUtil{
         info[MPMediaItemPropertyArtist] = author
         //音乐的播放时间
         info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: curruntTime)
+        
         //音乐的播放速度
-        info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 1)
+        if XMSDKPlayer.shared()?.isPlaying() ?? false{
+            info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 1)
+        }else{
+            info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 0)
+        }
+        
         //音乐的总时间
         info[MPMediaItemPropertyPlaybackDuration] = NSNumber(value: totalTIme)
         //音乐的封面
@@ -802,7 +814,15 @@ extension UIUtil{
         info[MPMediaItemPropertyArtwork] = artwork
         //完成设置
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
-        
-//        SLLog(MPNowPlayingInfoCenter.default().nowPlayingInfo)
+
+    }
+    
+    static func configNowPlayingIsPause(isPlaying: Bool){
+        let info = MPNowPlayingInfoCenter.default().nowPlayingInfo
+        if var info = info{
+            info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: isPlaying ? 1 : 0)
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+            SLLog(MPNowPlayingInfoCenter.default().nowPlayingInfo)
+        }
     }
 }

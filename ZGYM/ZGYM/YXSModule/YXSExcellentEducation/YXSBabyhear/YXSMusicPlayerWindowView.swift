@@ -32,16 +32,17 @@ class YXSMusicPlayerWindowView: UIControl {
         instanceView.isHidden = false
         XMSDKPlayer.shared()?.trackPlayDelegate = instanceView
         
-        instanceView.becomeFirstResponder()
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        
     }
     
     /// 隐藏播放窗
     public static func hidePlayerWindow(){
+        UIApplication.shared.endReceivingRemoteControlEvents()
         UIView.animate(withDuration: 0.25, animations: {
             instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT, width: SCREEN_WIDTH - 30, height: 49)
             instanceView.removeFromSuperview()
         })
-        instanceView.resignFirstResponder()
     }
     
     ///更新播放窗口是否需要隐藏
@@ -157,7 +158,7 @@ class YXSMusicPlayerWindowView: UIControl {
     }
     
     ///当前播放状态
-    private var isPlayingMusic: Bool = true{
+    var isPlayingMusic: Bool = true{
         didSet{
             if isPlayingMusic{
                 closeBtn.isHidden = true
@@ -204,6 +205,9 @@ class YXSMusicPlayerWindowView: UIControl {
     @objc func closeClick(){
         XMSDKPlayer.shared()?.stopTrackPlay()
         YXSMusicPlayerWindowView.hidePlayerWindow()
+        
+        UIApplication.shared.endReceivingRemoteControlEvents()
+        UIUtil.configNowPlayingCenterUI()
     }
     
     @objc func playerClick(){

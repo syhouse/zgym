@@ -49,6 +49,8 @@ class YXSExcellentEducationVC: YXSBaseViewController,UITableViewDelegate, UITabl
             navigationController?.pushViewController(vc)
         } else {
             //优期刊
+            let vc = YXSPeriodicalListController()
+            navigationController?.pushViewController(vc)
         }
     }
     

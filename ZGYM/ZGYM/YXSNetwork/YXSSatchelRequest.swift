@@ -276,7 +276,7 @@ class YXSFileUploadFileRequest: YXSBaseRequset {
 let filePageQuery = "/file/page-query"
 /// 班级文件分页查询
 class YXSFilePageQueryRequest: YXSBaseRequset {
-    init(classId: Int, currentPage: Int, folderId: Int){
+    init(classId: Int, currentPage: Int, folderId: Int, keyword: String = ""){
         super.init()
         method = .post
         host = fileHost
@@ -285,7 +285,8 @@ class YXSFilePageQueryRequest: YXSBaseRequset {
             "classId":classId,
             "currentPage":currentPage,
                  "pageSize":20,
-                 "folderId":folderId]
+                 "folderId":folderId,
+                 "keyword":keyword]
     }
 }
 

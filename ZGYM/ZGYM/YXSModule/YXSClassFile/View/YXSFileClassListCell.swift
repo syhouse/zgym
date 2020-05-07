@@ -24,8 +24,8 @@ class YXSFileClassListCell: UITableViewCell {
         //               bgView.addSubview(commentLabel)
 
         bgView.snp.makeConstraints { (make) in
-           make.bottom.equalTo(-10)
-           make.right.left.top.equalTo(0)
+           make.top.equalTo(10)
+           make.right.left.bottom.equalTo(0)
         }
 
         nameLabel.snp.makeConstraints { (make) in

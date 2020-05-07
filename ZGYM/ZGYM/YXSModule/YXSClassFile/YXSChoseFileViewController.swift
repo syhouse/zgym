@@ -20,7 +20,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     var fileList: [YXSFileModel] = [YXSFileModel]()
     /// 选中的文件集合
     var selectedFileList: [YXSFileModel] = [YXSFileModel]()
-    ///
+    
     var completionHandler:((_ selectedFileList: [YXSFileModel], _ vc: YXSChoseFileViewController)->())?
     
     init(parentFolderId: Int = -1, selectedFileList: [YXSFileModel] = [YXSFileModel](), completionHandler:((_ selectedFileList: [YXSFileModel], _ vc: YXSChoseFileViewController)->())?) {
@@ -42,13 +42,38 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         self.title = "选择文件"
         
         // Do any additional setup after loading the view.
+        self.view.addSubview(searchBar)
+        searchBar.editingChangedBlock = {[weak self](view) in
+            guard let weakSelf = self else {return}
+            weakSelf.searchRequest(keyword: view.text ?? "") { [weak self](list) in
+                guard let weakSelf = self else {return}
+                DispatchQueue.main.async {
+                    weakSelf.fileList = list
+                    weakSelf.tableView.reloadData()
+                }
+            }
+        }
+        
+        searchBar.snp.makeConstraints({ (make) in
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            } else {
+                // Fallback on earlier versions
+                make.top.equalTo(0)
+            }
+            make.left.equalTo(0)
+            make.right.equalTo(0)
+        })
+        
         tableView.backgroundColor = kTableViewBackgroundColor
         tableView.register(YXSFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
         tableView.register(YXSFileAbleSlectedCell.classForCoder(), forCellReuseIdentifier: "SLFileAbleSlectedCell")
         
-        tableView.snp.remakeConstraints { (make) in
-            make.left.top.right.equalTo(0)
-        }
+        tableView.snp.remakeConstraints({ (make) in
+            make.top.equalTo(searchBar.snp_bottom)
+            make.left.equalTo(0)
+            make.right.equalTo(0)
+        })
             
         view.addSubview(bottomView)
         bottomView.snp.makeConstraints({ (make) in
@@ -62,66 +87,55 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     
     // MARK: - Request
     override func yxs_refreshData() {
-        loadData()
-        yxs_endingRefresh()
+        searchRequest(keyword: "") { [weak self](list) in
+            guard let weakSelf = self else {return}
+            DispatchQueue.main.async {
+                weakSelf.fileList.removeAll()
+                weakSelf.fileList = list
+                weakSelf.tableView.reloadData()
+                weakSelf.yxs_endingRefresh()
+            }
+        }
     }
     
-    @objc func loadData() {
-        
-        YXSSatchelDocFilePageQueryRequest(currentPage: self.curruntPage).request({ [weak self](json) in
+    override func yxs_loadNextPage() {
+        searchRequest(keyword: "") { [weak self](list) in
             guard let weakSelf = self else {return}
-            let hasNext = json["hasNext"]
-            
-            weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
-//            self.tableView.reloadData()
-            weakSelf.tableView.reloadData()
-            
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
-        return
-        
-        let workingGroup = DispatchGroup()
-        let workingQueue = DispatchQueue(label: "request_queue")
-        
-        // 入组
-        workingGroup.enter()
-        workingQueue.async {
-            // 出组
-            YXSSatchelFolderPageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
-                guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"]
-                
-                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
-                workingGroup.leave()
-                
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
-        }
-        
-        // 入组
-        workingGroup.enter()
-        workingQueue.async {
-            // 出组
-            YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
-                guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"]
-                
-                weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
-                workingGroup.leave()
-                
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
-            
-        }
-
-        // 调度组里的任务都执行完毕
-        workingGroup.notify(queue: workingQueue) {
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                weakSelf.fileList += list
+                weakSelf.tableView.reloadData()
+                weakSelf.yxs_endingRefresh()
             }
+        }
+    }
+    
+    @objc func searchRequest(keyword:String, completionHandler:((_ result: [YXSFileModel])->())?) {
+        
+        YXSSatchelDocFilePageQueryRequest(currentPage: self.curruntPage, keyword: keyword).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            let hasNext = json["hasNext"].boolValue
+            weakSelf.loadMore = hasNext
+            
+            let list = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+            
+            /// 填充选中状态
+            for sub in weakSelf.selectedFileList {
+                for item in list {
+                    if sub.id == item.id {
+                        item.isSelected = sub.isSelected
+                        break
+                    }
+                }
+            }
+            
+            completionHandler?(list)
+            
+            
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+            
+            MBProgressHUD.yxs_showMessage(message: msg)
+            weakSelf.yxs_endingRefresh()
         }
     }
     
@@ -138,6 +152,11 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     @objc func doneClick(sender: YXSButton) {
         completionHandler?(selectedFileList, self)
     }
+    
+    @objc func cancelClick(sender:YXSButton) {
+        self.navigationController?.popViewController()
+    }
+    
     
     // MARK: - Delegate
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -191,35 +210,40 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        if indexPath.section == 0 {
-//           let folderItem = folderList[indexPath.row]
-//            let vc = YXSChoseFileViewController(parentFolderId: folderItem.id ?? 0, selectedFileList: selectedFileList, completionHandler: completionHandler)
-//            vc.totalSize = totalSize
-//            navigationController?.pushViewController(vc)
-//
-//        } else {
-            let cell: YXSFileAbleSlectedCell = tableView.cellForRow(at: indexPath) as! YXSFileAbleSlectedCell
-            cell.btnSelect.isSelected = !cell.btnSelect.isSelected
-            
-            let fileItem = fileList[indexPath.row]
-            if cell.btnSelect.isSelected {
-                /// 选中
-                if selectedFileList.contains(fileItem) == false {
-                    selectedFileList.append(fileItem)
-                    totalSize += UInt(fileItem.fileSize ?? 0)
-                }
-                
-                
-            } else {
-                /// 取消选中
-                if selectedFileList.contains(fileItem) == true {
-                    if let indx = selectedFileList.firstIndex(of: fileItem) {
-                        selectedFileList.remove(at: indx)
-                        totalSize -= UInt(fileItem.fileSize ?? 0)
-                    }
+        let cell: YXSFileAbleSlectedCell = tableView.cellForRow(at: indexPath) as! YXSFileAbleSlectedCell
+        cell.btnSelect.isSelected = !cell.btnSelect.isSelected
+        
+        let fileItem = fileList[indexPath.row]
+        fileItem.isSelected = cell.btnSelect.isSelected
+        
+        if cell.btnSelect.isSelected {
+            /// 选中
+            var tmpIdx: Int? = nil
+            for (index, sub) in selectedFileList.enumerated() {
+                if sub.id == fileItem.id {
+                    tmpIdx = index
+                    break
                 }
             }
-//        }
+            if tmpIdx == nil {
+                selectedFileList.append(fileItem)
+                totalSize += UInt(fileItem.fileSize ?? 0)
+            }
+
+        } else {
+            /// 取消选中
+            var tmpIdx: Int? = nil
+            for (index, sub) in selectedFileList.enumerated() {
+                if sub.id == fileItem.id {
+                    tmpIdx = index
+                    break
+                }
+            }
+            if let idx = tmpIdx {
+                selectedFileList.remove(at: idx)
+                totalSize -= UInt(fileItem.fileSize ?? 0)
+            }
+        }
     }
     
     /*
@@ -233,6 +257,19 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     */
 
     // MARK: - LazyLoad
+    lazy var searchBar: YXSSearchView = {
+        let view = YXSSearchView(frame: CGRect.zero)
+        view.lbTitle.font = UIFont.systemFont(ofSize: 14)
+        view.tfInput.font = UIFont.systemFont(ofSize: 14)
+        view.tfInput.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#575A60")
+        view.btnCancel.addTarget(self, action: #selector(cancelClick(sender:)), for: .touchUpInside)
+        view.tfInput.snp.updateConstraints({ (make) in
+            make.height.equalTo(32)
+        })
+        view.bgMask.cornerRadius = 16
+        return view
+    }()
+    
     lazy var bottomView: SLChoseFileBottomView = {
         let view = SLChoseFileBottomView()
         view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#E6EAF3")

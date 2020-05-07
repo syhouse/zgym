@@ -50,16 +50,32 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
             setupRightBarButtonItem()
+            
+            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(tableViewLongPress(gestureRecognizer:)))
+            tableView.addGestureRecognizer(longPress)
         }
         
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(tableViewLongPress(gestureRecognizer:)))
-        tableView.addGestureRecognizer(longPress)
+        view.addSubview(btnSearch)
+        btnSearch.snp.makeConstraints({ (make) in
+            make.top.equalTo(0)
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.height.equalTo(44)
+        })
+                
+                
+        tableView.snp.remakeConstraints({ (make) in
+            make.top.equalTo(btnSearch.snp_bottom).offset(14)
+            make.left.equalTo(0)
+            make.right.equalTo(0)
+            make.bottom.equalTo(0)
+        })
         
         view.insertSubview(bottomView, aboveSubview: tableView)
         bottomView.snp.makeConstraints({ (make) in
             make.left.equalTo(0)
             make.right.equalTo(0)
-            make.bottom.equalTo(60)
+            make.bottom.equalTo(60) /// 让其伸出屏幕
             make.height.equalTo(60)
         })
     }
@@ -80,7 +96,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     // MARK: - Request
     override func yxs_refreshData() {
         loadData()
-        yxs_endingRefresh()
+    }
+    
+    override func yxs_loadNextPage() {
+        loadData()
     }
     
     @objc func loadData() {
@@ -95,7 +114,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         workingGroup.enter()
         workingQueue.async {
             // 出组
-            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
+            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: 1, folderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
@@ -113,7 +132,9 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             // 出组
             YXSFilePageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"]
+                
+                let hasNext = json["hasNext"].boolValue
+                weakSelf.loadMore = hasNext
                 
                 tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
                 workingGroup.leave()
@@ -137,6 +158,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                         }
                     }
                     
+
                     for sub in self.getSelectedFileList() {
                         for obj in tmpFileList {
                             if sub.id == obj.id {
@@ -146,10 +168,16 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                         }
                     }
                 }
+                
+                if self.curruntPage == 1{
+                    self.fileList.removeAll()
+                }
+                
                 self.folderList = tmpFolderList
-                self.fileList = tmpFileList
+                self.fileList += tmpFileList
                 
                 self.tableView.reloadData()
+                self.yxs_endingRefresh()
             }
         }
     }
@@ -175,7 +203,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             }
         }
         alert.lbTitle.text = "提示"
-        alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        if folderIdList.count > 0 {
+            alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        } else {
+            alert.lbContent.text = "确定要删除文件吗?"
+        }
         alert.btnDone.setTitle("删除", for: .normal)
         
 
@@ -246,9 +278,14 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         view.btnCancel.setTitle("取消", for: .normal)
     }
     
+    @objc func searchClick(sender: YXSButton) {
+        let vc = YXSSearchFileViewController(searchType: .classFile, classId: classId)
+        self.navigationController?.pushViewController(vc)
+    }
+    
     @objc func tableViewLongPress(gestureRecognizer:UILongPressGestureRecognizer) {
         if (gestureRecognizer.state == UIGestureRecognizer.State.began) {
-            
+
             if(isTbViewEditing == false) {
                 beginEditing()
                 
@@ -268,6 +305,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             let view = YXSInputAlertView2.showIn(target: self.view) { [weak self](result, btn) in
                 guard let weakSelf = self else {return}
                 if btn.titleLabel?.text == "确定" {
+                    
+                    if result.isBlank {
+                        MBProgressHUD.yxs_showMessage(message: "名称不能为空", inView: weakSelf.view)
+                        return
+                    }
                     
                     if tmpFolderList.count == 1 {
                         /// 文件夹更名
@@ -333,7 +375,12 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             /// 移动成功
             /// 取消编辑
             weakSelf.endEditing()
-
+            
+            /// 当前目录移动到当前目录 不刷新界面
+            if oldParentFolderId == parentFolderId {
+                return
+            }
+            
             /// 更新界面
             weakSelf.folderList = weakSelf.getUnselectedFolerList()
             weakSelf.fileList = weakSelf.getUnselectedFileList()
@@ -448,6 +495,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     @objc func previewFile(fileModel: YXSFileModel) {
         let wk = YXSBaseWebViewController()
         wk.loadUrl = fileModel.fileUrl
+        wk.title = fileModel.fileName
         navigationController?.pushViewController(wk)
     }
     
@@ -495,6 +543,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             self.bottomView.snp.updateConstraints({ (make) in
                 make.bottom.equalTo(0)
             })
+            
+            self.tableView.snp.updateConstraints({ (make) in
+                make.bottom.equalTo(-60)
+            })
             self.view.layoutIfNeeded()
         }
         tableView.reloadData()
@@ -517,6 +569,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         UIView.animate(withDuration: 0.3, animations: {
             self.bottomView.snp.updateConstraints({ (make) in
                  make.bottom.equalTo(60)
+            })
+            
+            self.tableView.snp.updateConstraints({ (make) in
+                make.bottom.equalTo(0)
             })
             self.view.layoutIfNeeded()
             
@@ -702,6 +758,21 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
     
     // MARK: - LazyLoad
+    lazy var btnSearch: YXSButton = {
+        let btn = YXSButton()
+        btn.setImage(UIImage(named: "yxs_chat_search"), for: .normal)
+        btn.setTitle("搜索", for: .normal)
+        btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        btn.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNight2C3144)
+        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .normal)
+        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .highlighted)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        btn.clipsToBounds = true
+        btn.layer.cornerRadius = 22
+        btn.addTarget(self, action: #selector(searchClick(sender:)), for: .touchUpInside)
+        return btn
+    }()
+    
     lazy var bottomView: YXSClassFileBottomView = {
         let view = YXSClassFileBottomView()
 //        view.backgroundColor = UIColor.red
