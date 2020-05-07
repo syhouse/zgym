@@ -75,7 +75,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         bottomView.snp.makeConstraints({ (make) in
             make.left.equalTo(0)
             make.right.equalTo(0)
-            make.bottom.equalTo(60)
+            make.bottom.equalTo(60) /// 让其伸出屏幕
             make.height.equalTo(60)
         })
     }
@@ -522,6 +522,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             self.bottomView.snp.updateConstraints({ (make) in
                 make.bottom.equalTo(0)
             })
+            
+            self.tableView.snp.updateConstraints({ (make) in
+                make.bottom.equalTo(-60)
+            })
             self.view.layoutIfNeeded()
         }
         tableView.reloadData()
@@ -544,6 +548,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         UIView.animate(withDuration: 0.3, animations: {
             self.bottomView.snp.updateConstraints({ (make) in
                  make.bottom.equalTo(60)
+            })
+            
+            self.tableView.snp.updateConstraints({ (make) in
+                make.bottom.equalTo(0)
             })
             self.view.layoutIfNeeded()
             
