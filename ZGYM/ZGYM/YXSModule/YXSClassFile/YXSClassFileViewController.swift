@@ -290,6 +290,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 guard let weakSelf = self else {return}
                 if btn.titleLabel?.text == "确定" {
                     
+                    if result.isBlank {
+                        MBProgressHUD.yxs_showMessage(message: "名称不能为空", inView: weakSelf.view)
+                        return
+                    }
+                    
                     if tmpFolderList.count == 1 {
                         /// 文件夹更名
                         let tmpItem = tmpFolderList.first
