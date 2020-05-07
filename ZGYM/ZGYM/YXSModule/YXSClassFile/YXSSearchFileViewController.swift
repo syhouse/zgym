@@ -10,11 +10,27 @@ import UIKit
 import NightNight
 import ObjectMapper
 
+enum SearchType {
+    case classFile
+    case satchel
+}
 /// 文件搜索界面
 class YXSSearchFileViewController: YXSBaseTableViewController {
 
     /// 文件列表
     var fileList: [YXSFileModel] = [YXSFileModel]()
+    var searchType: SearchType?
+    var classId: Int?
+    
+    init(searchType: SearchType, classId: Int? = nil) {
+        super.init()
+        self.searchType = searchType
+        self.classId = classId
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         self.tableViewIsGroup = true
@@ -64,18 +80,39 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
         })
     }
     
+    // MARK: - Request
     @objc func searchRequest(keyword:String, completionHandler:((_ result: [YXSFileModel])->())?) {
-        // 出组
-        YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: -1, keyword: keyword).request({ [weak self](json) in
-            guard let weakSelf = self else {return}
-            let hasNext = json["hasNext"]
+        
+        if searchType == SearchType.satchel {
+            YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: -1, keyword: keyword).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let hasNext = json["hasNext"]
+                
+                let tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+                completionHandler?(tmpFileList)
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
             
-            let tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
-            completionHandler?(tmpFileList)
-            
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
+        } else if searchType == SearchType.classFile {
+            if self.classId == nil {
+                MBProgressHUD.yxs_showMessage(message: "缺少班级ID")
+                return
+            }
+            YXSFilePageQueryRequest(classId: self.classId ?? 0, currentPage: self.curruntPage, folderId: -1).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let hasNext = json["hasNext"]
+                
+                let tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
+                completionHandler?(tmpFileList)
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
         }
+        
+
     }
     
     // MARK: - Action
