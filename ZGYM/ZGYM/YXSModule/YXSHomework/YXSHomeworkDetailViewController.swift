@@ -981,12 +981,21 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     }
                     break
                 case .lookHomeWorkGood:
-                    let vc = YXSHomeworkHistoryGoodVC.init(classId: weakSelf.homeModel.classId ?? 0, childid: model.childrenId ?? 0)
+                    let vc = YXSHomeworkHistoryGoodVC.init(classId: weakSelf.homeModel.classId ?? 0, childid: model.childrenId ?? 0) { (id) in
+                        if id == 0 {
+                            weakSelf.refreshData(isRefreshList: true)
+                        } else if id == weakSelf.homeModel.serviceId {
+                            weakSelf.refreshData(isRefreshList: true)
+                        }
+                    }
                     vc.title = model.childrenName
                     weakSelf.navigationController?.pushViewController(vc)
 //                    let vc = YXSHomeworkHistoryGoodVC.init(hmModel: weakSelf.homeModel, deModel: weakSelf.model!,childid: model.childrenId ?? 0)
                     
                     break
+                case .lookLastWeakClassStart:
+                    let vc = YXSClassStarPartentDetialController.init(classId: weakSelf.homeModel.classId ?? 0, childrenName: model.childrenName ?? "", childrenId: model.childrenId ?? 0, avar: model.childHeadPortrait ?? "", stage: YXSPersonDataModel.sharePerson.personStage, startTime: weakSelf.topHistoryModel?.startTime, endTime: weakSelf.topHistoryModel?.endTime, isLookOtherStudent: true)
+                    UIUtil.curruntNav().pushViewController(vc)
                 default:
                     break
                 }

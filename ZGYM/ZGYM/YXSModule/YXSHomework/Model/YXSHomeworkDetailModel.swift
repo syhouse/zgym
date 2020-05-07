@@ -279,7 +279,6 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         
     }
-
     
     ///headerView高度
     var headerHeight: CGFloat{
@@ -365,6 +364,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
 
     /// 是否需要showAllButton
     var needShowAllButton: Bool = false
+    
+    var homeworkCreateTime: String? ///发布作业创建时间
+    
     // MARK: - func
     /// 计算朋友圈model值
     func confingHeight(){
@@ -478,7 +480,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
                 remarkConfingHeight()
             }
             var height:CGFloat = 0.0
-            if isRemark == 1 && (remarkVisible == 1 || isMySubmit) {
+            if ((isRemark == 1 && (remarkVisible == 1 || isMySubmit)) || (isRemark == 1 && isMyPublish))  {
                 ///点评头部高度
                 height += 43 + 15
 
@@ -549,6 +551,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         fileJson <- map["fileJson"]
         goodMap <- map["goodMap"]
         homeworkId <- map["homeworkId"]
+        homeworkCreateTime <- map["homeworkCreateTime"]
     }
 
     /**
@@ -606,6 +609,8 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         fileJson = aDecoder.decodeObject(forKey: "fileJson") as? String
         goodMap = aDecoder.decodeObject(forKey: "goodMap") as? [String : Int]
         homeworkId = aDecoder.decodeObject(forKey: "homeworkId") as? Int
+        homeworkCreateTime = aDecoder.decodeObject(forKey: "homeworkCreateTime") as? String
+        
     }
 
     /**
@@ -761,5 +766,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         if homeworkId != nil {
             aCoder.encode(homeworkId, forKey: "homeworkId")
         }
+        if homeworkCreateTime != nil {
+            aCoder.encode(homeworkCreateTime, forKey: "homeworkCreateTime")
+        }
     }
 }
+

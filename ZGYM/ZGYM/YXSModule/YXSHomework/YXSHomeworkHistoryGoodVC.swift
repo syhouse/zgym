@@ -19,12 +19,11 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     var classId: Int?
     /// 当前操作的 IndexPath
     var curruntIndexPath: IndexPath!
-    let homeModel: YXSHomeListModel = YXSHomeListModel.init(JSON: ["id":0])!
-    init(classId: Int,childid: Int) {
+    var cancelGoodBlock: ((_ homeworkId: Int) ->())?
+    init(classId: Int,childid: Int,cancelGoodBlock:((_ homeworkId: Int) ->())? = nil) {
         self.childid = childid
         self.classId = classId
-        self.homeModel.classId = classId
-        self.homeModel.childrenId = childid
+        self.cancelGoodBlock = cancelGoodBlock
         super.init()
     }
     required init?(coder aDecoder: NSCoder) {
@@ -80,7 +79,6 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
             if weakSelf.dataSource.count == 0 {
                 weakSelf.tableView.tableFooterView = weakSelf.tableFooterView
             } else {
-                weakSelf.homeModel.serviceId = weakSelf.dataSource.first?.homeworkId
                 weakSelf.tableView.tableFooterView = nil
             }
             weakSelf.tableView.reloadData()
@@ -124,16 +122,16 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         var requset: YXSBaseRequset!
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             if let commentModel = commentModel{
-                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "REPLY" ,id: commentModel.id ?? 0)
+                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: listModel.homeworkCreateTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "REPLY" ,id: commentModel.id ?? 0)
             }else{
-                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "COMMENT" )
+                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: listModel.homeworkCreateTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "COMMENT" )
             }
         }else{
             if let commentModel = commentModel{
-                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "REPLY" ,id: commentModel.id ?? 0)
+                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: listModel.homeworkCreateTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "REPLY" ,id: commentModel.id ?? 0)
                 
             }else{
-                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "COMMENT" )
+                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: listModel.homeworkCreateTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "COMMENT" )
             }
         }
         requset.request({ (model:YXSHomeworkCommentModel) in
@@ -153,7 +151,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         let listModel = dataSource[section]
         
         var requset: YXSBaseRequset!
-        requset = YXSEducationHomeworkCommentDeleteRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", homeworkId: listModel.homeworkId ?? 0, id: commentModel.id ?? 0)
+        requset = YXSEducationHomeworkCommentDeleteRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: listModel.homeworkCreateTime ?? "", homeworkId: listModel.homeworkId ?? 0, id: commentModel.id ?? 0)
         requset.request({ (result) in
             if let curruntIndexPath  = self.curruntIndexPath{
                 listModel.commentJsonList?.remove(at: curruntIndexPath.row)
@@ -207,7 +205,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     
     func setHomeworkGoodEvent(_ section: Int){
         let model = dataSource[section]
-        YXSEducationHomeworkInTeacherChangeGoodRequest.init(childrenId: model.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", homeworkId: model.homeworkId ?? 0, isGood: 0).request({ (result) in
+        YXSEducationHomeworkInTeacherChangeGoodRequest.init(childrenId: model.childrenId ?? 0, homeworkCreateTime: model.homeworkCreateTime ?? "", homeworkId: model.homeworkId ?? 0, isGood: 0).request({ (result) in
             
             self.dataSource.remove(at: section)
             if self.dataSource.count == 0 {
@@ -215,6 +213,8 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
             } else {
                 self.tableView.tableFooterView = nil
             }
+            self.tableView.reloadData()
+            self.cancelGoodBlock?(0)
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
@@ -274,7 +274,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkDetailSectionHeaderViewHistory") as? YXSHomeworkDetailSectionHeaderView
         if let headerView = headerView{
             headerView.curruntSection = section
-//            headerView.hmModel = self.detailModel
+            headerView.hmModel = model
             model.isShowLookGoodButton = false
             headerView.model = model
             let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
@@ -286,12 +286,18 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
             headerView.reviewControlBlock = { [weak self](model)in
                 guard let weakSelf = self else {return}
                 let vc = YXSHomeworkCommentController()
-                vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
+                let homeModel = YXSHomeListModel.init(JSON: ["" : ""])
+                homeModel?.serviceId = model.homeworkId
+                homeModel?.createTime = model.homeworkCreateTime
+                homeModel?.teacherId = model.teacherId
+                homeModel?.teacherName = model.teacherName
+                vc.initChangeReview(myReviewModel: model, model: homeModel!)
                 vc.childrenIdList = [(model.childrenId ?? 0)]
                 vc.isPop = true
                 //点评成功后 刷新数据
                 vc.commetCallBack = { () -> () in
                     weakSelf.loadData()
+                    weakSelf.cancelGoodBlock?(model.homeworkId ?? 0)
                 }
                 weakSelf.navigationController?.pushViewController(vc)
             }
@@ -306,12 +312,18 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                         //修改
                         let vc = YXSHomeworkCommentController()
                         vc.isChangeRemark = true
-                        vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
+                        let homeModel = YXSHomeListModel.init(JSON: ["" : ""])
+                        homeModel?.serviceId = model.homeworkId
+                        homeModel?.createTime = model.homeworkCreateTime
+                        homeModel?.teacherId = model.teacherId
+                        homeModel?.teacherName = model.teacherName
+                        vc.initChangeReview(myReviewModel: model, model: homeModel!)
                         vc.childrenIdList = [(model.childrenId ?? 0)]
 //                        vc.isPop = true
                         //点评成功后 刷新数据
                         vc.commetCallBack = { () -> () in
                             weakSelf.loadData()
+                            weakSelf.cancelGoodBlock?(model.homeworkId ?? 0)
                         }
                         weakSelf.navigationController?.pushViewController(vc)
                     } else if selectType == .recall {
@@ -320,10 +332,11 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
                         alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (_) -> Void in
                             MBProgressHUD.yxs_showLoading()
-                            YXSEducationHomeworkRemarkCancel(homeworkId: model.homeworkId ?? 0, childrenId: model.childrenId ?? 0, homeworkCreateTime: strongSelf.homeModel.createTime ?? "").request({ (json) in
+                            YXSEducationHomeworkRemarkCancel(homeworkId: model.homeworkId ?? 0, childrenId: model.childrenId ?? 0, homeworkCreateTime: model.homeworkCreateTime ?? "").request({ (json) in
                                 MBProgressHUD.yxs_hideHUD()
                                 MBProgressHUD.yxs_showMessage(message: "删除点评成功")
                                 strongSelf.loadData()
+                                strongSelf.cancelGoodBlock?(model.homeworkId ?? 0)
                             }, failureHandler: { (msg, code) in
                                 MBProgressHUD.yxs_showMessage(message: msg)
                             })
@@ -333,43 +346,43 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                     }
                 }
             }
-            headerView.homeWorkChangeBlock = { [weak self](sender,model)in
-                guard let weakSelf = self else {return}
-                let point = UIApplication.shared.keyWindow?.convert(sender.bounds.origin, to: sender)
-                let offsetY = fabsf(Float(point!.y))
-                YXSHomeListSelectView.showAlert(offset: CGPoint(x: 15, y: CGFloat(offsetY) + 20), isShowSelectBtn: false, selects: weakSelf.changeModels) { [weak self](selectModel, selectModels) in
-                    guard let strongSelf = self else { return }
-                    let selectType = SLCommonScreenSelectType.init(rawValue: selectModel.paramsKey) ?? .all
-                    if selectType == .change {
-                        //修改
-                        
-                        let vc = YXSHomeworkPublishController.init(mySubmitModel: model, model: strongSelf.homeModel)
-                        vc.changeSubmitSucess = { (newModel) in
-                            strongSelf.dataSource[section] = newModel
-                            strongSelf.tableView.reloadData()
-                        }
-                        strongSelf.navigationController?.pushViewController(vc)
-                    } else if selectType == .recall {
-                        //撤回
-                        let alert = UIAlertController.init(title: "提示", message: "您是否撤回该作业？", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-                        alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (_) -> Void in
-                            MBProgressHUD.yxs_showLoading()
-                            YXSEducationHomeworkStudentCancelRequest(childrenId: model.childrenId  ?? 0, homeworkCreateTime:strongSelf.homeModel.createTime ?? "" ,homeworkId:model.homeworkId  ?? 0).request({ (json) in
-                                MBProgressHUD.yxs_hideHUD()
-                                MBProgressHUD.yxs_showMessage(message: "删除作业成功")
-                                strongSelf.homeModel.commitState = 1
-                                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationStudentWorkNotification), object: [kNotificationModelKey: strongSelf.homeModel])
-                                strongSelf.loadData()
-                            }, failureHandler: { (msg, code) in
-                                MBProgressHUD.yxs_showMessage(message: msg)
-                            })
-                        }))
-                        alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
-                        UIUtil.curruntNav().present(alert, animated: true, completion: nil)
-                    }
-                }
-            }
+//            headerView.homeWorkChangeBlock = { [weak self](sender,model)in
+//                guard let weakSelf = self else {return}
+//                let point = UIApplication.shared.keyWindow?.convert(sender.bounds.origin, to: sender)
+//                let offsetY = fabsf(Float(point!.y))
+//                YXSHomeListSelectView.showAlert(offset: CGPoint(x: 15, y: CGFloat(offsetY) + 20), isShowSelectBtn: false, selects: weakSelf.changeModels) { [weak self](selectModel, selectModels) in
+//                    guard let strongSelf = self else { return }
+//                    let selectType = SLCommonScreenSelectType.init(rawValue: selectModel.paramsKey) ?? .all
+//                    if selectType == .change {
+//                        //修改
+//                        let homeModel = YXSHomeListModel.init(JSONString: model.homeworkJson ?? "")
+//                        let vc = YXSHomeworkPublishController.init(mySubmitModel: model, model: homeModel)
+//                        vc.changeSubmitSucess = { (newModel) in
+//                            strongSelf.dataSource[section] = newModel
+//                            strongSelf.tableView.reloadData()
+//                        }
+//                        strongSelf.navigationController?.pushViewController(vc)
+//                    } else if selectType == .recall {
+//                        //撤回
+//                        let alert = UIAlertController.init(title: "提示", message: "您是否撤回该作业？", preferredStyle: .alert)
+//                        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+//                        alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (_) -> Void in
+//                            MBProgressHUD.yxs_showLoading()
+//                            YXSEducationHomeworkStudentCancelRequest(childrenId: model.childrenId  ?? 0, homeworkCreateTime:model.homeworkModel?.homeworkCreateTime ?? "" ,homeworkId:model.homeworkId  ?? 0).request({ (json) in
+//                                MBProgressHUD.yxs_hideHUD()
+//                                MBProgressHUD.yxs_showMessage(message: "删除作业成功")
+//                                strongSelf.homeModel.commitState = 1
+//                                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationStudentWorkNotification), object: [kNotificationModelKey: strongSelf.homeModel])
+//                                strongSelf.loadData()
+//                            }, failureHandler: { (msg, code) in
+//                                MBProgressHUD.yxs_showMessage(message: msg)
+//                            })
+//                        }))
+//                        alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
+//                        UIUtil.curruntNav().present(alert, animated: true, completion: nil)
+//                    }
+//                }
+//            }
             headerView.cellBlock = { [weak self](type,model: YXSHomeworkDetailModel) in
                 guard let weakSelf = self else {return}
                 switch type {
@@ -377,7 +390,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                     weakSelf.showComment(section:section)
                     break
                 case .praise:
-                    YXSEducationHomeworkPraiseRequest(childrenId: model.childrenId ?? 0, homeworkCreateTime: weakSelf.homeModel.createTime ?? "", homeworkId: model.homeworkId ?? 0).request({ [weak self](json) in
+                    YXSEducationHomeworkPraiseRequest(childrenId: model.childrenId ?? 0, homeworkCreateTime: model.homeworkCreateTime ?? "", homeworkId: model.homeworkId ?? 0).request({ [weak self](json) in
                         guard let strongSelf = self else {return}
                         model.praiseJson = json.stringValue
                         strongSelf.dataSource[section] = model
