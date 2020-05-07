@@ -43,4 +43,8 @@
  隐藏navigationController bar 使用self.fd_prefersNavigationBarHidden = ture
  
  SLSDWebImageMixedNight  拓展sdwebImage设置MixedImage的占位图
+ 
+ 
+ 
+ yxs_showBadgeOnItem(index: 1 优成长放出来
  */
