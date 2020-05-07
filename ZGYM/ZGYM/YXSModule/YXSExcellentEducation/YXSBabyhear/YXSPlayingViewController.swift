@@ -11,7 +11,7 @@ import NightNight
 import SDWebImage
 
 class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XMLivePlayerDelegate {
-
+    
     private var track: XMTrack?
     private var trackList: [Any] = []
     private var radio: XMRadio?
@@ -77,7 +77,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         self.fd_prefersNavigationBarHidden = true
         
         // Do any additional setup after loading the view.
-//        view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
+        //        view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#745683")
         
         /// 背景图
         view.addSubview(imgBgView)
@@ -134,6 +134,10 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
                 progressView.value = Float(curruntTime)/Float(shared.currentTrack()?.duration ?? 1)
                 lbCurrentDuration.text = stringWithDuration(duration: UInt(curruntTime))
                 btnPlayPause.isSelected = !shared.isPaused()
+                
+                if shared.isPlaying(){
+                    self.imgCover.resumeRotate()
+                }
             }
         }
     }
@@ -226,7 +230,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             
         }
     }
-
+    
     
     // MARK: - Action
     @objc func playPauseClick(sender: YXSButton) {
@@ -294,7 +298,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         }
         progressView.value = 0.0;
     }
-
+    
     @objc func playPreTrack(sender: YXSButton) {
         progressView.value = 0.0
         btnPlayPause.isSelected = true
@@ -308,7 +312,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             XMSDKPlayer.shared()?.playPreProgram()
         }
     }
-
+    
     @objc func playNextTrack(sender: YXSButton) {
         progressView.value = 0.0
         btnPlayPause.isSelected = true
@@ -322,7 +326,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             XMSDKPlayer.shared()?.playNextProgram()
         }
     }
-
+    
     @objc func sliderValueChanged(sender: UISlider) {
         if(sender == progressView) {
             if(trackList.count > 0){
@@ -335,7 +339,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             }
         }
     }
-
+    
     @objc func menuClick(sender: YXSButton) {
         playListVC = YXSPlayListViewController(trackList: trackList as! [XMTrack]) { [weak self](index) in
             guard let weakSelf = self else {return}
@@ -392,7 +396,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
         progressView.value = Float(percent)
         lbCurrentDuration.text = stringWithDuration(duration: currentSecond)
-
+        
         YXSRemoteControlInfoHelper.curruntTime = currentSecond
         curruntTime = currentSecond
         
@@ -401,11 +405,19 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     func xmTrackPlayNotifyCacheProcess(_ percent: CGFloat) {
         ///
-//        SLLog("CacheProcess:\(percent)")
+        //        SLLog("CacheProcess:\(percent)")
     }
     
     func xmTrackPlayerWillPlaying() {
         playListVC?.tableView.reloadData()
+    }
+    
+    func xmTrackPlayerDidPlaying() {
+        self.imgCover.resumeRotate()
+    }
+    
+    func xmTrackPlayerDidPaused() {
+        self.imgCover.stopRotating()
     }
     
     func xmTrackPlayerDidStart() {
@@ -419,7 +431,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"), completed: nil)
         UIUtil.configNowPlayingCenterUI()
     }
-
+    
     // MARK: - Live Radio
     func xmLiveRadioPlayerNotifyPlayProgress(_ percent: CGFloat, currentTime: Int) {
         progressView.value = Float(percent)
@@ -427,10 +439,10 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }
     
     func xmLiveRadioPlayerNotifyCacheProgress(_ percent: CGFloat) {
-//        SLLog("CacheProcess:\(percent)")
+        //        SLLog("CacheProcess:\(percent)")
     }
     
-
+    
     
     func xmLiveRadioPlayerDidStart() {
         playListVC?.tableView.reloadData()
@@ -489,7 +501,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         btn.setMixedImage(MixedImage(normal: "sl_player_pause", night: "sl_player_pause"), forState: .selected)
         return btn
     }()
-
+    
     lazy var btnPrevious: YXSButton = {
         let btn = YXSButton()
         btn.setMixedImage(MixedImage(normal: "sl_player_previous", night: "sl_player_previous"), forState: .normal)
@@ -593,13 +605,24 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }()
     
     /*
-    // MARK: - Navigation
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+
+extension YXSPlayingViewController: CAAnimationDelegate{
+    func animationDidStart(_ anim: CAAnimation) {
+        
     }
-    */
-
+    
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        
+    }
 }
