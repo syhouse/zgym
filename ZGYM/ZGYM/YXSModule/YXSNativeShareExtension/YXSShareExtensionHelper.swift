@@ -20,7 +20,7 @@ class YXSShareExtensionHelper: NSObject {
     
     @objc func shareExtensoin(url:URL, completionHandler:((()->())?)) {
         if YXSPersonDataModel.sharePerson.personRole == .PARENT {
-            MBProgressHUD.yxs_showMessage(message: "家长身份无权添加文件")
+            MBProgressHUD.yxs_showMessage(message: "家长身份无权添加文件", afterDelay: 3.0)
             return
         }
         
