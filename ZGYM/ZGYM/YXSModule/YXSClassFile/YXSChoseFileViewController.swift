@@ -90,18 +90,31 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         searchRequest(keyword: "") { [weak self](list) in
             guard let weakSelf = self else {return}
             DispatchQueue.main.async {
+                weakSelf.fileList.removeAll()
                 weakSelf.fileList = list
                 weakSelf.tableView.reloadData()
+                weakSelf.yxs_endingRefresh()
             }
         }
-        yxs_endingRefresh()
+    }
+    
+    override func yxs_loadNextPage() {
+        searchRequest(keyword: "") { [weak self](list) in
+            guard let weakSelf = self else {return}
+            DispatchQueue.main.async {
+                weakSelf.fileList += list
+                weakSelf.tableView.reloadData()
+                weakSelf.yxs_endingRefresh()
+            }
+        }
     }
     
     @objc func searchRequest(keyword:String, completionHandler:((_ result: [YXSFileModel])->())?) {
         
         YXSSatchelDocFilePageQueryRequest(currentPage: self.curruntPage, keyword: keyword).request({ [weak self](json) in
             guard let weakSelf = self else {return}
-            let hasNext = json["hasNext"]
+            let hasNext = json["hasNext"].boolValue
+            weakSelf.loadMore = hasNext
             
             let list = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
             
@@ -118,8 +131,11 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
             completionHandler?(list)
             
             
-        }) { (msg, code) in
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+            
             MBProgressHUD.yxs_showMessage(message: msg)
+            weakSelf.yxs_endingRefresh()
         }
     }
     
