@@ -9,20 +9,22 @@
 import Foundation
 import NightNight
 import ObjectMapper
+import UIKit
 
 class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     var dataSource: [YXSHomeworkDetailModel] = [YXSHomeworkDetailModel]()
-    /// 老师发布的作业详情
-    var detailModel: YXSHomeworkDetailModel
     /// 被点击的孩子id
     var childid: Int?
+    /// 班级id
+    var classId: Int?
     /// 当前操作的 IndexPath
     var curruntIndexPath: IndexPath!
-    var homeModel:YXSHomeListModel
-    init(hmModel:YXSHomeListModel,deModel: YXSHomeworkDetailModel,childid: Int) {
-        self.homeModel = hmModel
+    let homeModel: YXSHomeListModel = YXSHomeListModel.init(JSON: ["id":0])!
+    init(classId: Int,childid: Int) {
         self.childid = childid
-        self.detailModel = deModel
+        self.classId = classId
+        self.homeModel.classId = classId
+        self.homeModel.childrenId = childid
         super.init()
     }
     required init?(coder aDecoder: NSCoder) {
@@ -30,6 +32,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     }
     
     override func viewDidLoad() {
+        tableViewIsGroup = true
         super.viewDidLoad()
         self.scrollView.snp.makeConstraints { (make) in
             make.edges.equalTo(0)
@@ -59,12 +62,12 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     }
     
     func loadData(){
-        YXSEducationHomeworkQueryHistoryGoodRequest.init(childrenId: self.childid ?? 0, classId: self.homeModel.classId ?? 0, currentPage: curruntPage).request({ [weak self](json) in
+        YXSEducationHomeworkQueryHistoryGoodRequest.init(childrenId: self.childid ?? 0, classId: self.classId ?? 0, currentPage: curruntPage).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             weakSelf.yxs_endingRefresh()
             let joinList = Mapper<YXSHomeworkDetailModel>().mapArray(JSONObject: json["homeworkCommitList"].object) ?? [YXSHomeworkDetailModel]()
             for join in joinList {
-                join.remarkVisible = weakSelf.detailModel.remarkVisible
+//                join.remarkVisible = weakSelf.detailModel.remarkVisible
                 if let backImageUrl = join.backImageUrl, backImageUrl.count <= 0 {
                     join.backImageUrl = join.imageUrl
                 }
@@ -74,24 +77,17 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                 weakSelf.dataSource.removeAll()
             }
             weakSelf.dataSource += joinList
+            if weakSelf.dataSource.count == 0 {
+                weakSelf.tableView.tableFooterView = weakSelf.tableFooterView
+            } else {
+                weakSelf.homeModel.serviceId = weakSelf.dataSource.first?.homeworkId
+                weakSelf.tableView.tableFooterView = nil
+            }
             weakSelf.tableView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()
             MBProgressHUD.yxs_showMessage(message: msg)
         }
-//        YXSEducationFolderPageQueryRequest.init(currentPage: curruntPage, tabId: self.currentTab?.id ?? 1).request({ (json) in
-//            self.yxs_endingRefresh()
-//            let list = Mapper<YXSSynClassListModel>().mapArray(JSONObject: json["folderList"].object) ?? [YXSSynClassListModel]()
-//            if self.curruntPage == 1{
-//                self.dataSource.removeAll()
-//            }
-//            self.dataSource += list
-//            self.loadMore = json["hasNext"].boolValue
-//            self.tableView.reloadData()
-//        }) { (msg, code) in
-//            self.yxs_endingRefresh()
-//            MBProgressHUD.yxs_showMessage(message: msg)
-//        }
     }
     
     // MARK: - Action
@@ -128,16 +124,16 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         var requset: YXSBaseRequset!
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             if let commentModel = commentModel{
-                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, content: content, homeworkId: self.homeModel.serviceId ?? 0, type: "REPLY" ,id: commentModel.id ?? 0)
+                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "REPLY" ,id: commentModel.id ?? 0)
             }else{
-                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, content: content, homeworkId: self.homeModel.serviceId ?? 0, type: "COMMENT" )
+                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "COMMENT" )
             }
         }else{
             if let commentModel = commentModel{
-                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, content: content, homeworkId: self.homeModel.serviceId ?? 0, type: "REPLY" ,id: commentModel.id ?? 0)
+                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "REPLY" ,id: commentModel.id ?? 0)
                 
             }else{
-                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, content: content, homeworkId: self.homeModel.serviceId ?? 0, type: "COMMENT" )
+                requset = YXSEducationHomeworkCommentRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", content: content, homeworkId: listModel.homeworkId ?? 0, type: "COMMENT" )
             }
         }
         requset.request({ (model:YXSHomeworkCommentModel) in
@@ -157,7 +153,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         let listModel = dataSource[section]
         
         var requset: YXSBaseRequset!
-        requset = YXSEducationHomeworkCommentDeleteRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, homeworkId: self.homeModel.serviceId ?? 0, id: commentModel.id ?? 0)
+        requset = YXSEducationHomeworkCommentDeleteRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", homeworkId: listModel.homeworkId ?? 0, id: commentModel.id ?? 0)
         requset.request({ (result) in
             if let curruntIndexPath  = self.curruntIndexPath{
                 listModel.commentJsonList?.remove(at: curruntIndexPath.row)
@@ -206,6 +202,22 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
             }
         }
         
+    }
+    
+    
+    func setHomeworkGoodEvent(_ section: Int){
+        let model = dataSource[section]
+        YXSEducationHomeworkInTeacherChangeGoodRequest.init(childrenId: model.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", homeworkId: model.homeworkId ?? 0, isGood: 0).request({ (result) in
+            
+            self.dataSource.remove(at: section)
+            if self.dataSource.count == 0 {
+                self.tableView.tableFooterView = self.tableFooterView
+            } else {
+                self.tableView.tableFooterView = nil
+            }
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     // MARK: - tableViewDelegate
@@ -262,11 +274,15 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkDetailSectionHeaderViewHistory") as? YXSHomeworkDetailSectionHeaderView
         if let headerView = headerView{
             headerView.curruntSection = section
-            headerView.hmModel = self.detailModel
+//            headerView.hmModel = self.detailModel
             model.isShowLookGoodButton = false
             headerView.model = model
             let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
             headerView.yxs_addLine(position: .top, color: cl, lineHeight: 0.5)
+            headerView.goodClick = { [weak self](model)in
+                guard let weakSelf = self else {return}
+                weakSelf.setHomeworkGoodEvent(section)
+            }
             headerView.reviewControlBlock = { [weak self](model)in
                 guard let weakSelf = self else {return}
                 let vc = YXSHomeworkCommentController()
@@ -304,7 +320,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
                         alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (_) -> Void in
                             MBProgressHUD.yxs_showLoading()
-                            YXSEducationHomeworkRemarkCancel(homeworkId: strongSelf.homeModel.serviceId ?? 0, childrenId: model.childrenId ?? 0, homeworkCreateTime: strongSelf.homeModel.createTime ?? "").request({ (json) in
+                            YXSEducationHomeworkRemarkCancel(homeworkId: model.homeworkId ?? 0, childrenId: model.childrenId ?? 0, homeworkCreateTime: strongSelf.homeModel.createTime ?? "").request({ (json) in
                                 MBProgressHUD.yxs_hideHUD()
                                 MBProgressHUD.yxs_showMessage(message: "删除点评成功")
                                 strongSelf.loadData()
@@ -326,6 +342,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                     let selectType = SLCommonScreenSelectType.init(rawValue: selectModel.paramsKey) ?? .all
                     if selectType == .change {
                         //修改
+                        
                         let vc = YXSHomeworkPublishController.init(mySubmitModel: model, model: strongSelf.homeModel)
                         vc.changeSubmitSucess = { (newModel) in
                             strongSelf.dataSource[section] = newModel
@@ -338,7 +355,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
                         alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (_) -> Void in
                             MBProgressHUD.yxs_showLoading()
-                            YXSEducationHomeworkStudentCancelRequest(childrenId: model.childrenId  ?? 0, homeworkCreateTime:strongSelf.homeModel.createTime ?? "" ,homeworkId:strongSelf.homeModel.serviceId  ?? 0).request({ (json) in
+                            YXSEducationHomeworkStudentCancelRequest(childrenId: model.childrenId  ?? 0, homeworkCreateTime:strongSelf.homeModel.createTime ?? "" ,homeworkId:model.homeworkId  ?? 0).request({ (json) in
                                 MBProgressHUD.yxs_hideHUD()
                                 MBProgressHUD.yxs_showMessage(message: "删除作业成功")
                                 strongSelf.homeModel.commitState = 1
@@ -360,7 +377,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                     weakSelf.showComment(section:section)
                     break
                 case .praise:
-                    YXSEducationHomeworkPraiseRequest(childrenId: model.childrenId ?? 0, homeworkCreateTime: weakSelf.homeModel.createTime ?? "", homeworkId: weakSelf.homeModel.serviceId ?? 0).request({ [weak self](json) in
+                    YXSEducationHomeworkPraiseRequest(childrenId: model.childrenId ?? 0, homeworkCreateTime: weakSelf.homeModel.createTime ?? "", homeworkId: model.homeworkId ?? 0).request({ [weak self](json) in
                         guard let strongSelf = self else {return}
                         model.praiseJson = json.stringValue
                         strongSelf.dataSource[section] = model
@@ -429,5 +446,21 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     lazy var changeModels:[YXSSelectModel] = {
         var selectModels = [YXSSelectModel.init(text: "修改", isSelect: false, paramsKey: SLCommonScreenSelectType.change.rawValue),YXSSelectModel.init(text: "撤回", isSelect: false, paramsKey: SLCommonScreenSelectType.recall.rawValue)]
         return selectModels
+    }()
+    
+    lazy var tableFooterView: UIView = {
+        let footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_WIDTH))
+        let imageView = UIImageView.init(frame: CGRect(x: 52, y: 30, width: SCREEN_WIDTH - 104, height: 188))
+        imageView.mixedImage = MixedImage(normal: "yxs_homework_defultImage_nodata", night: "yxs_defultImage_nodata_night")
+        imageView.contentMode = .scaleAspectFit
+        footer.addSubview(imageView)
+        
+        let lbl = UILabel.init(frame: CGRect(x: 0, y: 228, width: SCREEN_WIDTH, height: 20))
+        lbl.text = "暂无历史优秀作业"
+        lbl.textAlignment = .center
+        lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
+        lbl.font = UIFont.systemFont(ofSize: 15)
+        footer.addSubview(lbl)
+        return footer
     }()
 }

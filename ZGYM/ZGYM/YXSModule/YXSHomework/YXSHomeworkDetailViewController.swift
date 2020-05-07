@@ -407,7 +407,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     }
     
     // MARK: - Request
-    @objc func refreshData() {
+    @objc func refreshData(isRefreshList: Bool = true) {
         MBProgressHUD.yxs_showLoading(ignore: true)
         
         YXSEducationHomeworkQueryHomeworkByIdRequest(childrenId: homeModel.childrenId ?? 0, homeworkCreateTime: homeModel.createTime ?? "", homeworkId: homeModel.serviceId ?? 0).request({ [weak self](model: YXSHomeworkDetailModel) in
@@ -427,7 +427,13 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     UIUtil.yxs_loadReadData(hModel!)
                 }
             }
-            weakSelf.refreshHomeworkData(index: weakSelf.isGood)
+            if isRefreshList {
+                
+                weakSelf.refreshHomeworkData(index: weakSelf.isGood)
+            } else {
+                weakSelf.tableView.reloadData()
+            }
+            
             
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -732,17 +738,23 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     func setHomeworkGoodEvent(_ section: Int,isGood: Int){
         let model = dataSource[section]
         YXSEducationHomeworkInTeacherChangeGoodRequest.init(childrenId: model.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, homeworkId: self.homeModel.serviceId ?? 0, isGood: isGood).request({ (result) in
+            
             if isGood == 1{
                 //设置优秀作业不刷新页面
                 model.isGood = 1
+                self.refreshData(isRefreshList: false)
+                
             } else {
-                self.dataSource.remove(at: section)
-                if self.dataSource.count == 0 {
-                    self.tableView.tableFooterView = self.tableFooterView
-                } else {
-                    self.tableView.tableFooterView = nil
+                if self.isGood != -1 {
+                    self.dataSource.remove(at: section)
+                    if self.dataSource.count == 0 {
+                        self.tableView.tableFooterView = self.tableFooterView
+                    } else {
+                        self.tableView.tableFooterView = nil
+                    }
                 }
-                self.refreshHomeworkData(index: self.isGood)
+                self.refreshData()
+//                self.refreshHomeworkData(index: self.isGood)
             }
             
             
@@ -969,9 +981,11 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     }
                     break
                 case .lookHomeWorkGood:
-                    let vc = YXSHomeworkHistoryGoodVC.init(hmModel: weakSelf.homeModel, deModel: weakSelf.model!,childid: model.childrenId ?? 0)
+                    let vc = YXSHomeworkHistoryGoodVC.init(classId: weakSelf.homeModel.classId ?? 0, childid: model.childrenId ?? 0)
                     vc.title = model.childrenName
                     weakSelf.navigationController?.pushViewController(vc)
+//                    let vc = YXSHomeworkHistoryGoodVC.init(hmModel: weakSelf.homeModel, deModel: weakSelf.model!,childid: model.childrenId ?? 0)
+                    
                     break
                 default:
                     break
@@ -1126,6 +1140,12 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         strongSelf.yxs_loadNextPage()
     })
     
+    lazy var tableViewRefreshHeader: MJRefreshNormalHeader = MJRefreshNormalHeader.init(refreshingBlock:{ [weak self] in
+        guard let strongSelf = self else { return }
+        strongSelf.curruntPage = 1
+        strongSelf.refreshData()
+    })
+    
     ///上传进度
     lazy var uploadHud: MBProgressHUD = {
         let hud = MBProgressHUD.showAdded(to: self.navigationController!.view, animated: true)
@@ -1165,7 +1185,7 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
                     }
                     
                     let vc = LFPhotoEditingController.init()
-                    
+                    vc.isHiddenStatusBar = true
                     vc.modalPresentationStyle = .fullScreen
                     vc.titleStr = self.graffitiDetailModel.childrenName ?? ""
                     let nav = UINavigationController.init(rootViewController: vc)

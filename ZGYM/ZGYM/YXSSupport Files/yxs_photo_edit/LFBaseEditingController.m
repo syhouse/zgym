@@ -64,6 +64,7 @@
     // Do any additional setup after loading the view.
     NSAssert(self.navigationController, @"You must wrap it with UINavigationController");
     self.view.backgroundColor = [UIColor blackColor];
+    [UIApplication sharedApplication].statusBarHidden = self.isHiddenStatusBar;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -81,7 +82,7 @@
             // 不允许下拉关闭
             self.modalInPresentation = YES;
             // 彻底关闭下拉手势
-            self.lf_dropShadowPanGestureRecognizer.enabled = NO;            
+            self.lf_dropShadowPanGestureRecognizer.enabled = NO;
         }
     }
 }
@@ -94,6 +95,7 @@
         // 重新开启下拉手势
         self.lf_dropShadowPanGestureRecognizer.enabled = YES;
     }
+    [UIApplication sharedApplication].statusBarHidden = NO;
 }
 
 - (void)dealloc

@@ -134,13 +134,25 @@ class YXSVoiceBaseView: UIView {
         if let maxWidth = maxWidth{
             flexibleWidth = maxWidth - minWidth
         }
+         
         let width:CGFloat = minWidth + flexibleWidth * percentage
-        indicatorView.snp_remakeConstraints { (make) in
-            make.top.equalTo(0)
-            make.left.equalTo(0)
-            make.bottom.equalTo(0)
-            make.width.equalTo(width)
+        if width > maxWidth ?? 230.0 {
+            let maxw:CGFloat = maxWidth ?? 230
+            indicatorView.snp_remakeConstraints { (make) in
+                make.top.equalTo(0)
+                make.left.equalTo(0)
+                make.bottom.equalTo(0)
+                make.width.equalTo(maxw)
+            }
+        } else {
+            indicatorView.snp_remakeConstraints { (make) in
+                make.top.equalTo(0)
+                make.left.equalTo(0)
+                make.bottom.equalTo(0)
+                make.width.equalTo(width)
+            }
         }
+        
     }
 
     

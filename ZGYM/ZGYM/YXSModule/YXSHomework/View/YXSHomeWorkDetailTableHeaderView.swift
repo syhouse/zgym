@@ -190,7 +190,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             })
             
             filterBtnView.snp.makeConstraints({ (make) in
-                make.top.equalTo(self.linkView.snp_bottom).offset(10)
+                make.top.equalTo(self.fileThirdView.snp_bottom).offset(10)
                 make.left.right.bottom.equalTo(0)
                 make.height.equalTo(70)
                 make.bottom.equalTo(0)
@@ -486,6 +486,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
 
     lazy var mediaView: YXSMediaView = {
         let view = YXSMediaView()
+        view.voiceMax = 300.0
         return view
     }()
 
