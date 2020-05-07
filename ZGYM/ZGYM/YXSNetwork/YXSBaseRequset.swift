@@ -40,6 +40,17 @@ public enum ServiceType: String {
             return "https://pro.c989.cn:50009/"
         }
     }
+    /// 获取育儿好文地址
+    func getChildContentUrl() -> String{
+        switch self {
+        case .ServiceProduct:
+            return "https://edu-pro.ym698.com:50009/yehw"
+        case .ServiceTest:
+            return "http://www.ym698.com/yehw"
+        case .ServiceLocal:
+            return "http://www.ym698.com/yehw"
+        }
+    }
 }
 
 
@@ -53,6 +64,8 @@ let homeHost = sericeType.getServiceUrl() + "classmatter-api"
 let fileHost = sericeType.getServiceUrl() + "file-api"
 //host oss上传相关业务
 let ossHost =  sericeType.getServiceUrl() + "oss-api"
+
+let childContentUrl = sericeType.getChildContentUrl()
 
 //单例类 用于保存请求参数
 class RequsetParamManager {

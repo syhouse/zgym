@@ -189,7 +189,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             classStartLabelBtn.isHidden = true
             goodHomeworkLabelBtn.isHidden = true
             ///是否展示修改按钮
-            if self.model?.isRemark == 1 {
+            if self.model?.isRemark == 1 || self.model?.isGood == 1{
                 homeWorkChangeButton.isHidden = true
             } else {
                 homeWorkChangeButton.isHidden = !(self.model?.isMySubmit ?? false)
@@ -358,7 +358,11 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
                 if self.hmModel?.remarkVisible == 1 {
                     isShowRemark = true
                 } else {
-                    isShowRemark = self.model?.isMySubmit ?? false
+                    if self.hmModel?.isMyPublish ?? false {
+                        isShowRemark = true
+                    } else {
+                        isShowRemark = self.model?.isMySubmit ?? false
+                    }
                 }
             }
             if isShowRemark {
