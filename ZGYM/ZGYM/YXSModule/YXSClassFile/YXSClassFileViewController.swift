@@ -50,10 +50,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
             setupRightBarButtonItem()
+            
+            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(tableViewLongPress(gestureRecognizer:)))
+            tableView.addGestureRecognizer(longPress)
         }
-        
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(tableViewLongPress(gestureRecognizer:)))
-        tableView.addGestureRecognizer(longPress)
         
         view.addSubview(btnSearch)
         btnSearch.snp.makeConstraints({ (make) in
@@ -269,7 +269,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     
     @objc func tableViewLongPress(gestureRecognizer:UILongPressGestureRecognizer) {
         if (gestureRecognizer.state == UIGestureRecognizer.State.began) {
-            
+
             if(isTbViewEditing == false) {
                 beginEditing()
                 

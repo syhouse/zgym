@@ -19,6 +19,11 @@ class YXSShareExtensionHelper: NSObject {
     
     
     @objc func shareExtensoin(url:URL, completionHandler:((()->())?)) {
+        if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+            MBProgressHUD.yxs_showMessage(message: "家长身份无权添加文件")
+            return
+        }
+        
         /// 拿到Json字符串
         let strTmp = url.lastPathComponent
         
@@ -115,7 +120,7 @@ class YXSShareExtensionHelper: NSObject {
             let dataSrouceArr = weakSelf.files2UploadDatas(files: files)
             
             MBProgressHUD.yxs_showLoading(inView: vc.view)
-            YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: dataSrouceArr, storageType: .classFile, progress: { (progress) in
+            YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: dataSrouceArr, storageType: .classFile, classId: classModel.id, progress: { (progress) in
                 
             }, sucess: { (list) in
                 YXSFileUploadFileRequest(classId: classModel.id ?? 0, folderId: -1, classFileList: list).request({ (json) in
