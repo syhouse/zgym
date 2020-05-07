@@ -28,28 +28,29 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         self.title = "我的文件"
 
         // Do any additional setup after loading the view.
-        view.addSubview(btnSearch)
-        view.addSubview(btnAddFileFromComputer)
-        btnSearch.snp.makeConstraints({ (make) in
-            make.top.equalTo(0)
-            make.left.equalTo(15)
-            make.right.equalTo(-15)
-            make.height.equalTo(44)
-        })
+//        view.addSubview(btnSearch)
+//        view.addSubview(btnAddFileFromComputer)
+//        btnSearch.snp.makeConstraints({ (make) in
+//            make.top.equalTo(0)
+//            make.left.equalTo(15)
+//            make.right.equalTo(-15)
+//            make.height.equalTo(44)
+//        })
         
-        btnAddFileFromComputer.snp.remakeConstraints({ (make) in
-            make.top.equalTo(btnSearch.snp_bottom).offset(14)
-            make.left.equalTo(0)
-            make.right.equalTo(0)
-            make.height.equalTo(30)
-        })
+//        btnAddFileFromComputer.snp.remakeConstraints({ (make) in
+//            make.top.equalTo(btnSearch.snp_bottom).offset(14)
+//            make.left.equalTo(0)
+//            make.right.equalTo(0)
+//            make.height.equalTo(30)
+//        })
         
-        tableView.snp.remakeConstraints({ (make) in
-            make.top.equalTo(btnAddFileFromComputer.snp_bottom).offset(0)
-            make.left.equalTo(0)
-            make.right.equalTo(0)
-            make.bottom.equalTo(0)
-        })
+//        tableView.snp.remakeConstraints({ (make) in
+////            make.top.equalTo(btnAddFileFromComputer.snp_bottom).offset(0)
+//            make.top.equalTo(btnSearch.snp_bottom).offset(14)
+//            make.left.equalTo(0)
+//            make.right.equalTo(0)
+//            make.bottom.equalTo(0)
+//        })
     }
     
     
@@ -161,7 +162,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         
     }
     
-    @objc func searchClick(sender: YXSButton) {
+    @objc override func searchClick(sender: YXSButton) {
         let vc = YXSSearchFileViewController(searchType: .satchel)
         self.navigationController?.pushViewController(vc)
     }
@@ -537,20 +538,20 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     }
     
     // MARK: - LazyLoad
-    lazy var btnSearch: YXSButton = {
-        let btn = YXSButton()
-        btn.setImage(UIImage(named: "yxs_chat_search"), for: .normal)
-        btn.setTitle("搜索", for: .normal)
-        btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        btn.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNight2C3144)
-        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .normal)
-        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .highlighted)
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        btn.clipsToBounds = true
-        btn.layer.cornerRadius = 22
-        btn.addTarget(self, action: #selector(searchClick(sender:)), for: .touchUpInside)
-        return btn
-    }()
+//    lazy var btnSearch: YXSButton = {
+//        let btn = YXSButton()
+//        btn.setImage(UIImage(named: "yxs_chat_search"), for: .normal)
+//        btn.setTitle("搜索", for: .normal)
+//        btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+//        btn.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNight2C3144)
+//        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .normal)
+//        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .highlighted)
+//        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+//        btn.clipsToBounds = true
+//        btn.layer.cornerRadius = 22
+//        btn.addTarget(self, action: #selector(searchClick(sender:)), for: .touchUpInside)
+//        return btn
+//    }()
     
     lazy var btnAddFileFromComputer: YXSButton = {
         let btn = YXSButton()

@@ -55,6 +55,22 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(tableViewLongPress(gestureRecognizer:)))
         tableView.addGestureRecognizer(longPress)
         
+        view.addSubview(btnSearch)
+        btnSearch.snp.makeConstraints({ (make) in
+            make.top.equalTo(0)
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.height.equalTo(44)
+        })
+                
+                
+        tableView.snp.remakeConstraints({ (make) in
+            make.top.equalTo(btnSearch.snp_bottom).offset(14)
+            make.left.equalTo(0)
+            make.right.equalTo(0)
+            make.bottom.equalTo(0)
+        })
+        
         view.insertSubview(bottomView, aboveSubview: tableView)
         bottomView.snp.makeConstraints({ (make) in
             make.left.equalTo(0)
@@ -244,6 +260,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         view.tfInput.placeholder = "请输入文件夹名称"
         view.btnDone.setTitle("创建", for: .normal)
         view.btnCancel.setTitle("取消", for: .normal)
+    }
+    
+    @objc func searchClick(sender: YXSButton) {
+        let vc = YXSSearchFileViewController(searchType: .classFile, classId: classId)
+        self.navigationController?.pushViewController(vc)
     }
     
     @objc func tableViewLongPress(gestureRecognizer:UILongPressGestureRecognizer) {
@@ -702,6 +723,21 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
     
     // MARK: - LazyLoad
+    lazy var btnSearch: YXSButton = {
+        let btn = YXSButton()
+        btn.setImage(UIImage(named: "yxs_chat_search"), for: .normal)
+        btn.setTitle("搜索", for: .normal)
+        btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        btn.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNight2C3144)
+        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .normal)
+        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .highlighted)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        btn.clipsToBounds = true
+        btn.layer.cornerRadius = 22
+        btn.addTarget(self, action: #selector(searchClick(sender:)), for: .touchUpInside)
+        return btn
+    }()
+    
     lazy var bottomView: YXSClassFileBottomView = {
         let view = YXSClassFileBottomView()
 //        view.backgroundColor = UIColor.red

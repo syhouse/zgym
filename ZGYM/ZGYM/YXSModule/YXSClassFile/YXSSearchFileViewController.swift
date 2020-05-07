@@ -47,7 +47,7 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
             yxs_setNavBack()
         }
         // Do any additional setup after loading the view.
-        
+        self.view.addSubview(searchBar)
         searchBar.editingChangedBlock = {[weak self](view) in
             guard let weakSelf = self else {return}
             weakSelf.searchRequest(keyword: view.text ?? "") { (list) in
@@ -57,7 +57,7 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
                 }
             }
         }
-        self.view.addSubview(searchBar)
+        
         searchBar.snp.makeConstraints({ (make) in
             if #available(iOS 11.0, *) {
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -100,7 +100,7 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
                 MBProgressHUD.yxs_showMessage(message: "缺少班级ID")
                 return
             }
-            YXSFilePageQueryRequest(classId: self.classId ?? 0, currentPage: self.curruntPage, folderId: -1).request({ [weak self](json) in
+            YXSFilePageQueryRequest(classId: self.classId ?? 0, currentPage: self.curruntPage, folderId: -1, keyword: keyword).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
