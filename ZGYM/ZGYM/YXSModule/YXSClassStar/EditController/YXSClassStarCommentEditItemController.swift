@@ -209,7 +209,7 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
     }
     
     @objc func editImageClick(){
-        let vc = YXSClassStarEvaluationItemLogoViewController()
+        let vc = YXSClassStarEvaluationItemLogoViewController.init(classId: classId)
         vc.complete = {
             [weak self] (imageUrl) in
             guard let strongSelf = self else { return }
