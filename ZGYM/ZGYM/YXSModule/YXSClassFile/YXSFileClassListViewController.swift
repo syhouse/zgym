@@ -58,6 +58,21 @@ class YXSFileClassListViewController: YXSBaseTableViewController {
         completionHandler?(indexPath.row)
     }
     
+    // MARK: - EmptyView
+    override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
+        return true
+    }
+    
+    override func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
+        return  UIImage.init(named: "yxs_defultImage_nodata")
+    }
+
+    override func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
+        let text = "暂无信息"
+        let attributes = [NSAttributedString.Key.font:UIFont.systemFont(ofSize: CGFloat(18)),
+                          NSAttributedString.Key.foregroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")]
+        return NSAttributedString(string: text, attributes: attributes as [NSAttributedString.Key : Any])
+    }
     /*
     // MARK: - Navigation
 

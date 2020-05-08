@@ -285,7 +285,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     
     @objc func tableViewLongPress(gestureRecognizer:UILongPressGestureRecognizer) {
         if (gestureRecognizer.state == UIGestureRecognizer.State.began) {
-
+            if fileList.count == 0 && folderList.count == 0 {
+                /// 无数据不可编辑
+                return
+            }
+            
             if(isTbViewEditing == false) {
                 beginEditing()
                 
@@ -797,11 +801,16 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         return  NightNight.theme == nil ? UIImage.init(named: "yxs_empty_file") : UIImage(named: "yxs_empty_file")
     }
 
+    override func buttonImage(forEmptyDataSet scrollView: UIScrollView, for state: UIControl.State) -> UIImage? {
+        return UIImage(named: "yxs_file_add")
+    }
+    
+    override func emptyDataSet(_ scrollView: UIScrollView, didTapButton button: UIButton) {
+        addFileClick()
+    }
+
     override func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        let text = "没有文件"
-        let attributes = [NSAttributedString.Key.font:UIFont.systemFont(ofSize: CGFloat(18)),
-                          NSAttributedString.Key.foregroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")]
-        return NSAttributedString(string: text, attributes: attributes as [NSAttributedString.Key : Any])
+        return nil
     }
     
     /*
