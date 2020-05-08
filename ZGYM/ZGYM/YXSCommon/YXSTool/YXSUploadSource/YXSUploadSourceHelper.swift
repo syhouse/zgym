@@ -77,28 +77,32 @@ class YXSUploadSourceHelper: NSObject {
     static let expiresVoiceDoucmentPath = "\(productPrefix)voice/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/"
     static let expiresVideoDoucmentPath = "\(productPrefix)video/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/"
     
-    static let starDoucmentPath = "\(productPrefix)star/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/"
     static func albumDoucmentPath(classId: Int, albumId: Int) -> String{
         return "\(productPrefix)album/ios/\(classId)/\(albumId)/"
     }
+    
+    static func starDoucmentPath(classId: Int) -> String{
+        return "\(productPrefix)star/ios/\(classId)/"
+    }
+    
     
     static func curriculumDoucmentPath(classId: Int) -> String{
         return "\(productPrefix)curriculum/ios/\(classId)/"
     }
     
     //现在一次请求 生成一个token
-    private var ossClient: OSSClient?
-    private var oSSAuth: YXSOSSAuthModel!
+    private static var ossClient: OSSClient?
+    private static var oSSAuth: YXSOSSAuthModel!
     private func initClient(){
         let conf = OSSClientConfiguration()
         conf.maxRetryCount = 2
         conf.timeoutIntervalForRequest = 300
         conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
         conf.maxConcurrentRequestCount = 50
-        let credential2:OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: self.oSSAuth.accessKeyId ?? "", secretKeyId: self.oSSAuth.accessKeySecret ?? "", securityToken: self.oSSAuth.securityToken ?? "")
+        let credential2:OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: YXSUploadSourceHelper.self.oSSAuth.accessKeyId ?? "", secretKeyId: YXSUploadSourceHelper.self.oSSAuth.accessKeySecret ?? "", securityToken: YXSUploadSourceHelper.self.oSSAuth.securityToken ?? "")
         
         //实例化
-        ossClient = OSSClient(endpoint: oSSAuth.endpoint ?? "", credentialProvider: credential2, clientConfiguration: conf)
+        YXSUploadSourceHelper.ossClient = OSSClient(endpoint: YXSUploadSourceHelper.oSSAuth.endpoint ?? "", credentialProvider: credential2, clientConfiguration: conf)
     }
     
     
@@ -222,9 +226,9 @@ class YXSUploadSourceHelper: NSObject {
     ///   - sucess: 成功
     ///   - failureHandler: 失败
     func uploadMedia(mediaInfos: [[String: Any]] , uploadPaths: [String],progress progressBlock : ((_ progress: CGFloat)->())? = nil, sucess:(([[String: Any]])->())?,failureHandler: ((String, String) -> ())?) {
-        if oSSAuth == nil{
+        if YXSUploadSourceHelper.oSSAuth == nil{
             YXSEducationOssAuthTokenRequest().request({ (model: YXSOSSAuthModel) in
-                self.oSSAuth = model
+                YXSUploadSourceHelper.self.oSSAuth = model
                 self.uploadMedia(mediaInfos: mediaInfos, uploadPaths: uploadPaths, progress: progressBlock,sucess: sucess,failureHandler: failureHandler)
             }, failureHandler: failureHandler)
             return
@@ -334,7 +338,7 @@ class YXSUploadSourceHelper: NSObject {
                     ossPutObj.uploadingFileURL = URL.init(string: uploadModel.audioModel.path ?? "")!
                 }
                 
-                ossPutObj.bucketName = self.oSSAuth.bucket
+                ossPutObj.bucketName = YXSUploadSourceHelper.self.oSSAuth.bucket
                 ossPutObj.objectKey = uploadModel.path
                 
                 ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
@@ -343,7 +347,7 @@ class YXSUploadSourceHelper: NSObject {
                     progressBlock?(progress)
                 }
                 
-                let uploadTask = self.ossClient?.putObject(ossPutObj)
+                let uploadTask = YXSUploadSourceHelper.self.ossClient?.putObject(ossPutObj)
                 
                 uploadTask?.continue({ (uploadTask) -> Any? in
                     if let _err = uploadTask.error {
@@ -351,10 +355,10 @@ class YXSUploadSourceHelper: NSObject {
                         group.leave()
                     } else {
                         if  let _:OSSPutObjectResult  = uploadTask.result as? OSSPutObjectResult {
-                            var point: NSString = (self.oSSAuth.endpoint ?? "") as NSString
+                            var point: NSString = (YXSUploadSourceHelper.self.oSSAuth.endpoint ?? "") as NSString
                             point = point.replacingOccurrences(of: "http://", with: "") as NSString
                             point = point.replacingOccurrences(of: "https://", with: "") as NSString
-                            let picUrlStr = "http://\(self.oSSAuth.bucket ?? "").\(point)/\(uploadModel.path)"
+                            let picUrlStr = "http://\(YXSUploadSourceHelper.self.oSSAuth.bucket ?? "").\(point)/\(uploadModel.path)"
                             urls.append([typeKey: sourceType, urlKey: picUrlStr,"index" : uploadModel.index])
                         }else{
                             failureHandlerMsg = "链接拼接失败"
@@ -469,14 +473,6 @@ class YXSUploadDataHepler{
         
         //实例化
         ossClient = OSSClient(endpoint: oSSAuth.endpoint ?? "", credentialProvider: credential2, clientConfiguration: conf)
-    }
-    
-    static func getImageUploadFilePath(fileDir: String, fileName: String) -> String{
-        return getUploadFilePath(fileDir: fileDir, fileName: fileName, fileType: "jpg")
-    }
-    
-    static func getUploadFilePath(fileDir: String, fileName: String, fileType: String) -> String{
-        return "\(fileDir)/" + "iOS/" + "\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/" + "\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/"  + fileName + "." + fileType
     }
     
     func uploadData(data: Data, path: String, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
