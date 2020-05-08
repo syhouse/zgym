@@ -96,7 +96,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     // MARK: - Request
     override func yxs_refreshData() {
         loadData()
-        yxs_endingRefresh()
+    }
+    
+    override func yxs_loadNextPage() {
+        loadData()
     }
     
     @objc func loadData() {
@@ -111,7 +114,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         workingGroup.enter()
         workingQueue.async {
             // 出组
-            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
+            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: 1, folderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
@@ -129,7 +132,9 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             // 出组
             YXSFilePageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"]
+                
+                let hasNext = json["hasNext"].boolValue
+                weakSelf.loadMore = hasNext
                 
                 tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
                 workingGroup.leave()
@@ -153,6 +158,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                         }
                     }
                     
+
                     for sub in self.getSelectedFileList() {
                         for obj in tmpFileList {
                             if sub.id == obj.id {
@@ -162,10 +168,16 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                         }
                     }
                 }
+                
+                if self.curruntPage == 1{
+                    self.fileList.removeAll()
+                }
+                
                 self.folderList = tmpFolderList
-                self.fileList = tmpFileList
+                self.fileList += tmpFileList
                 
                 self.tableView.reloadData()
+                self.yxs_endingRefresh()
             }
         }
     }
@@ -191,7 +203,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             }
         }
         alert.lbTitle.text = "提示"
-        alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        if folderIdList.count > 0 {
+            alert.lbContent.text = "删除文件夹会同时删除该文件夹内所有文件，确定要删除吗?"
+        } else {
+            alert.lbContent.text = "确定要删除文件吗?"
+        }
         alert.btnDone.setTitle("删除", for: .normal)
         
 
@@ -359,7 +375,12 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             /// 移动成功
             /// 取消编辑
             weakSelf.endEditing()
-
+            
+            /// 当前目录移动到当前目录 不刷新界面
+            if oldParentFolderId == parentFolderId {
+                return
+            }
+            
             /// 更新界面
             weakSelf.folderList = weakSelf.getUnselectedFolerList()
             weakSelf.fileList = weakSelf.getUnselectedFileList()

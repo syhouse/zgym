@@ -145,8 +145,11 @@ class YXSURLProtocol: URLProtocol , URLSessionDataDelegate, URLSessionTaskDelega
             cachedResponse.setValue(paramJson, forKey: "param")
             cachedResponse.setValue(self.request.url?.absoluteString, forKey: "url")
             cachedResponse.setValue(NSDate(), forKey: "timestamp")
-            cachedResponse.setValue(self.urlResponse?.mimeType, forKey: "mimeType")
-            cachedResponse.setValue(self.urlResponse?.textEncodingName, forKey: "encoding")
+            if self.urlResponse != nil {
+                cachedResponse.setValue(self.urlResponse?.mimeType, forKey: "mimeType")
+                cachedResponse.setValue(self.urlResponse?.textEncodingName, forKey: "encoding")
+            }
+            
 //            let httpResponse: HTTPURLResponse =
 //            let etag = httpResponse.allHeaderFields["Etag"]
 //            cachedResponse.setValue(etag, forKey: "etag")
