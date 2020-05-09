@@ -27,7 +27,7 @@ class YXSChildrenModel : NSObject, NSCoding, Mappable{
     
     var stage: StageType{
         get{
-            StageType.init(rawValue: grade?.stage ?? "") ?? .KINDERGARTEN
+            StageType.init(rawValue: grade?.stage ?? "") ?? .PRIMARY_SCHOOL
         }
     }
     

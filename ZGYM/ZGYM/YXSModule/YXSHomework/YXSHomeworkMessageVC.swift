@@ -216,6 +216,7 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
         if self.detailModel != nil {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkDetailSectionHeaderView") as? YXSHomeworkDetailSectionHeaderView
             if let headerView = headerView{
+                self.detailModel?.isShowLookGoodButton = false
                 headerView.hmModel = self.deModel
                 headerView.model = self.detailModel
     //            let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
