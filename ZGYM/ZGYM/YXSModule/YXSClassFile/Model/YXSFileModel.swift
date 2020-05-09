@@ -23,6 +23,7 @@ class YXSFileModel : YXSBaseFileModel {
     var updateTime : String?
     var userId : Int?
     
+    var satchelFileId: Int?
     
 
     required init?(map: Map){
@@ -43,6 +44,7 @@ class YXSFileModel : YXSBaseFileModel {
         updateTime <- map["updateTime"]
         userId <- map["userId"]
         
+        satchelFileId <- map["satchelFileId"]
     }
 
     /**

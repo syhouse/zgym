@@ -150,6 +150,9 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     
     // MARK: - Action
     @objc func doneClick(sender: YXSButton) {
+        for sub in selectedFileList {
+            sub.satchelFileId = sub.id
+        }
         completionHandler?(selectedFileList, self)
     }
     
