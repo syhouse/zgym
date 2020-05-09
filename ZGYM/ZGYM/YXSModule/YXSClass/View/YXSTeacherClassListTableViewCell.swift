@@ -15,11 +15,17 @@ class YXSTeacherClassListTableViewCell: YXSBaseClassListTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
         
+//        self.lbStudentCount.snp.remakeConstraints({ (make) in
+//            make.top.equalTo(self.lbClassNumber.snp_top)
+//            make.left.equalTo(self.lbClassNumber.snp_right).offset(22)
+//        })
+        
         self.contentView.addSubview(btnInvite)
         btnInvite.snp.makeConstraints({ (make) in
             make.top.equalTo(22)
             make.bottom.equalTo(-22)
-            make.centerY.equalTo(self.lbStudentCount.snp_centerY)
+//            make.centerY.equalTo(self.lbStudentCount.snp_centerY)
+//            make.centerY.equalTo(contentView.snp_centerY)
             make.right.equalTo(imgRightArrow.snp_right).offset(-30)
             make.width.equalTo(89)
             make.height.equalTo(30)

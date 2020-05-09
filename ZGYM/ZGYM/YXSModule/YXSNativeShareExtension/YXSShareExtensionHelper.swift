@@ -59,7 +59,6 @@ class YXSShareExtensionHelper: NSObject {
     @objc func shareToSatchel(files:[String], completionHandler:((()->())?)) {
         /// ShareExtension
         let vc = YXSSatchelFileViewController()
-        UIUtil.curruntNav().pushViewController(vc)
 
         let list = files
         var uploadArr:[YXSUploadDataResourceModel] = [YXSUploadDataResourceModel]()
@@ -93,6 +92,8 @@ class YXSShareExtensionHelper: NSObject {
         
         MBProgressHUD.yxs_showLoading(inView: vc.view)
         YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, storageType: .satchel, progress: nil, sucess: { (list) in
+            
+            UIUtil.curruntNav().pushViewController(vc)
             YXSSatchelUploadFileRequest(parentFolderId: -1, satchelFileList: list).request({ (json) in
                 DispatchQueue.main.async {
                     MBProgressHUD.yxs_hideHUDInView(view: vc.view)
@@ -155,8 +156,14 @@ class YXSShareExtensionHelper: NSObject {
             list += createClassList
             list += joinClassList
             
-            
-            if list.count > 1 {
+            if list.count == 1 {
+                if let classModel = list.first {
+                    let vc = YXSClassFileViewController(classId: classModel.id ?? 0, parentFolderId: -1)
+                    completionHandler?(vc, classModel)
+                    UIUtil.curruntNav().pushViewController(vc)
+                }
+
+            } else if list.count > 1 {
                 let vc = YXSFileClassListViewController(dataSource: list) { (idx) in
                     let classModel = list[idx]
                     let cfVc = YXSClassFileViewController(classId: classModel.id ?? 0, parentFolderId: -1)
@@ -165,13 +172,6 @@ class YXSShareExtensionHelper: NSObject {
                 }
                 UIUtil.curruntNav().pushViewController(vc)
                 
-            } else if list.count == 1 {
-                if let classModel = list.first {
-                    let vc = YXSClassFileViewController(classId: classModel.id ?? 0, parentFolderId: -1)
-                    completionHandler?(vc, classModel)
-                    UIUtil.curruntNav().pushViewController(vc)
-                }
-
             } else {
                 MBProgressHUD.yxs_showMessage(message: "暂未班级")
             }

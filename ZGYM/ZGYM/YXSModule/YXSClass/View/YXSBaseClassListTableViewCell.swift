@@ -17,7 +17,6 @@ class YXSBaseClassListTableViewCell: YXSBaseTableViewCell {//UITableViewCell {
         self.selectionStyle = .none
         self.contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         
-        self.contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         self.contentView.addSubview(self.lbTitle)
         self.contentView.addSubview(self.lbClassNumber)
         self.contentView.addSubview(self.lbStudentCount)

@@ -150,7 +150,7 @@ class YXSFriendsCircleInfoController: YXSBaseTableViewController {
                  UIApplication.shared.openURL(URL(string: phone)!)
              }
         })
-        UIUtil.yxs_setLabelAttributed(alert.messageLabel, text: ["是否呼叫", "  \(YXSFriendCircleUserInfoModel.account ?? "")"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#575A60"),kTextMainBodyColor])
+        UIUtil.yxs_setLabelAttributed(alert.messageLabel, text: ["是否呼叫", "  \(YXSFriendCircleUserInfoModel.account ?? "")"], colors: [MixedColor(normal: k575A60Color, night: k575A60Color), MixedColor(normal: kTextMainBodyColor, night: kNight898F9A)])
         alert.beginAnimation()
         
     }

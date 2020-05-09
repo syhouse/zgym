@@ -27,6 +27,16 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     var items: [String] = [String]()
     
     var curruntSelectIndex: Int?
+    var classId: Int
+    
+    init(classId: Int) {
+        self.classId = classId
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     var rightButton: YXSButton!
     // MARK: -leftCicle
@@ -119,7 +129,7 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     }
     
     @objc func selectCustomIcon(){
-//        YXSSelectMediaHelper.shareHelper.showSelectMedia(selectImage: true, selectVedio: false, selectAll: false, customVideo: false, maxCount: 1, customVideoFinish: nil)
+        //        YXSSelectMediaHelper.shareHelper.showSelectMedia(selectImage: true, selectVedio: false, selectAll: false, customVideo: false, maxCount: 1, customVideoFinish: nil)
         YXSSelectMediaHelper.shareHelper.pushImageAllCropPickerController()
         YXSSelectMediaHelper.shareHelper.delegate = self
     }
@@ -137,8 +147,8 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
     }
-
-
+    
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "YXSItemUrlCell", for: indexPath) as! YXSItemUrlCell
         cell.isItemSelect = curruntSelectIndex == indexPath.row
@@ -177,7 +187,7 @@ extension YXSClassStarEvaluationItemLogoViewController: YXSSelectMediaHelperDele
         if let image = images.first{
             if let data = image.yxs_compressImage(image: image, maxLength: imageMax){
                 MBProgressHUD.yxs_showLoading()
-                YXSUploadDataHepler().uploadData(data: data, path: YXSUploadDataHepler.getImageUploadFilePath(fileDir: "classStart", fileName: Date().toString().MD5()), sucess: { (url) in
+                YXSUploadDataHepler().uploadData(data: data, path: YXSUploadSourceHelper.starDoucmentPath(classId: classId) + Date().toString().MD5() + ".jpg", sucess: { (url) in
                     self.curruntIconUrl = url
                     self.curruntSelectIndex = nil
                     self.collectionView.reloadData()
@@ -187,13 +197,13 @@ extension YXSClassStarEvaluationItemLogoViewController: YXSSelectMediaHelperDele
                     MBProgressHUD.yxs_showMessage(message: msg)
                 }
                 ///等 YXSFileUploadHelper 工具构建好 移植
-//                let resourceModel = YXSUploadDataResourceModel()
-//                resourceModel.dataSource =
-//                YXSFileUploadHelper().uploadDataSource(dataSource: [YXSUploadDataResourceModel.], progress: <#T##((CGFloat) -> ())?##((CGFloat) -> ())?##(CGFloat) -> ()#>, sucess: <#T##(([YXSFileModel]) -> ())?##(([YXSFileModel]) -> ())?##([YXSFileModel]) -> ()#>, failureHandler: <#T##((String, String) -> ())?##((String, String) -> ())?##(String, String) -> ()#>)
+                //                let resourceModel = YXSUploadDataResourceModel()
+                //                resourceModel.dataSource =
+                //                YXSFileUploadHelper().uploadDataSource(dataSource: [YXSUploadDataResourceModel.], progress: <#T##((CGFloat) -> ())?##((CGFloat) -> ())?##(CGFloat) -> ()#>, sucess: <#T##(([YXSFileModel]) -> ())?##(([YXSFileModel]) -> ())?##([YXSFileModel]) -> ()#>, failureHandler: <#T##((String, String) -> ())?##((String, String) -> ())?##(String, String) -> ()#>)
             }
         }
         
-//        YXSUploadSourceHelper().uploadIm
+        //        YXSUploadSourceHelper().uploadIm
     }
 }
 
@@ -216,7 +226,7 @@ class YXSItemUrlCell: UICollectionViewCell{
         fatalError("init(coder:) has not been implemented")
     }
     
-
+    
     var isItemSelect:Bool = false {
         didSet{
             borderView.borderColor = isItemSelect ? kBlueColor : UIColor.white

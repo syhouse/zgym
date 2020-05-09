@@ -276,6 +276,22 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         view.btnDone.addTarget(self, action: #selector(doneClick(sender:)), for: .touchUpInside)
         return view
     }()
+    
+    // MARK: - EmptyView
+    override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
+        return true
+    }
+    
+    override func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
+        return  UIImage.init(named: "yxs_empty_file")
+    }
+
+    override func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
+        let text = "没有文件"
+        let attributes = [NSAttributedString.Key.font:UIFont.systemFont(ofSize: CGFloat(18)),
+                          NSAttributedString.Key.foregroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")]
+        return NSAttributedString(string: text, attributes: attributes as [NSAttributedString.Key : Any])
+    }
 }
 
 class SLChoseFileBottomView: UIView {
