@@ -512,11 +512,11 @@ extension YXSHomeController{
                 var indexSection = 0
                 var indexRow = 0
                 for (section,sectionModel) in self.yxs_dataSource.enumerated(){
-                    for (index,model) in sectionModel.items.enumerated(){
-                        if model.serviceId == model.serviceId{
+                    for (index,rowModel) in sectionModel.items.enumerated(){
+                        if rowModel.serviceId == model.serviceId{
                             indexSection = section
                             indexRow = index
-                            curruntModel = model
+                            curruntModel = rowModel
                             break
                         }
                     }
@@ -525,13 +525,12 @@ extension YXSHomeController{
                 if let curruntModel = curruntModel{
                     if model.msgType == 0{
                         if !(curruntModel.committedList?.contains(model.childrenId ?? 0) ?? false){
-                            curruntModel.committedList?.append(model.childrenId ?? 0)
+                                curruntModel.committedList?.append(model.childrenId ?? 0)
                         }
+                        
                         if !(curruntModel.readList?.contains(model.childrenId ?? 0) ?? false){
                             curruntModel.readList?.append(model.childrenId ?? 0)
                         }
-                        
-                        yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))
                     }
                     
                     if model.msgType == 5{
@@ -539,8 +538,8 @@ extension YXSHomeController{
                             let index = curruntModel.committedList?.firstIndex(of: model.childrenId ?? 0) ?? 0
                             curruntModel.committedList?.remove(at: index)
                         }
-                        yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))
                     }
+                    yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))
                 }
                 
                 
