@@ -17,6 +17,17 @@ class YXSShareExtensionHelper: NSObject {
         return instance
     }()
     
+    @objc func checkShareExtension(completionHandler:((()->())?)) {
+        
+        if UIUtil.RootController() is YXSBaseTabBarController {
+            if let obj = UserDefaults.standard.url(forKey: "kReceiveShareExtension") {
+               UserDefaults.standard.removeObject(forKey: "kReceiveShareExtension")
+               UserDefaults.standard.synchronize()
+                
+                shareExtensoin(url: obj, completionHandler: completionHandler)
+            }
+        }
+    }
     
     @objc func shareExtensoin(url:URL, completionHandler:((()->())?)) {
         if YXSPersonDataModel.sharePerson.personRole == .PARENT {
@@ -59,7 +70,8 @@ class YXSShareExtensionHelper: NSObject {
     @objc func shareToSatchel(files:[String], completionHandler:((()->())?)) {
         /// ShareExtension
         let vc = YXSSatchelFileViewController()
-
+        UIUtil.curruntNav().pushViewController(vc)
+        
         let list = files
         var uploadArr:[YXSUploadDataResourceModel] = [YXSUploadDataResourceModel]()
         
@@ -93,7 +105,6 @@ class YXSShareExtensionHelper: NSObject {
         MBProgressHUD.yxs_showLoading(inView: vc.view)
         YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, storageType: .satchel, progress: nil, sucess: { (list) in
             
-            UIUtil.curruntNav().pushViewController(vc)
             YXSSatchelUploadFileRequest(parentFolderId: -1, satchelFileList: list).request({ (json) in
                 DispatchQueue.main.async {
                     MBProgressHUD.yxs_hideHUDInView(view: vc.view)
@@ -102,13 +113,17 @@ class YXSShareExtensionHelper: NSObject {
                 }
                 
             }) { (msg, code) in
-                MBProgressHUD.yxs_hideHUDInView(view: vc.view)
-                MBProgressHUD.yxs_showMessage(message: msg)
+                DispatchQueue.main.async {
+                    MBProgressHUD.yxs_hideHUDInView(view: vc.view)
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
             }
             
         }) { (msg, code) in
-            MBProgressHUD.yxs_hideHUDInView(view: vc.view)
-            MBProgressHUD.yxs_showMessage(message: msg)
+            DispatchQueue.main.async {
+                MBProgressHUD.yxs_hideHUDInView(view: vc.view)
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
         }
     }
     
@@ -132,13 +147,17 @@ class YXSShareExtensionHelper: NSObject {
                     }
 
                 }) { (msg, code) in
-                    MBProgressHUD.yxs_hideHUDInView(view: vc.view)
-                    MBProgressHUD.yxs_showMessage(message: msg)
+                    DispatchQueue.main.async {
+                        MBProgressHUD.yxs_hideHUDInView(view: vc.view)
+                        MBProgressHUD.yxs_showMessage(message: msg)
+                    }
                 }
                 
             }) { (msg, code) in
-                MBProgressHUD.yxs_hideHUDInView(view: vc.view)
-                MBProgressHUD.yxs_showMessage(message: msg)
+                DispatchQueue.main.async {
+                    MBProgressHUD.yxs_hideHUDInView(view: vc.view)
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
             }
         }
     }

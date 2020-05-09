@@ -105,8 +105,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         
         if url.absoluteString.contains(shareExtensionSchemes) {
             /// ShareExtension
-//            YXSShareExtensionHelper.sharedInstance.shareToSatchel(url: url, completionHandler: nil)
-            YXSShareExtensionHelper.sharedInstance.shareExtensoin(url: url, completionHandler: nil)
+            UserDefaults.standard.set(url, forKey: "kReceiveShareExtension")
+            UserDefaults.standard.synchronize()
+            
+            YXSShareExtensionHelper.sharedInstance.checkShareExtension(completionHandler: nil)
+//            YXSShareExtensionHelper.sharedInstance.shareExtensoin(url: url, completionHandler: nil)
             return true
         }
         

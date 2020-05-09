@@ -402,11 +402,14 @@ class YXSFileUploadHelper: NSObject {
         if oSSAuth == nil {
             requestYXSOSSAuth(completionHandler: { [weak self](model) in
                 guard let weakSelf = self else {return}
-//                weakSelf.oSSAuth = model
                 
                 weakSelf.aliyunOSSUpload(objectKey: objectKey, uploadingFileURL: uploadingFileURL, uploadingData: uploadingData, uploadProgress: uploadProgress, completionHandler: completionHandler, failureHandler: failureHandler)
                 
-            }, failureHandler: nil)
+            }, failureHandler:{ (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+                failureHandler?(msg, code)
+            })
+            
             return
         }
         
