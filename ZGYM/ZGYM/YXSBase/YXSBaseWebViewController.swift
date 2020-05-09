@@ -17,7 +17,7 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
         print(message.body) //js回传参数
     }
     
-
+    var isCache: Bool = false
     var scriptKey: String = ""
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,8 +71,16 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
         didSet {
             if let tmp = self.loadUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                 if let url = URL(string: tmp) {
-                    let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 5)
-                    webView.load(request)
+                    if isCache {
+                        let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 10)
+                        webView.load(request)
+                    } else {
+                        let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 10)
+                        webView.load(request)
+                    }
+                    
+                    
+                    
                     
                 } else {
                     MBProgressHUD.yxs_showMessage(message: "网页地址无效")
@@ -94,9 +102,12 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
             
        //重设标题
 //        else
-        if keyPath == "title" {
-            self.title = self.title?.count ?? 0 > 0 ? self.title : self.webView.title
+        if self.title?.count ?? 0 <= 0 {
+            if keyPath == "title" {
+                self.title = self.title?.count ?? 0 > 0 ? self.title : self.webView.title
+            }
         }
+        
     }
     
     override func yxs_onBackClick() {

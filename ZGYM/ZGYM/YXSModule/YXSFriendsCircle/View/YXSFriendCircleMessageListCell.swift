@@ -105,6 +105,10 @@ class YXSFriendCircleMessageListCell: UITableViewCell {
             UIUtil.yxs_setLabelAttributed(commentLabel, text: ["点赞" ], colors: [grayBodyColor])
         }
         rightImage.isHidden = true
+        if let url = model.attachment, url.count > 0 {
+            rightImage.isHidden = false
+            rightImage.yxs_setImageWithURL(url: URL.init(string: url), placeholder: kImageDefualtMixedImage)
+        }
     }
     
     

@@ -81,8 +81,13 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
     /// 当前作业是否已过期
     var isExpired: Bool {
         get {
-            if endTime!.count > 0 {
+            if endTime?.count ?? 0 > 0 {
                 let endDate = Date.init(fromString: endTime!, format: .custom("yyyy-MM-dd HH:mm:ss"))
+                if endDate?.compare(Date()) == .orderedAscending {
+                    return true
+                }
+            } else if homeworkEndTime?.count ?? 0 > 0 {
+                let endDate = Date.init(fromString: homeworkEndTime!, format: .custom("yyyy-MM-dd HH:mm:ss"))
                 if endDate?.compare(Date()) == .orderedAscending {
                     return true
                 }
@@ -91,6 +96,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         
     }
+    
+    var homeworkEndTime: String?
+    
     
     var isTop : Int?
     var link : String?
@@ -552,6 +560,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         goodMap <- map["goodMap"]
         homeworkId <- map["homeworkId"]
         homeworkCreateTime <- map["homeworkCreateTime"]
+        homeworkEndTime <- map["homeworkEndTime"]
     }
 
     /**
@@ -610,6 +619,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         goodMap = aDecoder.decodeObject(forKey: "goodMap") as? [String : Int]
         homeworkId = aDecoder.decodeObject(forKey: "homeworkId") as? Int
         homeworkCreateTime = aDecoder.decodeObject(forKey: "homeworkCreateTime") as? String
+        homeworkEndTime = aDecoder.decodeObject(forKey: "homeworkEndTime") as? String
         
     }
 
@@ -768,6 +778,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         if homeworkCreateTime != nil {
             aCoder.encode(homeworkCreateTime, forKey: "homeworkCreateTime")
+        }
+        if homeworkEndTime != nil {
+            aCoder.encode(homeworkEndTime, forKey: "homeworkEndTime")
         }
     }
 }

@@ -9,10 +9,10 @@
 import UIKit
 import NightNight
 
-private let images = [kPunchCardKey,kHomeworkKey,kSolitaireKey,kNoticeKey]
-private let titles = ["打卡任务","作业","接龙","通知"]
-private let serviceIds = [2,1,3,0]
-private let events = [YXSHomeType.punchCard,.homework,YXSHomeType.solitaire,YXSHomeType.notice]
+private var images = [kPunchCardKey,kSolitaireKey,kNoticeKey]
+private var titles = ["打卡任务","接龙","通知"]
+private var serviceIds = [2,3,0]
+private var events = [YXSHomeType.punchCard,YXSHomeType.solitaire,YXSHomeType.notice]
 class YXSAgendaListController: YXSBaseTableViewController {
     // MARK: - property
     var yxs_dataSource: [YXSAgendaListModel] = [YXSAgendaListModel]()
@@ -30,6 +30,19 @@ class YXSAgendaListController: YXSBaseTableViewController {
     // MARK: - leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER && YXSPersonDataModel.sharePerson.personStage == .KINDERGARTEN{
+            images = [kPunchCardKey,kSolitaireKey,kNoticeKey]
+            titles = ["打卡任务","接龙","通知"]
+            serviceIds = [2,3,0]
+            events = [YXSHomeType.punchCard,YXSHomeType.solitaire,YXSHomeType.notice]
+        }else{
+            images = [kPunchCardKey,kHomeworkKey,kSolitaireKey,kNoticeKey]
+            titles = ["打卡任务","作业","接龙","通知"]
+            serviceIds = [2,1,3,0]
+            events = [YXSHomeType.punchCard,.homework,YXSHomeType.solitaire,YXSHomeType.notice]
+        }
+        
         
         title = "待办事项"
         tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9"), night: kNightBackgroundColor)

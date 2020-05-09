@@ -160,7 +160,11 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             if self.hmModel?.remarkVisible == 1 {
                 isShowRemark = true
             } else {
-                isShowRemark = self.model?.isMySubmit ?? false
+                if self.hmModel?.isMyPublish ?? false {
+                    isShowRemark = true
+                } else {
+                    isShowRemark = self.model?.isMySubmit ?? false
+                }
             }
         }
         if isShowRemark {
@@ -438,13 +442,23 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
     // MARK: - Action
     /// 点评作业
     @objc func reviewControlClick() {
-        reviewControlBlock?(self.model!)
+        if self.hmModel?.isExpired ?? false {
+            MBProgressHUD.yxs_showMessage(message: "当前作业已过期")
+        } else {
+            reviewControlBlock?(self.model!)
+        }
+        
     }
     
     @objc func goodControlClick() {
-        goodControl.isSelected = !goodControl.isSelected
-        goodClick?(self.model!)
-        finishView.isHidden = !goodControl.isSelected
+        if self.hmModel?.isExpired ?? false {
+            MBProgressHUD.yxs_showMessage(message: "当前作业已过期")
+        } else {
+            goodControl.isSelected = !goodControl.isSelected
+            goodClick?(self.model!)
+            finishView.isHidden = !goodControl.isSelected
+        }
+        
     }
 
     /// 评论

@@ -122,14 +122,14 @@ class YXSHomeTableHeaderView: UIView {
                 control.tag = index + kYXSHomeTableHeaderViewOrginTag
                 control.addTarget(self, action: #selector(yxs_controlClick), for: .touchUpInside)
                 yxs_itemBgView.addSubview(control)
-
+                
             }
             yxs_setButtonUI()
         }
         
     }
     
-
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -203,7 +203,7 @@ class YXSHomeTableHeaderView: UIView {
         label.addTarget(self, action: #selector(reloadLocation), for: .touchUpInside)
         return label
     }()
-
+    
     lazy var yxs_classButton: YXSButton = {
         let button = YXSButton.init()
         button.setMixedImage(MixedImage(normal: isOldUI ? "yxs_classlist_night" : "class_list_icon", night: "yxs_classlist_night"), forState: .normal)
@@ -224,13 +224,13 @@ class YXSHomeTableHeaderView: UIView {
         return imageView
     }()
     
-        lazy var yxs_itemBgView: UIView = {
-            let itemBgView = UIView()
-            itemBgView.mixedBackgroundColor = MixedColor(normal: UIColor.white , night: kNightForegroundColor)
-            itemBgView.cornerRadius = 4
-            itemBgView.addShadow(ofColor: MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#ECEFF5"), night: UIColor.clear), radius: 10, offset: CGSize(width: 0, height: 2), opacity: 1)
-            return itemBgView
-        }()
+    lazy var yxs_itemBgView: UIView = {
+        let itemBgView = UIView()
+        itemBgView.mixedBackgroundColor = MixedColor(normal: UIColor.white , night: kNightForegroundColor)
+        itemBgView.cornerRadius = 4
+        itemBgView.addShadow(ofColor: MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#ECEFF5"), night: UIColor.clear), radius: 10, offset: CGSize(width: 0, height: 2), opacity: 1)
+        return itemBgView
+    }()
     
     lazy var yxs_agendaView: YXSHomeAgendaView = {
         let yxs_agendaView = YXSHomeAgendaView.init(false)
@@ -241,64 +241,62 @@ class YXSHomeTableHeaderView: UIView {
 
 ///目前不需要
 extension YXSHomeTableHeaderView{
-        func yxs_setButtonUI(){
-            var lineCount = 0
-            if YXSPersonDataModel.sharePerson.showKINDERGARTENUI{
-                            kHeaderTexts = ["通知", "班级之星", "打卡", "接龙", "食谱", "通讯录"]
-                kHeaderImages = [kNoticeKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kFoodKey, kAddressbookKey]
-                kHeaderActions = [YXSHomeHeaderActionEvent.notice, .classstart, .punchCard, .solitaire, .course, .addressbook]
-                lineCount = 3
-            }else{
-                kHeaderTexts = ["通知", "作业", "班级之星", "打卡", "接龙", "课表", "通讯录"]
-                kHeaderImages = [kNoticeKey, kHomeworkKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kCourseKey, kAddressbookKey]
-                kHeaderActions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .course, .addressbook]
-//                kHeaderTexts = ["通知", "作业", "班级之星", "打卡", "接龙", "课表", "通讯录", "相册"]
-//                kHeaderImages = [kNoticeKey, kHomeworkKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kCourseKey, kAddressbookKey, "yxs_photo"]
-//                kHeaderActions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .course, .addressbook, .photo]
-                lineCount = 4
-    
-            }
-            var last: UIView!
-            let padding: CGFloat = (SCREEN_WIDTH - 40*2 - 41*CGFloat(lineCount))/CGFloat((lineCount - 1))
-            let itemWidth: CGFloat =  41
-            let itemMargin =  25
-            for index in 0..<kMaxCount{
-                let control = viewWithTag(kYXSHomeTableHeaderViewOrginTag + index)!
-                control.isHidden = true
-                control.snp_removeConstraints()
-            }
-    
-            for index in 0..<kHeaderTexts.count{
-                let control = viewWithTag(kYXSHomeTableHeaderViewOrginTag + index) as! YXSCustomImageControl
-                control.title = kHeaderTexts[index]
-                control.locailImage = kHeaderImages[index]
-                control.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
-                control.font = UIFont.systemFont(ofSize: 14)
-                let row = index % lineCount
-                let low = index / lineCount
-                control.snp.makeConstraints { (make) in
-                    if row == 0{
-                        if low == 0{
-                            make.top.equalTo(23)
-                        }else{
-                            make.top.equalTo(last!.snp_bottom).offset(17)
-                        }
-                        make.left.equalTo(itemMargin)
-                    }
-                    else {
-                        make.top.equalTo(last!)
-                        make.left.equalTo(last!.snp_right).offset(padding)
-                    }
-    
-                    make.width.equalTo(itemWidth)
-    
-                    if index == kHeaderTexts.count - 1 {
-                        make.bottom.equalTo(-23)
-                    }
-    
-                }
-                control.isHidden = false
-                last = control
-            }
+    func yxs_setButtonUI(){
+        var lineCount = 0
+        if YXSPersonDataModel.sharePerson.showKINDERGARTENUI{
+            kHeaderTexts = ["通知", "班级之星", "打卡", "接龙", "食谱", "成绩", "通讯录"]
+            kHeaderImages = [kNoticeKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kFoodKey, kScoreKey, kAddressbookKey]
+            kHeaderActions = [YXSHomeHeaderActionEvent.notice, .classstart, .punchCard, .solitaire, .course, .score, .addressbook]
+            lineCount = 4
+        }else{
+            kHeaderTexts = ["通知", "作业", "班级之星", "打卡", "接龙", "课表", "成绩", "通讯录"]
+            kHeaderImages = [kNoticeKey, kHomeworkKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kCourseKey, kScoreKey, kAddressbookKey]
+            kHeaderActions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .course, .score, .addressbook]
+            
+            lineCount = 4
+            
         }
+        var last: UIView!
+        let padding: CGFloat = (SCREEN_WIDTH - 40*2 - 41*CGFloat(lineCount))/CGFloat((lineCount - 1))
+        let itemWidth: CGFloat =  41
+        let itemMargin =  25
+        for index in 0..<kMaxCount{
+            let control = viewWithTag(kYXSHomeTableHeaderViewOrginTag + index)!
+            control.isHidden = true
+            control.snp_removeConstraints()
+        }
+        
+        for index in 0..<kHeaderTexts.count{
+            let control = viewWithTag(kYXSHomeTableHeaderViewOrginTag + index) as! YXSCustomImageControl
+            control.title = kHeaderTexts[index]
+            control.locailImage = kHeaderImages[index]
+            control.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+            control.font = UIFont.systemFont(ofSize: 14)
+            let row = index % lineCount
+            let low = index / lineCount
+            control.snp.makeConstraints { (make) in
+                if row == 0{
+                    if low == 0{
+                        make.top.equalTo(23)
+                    }else{
+                        make.top.equalTo(last!.snp_bottom).offset(17)
+                    }
+                    make.left.equalTo(itemMargin)
+                }
+                else {
+                    make.top.equalTo(last!)
+                    make.left.equalTo(last!.snp_right).offset(padding)
+                }
+                
+                make.width.equalTo(itemWidth)
+                
+                if index == kHeaderTexts.count - 1 {
+                    make.bottom.equalTo(-23)
+                }
+                
+            }
+            control.isHidden = false
+            last = control
+        }
+    }
 }

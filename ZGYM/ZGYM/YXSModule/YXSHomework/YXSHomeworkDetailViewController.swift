@@ -287,6 +287,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
 //                    for (index,model) in buttons.enumerated() {
                 for join in joinList {
                     join.remarkVisible = weakSelf.model?.remarkVisible
+                    join.teacherId = weakSelf.model?.teacherId
                     if let backImageUrl = join.backImageUrl, backImageUrl.count <= 0 {
                         join.backImageUrl = join.imageUrl
                     }
@@ -314,6 +315,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
 //                    for (index,model) in buttons.enumerated() {
                 for join in joinList {
                     join.remarkVisible = weakSelf.model?.remarkVisible
+                    join.teacherId = weakSelf.model?.teacherId
                     if let backImageUrl = join.backImageUrl, backImageUrl.count <= 0 {
                         join.backImageUrl = join.imageUrl
                     }
@@ -345,6 +347,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     if let backImageUrl = model.backImageUrl, backImageUrl.count <= 0 {
                         model.backImageUrl = model.imageUrl
                     }
+                    model.teacherId = weakSelf.model?.teacherId
                     model.remarkVisible = weakSelf.model?.remarkVisible
                     let joinList = [model]
                     weakSelf.dataSource.removeAll()
@@ -367,39 +370,44 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     }
     
     @objc func refreshUnreadMessage() {
-        YXSEducationHomeworkQueryHomeworkByIdRequest(childrenId: homeModel.childrenId ?? 0, homeworkCreateTime: homeModel.createTime ?? "", homeworkId: homeModel.serviceId ?? 0).request({ [weak self](model: YXSHomeworkDetailModel) in
-            guard let weakSelf = self else {return}
-            model.topHistoryModel = weakSelf.topHistoryModel
-            weakSelf.model = model
-            
-            weakSelf.tableHeaderView.model = model
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
-//        YXSEducationHomeworkMessageRequest(homeworkId: homeModel.serviceId ?? 0).requestCollection({ [weak self](list: [YXSHomeworkMessageModel]) in
+        self.refreshData(isRefreshList: true)
+//        YXSEducationHomeworkQueryHomeworkByIdRequest(childrenId: homeModel.childrenId ?? 0, homeworkCreateTime: homeModel.createTime ?? "", homeworkId: homeModel.serviceId ?? 0).request({ [weak self](model: YXSHomeworkDetailModel) in
 //            guard let weakSelf = self else {return}
-//            if list.count > 0 {
-//                var messagemodel:YXSPunchCardMessageTipsModel? = YXSPunchCardMessageTipsModel.init(JSONString: "{\"count\":0}")
-//                weakSelf.model?.messageCount = list.count
-//                weakSelf.model?.messageAvatar = list.last?.operatorAvatar
-//                weakSelf.model?.messageUserType = list.last?.operatorType
-//            } else {
-//                weakSelf.model?.messageCount = 0
-//                weakSelf.model?.messageAvatar = ""
-//                weakSelf.model?.messageUserType = ""
+//            model.topHistoryModel = weakSelf.topHistoryModel
+//            weakSelf.model = model
 //
-//            }
-//            weakSelf.tableHeaderView.model = weakSelf.model
+//            weakSelf.tableHeaderView.model = model
 //        }) { (msg, code) in
-//            MBProgressHUD.hide(for: self.view, animated: true)
-//            //            self.endingRefresh()
 //            MBProgressHUD.yxs_showMessage(message: msg)
 //        }
     }
     
     @objc func yxs_loadClassStarTopHistoryData(){
+        if let data = UserDefaults.standard.object(forKey: "\(String(describing: self.homeModel.classId))") {
+            let historyModel = NSKeyedUnarchiver.unarchiveObject(with: data as! Data) as! YXSClassStarTopHistoryModel
+            let endDate = Date.init(fromString: historyModel.endTime!, format: .custom("yyyy-MM-dd HH:mm:ss"))
+            if let date = endDate {
+                let isDiffer = date.yxs_dateByAddingDays(days: 7)?.yxs_dateByDeleteHour(hour: -4)?.yxs_CompareDiffer()
+                if isDiffer ?? false{
+                    self.topHistoryModel = historyModel
+                    self.model?.topHistoryModel = topHistoryModel
+                } else {
+                    self.refreshHistoryData()
+                }
+            } else {
+                self.refreshHistoryData()
+            }
+        } else {
+            self.refreshHistoryData()
+        }
+    }
+    
+    func refreshHistoryData(){
         YXSEducationClassStarTopHistoryRequest.init(classId: self.homeModel.classId ?? 0).request({ (topHistoryModel: YXSClassStarTopHistoryModel) in
             self.topHistoryModel = topHistoryModel
+            let encodedData = NSKeyedArchiver.archivedData(withRootObject: topHistoryModel)
+            UserDefaults.standard.set(encodedData, forKey: "\(String(describing: self.homeModel.classId))")
+            UserDefaults.standard.synchronize()
             self.model?.topHistoryModel = topHistoryModel
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -894,36 +902,41 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 let offsetY = fabsf(Float(point!.y))
                 YXSHomeListSelectView.showAlert(offset: CGPoint(x: 15, y: CGFloat(offsetY) + 20), isShowSelectBtn: false, selects: weakSelf.changeModels) { [weak self](selectModel, selectModels) in
                     guard let strongSelf = self else { return }
-                    let selectType = SLCommonScreenSelectType.init(rawValue: selectModel.paramsKey) ?? .all
-                    if selectType == .change {
-                        //修改
-                        let vc = YXSHomeworkCommentController()
-                        vc.isChangeRemark = true
-                        vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
-                        vc.childrenIdList = [(model.childrenId ?? 0)]
-//                        vc.isPop = true
-                        //点评成功后 刷新数据
-                        vc.commetCallBack = { () -> () in
-                            weakSelf.refreshData()
+                    if strongSelf.model?.isExpired ?? false{
+                        MBProgressHUD.yxs_showMessage(message: "当前作业已过期")
+                    } else {
+                        let selectType = SLCommonScreenSelectType.init(rawValue: selectModel.paramsKey) ?? .all
+                        if selectType == .change {
+                            //修改
+                            let vc = YXSHomeworkCommentController()
+                            vc.isChangeRemark = true
+                            vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
+                            vc.childrenIdList = [(model.childrenId ?? 0)]
+    //                        vc.isPop = true
+                            //点评成功后 刷新数据
+                            vc.commetCallBack = { () -> () in
+                                weakSelf.refreshData()
+                            }
+                            weakSelf.navigationController?.pushViewController(vc)
+                        } else if selectType == .recall {
+                            //撤回
+                            let alert = UIAlertController.init(title: "提示", message: "您是否撤回本条点评？", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+                            alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (_) -> Void in
+                                MBProgressHUD.yxs_showLoading()
+                                YXSEducationHomeworkRemarkCancel(homeworkId: strongSelf.homeModel.serviceId ?? 0, childrenId: model.childrenId ?? 0, homeworkCreateTime: strongSelf.homeModel.createTime ?? "").request({ (json) in
+                                    MBProgressHUD.yxs_hideHUD()
+                                    MBProgressHUD.yxs_showMessage(message: "删除点评成功")
+                                    strongSelf.refreshData()
+                                }, failureHandler: { (msg, code) in
+                                    MBProgressHUD.yxs_showMessage(message: msg)
+                                })
+                            }))
+                            alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
+                            UIUtil.curruntNav().present(alert, animated: true, completion: nil)
                         }
-                        weakSelf.navigationController?.pushViewController(vc)
-                    } else if selectType == .recall {
-                        //撤回
-                        let alert = UIAlertController.init(title: "提示", message: "您是否撤回本条点评？", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-                        alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (_) -> Void in
-                            MBProgressHUD.yxs_showLoading()
-                            YXSEducationHomeworkRemarkCancel(homeworkId: strongSelf.homeModel.serviceId ?? 0, childrenId: model.childrenId ?? 0, homeworkCreateTime: strongSelf.homeModel.createTime ?? "").request({ (json) in
-                                MBProgressHUD.yxs_hideHUD()
-                                MBProgressHUD.yxs_showMessage(message: "删除点评成功")
-                                strongSelf.refreshData()
-                            }, failureHandler: { (msg, code) in
-                                MBProgressHUD.yxs_showMessage(message: msg)
-                            })
-                        }))
-                        alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
-                        UIUtil.curruntNav().present(alert, animated: true, completion: nil)
                     }
+                    
                 }
             }
             headerView.homeWorkChangeBlock = { [weak self](sender,model)in
@@ -932,34 +945,39 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 let offsetY = fabsf(Float(point!.y))
                 YXSHomeListSelectView.showAlert(offset: CGPoint(x: 15, y: CGFloat(offsetY) + 20), isShowSelectBtn: false, selects: weakSelf.changeModels) { [weak self](selectModel, selectModels) in
                     guard let strongSelf = self else { return }
-                    let selectType = SLCommonScreenSelectType.init(rawValue: selectModel.paramsKey) ?? .all
-                    if selectType == .change {
-                        //修改
-                        let vc = YXSHomeworkPublishController.init(mySubmitModel: model, model: strongSelf.homeModel)
-                        vc.changeSubmitSucess = { (newModel) in
-                            strongSelf.dataSource[section] = newModel
-                            strongSelf.tableView.reloadData()
+                    if strongSelf.model?.isExpired ?? false{
+                        MBProgressHUD.yxs_showMessage(message: "当前作业已过期")
+                    } else {
+                        let selectType = SLCommonScreenSelectType.init(rawValue: selectModel.paramsKey) ?? .all
+                        if selectType == .change {
+                            //修改
+                            let vc = YXSHomeworkPublishController.init(mySubmitModel: model, model: strongSelf.homeModel)
+                            vc.changeSubmitSucess = { (newModel) in
+                                strongSelf.dataSource[section] = newModel
+                                strongSelf.tableView.reloadData()
+                            }
+                            strongSelf.navigationController?.pushViewController(vc)
+                        } else if selectType == .recall {
+                            //撤回
+                            let alert = UIAlertController.init(title: "提示", message: "您是否撤回该作业？", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+                            alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (_) -> Void in
+                                MBProgressHUD.yxs_showLoading()
+                                YXSEducationHomeworkStudentCancelRequest(childrenId: model.childrenId  ?? 0, homeworkCreateTime:strongSelf.homeModel.createTime ?? "" ,homeworkId:strongSelf.homeModel.serviceId  ?? 0).request({ (json) in
+                                    MBProgressHUD.yxs_hideHUD()
+                                    MBProgressHUD.yxs_showMessage(message: "删除作业成功")
+                                    strongSelf.homeModel.commitState = 1
+                                    NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationStudentWorkNotification), object: [kNotificationModelKey: strongSelf.homeModel])
+                                    strongSelf.refreshData()
+                                }, failureHandler: { (msg, code) in
+                                    MBProgressHUD.yxs_showMessage(message: msg)
+                                })
+                            }))
+                            alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
+                            UIUtil.curruntNav().present(alert, animated: true, completion: nil)
                         }
-                        strongSelf.navigationController?.pushViewController(vc)
-                    } else if selectType == .recall {
-                        //撤回
-                        let alert = UIAlertController.init(title: "提示", message: "您是否撤回该作业？", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-                        alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (_) -> Void in
-                            MBProgressHUD.yxs_showLoading()
-                            YXSEducationHomeworkStudentCancelRequest(childrenId: model.childrenId  ?? 0, homeworkCreateTime:strongSelf.homeModel.createTime ?? "" ,homeworkId:strongSelf.homeModel.serviceId  ?? 0).request({ (json) in
-                                MBProgressHUD.yxs_hideHUD()
-                                MBProgressHUD.yxs_showMessage(message: "删除作业成功")
-                                strongSelf.homeModel.commitState = 1
-                                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationStudentWorkNotification), object: [kNotificationModelKey: strongSelf.homeModel])
-                                strongSelf.refreshData()
-                            }, failureHandler: { (msg, code) in
-                                MBProgressHUD.yxs_showMessage(message: msg)
-                            })
-                        }))
-                        alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
-                        UIUtil.curruntNav().present(alert, animated: true, completion: nil)
                     }
+                    
                 }
             }
             headerView.cellBlock = { [weak self](type,model: YXSHomeworkDetailModel) in
