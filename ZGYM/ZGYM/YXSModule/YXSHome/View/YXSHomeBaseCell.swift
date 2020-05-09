@@ -299,7 +299,7 @@ class YXSHomeBaseCell: UITableViewCell {
     
     lazy var topTimeLabel: UILabel = {
         let label = UILabel()
-        label.textColor = kTextMainBodyColor
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }()

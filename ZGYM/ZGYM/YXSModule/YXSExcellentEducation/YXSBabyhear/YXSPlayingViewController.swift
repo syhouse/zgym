@@ -380,10 +380,13 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         if let share = XMSDKPlayer.shared(){
             switch share.getTrackPlayMode() {
             case .XMTrackModeCycle:
+                MBProgressHUD.yxs_showMessage(message: "随机播放")
                 share.setTrackPlayMode(.XMTrackModeRandom)
             case .XMTrackModeRandom:
+                MBProgressHUD.yxs_showMessage(message: "单曲循环")
                 share.setTrackPlayMode(.XMTrackModeSingle)
             case .XMTrackModeSingle:
+                MBProgressHUD.yxs_showMessage(message: "顺序播放")
                 share.setTrackPlayMode(.XMTrackModeCycle)
             default:
                 share.setTrackPlayMode(.XMTrackModeCycle)

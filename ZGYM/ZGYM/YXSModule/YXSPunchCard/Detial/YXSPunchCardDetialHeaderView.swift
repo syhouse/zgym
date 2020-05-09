@@ -278,9 +278,9 @@ class SLPunchCardTeacherView: UIView{
         let dic = [NSAttributedString.Key.font: kTextMainBodyFont]
         let height: CGFloat = UIUtil.yxs_getTextHeigh(textStr: model.content ?? "", attributes: dic , width: SCREEN_WIDTH - 16 - 16)
         classLabel.text = model.className
-        detailLabel.numberOfLines = model.isShowAll ? 0 : 2
+        detailLabel.numberOfLines = model.isShowAll ? 0 : 3
         //需要展示多行
-        let showMore = height > 45
+        let showMore = height > 60
         if showMore{
             showAllControl.isHidden = false
             showAllControl.snp.remakeConstraints { (make) in
