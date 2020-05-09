@@ -43,7 +43,23 @@ class YXSFileUploadHelper: NSObject {
     
     // MARK: - Request
     @objc func requestYXSOSSAuth(completionHandler:(((_ model: YXSOSSAuthModel)->())?), failureHandler: ((String, String) -> ())?) {
-        YXSEducationOssAuthTokenRequest().request({ (result: YXSOSSAuthModel) in
+        YXSEducationOssAuthTokenRequest().request({ [weak self](result: YXSOSSAuthModel) in
+            guard let weakSelf = self else {return}
+            
+            weakSelf.oSSAuth = result
+            
+            ///conf
+            let conf = OSSClientConfiguration()
+            conf.maxRetryCount = 2
+            conf.timeoutIntervalForRequest = 300
+            conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
+            conf.maxConcurrentRequestCount = 50
+            
+            // 实例化client
+            let credential: OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: weakSelf.oSSAuth?.accessKeyId ?? "", secretKeyId: weakSelf.oSSAuth?.accessKeySecret ?? "", securityToken: weakSelf.oSSAuth?.securityToken ?? "")
+            
+            weakSelf.ossClient = OSSClient(endpoint: weakSelf.oSSAuth?.endpoint ?? "", credentialProvider: credential, clientConfiguration: conf)
+            
             completionHandler?(result)
             
         }, failureHandler: failureHandler)
@@ -57,16 +73,6 @@ class YXSFileUploadHelper: NSObject {
      */
     func uploadDataSource(dataSource: [YXSUploadDataResourceModel], storageType: YXSStorageType, classId: Int? = nil, albumId: Int? = nil, progress : ((_ progress: CGFloat)->())?, sucess: (([YXSFileModel])->())?, failureHandler: ((String, String) -> ())?) {
 
-        if oSSAuth == nil {
-            YXSEducationOssAuthTokenRequest().request({ [weak self](model: YXSOSSAuthModel) in
-                guard let weakSelf = self else {return}
-                weakSelf.oSSAuth = model
-                weakSelf.uploadDataSource(dataSource: dataSource, storageType: storageType, classId: classId, albumId: albumId, progress: progress, sucess: sucess, failureHandler: failureHandler)
-                
-            }, failureHandler: failureHandler)
-            return
-        }
-        
         var resultArr = [YXSFileModel]()
         let queue = DispatchQueue.global()
         let group = DispatchGroup()
@@ -92,13 +98,11 @@ class YXSFileUploadHelper: NSObject {
                 case .album:
                     if classId == nil {
                         failureHandler?("album没有班级ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "album没有班级ID")
                         return
                     }
                     
                     if albumId == nil {
                         failureHandler?("album没有相册ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "album没有相册ID")
                         return
                     }
                     path = self.getAlbumUrl(fullName: fullName, classId: classId ?? 0, albumId: albumId ?? 0)
@@ -106,7 +110,6 @@ class YXSFileUploadHelper: NSObject {
                 case .classFile:
                     if classId == nil {
                         failureHandler?("classFile没有班级ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "classFile没有班级ID")
                         return
                     }
                     path = self.getClassFileUrl(fullName: fullName, classId: classId ?? 0)
@@ -169,13 +172,11 @@ class YXSFileUploadHelper: NSObject {
                 case .album:
                     if classId == nil {
                         failureHandler?("album没有班级ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "album没有班级ID")
                         return
                     }
                     
                     if albumId == nil {
                         failureHandler?("album没有相册ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "album没有相册ID")
                         return
                     }
                     path = self.getAlbumUrl(fullName: fullName, classId: classId ?? 0, albumId: albumId ?? 0)
@@ -183,7 +184,6 @@ class YXSFileUploadHelper: NSObject {
                 case .classFile:
                     if classId == nil {
                         failureHandler?("classFile没有班级ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "classFile没有班级ID")
                         return
                     }
                     path = self.getClassFileUrl(fullName: fullName, classId: classId ?? 0)
@@ -222,13 +222,11 @@ class YXSFileUploadHelper: NSObject {
                 case .album:
                     if classId == nil {
                         failureHandler?("album没有班级ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "album没有班级ID")
                         return
                     }
                     
                     if albumId == nil {
                         failureHandler?("album没有相册ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "album没有相册ID")
                         return
                     }
                     path = self.getAlbumUrl(fullName: fullName, classId: classId ?? 0, albumId: albumId ?? 0)
@@ -236,7 +234,6 @@ class YXSFileUploadHelper: NSObject {
                 case .classFile:
                     if classId == nil {
                         failureHandler?("classFile没有班级ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "classFile没有班级ID")
                         return
                     }
                     path = self.getClassFileUrl(fullName: fullName, classId: classId ?? 0)
@@ -272,19 +269,16 @@ class YXSFileUploadHelper: NSObject {
                 switch storageType {
                 case .temporary:
                     failureHandler?("存放路径不支持", "400")
-//                    MBProgressHUD.yxs_showMessage(message: "存放路径不支持")
                     return
                     
                 case .album:
                     if classId == nil {
                         failureHandler?("album没有班级ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "album没有班级ID")
                         return
                     }
                     
                     if albumId == nil {
                         failureHandler?("album没有相册ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "album没有相册ID")
                         return
                     }
                     path = self.getAlbumUrl(fullName: fullName, classId: classId ?? 0, albumId: albumId ?? 0)
@@ -292,7 +286,6 @@ class YXSFileUploadHelper: NSObject {
                 case .classFile:
                     if classId == nil {
                         failureHandler?("classFile没有班级ID", "400")
-//                        MBProgressHUD.yxs_showMessage(message: "classFile没有班级ID")
                         return
                     }
                     path = self.getClassFileUrl(fullName: fullName, classId: classId ?? 0)
@@ -338,16 +331,6 @@ class YXSFileUploadHelper: NSObject {
      *  当storageType 为 album时 classId、albumId必填
      */
     func uploadPHAssetDataSource(mediaAssets:[PHAsset],storageType: YXSStorageType, classId: Int? = nil, albumId: Int? = nil, progress : ((_ progress: CGFloat)->())?, sucess:(([YXSFileModel])->())?,failureHandler: ((String, String) -> ())?) {
-        
-        if oSSAuth == nil {
-            YXSEducationOssAuthTokenRequest().request({ [weak self](model: YXSOSSAuthModel) in
-                guard let weakSelf = self else {return}
-                weakSelf.oSSAuth = model
-                weakSelf.uploadPHAssetDataSource(mediaAssets: mediaAssets, storageType: storageType, classId: classId, albumId: albumId, progress: progress, sucess: sucess, failureHandler: failureHandler)
-                
-            }, failureHandler: failureHandler)
-            return
-        }
         
         var dataSource: [YXSUploadDataResourceModel] = [YXSUploadDataResourceModel]()
         let queue = DispatchQueue.global()
@@ -405,128 +388,7 @@ class YXSFileUploadHelper: NSObject {
             guard let weakSelf = self else {return}
             weakSelf.uploadDataSource(dataSource: dataSource, storageType: storageType, classId: classId, albumId: albumId, progress: progress, sucess: sucess, failureHandler: failureHandler)
         }
-        
-
-        
-        
-//        var resultArr = [YXSFileModel]()
-//        let queue = DispatchQueue.global()
-//        let group = DispatchGroup()
-//
-//        for asset in mediaAssets{
-//
-//            let model = YXSFileModel(JSON: ["":""])
-//            var path: String = ""
-//
-//            if asset.mediaType == .image {
-//                group.enter()
-//                queue.async { [weak self] in
-//                    guard let weakSelf = self else {return}
-//
-//                    let tmpName = (asset.value(forKey: "filename") as? String ?? "")
-//                    let fileName = tmpName.deletingPathExtension
-//                    let extName = "jpg"//tmpName.pathExtension.lowercased()
-//                    let fullName = "\(fileName).\(extName)"
-//
-//                    if albumId == nil || classId == nil {
-//                        path = weakSelf.kHostFilePath+fullName//weakSelf.getImageUrl(name: name)
-//
-//                    } else {
-//                        path = weakSelf.kHostFilePath+fullName//weakSelf.getAlbumImageUrl(name: name, classId: classId ?? 0, albumId: albumId ?? 0)
-//                    }
-//
-//                    PHImageManager.default().requestImageData(for: asset, options: nil) { (imageData, dataUTI, orientation, info) in
-//
-//                        weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: imageData, uploadProgress: nil, completionHandler: { (result) in
-//                            model?.fileUrl = result
-//                            model?.fileName = fullName
-//                            model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: imageData!))
-//                            model?.fileType = extName
-//                            resultArr.append(model!)
-//                            group.leave()
-//
-//                        }, failureHandler: failureHandler)
-//                    }
-//                }
-//
-//            } else if asset.mediaType == .video {
-//
-//                PHCachingImageManager.default().requestAVAsset(forVideo: asset, options: nil) { (asset, audioMix, info) in
-//
-//                    let asset = asset as? AVURLAsset
-//
-//                    if let url = asset?.url {
-//                        /// 视频数据
-//                        let tmpName = asset?.url.lastPathComponent
-//                        let fileName = tmpName?.deletingPathExtension
-//                        let extName = tmpName?.pathExtension.lowercased()
-//                        let fullName = "\(fileName ?? "").\(extName ?? "")"
-//
-//                        group.enter()
-//                        queue.async { [weak self] in
-//                            guard let weakSelf = self else {return}
-//
-//                            if albumId == nil || classId == nil {
-//                                path = weakSelf.kHostFilePath+fullName//weakSelf.getVideoUrl(name: name)
-//
-//                            } else {
-//                                path = weakSelf.kHostFilePath+fullName//weakSelf.getAlbumVideoUrl(name: name, classId: classId ?? 0, albumId: albumId ?? 0)
-//                            }
-//                            let data = try? Data(contentsOf: asset!.url)
-//
-//                            weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: data, uploadProgress: nil, completionHandler: { (result) in
-//
-//                                model?.fileUrl = result
-//                                model?.fileName = fullName
-//                                model?.fileSize = Int( YXSFileManagerHelper.sharedInstance.sizeKbOfDataSrouce(data: data!))
-//                                model?.fileType = extName
-//                                resultArr.append(model!)
-//                                group.leave()
-//
-//                            }, failureHandler: failureHandler)
-//                        }
-//
-//                        group.enter()
-//                        queue.async { [weak self] in
-//                            guard let weakSelf = self else {return}
-//                            ///获取视频第一帧
-//                            do {
-//                                let name = "\(fileName ?? "")_1.jpg"
-//                                path = weakSelf.kHostFilePath+name
-//
-//                                let img = weakSelf.getVideoFirstPicture(asset: asset!)
-//                                let imgData = img?.jpegData(compressionQuality: 1)
-//
-//                                weakSelf.aliyunOSSUpload(objectKey: path, uploadingData: imgData, uploadProgress: nil, completionHandler: { (result) in
-//                                    model?.bgUrl = result
-//                                    group.leave()
-//
-//                                }, failureHandler: failureHandler)
-//
-//                            } catch  {
-//                                print("错误")
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            } else if asset.mediaType == .audio {
-//
-//            }
-//        }
-//
-//        group.notify(queue: queue) {
-//            DispatchQueue.main.async {
-//                sucess?(resultArr)
-//            }
-//        }
     }
-    
-//    /// 上传多个媒体文件 (可能会被服务端定时清理)
-//    func uploadMedias(mediaAssets:[PHAsset], progress : ((_ progress: CGFloat)->())? = nil, sucess:(([YXSFileModel])->())?,failureHandler: ((String, String) -> ())?) {
-//
-//        uploadAlbumMedias(mediaAssets: mediaAssets, classId: nil, albumId: nil, progress: progress, sucess: sucess, failureHandler: failureHandler)
-//    }
     
     // MARK: - Base
     // uploadProgress: 当前上传段长度、当前已经上传总长度、一共需要上传的总长度
@@ -540,7 +402,8 @@ class YXSFileUploadHelper: NSObject {
         if oSSAuth == nil {
             requestYXSOSSAuth(completionHandler: { [weak self](model) in
                 guard let weakSelf = self else {return}
-                weakSelf.oSSAuth = model
+//                weakSelf.oSSAuth = model
+                
                 weakSelf.aliyunOSSUpload(objectKey: objectKey, uploadingFileURL: uploadingFileURL, uploadingData: uploadingData, uploadProgress: uploadProgress, completionHandler: completionHandler, failureHandler: failureHandler)
                 
             }, failureHandler: nil)
@@ -566,42 +429,43 @@ class YXSFileUploadHelper: NSObject {
         // put.contentDisposition = @"";
         // put.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil]; // 可以在上传时设置元信息或者其他HTTP头部
         
-        ///conf
-        let conf = OSSClientConfiguration()
-        conf.maxRetryCount = 2
-        conf.timeoutIntervalForRequest = 300
-        conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
-        conf.maxConcurrentRequestCount = 50
+//        ///conf
+//        let conf = OSSClientConfiguration()
+//        conf.maxRetryCount = 2
+//        conf.timeoutIntervalForRequest = 300
+//        conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
+//        conf.maxConcurrentRequestCount = 50
         
-        // 实例化client
-        let credential: OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: oSSAuth?.accessKeyId ?? "", secretKeyId: oSSAuth?.accessKeySecret ?? "", securityToken: oSSAuth?.securityToken ?? "")
-        ossClient = OSSClient(endpoint: oSSAuth?.endpoint ?? "", credentialProvider: credential, clientConfiguration: conf)
+//        // 实例化client
+//        let credential: OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: oSSAuth?.accessKeyId ?? "", secretKeyId: oSSAuth?.accessKeySecret ?? "", securityToken: oSSAuth?.securityToken ?? "")
+//        ossClient = OSSClient(endpoint: oSSAuth?.endpoint ?? "", credentialProvider: credential, clientConfiguration: conf)
         
         /// Task
-        let putTask = ossClient?.putObject(put)
-        putTask?.continue({ [weak self](task) -> Any? in
-            guard let weakSelf = self else {return nil}
-            
-            if task.error == nil {
-                SLLog("upload object success!")
-                if  let _:OSSPutObjectResult  = task.result as? OSSPutObjectResult {
-                    var point: NSString = (weakSelf.oSSAuth?.endpoint ?? "") as NSString
-                    point = point.replacingOccurrences(of: "http://", with: "") as NSString
-                    point = point.replacingOccurrences(of: "https://", with: "") as NSString
-                    let strUrl = "http://\(weakSelf.oSSAuth?.bucket ?? "").\(point)/\(objectKey)"
-                    completionHandler?(strUrl)
-                    
-                } else {
-                    /// "链接拼接失败"
-                    failureHandler?("链接拼接失败", "400")
-                }
+        if let putTask = ossClient?.putObject(put) {
+            putTask.continue({ [weak self](task) -> Any? in
+                guard let weakSelf = self else {return nil}
+                
+                if task.error == nil {
+                    SLLog("upload object success!")
+                    if  let _:OSSPutObjectResult  = task.result as? OSSPutObjectResult {
+                        var point: NSString = (weakSelf.oSSAuth?.endpoint ?? "") as NSString
+                        point = point.replacingOccurrences(of: "http://", with: "") as NSString
+                        point = point.replacingOccurrences(of: "https://", with: "") as NSString
+                        let strUrl = "http://\(weakSelf.oSSAuth?.bucket ?? "").\(point)/\(objectKey)"
+                        completionHandler?(strUrl)
+                        
+                    } else {
+                        /// "链接拼接失败"
+                        failureHandler?("链接拼接失败", "400")
+                    }
 
-            } else {
-                SLLog("upload object failed, error:\(task.error)")
-                failureHandler?(task.error?.localizedDescription ?? "", "400")
-            }
-            return nil
-        })
+                } else {
+                    SLLog("upload object failed, error:\(task.error)")
+                    failureHandler?(task.error?.localizedDescription ?? "", "400")
+                }
+                return nil
+            })
+        }
     }
     
     
