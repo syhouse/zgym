@@ -467,6 +467,14 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 }
             }
             
+            /// 视频图标显示
+            switch item.fileType {
+            case "mp4","MP4","mov":
+                cell.imgVideoTag.isHidden = false
+            default:
+                cell.imgVideoTag.isHidden = true
+            }
+            
             cell.model = item
             return cell
         }
