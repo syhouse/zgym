@@ -506,14 +506,56 @@ extension YXSHomeController{
             if model.msgType == 3{
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.init(rawValue: model.serviceType ?? 0) ?? .homework])
             }
-        }
-        if !isChateWaitRefreshData{
-            isChateWaitRefreshData = true
-            ///首次启动可能收到大量IM消息推送过来  接收几秒钟后统一刷新一次接口
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
-                self.yxs_refreshListWithOutUserData()
+            
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+                var curruntModel: YXSHomeListModel?
+                var indexSection = 0
+                var indexRow = 0
+                for (section,sectionModel) in self.yxs_dataSource.enumerated(){
+                    for (index,model) in sectionModel.items.enumerated(){
+                        if model.serviceId == model.serviceId{
+                            indexSection = section
+                            indexRow = index
+                            curruntModel = model
+                            break
+                        }
+                    }
+                }
+                
+                if let curruntModel = curruntModel{
+                    if model.msgType == 0{
+                        if !(curruntModel.committedList?.contains(model.childrenId ?? 0) ?? false){
+                            curruntModel.committedList?.append(model.childrenId ?? 0)
+                        }
+                        if !(curruntModel.readList?.contains(model.childrenId ?? 0) ?? false){
+                            curruntModel.readList?.append(model.childrenId ?? 0)
+                        }
+                        
+                        yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))
+                    }
+                    
+                    if model.msgType == 5{
+                        if curruntModel.commitCount > 0, (curruntModel.committedList?.contains(model.childrenId ?? 0) ?? false){
+                            let index = curruntModel.committedList?.firstIndex(of: model.childrenId ?? 0) ?? 0
+                            curruntModel.committedList?.remove(at: index)
+                        }
+                        yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))
+                    }
+                }
+                
+                
+            }else{
+                if !isChateWaitRefreshData{
+                    isChateWaitRefreshData = true
+                    ///首次启动可能收到大量IM消息推送过来  接收几秒钟后统一刷新一次接口
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                        self.yxs_refreshListWithOutUserData()
+                    }
+                }
             }
         }
+        
+        
         
     }
     

@@ -12,6 +12,7 @@ import NightNight
 class YXSChildContentListCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         contentView.addSubview(titleLbl)
         contentView.addSubview(timeLbl)
         contentView.addSubview(coverImgV)
