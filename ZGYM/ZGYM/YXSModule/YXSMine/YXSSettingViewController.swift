@@ -161,7 +161,7 @@ class YXSSettingViewController: YXSBaseViewController, UITableViewDelegate, UITa
     
     @objc func logoutClick(sender: YXSButton) {
         if !yxs_user.hasSetPassword! {
-            let tmp: YXSInputAlertView = YXSInputAlertView.showIn(target: self.view) { (text, sender) in
+            let tmp: YXSInputAlertView = YXSInputAlertView.showIn(target: self.view, maxLength: 15) { (text, sender) in
                 if sender.titleLabel?.text == "确认" && text.count > 0 {
                     if text.isPassword {
                         MBProgressHUD.yxs_showLoading()

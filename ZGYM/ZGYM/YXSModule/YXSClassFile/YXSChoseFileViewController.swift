@@ -187,15 +187,24 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
             cell.lbSubTitle.text = fileSize
             cell.lbThirdTitle.text = "\(item.createTime?.yxs_DayTime() ?? "")"
             
-            if let url = URL(string: item.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
-                if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
-                    cell.imgIcon.image = img
-                    
-                } else {
-                    let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
-                    cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+            /// 图标
+            if item.bgUrl?.count ?? 0 > 0 {
+                /// 首图
+                cell.imgIcon.sd_setImage(with: URL(string: item.bgUrl ?? ""), placeholderImage: kImageDefualtImage)
+                
+            } else {
+                if let url = URL(string: item.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
+                    if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
+                        /// 文件类型
+                        cell.imgIcon.image = img
+                        
+                    } else {
+                        /// 图片
+                        cell.imgIcon.sd_setImage(with: url, placeholderImage: kImageDefualtImage)
+                    }
                 }
             }
+        
             cell.model = item
             return cell
 //        }

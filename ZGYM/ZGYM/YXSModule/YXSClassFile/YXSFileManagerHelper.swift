@@ -156,13 +156,14 @@ class YXSFileManagerHelper: NSObject {
                 return UIImage(named: "yxs_file_excel") ?? UIImage(named: "defultImage")
             case "pdf":
                 return UIImage(named: "yxs_file_pdf") ?? UIImage(named: "defultImage")
-            
+            case "txt":
+                return UIImage(named: "yxs_file_txt") ?? UIImage(named: "defultImage")
             /// 图片
-            case "jpg":
+            case "jpg","png":
             return nil
             /// 音频
             case "m4a","mp3","wav","ogg","m4r","acc":
-            return img
+            return UIImage(named: "yxs_file_mp3") ?? UIImage(named: "defultImage")
             /// 视频
             case "mp4","MP4","mov":
                 return getVideoFirstPicture(url: fileUrl)//getIconWithFileUrl(fileUrl)
