@@ -150,6 +150,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     
     // MARK: - Action
     @objc func doneClick(sender: YXSButton) {
+        /// 赋值satchelFileId字段 原因服务器需要知道文件是从书包过来的
         for sub in selectedFileList {
             sub.satchelFileId = sub.id
         }
