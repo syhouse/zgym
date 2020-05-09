@@ -6662,7 +6662,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6683,7 +6683,7 @@
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/TencentIM/TUIKit/Classes/Third/voiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/XMLY",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation;
 				PRODUCT_MODULE_NAME = ZGYM;
 				PRODUCT_NAME = "优学业";
@@ -6703,7 +6703,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6724,7 +6724,7 @@
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/TencentIM/TUIKit/Classes/Third/voiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/XMLY",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation;
 				PRODUCT_MODULE_NAME = ZGYM;
 				PRODUCT_NAME = "优学业";
