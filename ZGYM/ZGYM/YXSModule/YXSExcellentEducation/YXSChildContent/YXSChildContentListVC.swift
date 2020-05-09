@@ -10,6 +10,7 @@ import Foundation
 import JXCategoryView
 import NightNight
 import ObjectMapper
+import Alamofire
 
 class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentViewDelegate {
     
@@ -35,6 +36,7 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
             make.edges.equalTo(0)
         }
         tableView.register(YXSChildContentListCell.self, forCellReuseIdentifier: "YXSChildContentListCell")
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -115,6 +117,8 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
             vc.loadUrl = childContentUrl
             let dic = ["id":model.id ?? 0, "token":YXSPersonDataModel.sharePerson.token ?? "", "avatar":YXSPersonDataModel.sharePerson.userModel.avatar ?? "","name":YXSPersonDataModel.sharePerson.userModel.name ?? ""] as [String : Any]
             vc.scriptKey = dic.jsonString() ?? ""
+            vc.isCache = true
+            vc.title = "详情"
             self.navigationController?.pushViewController(vc)
         }
     }

@@ -172,6 +172,17 @@ extension Date {
         return calendar.date(byAdding: components, to: self) ?? nil
     }
     
+    
+    /// 返回一个日期，是在当前时间往后n时的日期
+    /// - Parameter hour: 需要增加的时间（时）
+    /// - Returns: 增加后日期
+    func yxs_dateByDeleteHour(hour:Int) -> Date? {
+        let calendar = Calendar.current
+        var components = DateComponents.init()
+        components.hour = hour
+        return calendar.date(byAdding: components, to: self) ?? nil
+    }
+    
     /// 与当前时间的月份差是否超过传入的值  传入的时间  比 当前时间 大
     /// - Returns: 相差的月数 正值为大于当前日期 负值为小于当前日期
     func yxs_isDifferWithMonth(month: Int) -> Bool? {
@@ -188,6 +199,27 @@ extension Date {
             } else {
                 return false
             }
+        } else {
+            return false
+        }
+    }
+    
+    /// 与当前时间比较大小
+    func yxs_CompareDiffer() -> Bool? {
+        let calendar = Calendar.current
+        let cmps = calendar.dateComponents([Calendar.Component.year,Calendar.Component.month,Calendar.Component.day,Calendar.Component.hour,Calendar.Component.minute,Calendar.Component.second], from: Date(), to: self)
+        if cmps.year ?? 0 > 0 {
+            return true
+        } else if cmps.month ?? 0 > 0 {
+            return true
+        } else if cmps.day ?? 0 > 0 {
+            return true
+        } else if cmps.hour ?? 0 > 0 {
+            return true
+        } else if cmps.minute ?? 0 > 0 {
+            return true
+        } else if cmps.second ?? 0 > 0 {
+            return true
         } else {
             return false
         }
