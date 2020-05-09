@@ -125,9 +125,6 @@ class NSUtil {
     
     
 // MARK: - 阿里云上传资源路径
-    static func getPath(sourceType: SourceNameType,fileName: String,fileType: String) -> String{
-        return "\(sourceType.rawValue)/" + "iOS/" + "\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/" + "\(YXSPersonDataModel.sharePerson.userModel?.type ?? "")/"  + fileName + "." + fileType
-    }
     /// 编译版本(6)
     static func BundleVersion() -> String{
         return BundleInfo(key: "CFBundleVersion")

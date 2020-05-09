@@ -543,10 +543,11 @@ class YXSFileUploadHelper: NSObject {
     
     // MARK: - GetUrl
     /// 临时图片
+    let isTest = sericeType == ServiceType.ServiceTest
     @objc func getTmpImgUrl(fullName: String)-> String{
         let name = fullName.deletingPathExtension
         let extName = fullName.pathExtension.lowercased()
-        #if DEBUG
+        #if isTest
         return "test-env/img/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
         #else
         return "product-env/img/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
@@ -557,7 +558,7 @@ class YXSFileUploadHelper: NSObject {
     @objc func getTmpVoiceUrl(fullName: String)-> String{
         let name = fullName.deletingPathExtension
         let extName = fullName.pathExtension.lowercased()
-        #if DEBUG
+        #if isTest
         return "test-env/voice/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
         #else
         return "product-env/voice/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
@@ -570,7 +571,7 @@ class YXSFileUploadHelper: NSObject {
     @objc func getTmpVideoUrl(fullName: String)-> String{
         let name = fullName.deletingPathExtension
         let extName = fullName.pathExtension.lowercased()
-        #if DEBUG
+        #if isTest
         return "test-env/video/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
         #else
         return "product-env/video/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
@@ -581,7 +582,7 @@ class YXSFileUploadHelper: NSObject {
     @objc func getAlbumUrl(fullName: String, classId: Int, albumId: Int)-> String {
         let name = fullName.deletingPathExtension
         let extName = fullName.pathExtension.lowercased()
-        #if DEBUG
+        #if isTest
         return "test-env/album/ios/\(classId)/\(albumId)/\(name).\(extName)"
         #else
         return "product-env/album/ios/\(classId)/\(albumId)/\(name).\(extName)"
@@ -592,7 +593,7 @@ class YXSFileUploadHelper: NSObject {
     @objc func getClassFileUrl(fullName:String, classId: Int)-> String {
         let name = fullName.deletingPathExtension
         let extName = fullName.pathExtension.lowercased()
-        #if DEBUG
+        #if isTest
         return "test-env/class-file/ios/\(classId)/\(name).\(extName)"
         #else
         return "product-env/class-file/ios/\(classId)/\(name).\(extName)"
@@ -603,7 +604,7 @@ class YXSFileUploadHelper: NSObject {
     @objc func getSatchelUrl(fullName:String)-> String {
         let name = fullName.deletingPathExtension
         let extName = fullName.pathExtension.lowercased()
-        #if DEBUG
+        #if isTest
         return "test-env/satchel/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
         #else
         return "product-env/satchel/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
@@ -614,7 +615,7 @@ class YXSFileUploadHelper: NSObject {
     @objc func getCircleUrl(fullName:String)-> String {
         let name = fullName.deletingPathExtension
         let extName = fullName.pathExtension.lowercased()
-        #if DEBUG
+        #if isTest
         return "test-env/class-circle/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
         #else
         return "product-env/class-circle/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
@@ -625,7 +626,7 @@ class YXSFileUploadHelper: NSObject {
     @objc func getAvatarUrl(fullName:String)-> String {
         let name = fullName.deletingPathExtension
         let extName = fullName.pathExtension.lowercased()
-        #if DEBUG
+        #if isTest
         return "test-env/avatar/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
         #else
         return "product-env/avatar/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
