@@ -102,39 +102,39 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
             guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUD()
             weakSelf.detailModel = model
-            
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                MBProgressHUD.yxs_showLoading(ignore: true)
+                YXSEducationCensusTeacherStaffListRequest(censusId: weakSelf.censusId ?? 0).request({ [weak self](json) in
+                    guard let strongSelf = self else {return}
+                    MBProgressHUD.yxs_hideHUD()
+                    
+                    strongSelf.joinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["joinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
+                    strongSelf.notJoinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["notJoinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
+                    strongSelf.checkEmptyData()
+                    
+                }) { (msg, code) in
+                        MBProgressHUD.yxs_showMessage(message: msg)
+                }
+                
+            } else {
+                MBProgressHUD.yxs_showLoading(ignore: true)
+                YXSEducationCensusParentStaffListRequest(censusId: weakSelf.censusId ?? 0).request({ [weak self](json) in
+                    guard let strongSelf = self else {return}
+                    MBProgressHUD.yxs_hideHUD()
+                    
+                    strongSelf.joinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["joinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
+                    strongSelf.notJoinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["notJoinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
+                    strongSelf.checkEmptyData()
+                    
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
+            }
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
         
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            MBProgressHUD.yxs_showLoading(ignore: true)
-            YXSEducationCensusTeacherStaffListRequest(censusId: self.censusId ?? 0).request({ [weak self](json) in
-                guard let weakSelf = self else {return}
-                MBProgressHUD.yxs_hideHUD()
-                
-                weakSelf.joinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["joinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
-                weakSelf.notJoinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["notJoinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
-                weakSelf.checkEmptyData()
-                
-            }) { (msg, code) in
-                    MBProgressHUD.yxs_showMessage(message: msg)
-            }
-            
-        } else {
-            MBProgressHUD.yxs_showLoading(ignore: true)
-            YXSEducationCensusParentStaffListRequest(censusId: self.censusId ?? 0).request({ [weak self](json) in
-                guard let weakSelf = self else {return}
-                MBProgressHUD.yxs_hideHUD()
-                
-                weakSelf.joinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["joinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
-                weakSelf.notJoinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["notJoinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
-                weakSelf.checkEmptyData()
-                
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
-        }
+        
         
     }
     

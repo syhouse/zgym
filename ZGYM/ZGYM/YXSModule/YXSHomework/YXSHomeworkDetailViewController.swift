@@ -83,18 +83,18 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         tableView.register(YXSHomeworkDetailCell.self, forCellReuseIdentifier: "YXSHomeworkDetailCell")
         tableView.register(YXSHomeworkDetailSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: "YXSHomeworkDetailSectionHeaderView")
         tableView.register(YXSPunchCardDetialTableFooterView.self, forHeaderFooterViewReuseIdentifier: "SLPunchCardDetialTableFooterView")
-        tableHeaderView.mediaView.voiceTouchedHandler = { [weak self](url, duration) in
-            guard let weakSelf = self else {return}
-            weakSelf.voiceClick()
-        }
-        tableHeaderView.mediaView.videoTouchedHandler = { [weak self](url) in
-            guard let weakSelf = self else {return}
-            let vc = SLVideoPlayController()
-            vc.videoUrl = url
-            weakSelf.navigationController?.pushViewController(vc)
-        }
-        tableHeaderView.mediaView.imageTouchedHandler = {(imageView, index) in
-        }
+//        tableHeaderView.mediaView.voiceTouchedHandler = { [weak self](url, duration) in
+//            guard let weakSelf = self else {return}
+//            weakSelf.voiceClick()
+//        }
+//        tableHeaderView.mediaView.videoTouchedHandler = { [weak self](url) in
+//            guard let weakSelf = self else {return}
+//            let vc = SLVideoPlayController()
+//            vc.videoUrl = url
+//            weakSelf.navigationController?.pushViewController(vc)
+//        }
+//        tableHeaderView.mediaView.imageTouchedHandler = {(imageView, index) in
+//        }
 
         tableHeaderView.pushToBlock = { [weak self]()in
             guard let weakSelf = self else {return}
@@ -423,7 +423,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             MBProgressHUD.yxs_hideHUD()
             model.topHistoryModel = weakSelf.topHistoryModel
             weakSelf.model = model
-            weakSelf.tableHeaderView.model = model
+            weakSelf.tableHeaderView.setModel(model: model)
             if YXSPersonDataModel.sharePerson.personRole == .PARENT && weakSelf.homeModel.isRead != 1{
                 /// 标记页面已读
                 if !(weakSelf.model?.readList?.contains(weakSelf.homeModel.childrenId ?? 0) ?? false) {
@@ -456,7 +456,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     var model: YXSHomeworkDetailModel? {
         didSet {
             checkHomeworkCommited()
-            tableHeaderView.model = self.model
+            tableHeaderView.setModel(model: self.model!)
             tableView.tableHeaderView = tableHeaderView
             refreshLayout()
         }
@@ -548,17 +548,31 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
 
     @objc func remindClick() {
         pushToContainer()
-//        var childrenIdList:[Int] = [Int]()
-//        for sub in secondListModel ?? [YXSClassMemberModel]() {
-//            childrenIdList.append(sub.childrenId ?? 0)
-//        }
-//        MBProgressHUD.yxs_showLoading()
-//        YXSEducationTeacherOneTouchReminderRequest(childrenIdList: childrenIdList, classId: homeListModel?.classId ?? 0, opFlag: 1, serviceId: homeListModel?.serviceId ?? 0, serviceType: 1, serviceCreateTime: homeListModel?.createTime ?? "").request({ (json) in
-//            MBProgressHUD.yxs_showMessage(message: "通知成功")
-//
-//        }) { (msg, code) in
-//            MBProgressHUD.yxs_showMessage(message: msg)
-//        }
+    }
+    
+    ///更新高度
+    func updateHeaderHeight(){
+        self.tableHeaderView.setModel(model: self.model!)
+        self.tableView.tableHeaderView = self.tableHeaderView
+    }
+    
+    // MARK: -点击展开刷新
+    /// 点击展开刷新
+    /// - Parameters:
+    ///   - section: section
+    ///   - isScroll: 是否滚动
+    func showAllRefresh(section: Int, isScroll: Bool = false){
+        var scroll = false
+        let headerView = tableView.headerView(forSection: section)
+        if let headerView = headerView, isScroll{
+            let rc = tableView.convert(headerView.frame, to: self.view)
+            SLLog(rc)
+            if rc.minY < 0{
+                scroll = true
+            }
+        }
+        
+        reloadTableView(section:section,scroll: scroll)
     }
     
     // MARK: - Other
@@ -872,7 +886,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         if let headerView = headerView{
             headerView.curruntSection = section
             headerView.hmModel = self.model
-            headerView.model = model
+            headerView.setModel(model: model)
             let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
             headerView.yxs_addLine(position: .top, color: cl, lineHeight: 0.5)
             headerView.goodClick = { [weak self](model)in
@@ -998,6 +1012,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                         MBProgressHUD.yxs_showMessage(message: msg)
                     }
                     break
+                case .showAll:
+                    weakSelf.showAllRefresh(section: section, isScroll: !model.isShowContentAll)
                 case .lookHomeWorkGood:
                     let vc = YXSHomeworkHistoryGoodVC.init(classId: weakSelf.homeModel.classId ?? 0, childid: model.childrenId ?? 0) { (id) in
                         if id == 0 {
@@ -1090,7 +1106,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
 
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: CGRect.zero, style: UITableView.Style.grouped)
-        tableView.dataSource = self
+        tableView.dataSource
+            = self
         tableView.delegate = self
         tableView.mixedBackgroundColor = MixedColor.init(normal: UIColor.white, night: kNightBackgroundColor)
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
@@ -1187,12 +1204,16 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
     
     func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
         switch eventName {
+        case kYXSHomeworkDetialHeaderViewUpdateHeaderViewEvent:
+            let isShow: Bool = info!["isShow"] as! Bool
+            self.model?.isShowContentAll = isShow
+            self.updateHeaderHeight()
         case kFriendsCircleMessageViewGoMessageEvent:
             let vc = YXSCommonMessageListController.init(hmModel: self.homeModel, deModel: self.model!)
             vc.loadSucess = {
                 [weak self] in
                 guard let strongSelf = self else { return }
-                strongSelf.tableHeaderView.model = strongSelf.model
+                strongSelf.tableHeaderView.setModel(model: strongSelf.model!)
             }
             self.navigationController?.pushViewController(vc)
         case kHomeworkPictureGraffitiNextEvent:

@@ -76,7 +76,7 @@ class YXSURLProtocol: URLProtocol , URLSessionDataDelegate, URLSessionTaskDelega
                 let delegate = UIApplication.shared.delegate as! AppDelegate
                 let context = delegate.context
                 DispatchQueue.global().async {
-                    let possibleCachedResponse = self.cachedResponseForCurrentRequest(context: context)
+                    let possibleCachedResponse = self.cachedResponseForCurrentRequest(context: context,delegate: delegate)
                     if let cachedResponse = possibleCachedResponse {
                         print("----- 从缓存中获取响应内容 -----")
 
@@ -125,23 +125,26 @@ class YXSURLProtocol: URLProtocol , URLSessionDataDelegate, URLSessionTaskDelega
         self.dataTask       = nil
         self.receivedData   = nil
         self.urlResponse    = nil
+        SLLog("+++++  初始化data  +++++")
     }
 
+
     //保存获取到的请求响应数据
-    func saveCachedResponse (context:NSManagedObjectContext) {
+    func saveCachedResponse (context:NSManagedObjectContext, data: NSData) {
         print("+++++ 将获取到的数据缓存起来 +++++")
         SLLog("+++++  " + self.request.url!.absoluteString + "  +++++")
 
 
 
         //保存（Core Data数据要放在主线程中保存，要不并发是容易崩溃）
-
+        SLLog("+++++  666添加data\(data.length)  +++++")
         DispatchQueue.global().async {
             let param = RequsetParamManager.getSharedInstance().urlParam
+
             let paramJson = param?.jsonString()
             //创建NSManagedObject的实例，来匹配在.xcdatamodeld 文件中所对应的数据模型。
             let cachedResponse = NSEntityDescription.insertNewObject(forEntityName: "SLCachedURLResponse", into: context)
-            cachedResponse.setValue(self.receivedData, forKey: "data")
+            cachedResponse.setValue(data, forKey: "data")
             cachedResponse.setValue(paramJson, forKey: "param")
             cachedResponse.setValue(self.request.url?.absoluteString, forKey: "url")
             cachedResponse.setValue(NSDate(), forKey: "timestamp")
@@ -149,7 +152,7 @@ class YXSURLProtocol: URLProtocol , URLSessionDataDelegate, URLSessionTaskDelega
                 cachedResponse.setValue(self.urlResponse?.mimeType, forKey: "mimeType")
                 cachedResponse.setValue(self.urlResponse?.textEncodingName, forKey: "encoding")
             }
-            
+            SLLog("+++++  保存data  +++++")
 //            let httpResponse: HTTPURLResponse =
 //            let etag = httpResponse.allHeaderFields["Etag"]
 //            cachedResponse.setValue(etag, forKey: "etag")
@@ -171,9 +174,9 @@ class YXSURLProtocol: URLProtocol , URLSessionDataDelegate, URLSessionTaskDelega
 
 
     //检索缓存请求
-    func cachedResponseForCurrentRequest(context:NSManagedObjectContext) -> NSManagedObject? {
+    func cachedResponseForCurrentRequest(context:NSManagedObjectContext,delegate: AppDelegate ) -> NSManagedObject? {
         //获得managedObjectContext
-        let delegate = UIApplication.shared.delegate as! AppDelegate
+        
         let context = delegate.context
         //创建一个NSFetchRequest，通过它得到对象模型实体：SLCachedURLResponse
         let fetchRequest: NSFetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "SLCachedURLResponse")
@@ -181,7 +184,6 @@ class YXSURLProtocol: URLProtocol , URLSessionDataDelegate, URLSessionTaskDelega
         fetchRequest.entity = entity
 
         let param = RequsetParamManager.getSharedInstance().urlParam
-
         let paramJson = param?.jsonString() ?? ""
         var paramStr = paramJson.replacingOccurrences(of: "{", with: "")
         paramStr = paramStr.replacingOccurrences(of: "}", with: "")
@@ -244,26 +246,32 @@ class YXSURLProtocol: URLProtocol , URLSessionDataDelegate, URLSessionTaskDelega
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         self.urlResponse = response
+        SLLog("+++++  清除data\(self.receivedData?.length)  +++++")
         self.receivedData = NSMutableData()
         completionHandler(.allow)
+        
     }
 
     @available(iOS 7.0, *)
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         self.client?.urlProtocol(self, didLoad: data)
         self.receivedData?.append(data)
+        SLLog("+++++  添加data\(self.receivedData?.length)  +++++")
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if error != nil {
             self.client?.urlProtocol(self, didFailWithError: error!)
         } else {
-            //保存获取到的请求响应数据
-            DispatchQueue.main.async {
-                //获得Core Data的NSManagedObjectContext
-                let delegate = UIApplication.shared.delegate as! AppDelegate
-                let context = delegate.context
-                self.saveCachedResponse(context: context)
+            if self.receivedData?.length ?? 0 > 0 {
+                 let data = NSData.init(data: self.receivedData as! Data)
+                //保存获取到的请求响应数据
+                DispatchQueue.main.async {
+                    //获得Core Data的NSManagedObjectContext
+                    let delegate = UIApplication.shared.delegate as! AppDelegate
+                    let context = delegate.context
+                    self.saveCachedResponse(context: context,data: data)
+                }
             }
             self.client?.urlProtocolDidFinishLoading(self)
         }

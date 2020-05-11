@@ -227,6 +227,8 @@ class YXSDatePickerView: UIView {
         //注意：action里面的方法名后面需要加个冒号“：”
         datePicker.addTarget(self, action: #selector(changeDate),
                              for: UIControl.Event.valueChanged)
+        datePicker.calendar = Calendar.current
+        datePicker.locale = Locale.init(identifier: "zh_GB")
         return datePicker
     }()
     

@@ -224,6 +224,25 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         }
     }
     
+    // MARK: -点击展开刷新
+    /// 点击展开刷新
+    /// - Parameters:
+    ///   - section: section
+    ///   - isScroll: 是否滚动
+    func showAllRefresh(section: Int, isScroll: Bool = false){
+        var scroll = false
+        let headerView = tableView.headerView(forSection: section)
+        if let headerView = headerView, isScroll{
+            let rc = tableView.convert(headerView.frame, to: self.view)
+            SLLog(rc)
+            if rc.minY < 0{
+                scroll = true
+            }
+        }
+        
+        reloadTableView(section:section,scroll: scroll)
+    }
+    
     // MARK: - tableViewDelegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if dataSource.count > section {
@@ -280,7 +299,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
             headerView.curruntSection = section
             headerView.hmModel = model
             model.isShowLookGoodButton = false
-            headerView.model = model
+            headerView.setModel(model: model)
             let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
             headerView.yxs_addLine(position: .top, color: cl, lineHeight: 0.5)
             headerView.goodClick = { [weak self](model)in
@@ -365,6 +384,8 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                 case .comment:
                     weakSelf.showComment(section:section)
                     break
+                case .showAll:
+                    weakSelf.showAllRefresh(section: section, isScroll: !model.isShowContentAll)
                 case .praise:
                     YXSEducationHomeworkPraiseRequest(childrenId: model.childrenId ?? 0, homeworkCreateTime: model.homeworkCreateTime ?? "", homeworkId: model.homeworkId ?? 0).request({ [weak self](json) in
                         guard let strongSelf = self else {return}
