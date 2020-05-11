@@ -45,6 +45,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         view.mixedBackgroundColor = MixedColor(normal: kNightFFFFFF, night: kNightBackgroundColor)
         tableView.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
         
+        /// 取出缓存数据赋值
+        folderList = YXSCacheHelper.yxs_getCacheClassFolderList(classId: classId, parentFolderId: parentFolderId)
+        fileList = YXSCacheHelper.yxs_getCacheClassFileList(classId: classId, parentFolderId: parentFolderId)
+        
         tableView.register(YXSFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
         tableView.register(YXSFileCell.classForCoder(), forCellReuseIdentifier: "SLFileCell")
         
@@ -177,6 +181,10 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 self.fileList += tmpFileList
                 
                 self.tableView.reloadData()
+                
+                YXSCacheHelper.yxs_cacheClassFolderList(dataSource: self.folderList, classId: self.classId, parentFolderId: self.parentFolderId)
+                YXSCacheHelper.yxs_cacheClassFileList(dataSource: self.fileList, classId: self.classId, parentFolderId: self.parentFolderId)
+                
                 self.yxs_endingRefresh()
             }
         }

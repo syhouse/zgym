@@ -191,35 +191,78 @@ class YXSMineViewController: YXSBaseTableViewController{
     
     @objc func classFileClick() {
         /// 班级文件
-        YXSEducationGradeListRequest().request({ [weak self](json) in
-            guard let weakSelf = self else {return}
+        let cacheJoinList = YXSCacheHelper.yxs_getCacheClassJoinList()
+        let cacheCreateList = YXSCacheHelper.yxs_getCacheClassCreateList()
+        if cacheJoinList != nil || cacheCreateList != nil {
             var list:[YXSClassModel] = [YXSClassModel]()
-            let joinClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
-            let createClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
-            
-            list += createClassList
-            list += joinClassList
+            list += cacheCreateList
+            list += cacheJoinList
             
             if list.count > 1 {
                 let vc = YXSFileClassListViewController(dataSource: list) { (idx) in
                     let classModel = list[idx]
                     let vc = YXSClassFileViewController(classId: classModel.id ?? 0, parentFolderId: -1)
-                    weakSelf.navigationController?.pushViewController(vc)
+                    self.navigationController?.pushViewController(vc)
                 }
-                weakSelf.navigationController?.pushViewController(vc)
+                self.navigationController?.pushViewController(vc)
                 
             } else if list.count == 1 {
                 let classId = list.first?.id
                 let vc = YXSClassFileViewController(classId: classId ?? 0, parentFolderId: -1)
-                weakSelf.navigationController?.pushViewController(vc)
+                self.navigationController?.pushViewController(vc)
                 
             } else {
                 MBProgressHUD.yxs_showMessage(message: "暂未班级")
             }
             
-        }) { [weak self](msg, code) in
-            guard let weakSelf = self else {return}
-            MBProgressHUD.yxs_showMessage(message: msg)
+            YXSEducationGradeListRequest().request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                var list:[YXSClassModel] = [YXSClassModel]()
+                let joinClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
+                let createClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
+                
+                YXSCacheHelper.yxs_cacheClassJoinList(dataSource: joinClassList)
+                YXSCacheHelper.yxs_cacheClassCreateList(dataSource: createClassList)
+                
+            }) { [weak self](msg, code) in
+                guard let weakSelf = self else {return}
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+            
+        } else {
+            YXSEducationGradeListRequest().request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                var list:[YXSClassModel] = [YXSClassModel]()
+                let joinClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
+                let createClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
+                
+                YXSCacheHelper.yxs_cacheClassJoinList(dataSource: joinClassList)
+                YXSCacheHelper.yxs_cacheClassCreateList(dataSource: createClassList)
+                
+                list += createClassList
+                list += joinClassList
+                
+                if list.count > 1 {
+                    let vc = YXSFileClassListViewController(dataSource: list) { (idx) in
+                        let classModel = list[idx]
+                        let vc = YXSClassFileViewController(classId: classModel.id ?? 0, parentFolderId: -1)
+                        weakSelf.navigationController?.pushViewController(vc)
+                    }
+                    weakSelf.navigationController?.pushViewController(vc)
+                    
+                } else if list.count == 1 {
+                    let classId = list.first?.id
+                    let vc = YXSClassFileViewController(classId: classId ?? 0, parentFolderId: -1)
+                    weakSelf.navigationController?.pushViewController(vc)
+                    
+                } else {
+                    MBProgressHUD.yxs_showMessage(message: "暂未班级")
+                }
+                
+            }) { [weak self](msg, code) in
+                guard let weakSelf = self else {return}
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
         }
     }
     
