@@ -99,7 +99,7 @@ class YXSUploadSourceHelper: NSObject {
         conf.timeoutIntervalForRequest = 300
         conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
         conf.maxConcurrentRequestCount = 50
-        let credential2:OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: YXSUploadSourceHelper.oSSAuth.accessKeyId ?? "", secretKeyId: YXSUploadSourceHelper.oSSAuth.accessKeySecret ?? "", securityToken: YXSUploadSourceHelper.oSSAuth.securityToken ?? "")
+        let credential2:OSSCredentialProvider =  OSSStsTokenCredentialProvider.init(accessKeyId: YXSUploadSourceHelper.oSSAuth.accessKeyId ?? "", secretKeyId: YXSUploadSourceHelper.oSSAuth.accessKeySecret ?? "", securityToken: YXSUploadSourceHelper.oSSAuth.securityToken ?? "")
         
         //实例化
         YXSUploadSourceHelper.ossClient = OSSClient(endpoint: YXSUploadSourceHelper.oSSAuth.endpoint ?? "", credentialProvider: credential2, clientConfiguration: conf)
@@ -226,6 +226,14 @@ class YXSUploadSourceHelper: NSObject {
     ///   - sucess: 成功
     ///   - failureHandler: 失败
     func uploadMedia(mediaInfos: [[String: Any]] , uploadPaths: [String],progress progressBlock : ((_ progress: CGFloat)->())? = nil, sucess:(([[String: Any]])->())?,failureHandler: ((String, String) -> ())?) {
+        ///判断tokenModel是否过期
+        if YXSUploadSourceHelper.oSSAuth != nil{
+            if YXSUploadSourceHelper.oSSAuth.expirationDate.timeIntervalSince1970 <= Date().timeIntervalSince1970{
+                YXSUploadSourceHelper.oSSAuth = nil
+            }
+        }
+        
+        
         if YXSUploadSourceHelper.oSSAuth == nil{
             YXSEducationOssAuthTokenRequest().request({ (model: YXSOSSAuthModel) in
                 YXSUploadSourceHelper.oSSAuth = model
@@ -233,7 +241,6 @@ class YXSUploadSourceHelper: NSObject {
             }, failureHandler: failureHandler)
             return
         }
-        
         initClient()
         var urls = [[String: Any]]()
         let queue = DispatchQueue.global()
@@ -260,28 +267,6 @@ class YXSUploadSourceHelper: NSObject {
                 }
             }
             
-//            else if sourceType == .album{
-//                if let classId = info[classIdKey] as? Int, let albumId = info[albumIdKey] as? Int{
-//                    if mediaModel.type == .video{
-//                        let newModel = SLUploadSourceModel.init(model: mediaModel, type: SourceNameType.album,path:
-//                            "\(sourceType.rawValue)/\(classId )/\(albumId)/+\(mediaModel.fileName.MD5())_1.jpg")
-//                        newModel.index = index
-//                        uploadModels.append(newModel)
-//
-//                        let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType,path: "\(sourceType.rawValue)/\(classId )/\(albumId)/+\(mediaModel.fileName.MD5()).mp4")
-//                        curruntModel.index = index
-//                        uploadModels.append(curruntModel)
-//
-//                    }else{
-//                        let curruntModel = SLUploadSourceModel.init(model: mediaModel, type: sourceType,path: "\(sourceType.rawValue)/\(classId )/\(albumId)/+\(mediaModel.fileName.MD5()).jpg")
-//                        curruntModel.index = index
-//                        uploadModels.append(curruntModel)
-//                    }
-//                }else{
-//                    assert(false, "相册资源必须传classId和albumId")
-//                }
-//
-//            }
             ///组装model与路径
             if  sourceType == .video{
                 let newModel = SLUploadSourceModel.init(model: mediaModel, type: SourceNameType.firstVideo, path: uploadPaths[index] + mediaModel.fileName.MD5() + "_1.jpg")
@@ -311,6 +296,7 @@ class YXSUploadSourceHelper: NSObject {
         for uploadModel in uploadModels{
             let ossPutObj: OSSPutObjectRequest = OSSPutObjectRequest()
             //path为上传到阿里云的路径
+            let semaphore = DispatchSemaphore(value: 0)
             group.enter()
             queue.async {
                 let sourceType: SourceNameType = uploadModel.type
@@ -319,7 +305,6 @@ class YXSUploadSourceHelper: NSObject {
                     let data = uploadModel.model.showImg?.yxs_compressImage(image: uploadModel.model.showImg!, maxLength: imageMax)
                     ossPutObj.uploadingData = data
                 case .video:
-                    let semaphore = DispatchSemaphore(value: 0)
                     PHImageManager.default().requestExportSession(forVideo: uploadModel.model.asset, options: nil, exportPreset: AVAssetExportPresetMediumQuality) { (exportSession, info) in
                         //将asset转换为AVAssetExportSession对象,用AVAssetExportSession转化为Data
                         HMVideoCompression().compressVideo(exportSession) { (data) in
