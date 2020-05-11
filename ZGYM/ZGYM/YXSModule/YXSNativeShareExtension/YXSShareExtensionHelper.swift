@@ -21,10 +21,12 @@ class YXSShareExtensionHelper: NSObject {
         
         if UIUtil.RootController() is YXSBaseTabBarController {
             if let obj = UserDefaults.standard.url(forKey: "kReceiveShareExtension") {
-               UserDefaults.standard.removeObject(forKey: "kReceiveShareExtension")
-               UserDefaults.standard.synchronize()
                 
-                shareExtensoin(url: obj, completionHandler: completionHandler)
+                shareExtensoin(url: obj) {
+                    UserDefaults.standard.removeObject(forKey: "kReceiveShareExtension")
+                    UserDefaults.standard.synchronize()
+                    completionHandler?()
+                }
             }
         }
     }
@@ -72,36 +74,10 @@ class YXSShareExtensionHelper: NSObject {
         let vc = YXSSatchelFileViewController()
         UIUtil.curruntNav().pushViewController(vc)
         
-        let list = files
-        var uploadArr:[YXSUploadDataResourceModel] = [YXSUploadDataResourceModel]()
+        let uploadArr = files2UploadDatas(files: files)
         
-        for sub in list {
-            
-            let fileName = sub
-            let extName = sub.pathExtension.lowercased()
-            let url = YXSFileManagerHelper.sharedInstance.getFullPathURL(lastPathComponent: fileName)
-            let size = YXSFileManagerHelper.sharedInstance.sizeMbOfFilePath(filePath: url)
-
-            let model = YXSUploadDataResourceModel()
-            
-            if extName == "mov" || extName == "mp4" {
-                model.bgImage = YXSFileUploadHelper.sharedInstance.getVideoFirstPicture(url: url)
-                let semaphore = DispatchSemaphore(value: 0)
-                YXSFileUploadHelper.sharedInstance.video2Mp4(url: url) { (data, newUrl) in
-                    model.fileName = newUrl?.lastPathComponent
-                    model.dataSource = data
-                    uploadArr.append(model)
-                    semaphore.signal()
-                }
-                semaphore.wait()
-                
-            } else {
-                model.fileName = fileName
-                model.dataSource = try? Data(contentsOf: url)
-                uploadArr.append(model)
-            }
-        }
-        
+        let obj = UserDefaults.standard.url(forKey: "kReceiveShareExtension")
+        if obj == nil { return }
         MBProgressHUD.yxs_showLoading(inView: vc.view)
         YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: uploadArr, storageType: .satchel, progress: nil, sucess: { (list) in
             
@@ -109,6 +85,7 @@ class YXSShareExtensionHelper: NSObject {
                 DispatchQueue.main.async {
                     MBProgressHUD.yxs_hideHUDInView(view: vc.view)
                     MBProgressHUD.yxs_showMessage(message: "上传成功")
+                    completionHandler?()
                     vc.loadData()
                 }
                 
@@ -135,6 +112,9 @@ class YXSShareExtensionHelper: NSObject {
             
             let dataSrouceArr = weakSelf.files2UploadDatas(files: files)
             
+            let obj = UserDefaults.standard.url(forKey: "kReceiveShareExtension")
+            if obj == nil { return }
+            
             MBProgressHUD.yxs_showLoading(inView: vc.view)
             YXSFileUploadHelper.sharedInstance.uploadDataSource(dataSource: dataSrouceArr, storageType: .classFile, classId: classModel.id, progress: { (progress) in
                 
@@ -143,6 +123,7 @@ class YXSShareExtensionHelper: NSObject {
                     DispatchQueue.main.async {
                         MBProgressHUD.yxs_hideHUDInView(view: vc.view)
                         MBProgressHUD.yxs_showMessage(message: "上传成功")
+                        completionHandler?()
                         vc.loadData()
                     }
 
