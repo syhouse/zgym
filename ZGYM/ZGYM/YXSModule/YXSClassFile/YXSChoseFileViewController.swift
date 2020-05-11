@@ -21,6 +21,9 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     /// 选中的文件集合
     var selectedFileList: [YXSFileModel] = [YXSFileModel]()
     
+    /// 侦听下一级页面 选中的文件发生变化 刷新底部View
+    var selectedItemsDidChangeBlock:((_ selectedFileList: [YXSFileModel])->())?
+    
     var completionHandler:((_ selectedFileList: [YXSFileModel], _ vc: YXSChoseFileViewController)->())?
     
     init(parentFolderId: Int = -1, selectedFileList: [YXSFileModel] = [YXSFileModel](), completionHandler:((_ selectedFileList: [YXSFileModel], _ vc: YXSChoseFileViewController)->())?) {
@@ -45,12 +48,34 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         self.view.addSubview(searchBar)
         searchBar.editingChangedBlock = {[weak self](view) in
             guard let weakSelf = self else {return}
-            weakSelf.searchRequest(keyword: view.text ?? "") { [weak self](list) in
+//            weakSelf.searchRequest(keyword: view.text ?? "") { [weak self](list) in
+//                guard let weakSelf = self else {return}
+//                DispatchQueue.main.async {
+//                    weakSelf.fileList = list
+//                    weakSelf.tableView.reloadData()
+//                }
+//            }
+            
+            // 出组
+            YXSSatchelFilePageQueryRequest(currentPage: 1, parentFolderId: weakSelf.parentFolderId, keyword: view.text ?? "").request({ [weak self](json) in
                 guard let weakSelf = self else {return}
+//                let hasNext = json["hasNext"].boolValue
+//                weakSelf.loadMore = hasNext
                 DispatchQueue.main.async {
-                    weakSelf.fileList = list
+                    weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+                    for sub in weakSelf.selectedFileList {
+                        for obj in weakSelf.fileList {
+                            if sub.id == obj.id {
+                                obj.isSelected = true
+                                break
+                            }
+                        }
+                    }
                     weakSelf.tableView.reloadData()
                 }
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
             }
         }
         
@@ -64,6 +89,13 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
             make.left.equalTo(0)
             make.right.equalTo(0)
         })
+        
+        /// 初始化
+        var size = 0
+        for sub in selectedFileList {
+            size += sub.fileSize ?? 0
+        }
+        totalSize = UInt(size)
         
         tableView.backgroundColor = kTableViewBackgroundColor
         tableView.register(YXSFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
@@ -87,24 +119,95 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     
     // MARK: - Request
     override func yxs_refreshData() {
-        searchRequest(keyword: "") { [weak self](list) in
-            guard let weakSelf = self else {return}
-            DispatchQueue.main.async {
-                weakSelf.fileList.removeAll()
-                weakSelf.fileList = list
-                weakSelf.tableView.reloadData()
-                weakSelf.yxs_endingRefresh()
-            }
-        }
+        loadData(keyword: "")
+//        searchRequest(keyword: "") { [weak self](list) in
+//            guard let weakSelf = self else {return}
+//            DispatchQueue.main.async {
+//                weakSelf.fileList.removeAll()
+//                weakSelf.fileList = list
+//                weakSelf.tableView.reloadData()
+//                weakSelf.yxs_endingRefresh()
+//            }
+//        }
     }
     
     override func yxs_loadNextPage() {
-        searchRequest(keyword: "") { [weak self](list) in
-            guard let weakSelf = self else {return}
+        loadData(keyword: "")
+//        searchRequest(keyword: "") { [weak self](list) in
+//            guard let weakSelf = self else {return}
+//            DispatchQueue.main.async {
+//                weakSelf.fileList += list
+//                weakSelf.tableView.reloadData()
+//                weakSelf.yxs_endingRefresh()
+//            }
+//        }
+    }
+    
+     @objc func loadData(keyword:String) {
+            
+        let workingGroup = DispatchGroup()
+        let workingQueue = DispatchQueue(label: "request_queue")
+        
+        var tmpFolderList = [YXSFolderModel]()
+        var tmpFileList = [YXSFileModel]()
+        
+        // 入组
+        workingGroup.enter()
+        workingQueue.async {
+            // 出组
+            YXSSatchelFolderPageQueryRequest(currentPage: 1, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+//                let hasNext = json["hasNext"].boolValue
+//                weakSelf.loadMore = hasNext
+                
+                tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                workingGroup.leave()
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
+        
+        // 入组
+        workingGroup.enter()
+        workingQueue.async {
+            // 出组
+            YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                let hasNext = json["hasNext"].boolValue
+                weakSelf.loadMore = hasNext
+                
+                tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+                workingGroup.leave()
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+            
+        }
+
+        // 调度组里的任务都执行完毕
+        workingGroup.notify(queue: workingQueue) {
             DispatchQueue.main.async {
-                weakSelf.fileList += list
-                weakSelf.tableView.reloadData()
-                weakSelf.yxs_endingRefresh()
+                /// 填充选中的Cell
+                for sub in self.selectedFileList {
+                    for obj in tmpFileList {
+                        if sub.id == obj.id {
+                            obj.isSelected = true
+                            break
+                        }
+                    }
+                }
+                
+                if self.curruntPage == 1{
+                    self.fileList.removeAll()
+                }
+                
+                self.folderList = tmpFolderList
+                self.fileList += tmpFileList
+                
+                self.tableView.reloadData()
+                self.yxs_endingRefresh()
             }
         }
     }
@@ -164,26 +267,26 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     
     // MARK: - Delegate
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if section == 0 {
-//            return folderList.count
-//        } else {
+        if section == 0 {
+            return folderList.count
+        } else {
             return fileList.count
-//        }
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        if indexPath.section == 0 {
-//            let item = folderList[indexPath.row]
-//            let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
-//            cell.model = item
-//            cell.lbTitle.text = item.folderName
-//            return cell
-//
-//        } else {
+        if indexPath.section == 0 {
+            let item = folderList[indexPath.row]
+            let cell: YXSFileGroupCell = tableView.dequeueReusableCell(withIdentifier: "SLFileGroupCell") as! YXSFileGroupCell
+            cell.model = item
+            cell.lbTitle.text = item.folderName
+            return cell
+
+        } else {
             let item = fileList[indexPath.row]//[indexPath.row]
             let cell: YXSFileAbleSlectedCell = tableView.dequeueReusableCell(withIdentifier: "SLFileAbleSlectedCell") as! YXSFileAbleSlectedCell
             cell.lbTitle.text = item.fileName
@@ -219,7 +322,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         
             cell.model = item
             return cell
-//        }
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -231,41 +334,76 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell: YXSFileAbleSlectedCell = tableView.cellForRow(at: indexPath) as! YXSFileAbleSlectedCell
-        cell.btnSelect.isSelected = !cell.btnSelect.isSelected
-        
-        let fileItem = fileList[indexPath.row]
-        fileItem.isSelected = cell.btnSelect.isSelected
-        
-        if cell.btnSelect.isSelected {
-            /// 选中
-            var tmpIdx: Int? = nil
-            for (index, sub) in selectedFileList.enumerated() {
-                if sub.id == fileItem.id {
-                    tmpIdx = index
-                    break
-                }
+        if indexPath.section == 0 {
+            let item = folderList[indexPath.row]
+            
+            let vc = YXSChoseFileViewController(parentFolderId: item.id ?? 0, selectedFileList: selectedFileList) { [weak self](list, vc) in
+                guard let weakSelf = self else {return}
+                weakSelf.completionHandler?(list, vc)
             }
-            if tmpIdx == nil {
-                selectedFileList.append(fileItem)
-                totalSize += UInt(fileItem.fileSize ?? 0)
-            }
+            
+            /// 侦听下一级页面 选中的文件发生变化 刷新底部View
+            vc.selectedItemsDidChangeBlock = { [weak self] (list) in
+                 guard let weakSelf = self else {return}
+                 weakSelf.selectedFileList = list
+                 var size = 0
+                 for sub in list {
+                     size += sub.fileSize ?? 0
+                 }
+                 weakSelf.totalSize = UInt(size)
+             }
 
+            navigationController?.pushViewController(vc)
+            
         } else {
-            /// 取消选中
-            var tmpIdx: Int? = nil
-            for (index, sub) in selectedFileList.enumerated() {
-                if sub.id == fileItem.id {
-                    tmpIdx = index
-                    break
+            let cell: YXSFileAbleSlectedCell = tableView.cellForRow(at: indexPath) as! YXSFileAbleSlectedCell
+            cell.btnSelect.isSelected = !cell.btnSelect.isSelected
+            
+            let fileItem = fileList[indexPath.row]
+            fileItem.isSelected = cell.btnSelect.isSelected
+            
+            if cell.btnSelect.isSelected {
+                /// 选中
+                var tmpIdx: Int? = nil
+                for (index, sub) in selectedFileList.enumerated() {
+                    if sub.id == fileItem.id {
+                        tmpIdx = index
+                        break
+                    }
+                }
+                if tmpIdx == nil {
+                    selectedFileList.append(fileItem)
+                    totalSize += UInt(fileItem.fileSize ?? 0)
+                }
+
+            } else {
+                /// 取消选中
+                var tmpIdx: Int? = nil
+                for (index, sub) in selectedFileList.enumerated() {
+                    if sub.id == fileItem.id {
+                        tmpIdx = index
+                        break
+                    }
+                }
+                if let idx = tmpIdx {
+                    selectedFileList.remove(at: idx)
+                    totalSize -= UInt(fileItem.fileSize ?? 0)
                 }
             }
-            if let idx = tmpIdx {
-                selectedFileList.remove(at: idx)
-                totalSize -= UInt(fileItem.fileSize ?? 0)
-            }
+            selectedItemsDidChangeBlock?(selectedFileList)
         }
     }
+    
+    // MARK: - Other
+//    @objc func getSelectedFileList() -> [YXSFileModel] {
+//        var tmpArr = [YXSFileModel]()
+//        for sub in fileList {
+//            if sub.isSelected ?? false {
+//                tmpArr.append(sub)
+//            }
+//        }
+//        return tmpArr
+//    }
     
     /*
     // MARK: - Navigation

@@ -249,7 +249,8 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: choseFileList).request({ (json) in
                 DispatchQueue.main.async {
                     weakSelf.loadData()
-                    vc.navigationController?.popViewController()
+                    vc.navigationController?.popToViewController(weakSelf, animated: true)
+//                    vc.navigationController?.popViewController()
                 }
                 
             }) { (msg, code) in
