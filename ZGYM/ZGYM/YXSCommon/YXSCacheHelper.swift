@@ -15,7 +15,8 @@ class YXSCacheHelper: NSObject {
     public static func yxs_cacheHomeList(dataSource: [YXSHomeSectionModel], childrenId: Int?){
         DispatchQueue.global().async {
             let personModel = YXSPersonDataModel.sharePerson
-            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "HomeList\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)"))
+            let cachePath = "HomeList\(personModel.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)"
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: cachePath))
         }
     }
     
@@ -23,7 +24,8 @@ class YXSCacheHelper: NSObject {
     public static func yxs_getCacheHomeList(childrenId: Int?) -> [YXSHomeSectionModel]{
         var dataSource:[YXSHomeSectionModel] = [YXSHomeSectionModel]()
         let personModel = YXSPersonDataModel.sharePerson
-        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "HomeList\(personModel.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)")) as? [YXSHomeSectionModel]
+        let cachePath = "HomeList\(personModel.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)"
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: cachePath)) as? [YXSHomeSectionModel]
         if let items = items{
             dataSource = items
         }else{

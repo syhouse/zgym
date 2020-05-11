@@ -220,7 +220,7 @@ class YXSDatePickerView: UIView {
                 datePicker.date = date
             }
         }
-        
+        ///显示24小时制
         datePicker.calendar = Calendar.current
         datePicker.locale = Locale.init(identifier: "zh_GB")
         
