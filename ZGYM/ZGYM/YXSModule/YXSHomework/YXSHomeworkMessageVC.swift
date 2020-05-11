@@ -166,6 +166,25 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
+    
+    // MARK: -点击展开刷新
+    /// 点击展开刷新
+    /// - Parameters:
+    ///   - section: section
+    ///   - isScroll: 是否滚动
+    func showAllRefresh(section: Int, isScroll: Bool = false){
+        var scroll = false
+        let headerView = tableView.headerView(forSection: section)
+        if let headerView = headerView, isScroll{
+            let rc = tableView.convert(headerView.frame, to: self.view)
+            SLLog(rc)
+            if rc.minY < 0{
+                scroll = true
+            }
+        }
+        
+        reloadTableView(section:section,scroll: scroll)
+    }
 
     // MARK: - tableViewDelegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -218,7 +237,7 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
             if let headerView = headerView{
                 self.detailModel?.isShowLookGoodButton = false
                 headerView.hmModel = self.deModel
-                headerView.model = self.detailModel
+                headerView.setModel(model: self.detailModel!)
     //            let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
     //            headerView.yxs_addLine(position: .top, color: cl, lineHeight: 0.5)
                 headerView.goodClick = { [weak self](model)in
@@ -330,6 +349,8 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
                     case .comment:
                         weakSelf.showComment(section:section)
                         break
+                    case .showAll:
+                        weakSelf.showAllRefresh(section: section, isScroll: !model.isShowContentAll)
                     case .praise:
                         YXSEducationHomeworkPraiseRequest(childrenId: model.childrenId ?? 0, homeworkCreateTime: weakSelf.homeModel.createTime ?? "", homeworkId: weakSelf.homeModel.serviceId ?? 0).request({ [weak self](json) in
                             guard let strongSelf = self else {return}

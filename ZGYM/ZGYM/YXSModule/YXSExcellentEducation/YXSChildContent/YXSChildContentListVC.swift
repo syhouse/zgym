@@ -112,12 +112,13 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
         if dataSource.count > indexPath.row {
             let model = dataSource[indexPath.row]
             let vc = YXSBaseWebViewController()
+            vc.isCache = true
 //            vc.loadUrl = "http://192.168.10.157/yehw/index.html"
 //            vc.loadUrl = "http://www.ym698.com/yehw/"
             vc.loadUrl = childContentUrl
             let dic = ["id":model.id ?? 0, "token":YXSPersonDataModel.sharePerson.token ?? "", "avatar":YXSPersonDataModel.sharePerson.userModel.avatar ?? "","name":YXSPersonDataModel.sharePerson.userModel.name ?? ""] as [String : Any]
             vc.scriptKey = dic.jsonString() ?? ""
-            vc.isCache = true
+            
             vc.title = "详情"
             self.navigationController?.pushViewController(vc)
         }

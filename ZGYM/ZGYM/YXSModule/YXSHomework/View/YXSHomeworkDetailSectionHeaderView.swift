@@ -47,6 +47,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         addSubview(homeWorkChangeButton)
         addSubview(goodControl)
         addSubview(contentLabel)
+        addSubview(showAllButton)
         addSubview(nineMediaView)
         addSubview(voiceView)
 
@@ -182,245 +183,234 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
 //    }
     
     // MARK: - Setter
-    var model: YXSHomeworkDetailModel? {
-        didSet {
-            favView.isHidden = true
-            goodControl.isHidden = true
-            remarkView.isHidden = true
-            voiceView.isHidden = true
-            reviewControl.isHidden = true
-            finishView.isHidden = true
-            classStartLabelBtn.isHidden = true
-            goodHomeworkLabelBtn.isHidden = true
-            ///是否展示修改按钮
-            if self.model?.isRemark == 1 || self.model?.isGood == 1{
-                homeWorkChangeButton.isHidden = true
-            } else {
-                homeWorkChangeButton.isHidden = !(self.model?.isMySubmit ?? false)
-            }
-            
-            updateButtons()
-            voiceView.snp_removeConstraints()
-            favView.snp_removeConstraints()
-            finishView.isHidden = !(self.model?.isGood == 1)
+    
+    func setModel(model:YXSHomeworkDetailModel) {
+        self.model = model
+        favView.isHidden = true
+        goodControl.isHidden = true
+        remarkView.isHidden = true
+        voiceView.isHidden = true
+        reviewControl.isHidden = true
+        finishView.isHidden = true
+        classStartLabelBtn.isHidden = true
+        goodHomeworkLabelBtn.isHidden = true
+        ///是否展示修改按钮
+        if self.model?.isRemark == 1 || self.model?.isGood == 1{
+            homeWorkChangeButton.isHidden = true
+        } else {
+            homeWorkChangeButton.isHidden = !(self.model?.isMySubmit ?? false)
+        }
+        
+        updateButtons()
+        voiceView.snp_removeConstraints()
+        favView.snp_removeConstraints()
+        finishView.isHidden = !(self.model?.isGood == 1)
 //            //其他老师&家长展示盖章
 //            if !(self.hmModel?.isMyPublish ?? false) && (self.model?.isGood == 1){
 //                finishView.isHidden = false
 //            }
-            goodControl.isHidden = !(self.hmModel?.isMyPublish ?? false)
-            commentButton.isHidden = self.hmModel?.isMyPublish ?? false
-            praiseButton.isHidden = self.hmModel?.isMyPublish ?? false
-            reviewControl.isHidden = !(self.hmModel?.isMyPublish ?? false)
-            if self.model?.isGood == 1 {
-                goodControl.isSelected = true
-            } else {
-                goodControl.isSelected = false
+        goodControl.isHidden = !(self.hmModel?.isMyPublish ?? false)
+        commentButton.isHidden = self.hmModel?.isMyPublish ?? false
+        praiseButton.isHidden = self.hmModel?.isMyPublish ?? false
+        reviewControl.isHidden = !(self.hmModel?.isMyPublish ?? false)
+        if self.model?.isGood == 1 {
+            goodControl.isSelected = true
+        } else {
+            goodControl.isSelected = false
+        }
+        
+        if let myClassStartRank = self.hmModel?.getMyClassStartRank(id: self.model?.childrenId ?? 0), myClassStartRank > 0 {
+            classStartLabelBtn.isHidden = false
+            switch myClassStartRank {
+            case 1:
+                classStartLabelBtn.locailImage = "yxs_punch_detial_first"
+                case 2:
+                classStartLabelBtn.locailImage = "yxs_punch_detial_secend"
+                case 3:
+                classStartLabelBtn.locailImage = "yxs_punch_detial_thrid"
+            default:
+                break
             }
-            
-//            if self.model?.isRemark == 0 && self.model?.commentJsonList?.count ?? 0 > 0{
-//                bottomLine.isHidden = true
-//            } else {
-//                bottomLine.isHidden = false
-//            }
-            
-            if let myClassStartRank = self.hmModel?.getMyClassStartRank(id: self.model?.childrenId ?? 0), myClassStartRank > 0 {
-                classStartLabelBtn.isHidden = false
-                switch myClassStartRank {
-                case 1:
-                    classStartLabelBtn.locailImage = "yxs_punch_detial_first"
-                    case 2:
-                    classStartLabelBtn.locailImage = "yxs_punch_detial_secend"
-                    case 3:
-                    classStartLabelBtn.locailImage = "yxs_punch_detial_thrid"
-                default:
-                    break
-                }
-                classStartLabelBtn.snp.updateConstraints { (make) in
-                    make.width.equalTo(115)
-                }
-                goodHomeworkLabelBtn.snp.updateConstraints { (make) in
-                    make.left.equalTo(classStartLabelBtn.snp_right).offset(10)
-                }
-            } else {
-                classStartLabelBtn.isHidden = true
-                classStartLabelBtn.snp.updateConstraints { (make) in
-                    make.width.equalTo(0)
-                }
-                goodHomeworkLabelBtn.snp.updateConstraints { (make) in
-                    make.left.equalTo(classStartLabelBtn.snp_right).offset(0)
-                }
+            classStartLabelBtn.snp.updateConstraints { (make) in
+                make.width.equalTo(115)
             }
-            let goodCount: Int = self.hmModel?.getChildGoodCount(id: self.model?.childrenId ?? 0) ?? 0
-            if  goodCount > 0 && self.model?.isShowLookGoodButton ?? true {
-                goodHomeworkLabelBtn.isHidden = false
-                goodHomeworkLabelBtn.title = "优秀作业+\(goodCount)"
+            goodHomeworkLabelBtn.snp.updateConstraints { (make) in
+                make.left.equalTo(classStartLabelBtn.snp_right).offset(10)
             }
-            
-            imgAvatar.sd_setImage(with: URL(string: self.model?.childHeadPortrait ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
-            var text = self.model?.childrenName
-            for model in Relationships{
-                if model.paramsKey == self.model?.relationship{
-                    text! += model.text
-                    break
-                }
+        } else {
+            classStartLabelBtn.isHidden = true
+            classStartLabelBtn.snp.updateConstraints { (make) in
+                make.width.equalTo(0)
             }
-            lbName.text = text
-            lbTime.text = self.model?.createTime?.yxs_Time()
-            UIUtil.yxs_setLabelParagraphText(contentLabel, text: self.model?.content)
-            let paragraphStye = NSMutableParagraphStyle()
-            paragraphStye.lineSpacing = kMainContentLineHeight
-            paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
-            let dic = [NSAttributedString.Key.font: kTextMainBodyFont, NSAttributedString.Key.paragraphStyle:paragraphStye]
-            let height = UIUtil.yxs_getTextHeigh(textStr: self.model?.content, attributes: dic , width: SCREEN_WIDTH - 30)
-            if height < 20 {
-                contentLabel.snp.remakeConstraints { (make) in
-                    make.left.equalTo(15)
+            goodHomeworkLabelBtn.snp.updateConstraints { (make) in
+                make.left.equalTo(classStartLabelBtn.snp_right).offset(0)
+            }
+        }
+        let goodCount: Int = self.hmModel?.getChildGoodCount(id: self.model?.childrenId ?? 0) ?? 0
+        if  goodCount > 0 && self.model?.isShowLookGoodButton ?? true {
+            goodHomeworkLabelBtn.isHidden = false
+            goodHomeworkLabelBtn.title = "优秀作业+\(goodCount)"
+        }
+        
+        imgAvatar.sd_setImage(with: URL(string: self.model?.childHeadPortrait ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
+        var text = self.model?.childrenName
+        for model in Relationships{
+            if model.paramsKey == self.model?.relationship{
+                text! += model.text
+                break
+            }
+        }
+        lbName.text = text
+        lbTime.text = self.model?.createTime?.yxs_Time()
+        UIUtil.yxs_setLabelParagraphText(contentLabel, text: self.model?.content)
+        let paragraphStye = NSMutableParagraphStyle()
+        paragraphStye.lineSpacing = kMainContentLineHeight
+        paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
+        let dic = [NSAttributedString.Key.font: kTextMainBodyFont, NSAttributedString.Key.paragraphStyle:paragraphStye]
+        let height = UIUtil.yxs_getTextHeigh(textStr: self.model?.content, attributes: dic , width: SCREEN_WIDTH - 30)
+        contentLabel.numberOfLines = model.isShowContentAll ? 0 : 3
+        var last: UIView! = contentLabel
+        var lastBottom = 10
+        if height < 20 {
+            contentLabel.snp.remakeConstraints { (make) in
+                make.left.equalTo(15)
 //                    make.height.equalTo(height)
-                    make.top.equalTo(imgAvatar.snp_bottom).offset(15)
-                }
-                contentLabel.sizeToFit()
+                make.top.equalTo(imgAvatar.snp_bottom).offset(15)
             }
-            else {
-                contentLabel.snp.remakeConstraints({ (make) in
-                    make.left.equalTo(15)
-//                    make.height.equalTo(height)
-                    make.width.equalTo(SCREEN_WIDTH - 30)
-                    make.top.equalTo(imgAvatar.snp_bottom).offset(15)
-                })
-            }
-            var last: UIView! = contentLabel
-            var lastBottom = 10
-            if self.model?.hasVoice ?? false {
-                voiceView.isHidden = false
-                voiceView.id = "\(self.model?.id ?? 0)"
-                let voiceModel = YXSVoiceViewModel()
-                voiceView.width = SCREEN_WIDTH - 30 - 41
-                voiceModel.voiceDuration = self.model?.audioDuration
-                voiceModel.voiceUlr = self.model?.audioUrl
-                voiceView.model = voiceModel
-                voiceView.snp.remakeConstraints { (make) in
-                    make.top.equalTo(last.snp_bottom).offset(10)
-                    make.left.equalTo(contentLabel)
-                    make.width.equalTo(SCREEN_WIDTH - 30)
-                    make.height.equalTo(36)
-                }
-                last = voiceView
-                lastBottom = 14
-            } else {
-                voiceView.isHidden = true
-            }
-            
-            if self.model?.imgs.count ?? 0 > 0{
-                nineMediaView.isHidden = false
-                nineMediaView.isGraffiti = self.hmModel?.isMyPublish ?? false
-                nineMediaView.medias = self.model?.imgs
-                nineMediaView.snp.remakeConstraints { (make) in
-                    make.left.right.equalTo(0)
-                    make.top.equalTo(last.snp_bottom).offset(lastBottom)
-                }
-                last = nineMediaView
-            }else{
-                nineMediaView.isHidden = true
-            }
-            
-            reviewControl.snp.remakeConstraints({ (make) in
-                make.top.equalTo(last.snp_bottom).offset(10)
-                make.right.equalTo(-15)
-                make.width.equalTo(100)
-                make.height.equalTo(26)
+            contentLabel.sizeToFit()
+        }
+        else {
+            contentLabel.snp.remakeConstraints({ (make) in
+                make.left.equalTo(15)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.top.equalTo(imgAvatar.snp_bottom).offset(15)
             })
-            last = reviewControl
-//            var imgs:[String]? = nil
-//            if self.model?.imageUrl?.count ?? 0 > 0 {
-//                imgs = self.model?.imageUrl?.components(separatedBy: ",")
-//            }
-//
-//            let mediaModel = YXSMediaViewModel()//(content: self.model?.content, voiceUrl: self.model?.audioUrl, voiceDuration: self.model?.audioDuration, images: imgs)
-//            mediaModel.content = self.model?.content
-//            mediaModel.voiceUrl = self.model?.audioUrl
-//            mediaModel.voiceDuration = self.model?.audioDuration
-//            mediaModel.images = imgs
-//            mediaModel.bgUrl = self.model?.bgUrl
-//            mediaModel.videoUrl = self.model?.videoUrl
-//            mediaView.layoutIfNeeded();
-//            mediaView.model = mediaModel
-//            mediaView.layoutIfNeeded()
-//            let height = mediaView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-//            mediaView.snp.remakeConstraints({ (make) in
-//                make.top.equalTo(imgAvatar.snp_bottom).offset(20)
-//                make.left.equalTo(15)
-//                make.width.equalTo(SCREEN_WIDTH - 30)
-//                make.height.equalTo(height)
-//            })
+            if model.needShowAllButton{
+                showAllButton.isHidden = false
+                showAllButton.isSelected = model.isShowContentAll
+                showAllButton.snp.remakeConstraints { (make) in
+                    make.left.equalTo(contentLabel)
+                    make.top.equalTo(contentLabel.snp_bottom).offset(9)
+                    make.height.equalTo(26)
+                }
+                last = showAllButton
+            }else{
+                showAllButton.isHidden = true
+                showAllButton.snp.removeConstraints()
+            }
             
-            ///是否显示点评
-            var isShowRemark : Bool = false
-            if self.model?.isRemark == 0 {
-                isShowRemark = false
+        }
+        
+        
+        if self.model?.hasVoice ?? false {
+            voiceView.isHidden = false
+            voiceView.id = "\(self.model?.id ?? 0)"
+            let voiceModel = YXSVoiceViewModel()
+            voiceView.width = SCREEN_WIDTH - 30 - 41
+            voiceModel.voiceDuration = self.model?.audioDuration
+            voiceModel.voiceUlr = self.model?.audioUrl
+            voiceView.model = voiceModel
+            voiceView.snp.remakeConstraints { (make) in
+                make.top.equalTo(last.snp_bottom).offset(10)
+                make.left.equalTo(contentLabel)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.height.equalTo(36)
+            }
+            last = voiceView
+            lastBottom = 14
+        } else {
+            voiceView.isHidden = true
+        }
+        
+        if self.model?.imgs.count ?? 0 > 0{
+            nineMediaView.isHidden = false
+            nineMediaView.isGraffiti = self.hmModel?.isMyPublish ?? false
+            nineMediaView.medias = self.model?.imgs
+            nineMediaView.snp.remakeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.top.equalTo(last.snp_bottom).offset(lastBottom)
+            }
+            last = nineMediaView
+        }else{
+            nineMediaView.isHidden = true
+        }
+        
+        reviewControl.snp.remakeConstraints({ (make) in
+            make.top.equalTo(last.snp_bottom).offset(10)
+            make.right.equalTo(-15)
+            make.width.equalTo(100)
+            make.height.equalTo(26)
+        })
+        last = reviewControl
+        
+        ///是否显示点评
+        var isShowRemark : Bool = false
+        if self.model?.isRemark == 0 {
+            isShowRemark = false
+        } else {
+            reviewControl.isHidden = true
+            if self.hmModel?.remarkVisible == 1 {
+                isShowRemark = true
             } else {
-                reviewControl.isHidden = true
-                if self.hmModel?.remarkVisible == 1 {
+                if self.hmModel?.isMyPublish ?? false {
                     isShowRemark = true
                 } else {
-                    if self.hmModel?.isMyPublish ?? false {
-                        isShowRemark = true
-                    } else {
-                        isShowRemark = self.model?.isMySubmit ?? false
-                    }
+                    isShowRemark = self.model?.isMySubmit ?? false
                 }
             }
-            if isShowRemark {
-                remarkView.isHidden = false
-                remarkView.hmModel = self.hmModel
-                remarkView.model = self.model
-                remarkView.layoutIfNeeded()
+        }
+        if isShowRemark {
+            remarkView.isHidden = false
+            remarkView.hmModel = self.hmModel
+            remarkView.model = self.model
+            remarkView.layoutIfNeeded()
 //                let height = remarkView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-                let height = self.model?.remarkHeight ?? 0
-                remarkView.snp.remakeConstraints { (make) in
-                    make.top.equalTo(reviewControl.snp_bottom).offset(15)
-                    make.left.equalTo(imgAvatar)
-                    make.width.equalTo(SCREEN_WIDTH - 30)
-                    make.height.equalTo(height)
-                }
-                last = remarkView
-            } else {
-                remarkView.snp.removeConstraints()
-                remarkView.isHidden = true
+            let height = self.model?.remarkHeight ?? 0
+            remarkView.snp.remakeConstraints { (make) in
+                make.top.equalTo(reviewControl.snp_bottom).offset(15)
+                make.left.equalTo(imgAvatar)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.height.equalTo(height)
             }
+            last = remarkView
+        } else {
+            remarkView.snp.removeConstraints()
+            remarkView.isHidden = true
+        }
+        
+        var favs = [String]()
+        if let prises = model.praiseJsonList, prises.count > 0{
+            for (_,prise) in prises.enumerated(){
+                favs.append(prise.userName ?? "")
+            }
+            favView.isHidden = false
             
-            var favs = [String]()
-            if let prises = model?.praiseJsonList, prises.count > 0{
-                for (_,prise) in prises.enumerated(){
-                    favs.append(prise.userName ?? "")
-                }
-                favView.isHidden = false
-                
 //                favView.favLabel
-                UIUtil.yxs_setLabelParagraphText(favView.favLabel, text: favs.joined(separator: ","), font: UIFont.systemFont(ofSize: 14), lineSpacing: 6)
-                let newText = favs.joined(separator: ",")
-                let paragraphStye = NSMutableParagraphStyle()
-                //调整行间距
-                paragraphStye.lineSpacing = 6
-                paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
-                let dic = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.paragraphStyle:paragraphStye]
-                let size = UIUtil.yxs_getTextSize(textStr: newText, attributes: dic, width: SCREEN_WIDTH - 30 - 46)
+            UIUtil.yxs_setLabelParagraphText(favView.favLabel, text: favs.joined(separator: ","), font: UIFont.systemFont(ofSize: 14), lineSpacing: 6)
+            let newText = favs.joined(separator: ",")
+            let paragraphStye = NSMutableParagraphStyle()
+            //调整行间距
+            paragraphStye.lineSpacing = 6
+            paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
+            let dic = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.paragraphStyle:paragraphStye]
+            let size = UIUtil.yxs_getTextSize(textStr: newText, attributes: dic, width: SCREEN_WIDTH - 30 - 46)
 
-                favView.frame = CGRect.init(x: 15, y: last.tz_bottom + 12.5, width: SCREEN_WIDTH - 30, height: size.height + 8 + 7.5 + 8)
+            favView.frame = CGRect.init(x: 15, y: last.tz_bottom + 12.5, width: SCREEN_WIDTH - 30, height: size.height + 8 + 7.5 + 8)
 //                favView.snp.remakeConstraints { (make) in
 //                    make.top.equalTo(last.snp_bottom).offset(12.5)
 //                    make.left.equalTo(imgAvatar)
 //                    make.width.equalTo(SCREEN_WIDTH - 30)
 //                }
 
-                
-                if (model?.commentJsonList?.count ?? 0) != 0{
-                    favView.favBgView.yxs_addRoundedCorners(corners: [.topLeft,.topRight], radii: CGSize.init(width: 2.5, height: 2.5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height: 800))
-                }else{
-                    favView.favBgView.yxs_addRoundedCorners(corners: [.allCorners], radii: CGSize.init(width: 2.5, height: 2.5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height: 800))
-                }
+            
+            if (model.commentJsonList?.count ?? 0) != 0{
+                favView.favBgView.yxs_addRoundedCorners(corners: [.topLeft,.topRight], radii: CGSize.init(width: 2.5, height: 2.5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height: 800))
+            }else{
+                favView.favBgView.yxs_addRoundedCorners(corners: [.allCorners], radii: CGSize.init(width: 2.5, height: 2.5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height: 800))
             }
         }
     }
+    var model: YXSHomeworkDetailModel?
 
     // MARK: -UIUpdate
     private func updateButtons(){
@@ -470,6 +460,12 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
     @objc func praiseClick() {
         self.praiseButton.isSelected = !self.praiseButton.isSelected
         cellBlock?(.praise,self.model!)
+    }
+    
+    @objc func showAllClick(){
+        model?.isShowContentAll = !(model?.isShowContentAll ?? false)
+        showAllButton.isSelected = model?.isShowContentAll ?? false
+        cellBlock?(.showAll,self.model!)
     }
 
     /// 作业提交家长点击撤回修改
@@ -647,6 +643,15 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
         bottomline.backgroundColor = cl
         return bottomline
+    }()
+    lazy var showAllButton: UIButton = {
+        let button = UIButton.init()
+        button.setTitleColor(kBlueColor, for: .normal)
+        button.setTitle("全文", for: .normal)
+        button.setTitle("收起", for: .selected)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        button.addTarget(self, action: #selector(showAllClick), for: .touchUpInside)
+        return button
     }()
 }
 

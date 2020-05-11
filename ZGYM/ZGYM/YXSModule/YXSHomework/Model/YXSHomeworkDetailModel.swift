@@ -200,7 +200,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
     var childrenId : Int?
 
     /// 当前内容是否展开
-    var isShowContentAll: Bool = true
+    var isShowContentAll: Bool = false
 
 
     /// 当前评论是否展开
@@ -300,6 +300,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
             let helper = YXSFriendsConfigHelper.helper
             //content顶部距离
             var height: CGFloat = 15 + 40
+            if needShowAllButton{
+                height += 26.0 + 9.0
+            }
             if self.isShowContentAll{
                 height += frameModel.contentIsShowAllHeight + 15
 

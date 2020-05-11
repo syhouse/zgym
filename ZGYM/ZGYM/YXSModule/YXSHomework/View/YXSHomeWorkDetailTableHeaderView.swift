@@ -19,6 +19,8 @@ enum SLJopType{
     case myJobType     //我的作业
 }
 
+let kYXSHomeworkDetialHeaderViewUpdateHeaderViewEvent = "YXSHomeworkDetialHeaderViewUpdateHeaderViewEvent"
+
 class YXSHomeWorkDetailTableHeaderView : UIView {
 
     var pushToBlock:(()->())?
@@ -31,7 +33,10 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             addSubview(avatarView)
             addSubview(dateView)
             addSubview(readCommitPanel)
-            addSubview(mediaView)
+            addSubview(contentLabel)
+            addSubview(showAllControl)
+            addSubview(nineMediaView)
+            addSubview(voiceView)
             addSubview(linkView)
             addSubview(fileFirstView)
             addSubview(fileSecondView)
@@ -41,7 +46,10 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
 //            addSubview(topHeaderView)
             addSubview(contactTeacher)
             addSubview(dateView)
-            addSubview(mediaView)
+            addSubview(contentLabel)
+            addSubview(showAllControl)
+            addSubview(nineMediaView)
+            addSubview(voiceView)
             addSubview(linkView)
             addSubview(fileFirstView)
             addSubview(fileSecondView)
@@ -94,15 +102,31 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
                 make.height.equalTo(60)
             })
 
-            mediaView.snp.makeConstraints({ (make) in
-                make.top.equalTo(self.readCommitPanel.snp_bottom).offset(20)
+            contentLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
-                make.right.equalTo(-15)
-            })
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.top.equalTo(readCommitPanel.snp_bottom).offset(15)
+            }
+            
+            voiceView.snp.makeConstraints { (make) in
+                make.left.equalTo(15)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.top.equalTo(contentLabel.snp_bottom).offset(10)
+                make.height.equalTo(36)
+            }
+            nineMediaView.snp.makeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.top.equalTo(voiceView.snp_bottom).offset(10)
+            }
+//            mediaView.snp.makeConstraints({ (make) in
+//                make.top.equalTo(self.readCommitPanel.snp_bottom).offset(20)
+//                make.left.equalTo(15)
+//                make.right.equalTo(-15)
+//            })
 
 
             linkView.snp.makeConstraints({ (make) in
-                make.top.equalTo(self.mediaView.snp_bottom).offset(20)
+                make.top.equalTo(self.nineMediaView.snp_bottom).offset(20)
                 make.left.equalTo(15)
                 make.right.equalTo(-15)
                 make.height.equalTo(44)
@@ -154,15 +178,30 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
                 make.right.equalTo(-15)
                 make.height.equalTo(20)
             }
-
-            mediaView.snp.makeConstraints({ (make) in
-                make.top.equalTo(self.dateView.snp_bottom).offset(40)
+            contentLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
-                make.right.equalTo(-15)
-            })
-
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.top.equalTo(dateView.snp_bottom).offset(15)
+            }
+            
+            voiceView.snp.makeConstraints { (make) in
+                make.left.equalTo(15)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.top.equalTo(contentLabel.snp_bottom).offset(10)
+                make.height.equalTo(36)
+            }
+            nineMediaView.snp.makeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.top.equalTo(voiceView.snp_bottom).offset(10)
+            }
+//            mediaView.snp.makeConstraints({ (make) in
+//                make.top.equalTo(self.dateView.snp_bottom).offset(40)
+//                make.left.equalTo(15)
+//                make.right.equalTo(-15)
+//            })
+//
             linkView.snp.makeConstraints({ (make) in
-                make.top.equalTo(self.mediaView.snp_bottom).offset(20)
+                make.top.equalTo(self.nineMediaView.snp_bottom).offset(20)
                 make.left.equalTo(15)
                 make.right.equalTo(-15)
                 make.height.equalTo(44)
@@ -251,171 +290,256 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             }
         }
     }
-    
-    var model: YXSHomeworkDetailModel? {
-        didSet {
-            var messagemodel:YXSPunchCardMessageTipsModel? = YXSPunchCardMessageTipsModel.init(JSONString: "{\"count\":0}")
-            messagemodel?.count = self.model?.messageCount
-            messagemodel?.commentsUserInfo?.avatar = self.model?.messageAvatar
-            messagemodel?.commentsUserInfo?.userType = self.model?.messageUserType
-            self.messageModel = messagemodel
-            filterBtnView.model = self.model
+    func setModel(model:YXSHomeworkDetailModel) {
+        self.model = model
+        var messagemodel:YXSPunchCardMessageTipsModel? = YXSPunchCardMessageTipsModel.init(JSONString: "{\"count\":0}")
+        messagemodel?.count = self.model?.messageCount
+        messagemodel?.commentsUserInfo?.avatar = self.model?.messageAvatar
+        messagemodel?.commentsUserInfo?.userType = self.model?.messageUserType
+        self.messageModel = messagemodel
+        filterBtnView.model = self.model
 
-            if self.model?.endTimeIsUnlimited ?? false {
-                dateView.title = "截止日期：不限时"
-            } else {
-                let endDateStr = self.model?.endTime?.yxs_Date().toString(format: .custom("yyyy-MM-dd HH:mm"))
-                dateView.title = "截止日期：\(endDateStr ?? "")"
+        if self.model?.endTimeIsUnlimited ?? false {
+            dateView.title = "截止日期：不限时"
+        } else {
+            let endDateStr = self.model?.endTime?.yxs_Date().toString(format: .custom("yyyy-MM-dd HH:mm"))
+            dateView.title = "截止日期：\(endDateStr ?? "")"
+        }
+        
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            var teacherName = "我"
+            if self.model?.teacherName != YXSPersonDataModel.sharePerson.userModel.name {
+                teacherName = self.model?.teacherName ?? ""
             }
-            
-            if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-                var teacherName = "我"
-                if self.model?.teacherName != YXSPersonDataModel.sharePerson.userModel.name {
-                    teacherName = self.model?.teacherName ?? ""
-                }
-                avatarView.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
-                avatarView.lbTitle.text = "\(teacherName) ｜ \(self.model?.createTime?.yxs_Time() ?? "")"
-                avatarView.lbSubTitle.text = self.model?.className
+            avatarView.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
+            avatarView.lbTitle.text = "\(teacherName) ｜ \(self.model?.createTime?.yxs_Time() ?? "")"
+            avatarView.lbSubTitle.text = self.model?.className
 //                topHeaderView.strSubTitle = "\(teacherName) ｜ \(self.model?.createTime?.yxs_Time() ?? "")"
 
 //                contactTeacher.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
 //                contactTeacher.lbTitle.text = self.model?.teacherName
 //                contactTeacher.lbSubTitle.text = self.model?.createTime?.yxs_Time()
 
-            } else {
-                contactTeacher.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
-                contactTeacher.lbTitle.text = self.model?.teacherName
-                contactTeacher.lbSubTitle.text = self.model?.className
-                contactTeacher.lbThirdTitle.text = "| \(self.model?.createTime?.yxs_Time() ?? "")"
-            }
-
-
-            readCommitPanel.firstValue = String(self.model?.readList?.count ?? 0)
-            readCommitPanel.firstTotal = String(self.model?.memberCount ?? 0)
-
-            if self.model?.onlineCommit == 1 {
-                readCommitPanel.lbTitle2.text = "提交"
-                readCommitPanel.secondValue = String(self.model?.committedList?.count ?? 0)
-                readCommitPanel.secondTotal = String(self.model?.memberCount ?? 0)
-                filterBtnView.isHidden = false
-            } else {
-                readCommitPanel.lbTitle2.isHidden = true
-                readCommitPanel.lbCommit.isHidden = true
-                readCommitPanel.lbTotal2.isHidden = true
-                filterBtnView.isHidden = true
-            }
-
-
-            var imgs:[String]? = nil
-            if self.model?.imageUrl?.count ?? 0 > 0 {
-                imgs = self.model?.imageUrl?.components(separatedBy: ",")
-            }
-
-            let mediaModel = YXSMediaViewModel()//(content: self.model?.content, voiceUrl: self.model?.audioUrl, voiceDuration: self.model?.audioDuration, images: imgs)
-            mediaModel.content = self.model?.content
-            mediaModel.voiceUrl = self.model?.audioUrl
-            mediaModel.voiceDuration = self.model?.audioDuration
-            mediaModel.images = imgs
-            mediaModel.bgUrl = self.model?.bgUrl
-            mediaModel.videoUrl = self.model?.videoUrl
-            mediaView.voiceView.id = "\(self.model?.id ?? 0)"
-            mediaView.layoutIfNeeded();
-            mediaView.model = mediaModel
-            mediaView.layoutIfNeeded();
-            let height = mediaView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-            if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-                mediaView.snp.remakeConstraints({ (make) in
-                    make.top.equalTo(self.readCommitPanel.snp_bottom).offset(20)
-                    make.left.equalTo(15)
-                    make.right.equalTo(-15)
-                    make.height.equalTo(height)
-                })
-            } else {
-                mediaView.snp.makeConstraints({ (make) in
-                    make.top.equalTo(self.dateView.snp_bottom).offset(20)
-                    make.left.equalTo(15)
-                    make.right.equalTo(-15)
-                    make.height.equalTo(height)
-                })
-            }
-
-            linkView.strLink = self.model?.link ?? ""
-            if self.model?.link == nil || self.model?.link?.count == 0 {
-                linkView.isHidden = true
-                linkView.snp.updateConstraints({ (make) in
-                    make.top.equalTo(self.mediaView.snp_bottom).offset(0)
-                    make.height.equalTo(0)
-                })
-            } else {
-                linkView.isHidden = false
-            }
-            
-            if self.model?.fileList.count ?? 0 > 0 {
-                for index in 0..<(self.model?.fileList.count)!{
-                    switch index {
-                    case 0:
-                        fileFirstView.isHidden = false
-                        fileFirstView.setModel(model: (self.model?.fileList[index])!)
-                        fileSecondView.isHidden = true
-                        fileThirdView.isHidden = true
-                        fileSecondView.snp.updateConstraints({ (make) in
-                            make.top.equalTo(self.fileFirstView.snp_bottom).offset(0)
-                            make.height.equalTo(0)
-                        })
-                        fileThirdView.snp.updateConstraints({ (make) in
-                            make.top.equalTo(self.fileSecondView.snp_bottom).offset(0)
-                            make.height.equalTo(0)
-                        })
-                    case 1:
-                        fileSecondView.isHidden = false
-                        fileThirdView.isHidden = true
-                        fileSecondView.setModel(model: (self.model?.fileList[index])!)
-                        fileSecondView.snp.updateConstraints({ (make) in
-                            make.top.equalTo(self.fileFirstView.snp_bottom).offset(10)
-                            make.height.equalTo(44)
-                        })
-                        fileThirdView.snp.updateConstraints({ (make) in
-                            make.top.equalTo(self.fileSecondView.snp_bottom).offset(0)
-                            make.height.equalTo(0)
-                        })
-                    case 2:
-                        fileThirdView.isHidden = false
-                        fileThirdView.setModel(model: (self.model?.fileList[index])!)
-                        fileThirdView.snp.updateConstraints({ (make) in
-                            make.top.equalTo(self.fileSecondView.snp_bottom).offset(10)
-                            make.height.equalTo(44)
-                        })
-                    default:
-                        print("")
-                    }
-                }
-            } else {
-                fileFirstView.isHidden = true
-                fileSecondView.isHidden = true
-                fileThirdView.isHidden = true
-                fileFirstView.snp.updateConstraints({ (make) in
-                    make.top.equalTo(self.linkView.snp_bottom).offset(0)
-                    make.height.equalTo(0)
-                })
-                fileSecondView.snp.updateConstraints({ (make) in
-                    make.top.equalTo(self.fileFirstView.snp_bottom).offset(0)
-                    make.height.equalTo(0)
-                })
-                fileThirdView.snp.updateConstraints({ (make) in
-                    make.top.equalTo(self.fileSecondView.snp_bottom).offset(0)
-                    make.height.equalTo(0)
-                })
-            }
-            
-            
-            if self.model?.onlineCommit == 0 {
-                filterBtnView.snp.updateConstraints { (make) in
-                    make.height.equalTo(1)
-                }
-            }
-            superview?.layoutIfNeeded()
+        } else {
+            contactTeacher.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
+            contactTeacher.lbTitle.text = self.model?.teacherName
+            contactTeacher.lbSubTitle.text = self.model?.className
+            contactTeacher.lbThirdTitle.text = "| \(self.model?.createTime?.yxs_Time() ?? "")"
         }
+
+
+        readCommitPanel.firstValue = String(self.model?.readList?.count ?? 0)
+        readCommitPanel.firstTotal = String(self.model?.memberCount ?? 0)
+
+        if self.model?.onlineCommit == 1 {
+            readCommitPanel.lbTitle2.text = "提交"
+            readCommitPanel.secondValue = String(self.model?.committedList?.count ?? 0)
+            readCommitPanel.secondTotal = String(self.model?.memberCount ?? 0)
+            filterBtnView.isHidden = false
+        } else {
+            readCommitPanel.lbTitle2.isHidden = true
+            readCommitPanel.lbCommit.isHidden = true
+            readCommitPanel.lbTotal2.isHidden = true
+            filterBtnView.isHidden = true
+        }
+
+        var last:UIView = contentLabel
+        UIUtil.yxs_setLabelParagraphText(contentLabel, text: self.model?.content)
+        let paragraphStye = NSMutableParagraphStyle()
+        paragraphStye.lineSpacing = kMainContentLineHeight
+        paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
+        let dic = [NSAttributedString.Key.font: kTextMainBodyFont, NSAttributedString.Key.paragraphStyle:paragraphStye]
+        let height = UIUtil.yxs_getTextHeigh(textStr: self.model?.content, attributes: dic , width: SCREEN_WIDTH - 30)
+        contentLabel.numberOfLines = model.isShowContentAll ? 0 : 3
+        if height < 20 {
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                contentLabel.snp.remakeConstraints { (make) in
+                    make.left.equalTo(15)
+                    make.top.equalTo(readCommitPanel.snp_bottom).offset(15)
+                }
+            } else {
+                contentLabel.snp.remakeConstraints { (make) in
+                    make.left.equalTo(15)
+                    make.top.equalTo(dateView.snp_bottom).offset(15)
+                }
+            }
+            
+            contentLabel.sizeToFit()
+        }
+        else {
+            model.confingHeight()
+            if model.needShowAllButton{
+                showAllControl.isHidden = false
+                showAllControl.isSelected = model.isShowContentAll
+                showAllControl.snp.remakeConstraints { (make) in
+                    make.left.equalTo(contentLabel)
+                    make.top.equalTo(contentLabel.snp_bottom).offset(9)
+                    make.height.equalTo(26)
+                }
+                last = showAllControl
+            } else {
+                showAllControl.isHidden = true
+                showAllControl.snp.removeConstraints()
+            }
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                contentLabel.snp.remakeConstraints({ (make) in
+                    make.left.equalTo(15)
+                    make.width.equalTo(SCREEN_WIDTH - 30)
+                    make.top.equalTo(readCommitPanel.snp_bottom).offset(15)
+                })
+            } else {
+                contentLabel.snp.remakeConstraints { (make) in
+                    make.left.equalTo(15)
+                    make.width.equalTo(SCREEN_WIDTH - 30)
+                    make.top.equalTo(dateView.snp_bottom).offset(15)
+                }
+            }
+            
+        }
+        
+        if self.model?.hasVoice ?? false {
+            voiceView.isHidden = false
+            voiceView.id = "\(self.model?.id ?? 0)"
+            let voiceModel = YXSVoiceViewModel()
+            voiceView.width = SCREEN_WIDTH - 30 - 41
+            voiceModel.voiceDuration = self.model?.audioDuration
+            voiceModel.voiceUlr = self.model?.audioUrl
+            voiceView.model = voiceModel
+            voiceView.snp.remakeConstraints { (make) in
+                make.top.equalTo(last.snp_bottom).offset(10)
+                make.left.equalTo(15)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.height.equalTo(36)
+            }
+        } else {
+            voiceView.isHidden = true
+            voiceView.snp.remakeConstraints { (make) in
+                make.height.equalTo(0)
+                make.left.equalTo(15)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.top.equalTo(last.snp_bottom).offset(0)
+            }
+        }
+
+        if self.model?.imgs.count ?? 0 > 0{
+            nineMediaView.isHidden = false
+            nineMediaView.medias = self.model?.imgs
+            nineMediaView.snp.remakeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.top.equalTo(voiceView.snp_bottom).offset(10)
+            }
+        }else{
+            nineMediaView.isHidden = true
+            nineMediaView.snp.updateConstraints { (make) in
+                make.top.equalTo(voiceView.snp_bottom).offset(0)
+            }
+        }
+
+//        let mediaModel = YXSMediaViewModel()//(content: self.model?.content, voiceUrl: self.model?.audioUrl, voiceDuration: self.model?.audioDuration, images: imgs)
+//        mediaModel.content = self.model?.content
+//        mediaModel.voiceUrl = self.model?.audioUrl
+//        mediaModel.voiceDuration = self.model?.audioDuration
+//        mediaModel.images = imgs
+//        mediaModel.bgUrl = self.model?.bgUrl
+//        mediaModel.videoUrl = self.model?.videoUrl
+//        mediaView.voiceView.id = "\(self.model?.id ?? 0)"
+//        mediaView.layoutIfNeeded();
+//        mediaView.model = mediaModel
+//        mediaView.layoutIfNeeded();
+//        let height = mediaView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+//        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+//            mediaView.snp.remakeConstraints({ (make) in
+//                make.top.equalTo(self.readCommitPanel.snp_bottom).offset(20)
+//                make.left.equalTo(15)
+//                make.right.equalTo(-15)
+//                make.height.equalTo(height)
+//            })
+//        } else {
+//            mediaView.snp.makeConstraints({ (make) in
+//                make.top.equalTo(self.dateView.snp_bottom).offset(20)
+//                make.left.equalTo(15)
+//                make.right.equalTo(-15)
+//                make.height.equalTo(height)
+//            })
+//        }
+
+        linkView.strLink = self.model?.link ?? ""
+        if self.model?.link == nil || self.model?.link?.count == 0 {
+            linkView.isHidden = true
+            linkView.snp.updateConstraints({ (make) in
+                make.top.equalTo(self.nineMediaView.snp_bottom).offset(0)
+                make.height.equalTo(0)
+            })
+        } else {
+            linkView.isHidden = false
+        }
+        
+        if self.model?.fileList.count ?? 0 > 0 {
+            for index in 0..<(self.model?.fileList.count)!{
+                switch index {
+                case 0:
+                    fileFirstView.isHidden = false
+                    fileFirstView.setModel(model: (self.model?.fileList[index])!)
+                    fileSecondView.isHidden = true
+                    fileThirdView.isHidden = true
+                    fileSecondView.snp.updateConstraints({ (make) in
+                        make.top.equalTo(self.fileFirstView.snp_bottom).offset(0)
+                        make.height.equalTo(0)
+                    })
+                    fileThirdView.snp.updateConstraints({ (make) in
+                        make.top.equalTo(self.fileSecondView.snp_bottom).offset(0)
+                        make.height.equalTo(0)
+                    })
+                case 1:
+                    fileSecondView.isHidden = false
+                    fileThirdView.isHidden = true
+                    fileSecondView.setModel(model: (self.model?.fileList[index])!)
+                    fileSecondView.snp.updateConstraints({ (make) in
+                        make.top.equalTo(self.fileFirstView.snp_bottom).offset(10)
+                        make.height.equalTo(44)
+                    })
+                    fileThirdView.snp.updateConstraints({ (make) in
+                        make.top.equalTo(self.fileSecondView.snp_bottom).offset(0)
+                        make.height.equalTo(0)
+                    })
+                case 2:
+                    fileThirdView.isHidden = false
+                    fileThirdView.setModel(model: (self.model?.fileList[index])!)
+                    fileThirdView.snp.updateConstraints({ (make) in
+                        make.top.equalTo(self.fileSecondView.snp_bottom).offset(10)
+                        make.height.equalTo(44)
+                    })
+                default:
+                    print("")
+                }
+            }
+        } else {
+            fileFirstView.isHidden = true
+            fileSecondView.isHidden = true
+            fileThirdView.isHidden = true
+            fileFirstView.snp.updateConstraints({ (make) in
+                make.top.equalTo(self.linkView.snp_bottom).offset(0)
+                make.height.equalTo(0)
+            })
+            fileSecondView.snp.updateConstraints({ (make) in
+                make.top.equalTo(self.fileFirstView.snp_bottom).offset(0)
+                make.height.equalTo(0)
+            })
+            fileThirdView.snp.updateConstraints({ (make) in
+                make.top.equalTo(self.fileSecondView.snp_bottom).offset(0)
+                make.height.equalTo(0)
+            })
+        }
+        
+        
+        if self.model?.onlineCommit == 0 {
+            filterBtnView.snp.updateConstraints { (make) in
+                make.height.equalTo(1)
+            }
+        }
+        superview?.layoutIfNeeded()
     }
+    var model: YXSHomeworkDetailModel?
 
     // MARK: - Action
     /// 阅读
@@ -460,6 +584,13 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             UIUtil.curruntNav().pushViewController(wk)
         }
     }
+    
+    @objc func showAllClick(){
+        self.model?.isShowContentAll = !(self.model?.isShowContentAll ?? false)
+        showAllControl.isSelected = self.model?.isShowContentAll ?? false
+        setModel(model: self.model!)
+        yxs_routerEventWithName(eventName:kYXSHomeworkDetialHeaderViewUpdateHeaderViewEvent,info: ["isShow":self.model?.isShowContentAll ?? false])
+    }
 
     // MARK: - LazyLoad
     /// 一年级3班  我 ｜ 2019/11/13 14:30
@@ -484,10 +615,33 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
         return view
     }()
 
-    lazy var mediaView: YXSMediaView = {
-        let view = YXSMediaView()
-        view.voiceMax = 300.0
-        return view
+//    lazy var mediaView: YXSMediaView = {
+//        let view = YXSMediaView()
+//        view.voiceMax = 300.0
+//        return view
+//    }()
+    
+    lazy var contentLabel: YXSEventCopyLabel = {
+        let label = YXSEventCopyLabel()
+        label.font = kTextMainBodyFont
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    lazy var nineMediaView: YXSNineMediaView = {
+        let nineMediaView = YXSNineMediaView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 0))
+        nineMediaView.edges = UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 15)
+        return nineMediaView
+    }()
+    
+    lazy var voiceView: YXSListVoiceView = {
+        let voiceView = YXSListVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 36), complete: {
+            [weak self] (url, duration)in
+            guard let strongSelf = self else { return }
+        })
+        voiceView.minWidth = 120
+        return voiceView
     }()
 
     lazy var linkView: YXSLinkView = {
@@ -560,6 +714,20 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
     lazy var messageView: YXSFriendsCircleMessageView = {
         let messageView = YXSFriendsCircleMessageView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 42.5))
         return messageView
+    }()
+    
+    lazy var showAllControl: YXSCustomImageControl = {
+        let showAllControl = YXSCustomImageControl.init(imageSize: CGSize.init(width: 14, height: 14), position: YXSImagePositionType.right, padding: 5.5)
+        showAllControl.mixedTextColor = MixedColor(normal: kBlueColor, night: kBlueColor)
+        showAllControl.setTitle("展开", for: .normal)
+        showAllControl.setTitle("收起", for: .selected)
+        showAllControl.font = UIFont.boldSystemFont(ofSize: 14)
+        showAllControl.setImage(UIImage.init(named: "down_gray"), for: .normal)
+        showAllControl.setImage(UIImage.init(named: "up_gray"), for: .selected)
+        showAllControl.addTarget(self, action: #selector(showAllClick), for: .touchUpInside)
+        showAllControl.isSelected = false
+        showAllControl.isHidden = true
+        return showAllControl
     }()
 }
 
