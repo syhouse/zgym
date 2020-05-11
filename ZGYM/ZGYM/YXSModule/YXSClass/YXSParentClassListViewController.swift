@@ -17,6 +17,9 @@ class YXSParentClassListViewController: YXSBaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "班级列表"
+        
+        dataSource = YXSCacheHelper.yxs_getCacheParentClassJoinList()
+        
         self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNightBackgroundColor)
         self.tableView.register(YXSParentClassListTableViewCell.classForCoder(), forCellReuseIdentifier: "YXSParentClassListTableViewCell")
         
@@ -37,11 +40,13 @@ class YXSParentClassListViewController: YXSBaseTableViewController {
     
     // MARK: - Request
     func loadData() {
-        YXSEducationGradeListRequest().request({ (json) in
-            self.dataSource = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
+        YXSEducationGradeListRequest().request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            weakSelf.dataSource = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
+            YXSCacheHelper.yxs_cacheParentClassJoinList(dataSource: weakSelf.dataSource)
             
-            self.tableView.reloadData()
-            self.yxs_endingRefresh()
+            weakSelf.tableView.reloadData()
+            weakSelf.yxs_endingRefresh()
             
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
