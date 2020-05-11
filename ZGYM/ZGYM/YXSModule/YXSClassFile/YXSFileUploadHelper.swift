@@ -399,6 +399,13 @@ class YXSFileUploadHelper: NSObject {
             return
         }
         
+        ///判断tokenModel是否过期
+        if let oSSAuth = oSSAuth{
+            if oSSAuth.expirationDate.timeIntervalSince1970 <= Date().timeIntervalSince1970{
+                self.oSSAuth = nil
+            }
+        }
+        
         if oSSAuth == nil {
             requestYXSOSSAuth(completionHandler: { [weak self](model) in
                 guard let weakSelf = self else {return}

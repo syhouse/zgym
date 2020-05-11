@@ -120,15 +120,6 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
                     UIUtil.yxs_loadReadData(hModel!)
                 }
             }
-//            /// 标记页面已读
-//            if YXSPersonDataModel.sharePerson.personRole == .PARENT && homeModel.isRead != 1{
-//                let model = SLHomeListModel(JSON: ["":""])
-//                model?.serviceId = homeModel.serviceId
-//                model?.childrenId = homeModel.childrenId
-//                model?.createTime = homeModel.createTime
-//                model?.serviceType = 0
-//                UIUtil.yxs_loadReadData(model!)
-//            }
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }

@@ -59,6 +59,9 @@ class YXSMineViewController: YXSBaseTableViewController{
     //请求个人信息
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        YXSMusicPlayerWindowView.setView(hide: true)
+        
         loadUserData()
     }
     

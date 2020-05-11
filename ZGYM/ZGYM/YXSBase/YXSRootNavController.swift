@@ -48,12 +48,6 @@ extension YXSRootNavController: UINavigationControllerDelegate{
         if let _ = toVC as? YXSMyCollectDetailsVC{
             YXSMusicPlayerWindowView.setView(hide: false)
         }
-        
-        ///回到我的页面 隐藏悬浮框
-        if let _ = toVC as? YXSMineViewController{
-            YXSMusicPlayerWindowView.setView(hide: true)
-        }
-        
         return nil
     }
     

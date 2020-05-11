@@ -107,6 +107,7 @@ class YXSPhotoCollectionView: UIView {
         previewLayer.frame = self.bounds
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         self.layer.addSublayer(previewLayer)
+//        self.layer.insertSublayer(previewLayer, below: <#T##CALayer?#>)
         
         
         //添加自定义控件
