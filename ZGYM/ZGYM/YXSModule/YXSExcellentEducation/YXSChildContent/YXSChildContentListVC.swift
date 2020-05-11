@@ -118,7 +118,6 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
             vc.loadUrl = childContentUrl
             let dic = ["id":model.id ?? 0, "token":YXSPersonDataModel.sharePerson.token ?? "", "avatar":YXSPersonDataModel.sharePerson.userModel.avatar ?? "","name":YXSPersonDataModel.sharePerson.userModel.name ?? ""] as [String : Any]
             vc.scriptKey = dic.jsonString() ?? ""
-            
             vc.title = "详情"
             self.navigationController?.pushViewController(vc)
         }

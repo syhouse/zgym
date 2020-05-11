@@ -15,7 +15,8 @@ class YXSCacheHelper: NSObject {
     public static func yxs_cacheHomeList(dataSource: [YXSHomeSectionModel], childrenId: Int?){
         DispatchQueue.global().async {
             let personModel = YXSPersonDataModel.sharePerson
-            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "HomeList\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)"))
+            let cachePath = "HomeList\(personModel.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)"
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: cachePath))
         }
     }
     
@@ -23,7 +24,8 @@ class YXSCacheHelper: NSObject {
     public static func yxs_getCacheHomeList(childrenId: Int?) -> [YXSHomeSectionModel]{
         var dataSource:[YXSHomeSectionModel] = [YXSHomeSectionModel]()
         let personModel = YXSPersonDataModel.sharePerson
-        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "HomeList\(personModel.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)")) as? [YXSHomeSectionModel]
+        let cachePath = "HomeList\(personModel.personRole.rawValue)\(personModel.userModel.id ?? 0)\(childrenId ?? 0)"
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: cachePath)) as? [YXSHomeSectionModel]
         if let items = items{
             dataSource = items
         }else{
@@ -114,6 +116,76 @@ class YXSCacheHelper: NSObject {
         return items
     }
 
+    /// 缓存班级列表数据
+    /// - Parameter dataSource: 班级列表
+    public static func yxs_cacheTeacherClassJoinList(dataSource: [YXSClassModel]){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "TeacherClassJoin\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)"))
+        }
+    }
+    
+    /// 获取班级列表的缓存数据
+    /// - Parameter dataSource: 班级列表
+    public static func yxs_getCacheTeacherClassJoinList() -> [YXSClassModel]{
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "TeacherClassJoin\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)")) as? [YXSClassModel] ?? [YXSClassModel]()
+        return items
+    }
+    
+    /// 缓存班级列表数据
+    /// - Parameter dataSource: 班级列表
+    public static func yxs_cacheTeacherClassCreateList(dataSource: [YXSClassModel]){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "TeacherClassCreate\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)"))
+        }
+    }
+    
+    /// 获取班级列表的缓存数据
+    /// - Parameter dataSource: 班级列表
+    public static func yxs_getCacheTeacherClassCreateList() -> [YXSClassModel]{
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "TeacherClassCreate\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)")) as? [YXSClassModel] ?? [YXSClassModel]()
+        return items
+    }
+    
+    /// 缓存班级列表数据
+    /// - Parameter dataSource: 班级列表
+    public static func yxs_cacheParentClassJoinList(dataSource: [YXSClassModel]){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "ParentClassJoin\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)"))
+        }
+    }
+    
+    /// 获取班级列表的缓存数据
+    /// - Parameter dataSource: 班级列表
+    public static func yxs_getCacheParentClassJoinList() -> [YXSClassModel]{
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "ParentClassJoin\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)")) as? [YXSClassModel] ?? [YXSClassModel]()
+        return items
+    }
+    
+    /// 缓存书包文件夹列表数据
+    public static func yxs_cacheSatchelFolderList(dataSource: [YXSFolderModel], parentFolderId: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SatchelFolder\(parentFolderId)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)"))
+        }
+    }
+    
+    /// 获取书包文件夹列表数据
+    public static func yxs_getCacheSatchelFolderList(parentFolderId: Int)-> [YXSFolderModel] {
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SatchelFolder\(parentFolderId)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)")) as? [YXSFolderModel] ?? [YXSFolderModel]()
+        return items
+    }
+    
+    /// 缓存书包文件列表数据
+    public static func yxs_cacheSatchelFileList(dataSource: [YXSFileModel], parentFolderId: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SatchelFile\(parentFolderId)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)"))
+        }
+    }
+    
+    /// 获取书包文件列表数据
+    public static func yxs_getCacheSatchelFileList(parentFolderId: Int)-> [YXSFileModel] {
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SatchelFile\(parentFolderId)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)")) as? [YXSFileModel] ?? [YXSFileModel]()
+        return items
+    }
 }
 
 

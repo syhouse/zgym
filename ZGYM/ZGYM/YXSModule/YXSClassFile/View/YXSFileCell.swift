@@ -28,6 +28,7 @@ class YXSFileCell: YXSBaseFileCell {
         
         contentView.addSubview(iconBgView)
         iconBgView.addSubview(imgIcon)
+        iconBgView.insertSubview(imgVideoTag, aboveSubview: imgIcon)
         
         layout()
     }
@@ -67,6 +68,13 @@ class YXSFileCell: YXSBaseFileCell {
         imgIcon.snp.makeConstraints({ (make) in
             make.edges.equalTo(0)
         })
+        
+        imgVideoTag.snp.makeConstraints({ (make) in
+            make.top.equalTo(10)
+            make.left.equalTo(10)
+            make.right.equalTo(-10)
+            make.bottom.equalTo(-10)
+        })
     }
     
     
@@ -96,5 +104,12 @@ class YXSFileCell: YXSBaseFileCell {
     lazy var titlesContainer: UIView = {
         let view = UIView()
         return view
+    }()
+    
+    lazy var imgVideoTag: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "yxs_file_mp4")
+        img.isHidden = true
+        return img
     }()
 }

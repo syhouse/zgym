@@ -216,7 +216,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
     /// - Parameter calendarModel: l日历model
     public func selectCalendarModel(_ calendarModel: YXSCalendarModel?, isCurruntCalendarVC: Bool = true){
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-            punchCardFooter.isCurruntCalendarVC = true
+            punchCardFooter.isCurruntCalendarVC = isCurruntCalendarVC
             punchCardFooter.calendarModel = calendarModel
         }
     }

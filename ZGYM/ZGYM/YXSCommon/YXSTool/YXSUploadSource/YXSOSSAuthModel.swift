@@ -21,6 +21,17 @@ class YXSOSSAuthModel : NSObject, Mappable{
     var endpoint : String?
     var expiration : String?
     var securityToken : String?
+    
+    var expirationDate: Date{
+        if let expiration = expiration{
+            let str:NSString = expiration as NSString
+            let str1 = str.replacingOccurrences(of: "T", with: " ")
+            let str2 = str1.replacingOccurrences(of: "Z", with: "")
+            let date = str2.yxs_Date()
+            return Date.init(timeInterval: 8*60*60, since: date)
+        }
+        return Date()
+    }
 
     required init?(map: Map){}
 

@@ -26,6 +26,9 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         
         super.viewDidLoad()
         self.title = "我的文件"
+        
+        folderList = YXSCacheHelper.yxs_getCacheSatchelFolderList(parentFolderId: parentFolderId)
+        fileList = YXSCacheHelper.yxs_getCacheSatchelFileList(parentFolderId: parentFolderId)
 
         // Do any additional setup after loading the view.
 //        view.addSubview(btnSearch)
@@ -138,6 +141,10 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 self.fileList += tmpFileList
                 
                 self.tableView.reloadData()
+                
+                YXSCacheHelper.yxs_cacheSatchelFolderList(dataSource: self.folderList, parentFolderId: self.parentFolderId)
+                YXSCacheHelper.yxs_cacheSatchelFileList(dataSource: self.fileList, parentFolderId: self.parentFolderId)
+                
                 self.yxs_endingRefresh()
             }
         }
@@ -446,16 +453,35 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             let cell: YXSFileCell = tableView.dequeueReusableCell(withIdentifier: "SLFileCell") as! YXSFileCell
             cell.lbTitle.text = item.fileName
             let fileSize: String = YXSFileManagerHelper.sharedInstance.stringSizeOfDataSrouce(fileSize: UInt64(item.fileSize ?? 0))
+            
             cell.lbSubTitle.text = "\(fileSize) | \(item.createTime?.yxs_DayTime() ?? "")" ///"老师名 | 2020-8-16"
-            if let url = URL(string: item.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
-                if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
-                    cell.imgIcon.image = img
-                    
-                } else {
-                    let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
-                    cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+            
+            /// 图标
+            if item.bgUrl?.count ?? 0 > 0 {
+                /// 首图
+                cell.imgIcon.sd_setImage(with: URL(string: item.bgUrl ?? ""), placeholderImage: kImageDefualtImage)
+                
+            } else {
+                if let url = URL(string: item.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
+                    if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
+                        /// 文件类型
+                        cell.imgIcon.image = img
+                        
+                    } else {
+                        /// 图片
+                        cell.imgIcon.sd_setImage(with: url, placeholderImage: kImageDefualtImage)
+                    }
                 }
             }
+            
+            /// 视频图标显示
+            switch item.fileType {
+            case "mp4","MP4","mov":
+                cell.imgVideoTag.isHidden = false
+            default:
+                cell.imgVideoTag.isHidden = true
+            }
+            
             cell.model = item
             return cell
         }

@@ -112,11 +112,9 @@ class YXSGlobalJumpManager: NSObject {
             break
         case 6:
             /// 班级之星
-            let model = YXSClassStartClassModel(JSON: ["":""])
-            model?.classId = classId
             var vc: UIViewController
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                vc = YXSClassStarSignleClassStudentDetialController.init(childreId: childrenId, classId: classId,stage: StageType.init(rawValue: model?.stage ?? "") ?? StageType.KINDERGARTEN)
+                vc = YXSClassStarSignleClassStudentDetialController.init(childreId: childrenId, classId: classId,stage: StageType.init(rawValue: model.stage ?? "") ?? StageType.KINDERGARTEN)
                 
             }else{
                 let chilrModel = getChildModel(classId: classId, childId: childrenId)

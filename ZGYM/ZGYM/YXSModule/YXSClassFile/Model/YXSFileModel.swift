@@ -23,6 +23,8 @@ class YXSFileModel : YXSBaseFileModel {
     var updateTime : String?
     var userId : Int?
     
+    /// 服务器不会返这个字段 但用此model转json作为参数请求接口 从书包选择文件时此字段为必填值
+    var satchelFileId: Int?
     
 
     required init?(map: Map){
@@ -43,6 +45,7 @@ class YXSFileModel : YXSBaseFileModel {
         updateTime <- map["updateTime"]
         userId <- map["userId"]
         
+        satchelFileId <- map["satchelFileId"]
     }
 
     /**

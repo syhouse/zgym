@@ -42,8 +42,13 @@ class YXSBaseTabBarController: UITabBarController {
         if !YXSChatHelper.sharedInstance.isLogin() {
             YXSChatHelper.sharedInstance.login {
                 YXSGlobalJumpManager.sharedInstance.checkPushJump()
+                
+                /// 杀进程后 三方分享进来
+                YXSShareExtensionHelper.sharedInstance.checkShareExtension(completionHandler: nil)
             }
         }
+        
+
         
         self.delegate = self
         ///fps

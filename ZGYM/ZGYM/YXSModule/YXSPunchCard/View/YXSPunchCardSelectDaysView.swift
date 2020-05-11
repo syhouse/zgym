@@ -53,7 +53,7 @@ let PunchCardDays:[YXSPunchCardDay] = [YXSPunchCardDay.init("7天", 7),
 
 /// 选择打卡天数  标题+居中内容+取消+确定按钮 
 class YXSPunchCardSelectDaysView: UIView {
-    @discardableResult static func showAlert(_ yxs_selectModel: YXSPunchCardDay? = nil, yxs_dataSource:[YXSPunchCardDay] = PunchCardDays,title:String = "选择打卡天数",compelect:((_ modle: YXSPunchCardDay) ->())? = nil) -> YXSPunchCardSelectDaysView{
+    @discardableResult static func showAlert(_ yxs_selectModel: YXSPunchCardDay? = nil, yxs_dataSource:[YXSPunchCardDay] = PunchCardDays,title:String = "选择打卡天数",compelect:((_ modle: YXSPunchCardDay,_ index: Int) ->())? = nil) -> YXSPunchCardSelectDaysView{
         let view = YXSPunchCardSelectDaysView(yxs_selectModel,yxs_dataSource: yxs_dataSource,title: title)
         view.compelect = compelect
         view.yxs_beginAnimation()
@@ -62,7 +62,7 @@ class YXSPunchCardSelectDaysView: UIView {
     private var yxs_dataSource: [YXSPunchCardDay]
     private var title: String
     private var yxs_selectModel:YXSPunchCardDay?
-    private var compelect:((_ modle: YXSPunchCardDay) ->())?
+    private var compelect:((_ modle: YXSPunchCardDay,_ index: Int) ->())?
     private init(_ yxs_selectModel: YXSPunchCardDay? = nil,yxs_dataSource:[YXSPunchCardDay],title: String) {
         self.yxs_dataSource = yxs_dataSource
         self.title = title
@@ -147,7 +147,7 @@ class YXSPunchCardSelectDaysView: UIView {
     
     @objc func yxs_certainClick(){
         dismiss()
-        compelect?(yxs_dataSource[pickView.selectedRow(inComponent: 0)])
+        compelect?(yxs_dataSource[pickView.selectedRow(inComponent: 0)], pickView.selectedRow(inComponent: 0))
         
     }
     

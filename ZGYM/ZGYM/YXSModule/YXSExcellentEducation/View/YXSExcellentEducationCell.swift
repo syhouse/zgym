@@ -14,6 +14,7 @@ class YXSExcellentEducationCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(backgroundImageV)
+        contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         backgroundImageV.snp.makeConstraints { (make) in
             make.left.equalTo(15)
             make.width.equalTo(SCREEN_WIDTH - 30)

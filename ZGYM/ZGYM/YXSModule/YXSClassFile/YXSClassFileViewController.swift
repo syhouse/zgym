@@ -248,8 +248,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             
             YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: choseFileList).request({ (json) in
                 DispatchQueue.main.async {
+                    MBProgressHUD.yxs_showMessage(message: "上传成功")
                     weakSelf.loadData()
-                    vc.navigationController?.popViewController()
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.89) {
+                        vc.navigationController?.popToViewController(weakSelf, animated: true)
+                    }
                 }
                 
             }) { (msg, code) in
@@ -659,15 +662,32 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             let fileSize: String = YXSFileManagerHelper.sharedInstance.stringSizeOfDataSrouce(fileSize: UInt64(item.fileSize ?? 0))
             cell.lbSubTitle.text = "\(fileSize) | \(item.createTime?.yxs_DayTime() ?? "")" ///"老师名 | 2020-8-16"
             
-            if let url = URL(string: item.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
-                if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
-                    cell.imgIcon.image = img
-                    
-                } else {
-                    let strIcon = item.bgUrl?.count ?? 0 > 0 ? item.bgUrl : item.fileUrl
-                    cell.imgIcon.sd_setImage(with: URL(string: strIcon ?? ""), placeholderImage: kImageDefualtImage)
+            /// 图标
+            if item.bgUrl?.count ?? 0 > 0 {
+                /// 首图
+                cell.imgIcon.sd_setImage(with: URL(string: item.bgUrl ?? ""), placeholderImage: kImageDefualtImage)
+                
+            } else {
+                if let url = URL(string: item.fileUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
+                    if let img = YXSFileManagerHelper.sharedInstance.getIconWithFileUrl(url) {
+                        /// 文件类型
+                        cell.imgIcon.image = img
+                        
+                    } else {
+                        /// 图片
+                        cell.imgIcon.sd_setImage(with: url, placeholderImage: kImageDefualtImage)
+                    }
                 }
             }
+            
+            /// 视频图标显示
+            switch item.fileType {
+            case "mp4","MP4","mov":
+                cell.imgVideoTag.isHidden = false
+            default:
+                cell.imgVideoTag.isHidden = true
+            }
+            
             cell.model = item
             return cell
         }

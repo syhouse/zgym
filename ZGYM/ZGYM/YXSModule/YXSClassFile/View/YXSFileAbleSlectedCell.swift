@@ -24,6 +24,7 @@ class YXSFileAbleSlectedCell: YXSBaseFileCell {
         contentView.addSubview(lbThirdTitle)
         contentView.addSubview(iconBgView)
         iconBgView.addSubview(imgIcon)
+        iconBgView.insertSubview(imgVideoTag, aboveSubview: imgIcon)
         
         layout()
     }
@@ -69,6 +70,13 @@ class YXSFileAbleSlectedCell: YXSBaseFileCell {
             make.right.equalTo(-17)
             make.bottom.equalTo(titlesContainer.snp_bottom)
         })
+        
+        imgVideoTag.snp.makeConstraints({ (make) in
+            make.top.equalTo(10)
+            make.left.equalTo(10)
+            make.right.equalTo(-10)
+            make.bottom.equalTo(-10)
+        })
     }
     
     required init?(coder: NSCoder) {
@@ -110,6 +118,13 @@ class YXSFileAbleSlectedCell: YXSBaseFileCell {
     lazy var titlesContainer: UIView = {
         let view = UIView()
         return view
+    }()
+    
+    lazy var imgVideoTag: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "yxs_file_mp4")
+        img.isHidden = true
+        return img
     }()
     
 //    lazy var btnSelect: YXSButton = {
