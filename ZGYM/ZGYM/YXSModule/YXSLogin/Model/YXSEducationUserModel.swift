@@ -79,6 +79,9 @@ import ObjectMapper
         gradeIds = aDecoder.decodeObject(forKey: "gradeIds") as? [Int]
         timestamp = aDecoder.decodeObject(forKey: "timestamp") as? Int
         gradeNum = aDecoder.decodeObject(forKey: "gradeNum") as? String
+        
+        
+        curruntChild = aDecoder.decodeObject(forKey: "curruntChild") as? YXSChildrenModel
 	}
 
     /**
@@ -135,6 +138,10 @@ import ObjectMapper
         }
         if gradeNum != nil{
             aCoder.encode(gradeNum, forKey: "gradeNum")
+        }
+        
+        if curruntChild != nil{
+            aCoder.encode(curruntChild, forKey: "curruntChild")
         }
 	}
 }
