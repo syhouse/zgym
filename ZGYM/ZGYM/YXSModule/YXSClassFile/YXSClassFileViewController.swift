@@ -248,8 +248,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             
             YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: choseFileList).request({ (json) in
                 DispatchQueue.main.async {
+                    MBProgressHUD.yxs_showMessage(message: "上传成功")
                     weakSelf.loadData()
-                    vc.navigationController?.popToViewController(weakSelf, animated: true)
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.89) {
+                        vc.navigationController?.popToViewController(weakSelf, animated: true)
+                    }
                 }
                 
             }) { (msg, code) in
