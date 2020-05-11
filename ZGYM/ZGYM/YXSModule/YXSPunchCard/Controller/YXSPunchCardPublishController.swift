@@ -325,7 +325,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     }
     
     @objc func selectDaysClick(){
-        YXSPunchCardSelectDaysView.showAlert(self.publishModel.punchCardDay, compelect: {  [weak self] (modle) in
+        YXSPunchCardSelectDaysView.showAlert(self.publishModel.punchCardDay, compelect: {  [weak self] (modle, _) in
             guard let strongSelf = self else { return }
             strongSelf.publishModel.punchCardDay = modle
             strongSelf.updateUI()
@@ -350,7 +350,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
                 curruntModel = model
             }
         }
-        YXSPunchCardSelectDaysView.showAlert(curruntModel,yxs_dataSource: selectTimes, title: "选择提醒时间", compelect: {  [weak self] (modle) in
+        YXSPunchCardSelectDaysView.showAlert(curruntModel,yxs_dataSource: selectTimes, title: "选择提醒时间", compelect: {  [weak self] (modle, _) in
             guard let strongSelf = self else { return }
             strongSelf.publishModel.remindPanchCardTime = modle.text
             strongSelf.remindTimeSection.rightLabel.text =  modle.text
@@ -370,9 +370,9 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
                     curruntModel = model
                 }
             }
-            YXSPunchCardSelectDaysView.showAlert(curruntModel,yxs_dataSource: selectTimes, title: "选择补卡时间", compelect: {  [weak self] (modle) in
+            YXSPunchCardSelectDaysView.showAlert(curruntModel,yxs_dataSource: selectTimes, title: "选择补卡时间", compelect: {  [weak self] (modle, index) in
                 guard let strongSelf = self else { return }
-                strongSelf.patchCardTime = modle.text.date(withFormat: "MM月dd日")?.toString(format: DateFormatType.custom(kCommonDateFormatString))
+                strongSelf.patchCardTime = patchCardTimeList[index]
                 strongSelf.patchSelectTimeSection.rightLabel.text =  modle.text
             })
             
