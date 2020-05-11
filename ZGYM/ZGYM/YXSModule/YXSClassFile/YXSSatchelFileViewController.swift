@@ -26,6 +26,9 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         
         super.viewDidLoad()
         self.title = "我的文件"
+        
+        folderList = YXSCacheHelper.yxs_getCacheSatchelFolderList(parentFolderId: parentFolderId)
+        fileList = YXSCacheHelper.yxs_getCacheSatchelFileList(parentFolderId: parentFolderId)
 
         // Do any additional setup after loading the view.
 //        view.addSubview(btnSearch)
@@ -138,6 +141,10 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 self.fileList += tmpFileList
                 
                 self.tableView.reloadData()
+                
+                YXSCacheHelper.yxs_cacheSatchelFolderList(dataSource: self.folderList, parentFolderId: self.parentFolderId)
+                YXSCacheHelper.yxs_cacheSatchelFileList(dataSource: self.fileList, parentFolderId: self.parentFolderId)
+                
                 self.yxs_endingRefresh()
             }
         }
