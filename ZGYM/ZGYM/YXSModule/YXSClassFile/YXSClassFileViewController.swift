@@ -250,7 +250,6 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 DispatchQueue.main.async {
                     weakSelf.loadData()
                     vc.navigationController?.popToViewController(weakSelf, animated: true)
-//                    vc.navigationController?.popViewController()
                 }
                 
             }) { (msg, code) in
