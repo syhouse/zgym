@@ -144,7 +144,7 @@ class YXSSolitairePublishController: YXSCommonPublishBaseController {
                 let model = YXSPunchCardDay.init("\(totalCommitUpperLimit - index + 1)", index)
                 dataSource.append(model)
             }
-             YXSPunchCardSelectDaysView.showAlert(self.publishModel.solitaireStudents,yxs_dataSource: dataSource,title: "提交人数上限", compelect: {  [weak self] (modle) in
+            YXSPunchCardSelectDaysView.showAlert(self.publishModel.solitaireStudents,yxs_dataSource: dataSource,title: "提交人数上限", compelect: {  [weak self] (modle, _) in
                 guard let strongSelf = self else { return }
                 strongSelf.publishModel.solitaireStudents = modle
                 strongSelf.commitUpperLimit = modle.text.int ?? 0
