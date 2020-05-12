@@ -39,6 +39,11 @@ class YXSMyCollectDetailsVC: YXSBaseTableViewController,JXCategoryListContentVie
         }
         tableView.register(YXSMyCollectDetailsCell.self, forCellReuseIdentifier: "YXSMyCollectDetailsCell")
         tableView.register(YXSMyCollectAlbumCell.self, forCellReuseIdentifier: "YXSMyCollectAlbumCell")
+        if type == .voice {
+            self.dataSource = YXSCacheHelper.yxs_getCacheMyCollectionVoiceTask()
+        } else {
+            self.dataSource = YXSCacheHelper.yxs_getCacheMyCollectionAlbumTask()
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
     }
@@ -71,7 +76,7 @@ class YXSMyCollectDetailsVC: YXSBaseTableViewController,JXCategoryListContentVie
                     weakSelf.loadMore = false
                 }
                 weakSelf.dataSource += joinList
-                weakSelf.tableView.reloadData()
+                weakSelf.refreshData()
             }) { (msg, code) in
                 self.yxs_endingRefresh()
                 MBProgressHUD.yxs_showMessage(message: msg)
@@ -90,7 +95,7 @@ class YXSMyCollectDetailsVC: YXSBaseTableViewController,JXCategoryListContentVie
                     weakSelf.loadMore = false
                 }
                 weakSelf.dataSource += joinList
-                weakSelf.tableView.reloadData()
+                weakSelf.refreshData()
             }, failureHandler: { (msg, code) in
                 self.yxs_endingRefresh()
                 MBProgressHUD.yxs_showMessage(message: msg)
@@ -98,7 +103,15 @@ class YXSMyCollectDetailsVC: YXSBaseTableViewController,JXCategoryListContentVie
         }
     }
     
-    // MARK: - Action
+    func refreshData() {
+        if type == .voice {
+            YXSCacheHelper.yxs_cacheMyCollectionVoiceTask(dataSource: self.dataSource)
+        } else {
+            YXSCacheHelper.yxs_cacheMyCollectionAlbumTask(dataSource: self.dataSource)
+        }
+        
+        self.tableView.reloadData()
+    }
     
     
     /// 取消收藏
