@@ -298,13 +298,11 @@ extension AppDelegate{
         let loginNav = YXSRootNavController.init(rootViewController: YXSLoginViewController())
         var curruntRootVc:UIViewController?
         
-//        if isFirst{
-//            //首次登录
-//            curruntRootVc = YXSFirstLaunchController()
-//            UserDefaults.standard.set(true, forKey: kIsNotFirstLuanchKey)
-//        }else
-            
-            if yxs_user.accessToken == nil || yxs_user.type == nil || !YXSPersonDataModel.sharePerson.isLogin{
+        if isFirst{
+            //首次登录
+            curruntRootVc = YXSFirstLaunchController()
+            UserDefaults.standard.set(true, forKey: kIsNotFirstLuanchKey)
+        }else if yxs_user.accessToken == nil || yxs_user.type == nil || !YXSPersonDataModel.sharePerson.isLogin{
             //未登录或未选身份
             curruntRootVc = loginNav
             
