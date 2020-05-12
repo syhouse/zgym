@@ -429,11 +429,21 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
                     make.height.equalTo(44)
                 })
             }
-            header?.linkView.block = { [weak self](url) in
-                guard let weakSelf = self else {return}
-                let tmpStr = YXSObjcTool.shareInstance().getCompleteWebsite(url)
-                let newUrl = tmpStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-                UIApplication.shared.openURL(URL(string: newUrl)!)
+            header?.linkView.block = { (url) in
+                if url.count > 0 {
+                    let tmpStr = YXSObjcTool.shareInstance().getCompleteWebsite(url)
+                    if tmpStr.count > 0 {
+                        var charSet = CharacterSet.urlQueryAllowed
+                        charSet.insert(charactersIn: "#")
+                        charSet.insert(charactersIn: "%")
+                        let newUrl = tmpStr.addingPercentEncoding(withAllowedCharacters: charSet)!
+                        UIApplication.shared.openURL(URL(string: newUrl)!)
+                    } else {
+                        MBProgressHUD.yxs_showMessage(message: "无法打开该链接")
+                    }
+                } else {
+                    MBProgressHUD.yxs_showMessage(message: "无法打开该链接")
+                }
             }
             return header
         

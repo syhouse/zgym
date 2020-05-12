@@ -76,7 +76,10 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
         linkView.block = { [weak self](url) in
             guard let weakSelf = self else {return}
             let tmpStr = YXSObjcTool.shareInstance().getCompleteWebsite(url)
-            let newUrl = tmpStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            var charSet = CharacterSet.urlQueryAllowed
+            charSet.insert(charactersIn: "#")
+            charSet.insert(charactersIn: "%")
+            let newUrl = tmpStr.addingPercentEncoding(withAllowedCharacters: charSet)!
             UIApplication.shared.openURL(URL(string: newUrl)!)
         }
 

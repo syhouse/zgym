@@ -501,7 +501,10 @@ extension YXSHomeController{
     @objc func updateListForChatCall(_ notification:Notification){
         let model = notification.object as? IMCustomMessageModel
         if let model = model{
-            YXSLocalMessageHelper.shareHelper.yxs_changeLocalMessageLists(list: [model])
+            
+            if model.msgType == 0{
+                YXSLocalMessageHelper.shareHelper.yxs_changeLocalMessageLists(list: [model])
+            }
             
             if model.msgType == 3{
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.init(rawValue: model.serviceType ?? 0) ?? .homework])

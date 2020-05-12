@@ -98,7 +98,8 @@ class YXSFirstLaunchController: YXSBaseViewController {
     
     // MARK: -UI
     func initDataSource(){
-        let imagesP = ["yxs_launch_class_start","yxs_launch_notice", "yxs_launch_punch_card", "yxs_launch_friend_circle"]
+//        yxs_launch_friend_circle
+        let imagesP = ["yxs_launch_notice","yxs_launch_homework", "yxs_launch_punch_card", "yxs_launch_class_start"]
         for index in 0..<4{
             var image = imagesP[index]
             let dv = GBDeviceInfo.deviceInfo()

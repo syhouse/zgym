@@ -43,7 +43,6 @@ class YXSSelectAccessoryVC: YXSBaseTableViewController, UISearchBarDelegate {
         self.title = "选择附件"
         view.mixedBackgroundColor = MixedColor(normal: kNightFFFFFF, night: kNightBackgroundColor)
         tableView.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
-//        view.addSubview(btnSearch)
         view.addSubview(searchBar)
         view.addSubview(bottomView)
         searchBar.snp.makeConstraints({ (make) in
@@ -291,26 +290,18 @@ class YXSSelectAccessoryVC: YXSBaseTableViewController, UISearchBarDelegate {
     }
     
     // MARK: - LazyLoad
-    lazy var btnSearch: YXSButton = {
-        let btn = YXSButton()
-        btn.setImage(UIImage(named: "yxs_chat_search"), for: .normal)
-        btn.setTitle("搜索", for: .normal)
-        btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        btn.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNight2C3144)
-        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .normal)
-        btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightFFFFFF), forState: .highlighted)
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        btn.clipsToBounds = true
-        btn.layer.cornerRadius = 22
-        btn.addTarget(self, action: #selector(searchClick(sender:)), for: .touchUpInside)
-        return btn
-    }()
     
     lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar.init(frame: CGRect.zero)
         searchBar.showsCancelButton = true
         searchBar.delegate = self
         searchBar.placeholder = "输入文件名称搜索"
+        let img = NightNight.theme == .normal ? UIImage.yxs_image(with: UIColor.white) : UIImage.yxs_image(with: kNightForegroundColor)
+        let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
+        searchBar.backgroundImage = img
+        searchBar.yxs_addLine(position: .top, color: cl, lineHeight: 1)
+        searchBar.yxs_addLine(position: .bottom, color: cl, lineHeight: 1)
+//        searchBar.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.black)
         return searchBar
     }()
     
