@@ -193,7 +193,7 @@ class YXSMineViewController: YXSBaseTableViewController{
         /// 班级文件
         let cacheJoinList = YXSCacheHelper.yxs_getCacheClassJoinList()
         let cacheCreateList = YXSCacheHelper.yxs_getCacheClassCreateList()
-        if cacheJoinList != nil || cacheCreateList != nil {
+        if cacheJoinList.count > 1 || cacheCreateList.count > 1 {
             var list:[YXSClassModel] = [YXSClassModel]()
             list += cacheCreateList
             list += cacheJoinList
@@ -217,7 +217,7 @@ class YXSMineViewController: YXSBaseTableViewController{
             
             YXSEducationGradeListRequest().request({ [weak self](json) in
                 guard let weakSelf = self else {return}
-                var list:[YXSClassModel] = [YXSClassModel]()
+//                var list:[YXSClassModel] = [YXSClassModel]()
                 let joinClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
                 let createClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
                 
