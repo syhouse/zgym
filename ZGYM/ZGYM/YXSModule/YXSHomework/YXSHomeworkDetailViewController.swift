@@ -787,6 +787,12 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
 //            self.reloadTableView()
             
         }) { (msg, code) in
+            if isGood == 1{
+                model.isGood = 0
+            } else {
+                model.isGood = 1
+            }
+            self.tableView.reloadData()
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
