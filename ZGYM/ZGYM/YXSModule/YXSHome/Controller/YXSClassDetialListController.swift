@@ -20,6 +20,8 @@ class YXSClassDetialListController: YXSHomeBaseController {
     private var classDetialModel: YXSClassDetailModel!
     private var yxs_rightButton: YXSButton!
     
+    ///班级详情数据请求完成
+    private var hasLoadClassDetialRequest: Bool = false
     /// 导航栏 右边按钮的标题
     public var navRightBarButtonTitle: String? {
         didSet {
@@ -82,10 +84,11 @@ class YXSClassDetialListController: YXSHomeBaseController {
                 childs.first?.isSelect = true
             }
             self.stage = StageType.init(rawValue:model.stage ?? "") ?? StageType.KINDERGARTEN
-            
+            self.hasLoadClassDetialRequest = true
             self.yxs_loadData()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
+            self.yxs_endingRefresh()
         }
     }
     ///瀑布流
@@ -159,7 +162,11 @@ class YXSClassDetialListController: YXSHomeBaseController {
     }
     
     override func yxs_loadData(){
-        yxs_loadListData()
+        if !hasLoadClassDetialRequest{
+            yxs_loadClassDetailData()
+        }else{
+            yxs_loadListData()
+        }
     }
     
     // MARK: - action
