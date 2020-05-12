@@ -44,8 +44,8 @@ class YXSMyCollectVC: YXSBaseTableViewController {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc = YXSMyCollectDetailsVC()
-        self.navigationController?.pushViewController(vc)
+//        let vc = YXSMyCollectDetailsVC()
+//        self.navigationController?.pushViewController(vc)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
