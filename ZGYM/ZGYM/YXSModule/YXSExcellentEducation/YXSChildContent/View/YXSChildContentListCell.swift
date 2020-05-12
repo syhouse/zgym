@@ -42,7 +42,7 @@ class YXSChildContentListCell: UITableViewCell {
     }
     
     func setModel(model:YXSChildContentHomeListModel) {
-        coverImgV.sd_setImage(with: URL(string: model.cover ?? ""), placeholderImage: UIImage.init(named: "yxs_synclass_english_Icon"), options: .refreshCached, completed: nil)
+        coverImgV.sd_setImage(with: URL(string: model.cover ?? ""), placeholderImage: UIImage.init(named: "yxs_synclass_foldercell_default"), options: .refreshCached, completed: nil)
         titleLbl.text = model.title
         timeLbl.text = model.publishTime?.yxs_Time()
     }
@@ -65,6 +65,7 @@ class YXSChildContentListCell: UITableViewCell {
     
     lazy var coverImgV: UIImageView = {
         let imgV = UIImageView()
+        imgV.contentMode = .scaleAspectFit
         return imgV
     }()
     
