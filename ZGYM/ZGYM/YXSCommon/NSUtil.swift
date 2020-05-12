@@ -281,7 +281,10 @@ class NSUtil {
     /// 链接编码
     /// - Parameter url: 中文链接
     static func yxs_urlAllowedCharacters(url: String) -> String{
-        return url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        var charSet = CharacterSet.urlQueryAllowed
+        charSet.insert(charactersIn: "#")
+        charSet.insert(charactersIn: "%")
+        return url.addingPercentEncoding(withAllowedCharacters: charSet)!
     }
 }
 

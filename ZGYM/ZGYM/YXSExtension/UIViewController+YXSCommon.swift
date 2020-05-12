@@ -65,7 +65,7 @@ extension UIViewController{
         let button = YXSButton(frame: CGRect(x: 0, y: 0, width: 30 + (title?.size(withAttributes: [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)
         ]).width ?? 0.0), height: 40))
-        button.setTitleColor(UIColor.black, for: .normal)
+        button.setMixedTitleColor(MixedColor(normal: UIColor.black, night: UIColor.white), forState: .normal)
         button.setTitle(title, for: .normal)
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
         let leftItem = UIBarButtonItem(customView: button)
