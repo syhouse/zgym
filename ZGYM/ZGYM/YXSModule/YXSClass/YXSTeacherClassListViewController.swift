@@ -20,8 +20,8 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
         self.title = "班级列表"
 //        setupRightBarButtonItem()
         
-        createClassList = YXSCacheHelper.yxs_getCacheTeacherClassCreateList()
-        joinClassList = YXSCacheHelper.yxs_getCacheTeacherClassJoinList()
+        createClassList = YXSCacheHelper.yxs_getCacheClassCreateList()
+        joinClassList = YXSCacheHelper.yxs_getCacheClassJoinList()
         
         // Do any additional setup after loading the view.
         self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNightBackgroundColor)
@@ -53,8 +53,8 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
             weakSelf.joinClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
             weakSelf.createClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
             
-            YXSCacheHelper.yxs_cacheTeacherClassJoinList(dataSource: weakSelf.joinClassList)
-            YXSCacheHelper.yxs_cacheTeacherClassCreateList(dataSource: weakSelf.createClassList)
+            YXSCacheHelper.yxs_cacheClassJoinList(dataSource: weakSelf.joinClassList)
+            YXSCacheHelper.yxs_cacheClassCreateList(dataSource: weakSelf.createClassList)
             
             weakSelf.tableView.reloadData()
             weakSelf.checkEmptyData()

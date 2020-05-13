@@ -37,6 +37,9 @@ class YXSContactController: YXSBaseTableViewController{
     var parentList:[YXSContactModel] = [YXSContactModel]()
     var navRightBadgeBtn: SLBadgeButton = SLBadgeButton()
     
+    /// 请求回来班级相应ID所有联系人
+    var contactsModel:[YXSContactModel] = [YXSContactModel]()
+    
     /// 若传班级参数 仅显示当前一个班级的成员
     init(classId:Int? = nil) {
         super.init()
@@ -201,12 +204,6 @@ class YXSContactController: YXSBaseTableViewController{
         }
     }
     
-    var contactsModel: [YXSContactModel]? {
-        didSet {
-//            tableView.reloadData()
-        }
-    }
-    
     // MARK: - Action
     @objc func rightBarButtonClick(sender:UIButton) {
         let vc = YXSConversationListController()
@@ -232,14 +229,17 @@ class YXSContactController: YXSBaseTableViewController{
         return cell
     }
     
-    
-    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return groupList//["A","C"]
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
     }
     
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
     
-    func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-        return index
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell: YXSContactCell = tableView.cellForRow(at: indexPath) as! YXSContactCell
+        self.yxs_pushChatVC(imId: cell.model?.imId ?? "")
     }
     
     // MARK: -Group
@@ -266,109 +266,14 @@ class YXSContactController: YXSBaseTableViewController{
         return headerView
     }
     
-    // MARK: - Delegate
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        if teacherList.count > 0 {
-//            return groupList.count + 1 ?? 0
-//
-//        } else {
-//            return groupList.count ?? 0
-//        }
-//    }
-//
-//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if teacherList.count > 0 && section == 0 {
-//            return teacherList.count
-//
-//        } else {
-//            let index = teacherList.count > 0 ? section - 1 : section
-//            let group = groupList[index]
-//            let list = dataDict[group]
-//            return list?.count ?? 0
-//        }
-//    }
-//
-//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        if teacherList.count > 0 && indexPath.section == 0 {
-//            let cell:YXSContactCell = tableView.dequeueReusableCell(withIdentifier: "YXSContactCell") as! YXSContactCell
-//            cell.model = teacherList[indexPath.row]
-//            return cell
-//
-//        } else {
-//            let cell:YXSContactCell = tableView.dequeueReusableCell(withIdentifier: "YXSContactCell") as! YXSContactCell
-//            let section = teacherList.count > 0 ? indexPath.section - 1 : indexPath.section
-//            let group = groupList[section]
-//            let list = dataDict[group]
-//            cell.model = list?[indexPath.row]
-//            return cell
-//        }
-//
-//    }
-//
-//    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-//        return groupList//["A","C"]
-//    }
-//
-//    func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-//        if teacherList.count > 0 {
-//            return index + 1
-//
-//        } else {
-//            return index
-//        }
-//    }
-    
-    // MARK: -Group Style Use
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return 30
-//    }
-//
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        if teacherList.count > 0 && section == 0 {
-//            let view = UIView()
-//            let lb = YXSLabel()
-//            lb.text = "教师(\(teacherList.count))"
-//            lb.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
-//            lb.font = UIFont.systemFont(ofSize: 13)
-//            view.addSubview(lb)
-//            lb.snp.makeConstraints({ (make) in
-//                make.centerY.equalTo(view.snp_centerY)
-//                make.left.equalTo(15)
-//            })
-//
-//            view.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
-//            return view
-//
-//        } else {
-//            let index = teacherList.count > 0 ? section - 1 : section
-//            let view = UIView()
-//            let lb = YXSLabel()
-//            lb.text = groupList[index]
-//            lb.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
-//            lb.font = UIFont.systemFont(ofSize: 13)
-//            view.addSubview(lb)
-//            lb.snp.makeConstraints({ (make) in
-//                make.centerY.equalTo(view.snp_centerY)
-//                make.left.equalTo(15)
-//            })
-//
-//            view.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
-//            return view
-//        }
-//    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell: YXSContactCell = tableView.cellForRow(at: indexPath) as! YXSContactCell
-        self.yxs_pushChatVC(imId: cell.model?.imId ?? "")
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return groupList
     }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+    func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+        return index
     }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return UIView()
-    }
+
     
     // MARK: - Other
     /// 过滤若有班级ID 仅显示当前一个班级的成员
