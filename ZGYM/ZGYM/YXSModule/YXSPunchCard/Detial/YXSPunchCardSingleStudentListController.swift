@@ -42,39 +42,41 @@ class YXSPunchCardSingleStudentListController: YXSPunchCardSingleStudentBaseList
         }
     }
     
+    var isSuperHeaderViewInView = true
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if canScroll == false{
-            scrollView.setContentOffset(CGPoint.zero, animated: true)
+        let offsetY = scrollView.contentOffset.y
+//        print("TableView的偏移量：\(offsetY)")
+        if offsetY <= 0 {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: kHomeHeaderWillInScreenNotification), object: nil, userInfo: nil)
+        }
+        let transaltePoint = scrollView.panGestureRecognizer.translation(in: scrollView)
+        //向上拖动  当前不可拖动
+        if isSuperHeaderViewInView && transaltePoint.y < 0{
+            scrollView.setContentOffset(CGPoint.zero, animated: false)
         }
         
-        let offsetY = scrollView.contentOffset.y
-        //        print("TableView的偏移量：\(offsetY)")
-        if offsetY < 0 {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: kHomeHeaderInScreenNotification), object: nil, userInfo: [
-                "canScroll": "1"
-            ])
+        //向上拖动 当前不可拖动
+        if !isSuperHeaderViewInView && transaltePoint.y > 0 && offsetY <= 0{
+            scrollView.setContentOffset(CGPoint.zero, animated: false)
         }
+        
+        SLLog(transaltePoint.y)
         
     }
     
     override func addNotification() {
         super.addNotification()
         NotificationCenter.default.addObserver(self, selector: #selector(acceptMsg), name: NSNotification.Name(rawValue: kHomeHeaderLeaverScreenNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(acceptMsg), name: NSNotification.Name(rawValue: kHomeHeaderInScreenNotification), object: nil)
     }
     
     @objc func acceptMsg(_ notification: Notification?) {
         let notificationName: String = (notification?.name)!.rawValue
         if (notificationName == kHomeHeaderLeaverScreenNotification) {
-            let userInfo = notification?.userInfo
-            let canScroll = userInfo?["canScroll"] as? String
-            if (canScroll == "1") {
-                self.canScroll = true
-                tableView.showsVerticalScrollIndicator = true
-            }
+            isSuperHeaderViewInView = false
         } else if (notificationName == kHomeHeaderInScreenNotification) {
-            //        self.tableView.contentOffset = CGPointZero;
-            self.canScroll = false
-            tableView.showsVerticalScrollIndicator = false
+            isSuperHeaderViewInView = true
         }
     }
 }
@@ -103,7 +105,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     private var calendarModel: YXSCalendarModel?
     
     /// 是否可以滚动
-    fileprivate var canScroll = true
+    fileprivate var canScroll = false
     
     private var dataSource: [YXSPunchCardCommintListModel] = [YXSPunchCardCommintListModel]()
     
@@ -432,7 +434,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         let model = dataSource[section]
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SLPunchCardDetialTableHeaderView") as! YXSPunchCardDetialTableHeaderView
         model.topHistoryModel = topHistoryModel
-        model.isShowLookStudentAllButton = !(type == .myPunchCard || type == .studentPunchCardList)
+        model.isShowLookStudentAllButton = !(type == .myPunchCard || type == .studentPunchCardList || type == .goodHistory)
         model.isShowLookGoodButton = type != .goodHistory
         headerView.setModel(model, type: self.type)
         headerView.headerBlock = {[weak self](type) in
