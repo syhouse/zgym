@@ -209,7 +209,6 @@ let gradeList = "/grade/list"
 class YXSEducationGradeListRequest: YXSBaseRequset {
     override init() {
         super.init()
-        isLoadCache = true
         method = .post
         path = gradeList
         destinationJsonPaths = ["listCreate"]

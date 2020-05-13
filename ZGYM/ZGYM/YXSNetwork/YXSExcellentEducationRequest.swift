@@ -139,3 +139,30 @@ class YXSEducationChildContentCollectionArticleModifyRequest: YXSBaseRequset {
         param = ["articleId": articleId]
     }
 }
+
+// MARK: - 优期刊
+// MARK: -分页查询优期刊
+let periodicalPage = "/periodical/page"
+class YXSEducationPeriodicalPageRequest: YXSBaseRequset {
+    init(pageSize: Int = kPageSize, currentPage: Int) {
+        super.init()
+        method = .post
+        path = periodicalPage
+        param = ["currentPage": currentPage,
+                 "pageSize":pageSize]
+    }
+}
+
+// MARK: -分页查询优期刊文章
+let periodicalArticlePage = "/periodical/article/page"
+class YXSEducationPeriodicalArticlePageRequest: YXSBaseRequset {
+    init(periodicalId: Int, pageSize: Int = kPageSize, currentPage: Int) {
+        super.init()
+        method = .post
+        path = periodicalArticlePage
+        param = ["currentPage": currentPage,
+                 "pageSize":pageSize,
+                 "periodicalId": periodicalId]
+    }
+}
+

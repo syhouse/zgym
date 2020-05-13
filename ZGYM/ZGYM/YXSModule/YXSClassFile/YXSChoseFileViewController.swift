@@ -45,17 +45,11 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         self.title = "选择文件"
         
         // Do any additional setup after loading the view.
+        view.mixedBackgroundColor = MixedColor(normal: kNightFFFFFF, night: kNightBackgroundColor)
+        
         self.view.addSubview(searchBar)
         searchBar.editingChangedBlock = {[weak self](view) in
             guard let weakSelf = self else {return}
-//            weakSelf.searchRequest(keyword: view.text ?? "") { [weak self](list) in
-//                guard let weakSelf = self else {return}
-//                DispatchQueue.main.async {
-//                    weakSelf.fileList = list
-//                    weakSelf.tableView.reloadData()
-//                }
-//            }
-            
             // 出组
             YXSSatchelFilePageQueryRequest(currentPage: 1, parentFolderId: weakSelf.parentFolderId, keyword: view.text ?? "").request({ [weak self](json) in
                 guard let weakSelf = self else {return}
@@ -97,7 +91,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         }
         totalSize = UInt(size)
         
-        tableView.backgroundColor = kTableViewBackgroundColor
+        tableView.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
         tableView.register(YXSFileGroupCell.classForCoder(), forCellReuseIdentifier: "SLFileGroupCell")
         tableView.register(YXSFileAbleSlectedCell.classForCoder(), forCellReuseIdentifier: "SLFileAbleSlectedCell")
         

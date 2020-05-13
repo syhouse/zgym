@@ -11,11 +11,14 @@ import FDFullscreenPopGesture_Bell
 import NightNight
 import JXCategoryView
 
-///headerView滑出屏幕
+///headerView完整滑出屏幕
 let kHomeHeaderLeaverScreenNotification = "HomeHeaderLeaverScreenNotification"
 
-///headerView滑进屏幕
+///headerView完整滑进屏幕
 let kHomeHeaderInScreenNotification = "HomeHeaderInScreenNotification"
+
+///headerView将要滑进屏幕
+let kHomeHeaderWillInScreenNotification = "kHomeHeaderWillInScreenNotification"
 
 var headerHeight = 64 + kSafeTopHeight + 333
 
@@ -88,7 +91,8 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         //自定义
         loadData()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(acceptMsg(_:)), name: NSNotification.Name(rawValue: kHomeHeaderInScreenNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(acceptMsg(_:)), name: NSNotification.Name(rawValue: kHomeHeaderWillInScreenNotification), object: nil)
+        
         //家长打卡撤销
         NotificationCenter.default.addObserver(self, selector: #selector(loadData), name: NSNotification.Name.init(rawValue: kOperationStudentCancelPunchCardNotification), object: nil)
         
@@ -146,9 +150,9 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
             make.left.right.bottom.equalTo(scrollview)
             make.width.equalTo(scrollview)
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                make.height.equalTo(SCREEN_HEIGHT - kSafeTopHeight - 64 - kSafeBottomHeight)
+                make.height.equalTo(SCREEN_HEIGHT - kSafeTopHeight - 64)
             }else{
-                make.height.equalTo(SCREEN_HEIGHT - kSafeTopHeight - 64 - 60 - kSafeBottomHeight)
+                make.height.equalTo(SCREEN_HEIGHT - kSafeTopHeight - 64 - 60)
             }
         }
         self.addChild(pageController)
@@ -342,6 +346,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         if #available(iOS 11.0, *){
             view.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         }
+        view.bounces = false
         return view
     }()
     
@@ -396,28 +401,30 @@ extension YXSPunchCardDetialController{
         let maxOffsetY: CGFloat = headerHeight
         let offsetY = scrollView.contentOffset.y
         SLLog("offsetY=\(offsetY)")
-        if offsetY >= maxOffsetY{
+        
+        if offsetY == 0.0{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: kHomeHeaderInScreenNotification), object: nil, userInfo: [
+                "canScroll": "0"
+            ])
+        }
+        
+        if Int(offsetY) >= Int(maxOffsetY){
             scrollView.contentOffset = CGPoint(x: 0, y: maxOffsetY)
             //          print("滑动到顶端")
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: kHomeHeaderLeaverScreenNotification), object: nil, userInfo: [
                 "canScroll": "1"
             ])
-            if subCanScroll{
-                canScroll = false
-            }
             scrollView.showsVerticalScrollIndicator = false
 
             customNav.titleLabel.textAlignment = .left
             customNav.title = punchModel.title ?? ""
-            
-            scrollview.isScrollEnabled = false
+            canScroll = false
         } else {
             customNav.titleLabel.textAlignment = .center
             customNav.title = "打卡任务"
             scrollView.showsVerticalScrollIndicator = true
             if canScroll == false {
-                print("_canScroll:===\(canScroll)")
-                scrollView.contentOffset = CGPoint(x: 0, y: maxOffsetY)
+                scrollView.setContentOffset(CGPoint(x: 0, y: maxOffsetY), animated: false)
             }
         }
     }
@@ -425,17 +432,7 @@ extension YXSPunchCardDetialController{
     
     // MARK: - scrollView
     @objc func acceptMsg(_ notification: Notification?) {
-        let userInfo = notification?.userInfo
-        let canScroll = userInfo?["canScroll"] as? String
-        if (canScroll == "1") {
-            self.canScroll = true
-            scrollview.isScrollEnabled = true
-        }
-        
-        let subCanScroll = userInfo?["subCanScroll"] as? String
-        if (subCanScroll == "0") {
-            self.subCanScroll = false
-        }
+        self.canScroll = true
     }
     
     /// 刷新消息

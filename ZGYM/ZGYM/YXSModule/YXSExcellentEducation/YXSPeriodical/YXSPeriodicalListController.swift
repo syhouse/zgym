@@ -10,12 +10,31 @@ import UIKit
 import NightNight
 
 class YXSPeriodicalListController: YXSBaseTableViewController{
-    
+    var dataSource: [Any] = [Any]()
     // MARK: -leftCicle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "期刊"
-        yxs_initUI()
+        self.title = "优期刊"
+        
+        tableView.register(YXSPeriodicalCell.self, forCellReuseIdentifier: "YXSPeriodicalCell")
+    }
+    
+    override func yxs_refreshData() {
+        loadData()
+    }
+    
+    override func yxs_loadNextPage() {
+        loadData()
+    }
+    
+    func loadData(){
+        YXSEducationPeriodicalPageRequest.init(currentPage: curruntPage).requestCollection({ (list:[YXSClassModel]) in
+            self.yxs_endingRefresh()
+            self.tableView.reloadData()
+        }) { (msg, code) in
+            self.yxs_endingRefresh()
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     func yxs_initUI(){
@@ -49,7 +68,7 @@ class YXSPeriodicalListController: YXSBaseTableViewController{
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
-        label.text = "暂无期刊"
+        label.text = "暂无优期刊"
         return label
     }()
     
@@ -58,4 +77,24 @@ class YXSPeriodicalListController: YXSBaseTableViewController{
         yxs_imageView.mixedImage = MixedImage(normal: "yxs_empty_classScheduleCard", night: "yxs_empty_classScheduleCard_night")
         return yxs_imageView
     }()
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataSource.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "YXSPeriodicalCell", for: indexPath) as! YXSPeriodicalCell
+        cell.yxs_setCellModel(dataSource[indexPath.row] as? XMTrack)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = YXSPeriodicalListDetialController()
+        vc.title = "第六期刊物"
+        self.navigationController?.pushViewController(vc)
+    }
+    
+    override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
+        return showEmptyDataSource
+    }
 }

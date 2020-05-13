@@ -75,7 +75,6 @@ let parentQueryContacts = "/parent/query-contacts"
 class YXSEducationParentQueryContactsRequest: YXSBaseRequset {
     init(classId: Int){
         super.init()
-        isLoadCache = true
         method = .post
         host = homeHost
         path = parentQueryContacts
@@ -89,7 +88,6 @@ let teacherQueryContacts = "/teacher/query-contacts"
 class YXSEducationTeacherQueryContactsRequest: YXSBaseRequset {
     init(classId: Int){
         super.init()
-        isLoadCache = true
         method = .post
         host = homeHost
         path = teacherQueryContacts

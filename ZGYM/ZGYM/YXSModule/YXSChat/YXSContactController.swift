@@ -56,7 +56,13 @@ class YXSContactController: YXSBaseTableViewController{
         
         super.viewDidLoad()
         self.title = "通讯录"
-
+        
+        /// 取出缓存装载数据
+        classesModel = YXSCacheHelper.yxs_getCacheChatContactClassList()
+        gradeView.model = classesModel
+        contactsModel = YXSCacheHelper.yxs_getCacheChatContactAllCellList(classId: classesModel?.first?.id ?? 0)
+        processData(list: contactsModel)
+        
         tableView.mixedBackgroundColor = MixedColor(normal: kTableViewBackgroundColor, night: kNightBackgroundColor)
         
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -72,6 +78,12 @@ class YXSContactController: YXSBaseTableViewController{
         gradeView.cellSelectedBlock = {[weak self](index) in
             guard let weakSelf = self else {return}
             weakSelf.currentClassIndex = index
+            
+            let id = weakSelf.classesModel?[index].id ?? 0
+            weakSelf.contactsModel = YXSCacheHelper.yxs_getCacheChatContactAllCellList(classId: id)
+            weakSelf.processData(list: weakSelf.contactsModel)
+            weakSelf.tableView.reloadData()
+            
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
                 weakSelf.teacherContactRequest()
             } else {
@@ -125,6 +137,7 @@ class YXSContactController: YXSBaseTableViewController{
             var model = joinClassList + createClassList
             model = weakSelf.filter(classList: model)
             weakSelf.classesModel = model
+            YXSCacheHelper.yxs_cacheChatContactClassList(classesModel: model)
             
             if model.count > 0 {
                 weakSelf.teacherContactRequest()
@@ -139,10 +152,12 @@ class YXSContactController: YXSBaseTableViewController{
     
     @objc func teacherContactRequest() {
 //        MBProgressHUD.yxs_showLoading()
-        YXSEducationTeacherQueryContactsRequest(classId: classesModel?[currentClassIndex].id ?? 0).requestCollection({ [weak self](list:[YXSContactModel]) in
+        let cId = classesModel?[currentClassIndex].id ?? 0
+        YXSEducationTeacherQueryContactsRequest(classId: cId).requestCollection({ [weak self](list:[YXSContactModel]) in
             guard let weakSelf = self else {return}
 //            MBProgressHUD.yxs_hideHUD()
             weakSelf.contactsModel = list
+            YXSCacheHelper.yxs_cacheChatContactAllCellList(classId: cId, allCellModel: weakSelf.contactsModel)
             weakSelf.processData(list: list)
             weakSelf.tableView.reloadData()
             
@@ -162,6 +177,7 @@ class YXSContactController: YXSBaseTableViewController{
             model = model.yxs_filterDuplicates({$0.id})
             model = weakSelf.filter(classList: model)
             weakSelf.classesModel = model
+            YXSCacheHelper.yxs_cacheChatContactClassList(classesModel: model)
             
             if model.count > 0 {
                 weakSelf.parentContactRequest()
@@ -174,10 +190,12 @@ class YXSContactController: YXSBaseTableViewController{
     
     @objc func parentContactRequest() {
 //        MBProgressHUD.yxs_showLoading()
-        YXSEducationParentQueryContactsRequest(classId: classesModel?[currentClassIndex].id ?? 0).requestCollection({ [weak self](list:[YXSContactModel]) in
+        let cId = classesModel?[currentClassIndex].id ?? 0
+        YXSEducationParentQueryContactsRequest(classId: cId).requestCollection({ [weak self](list:[YXSContactModel]) in
             guard let weakSelf = self else {return}
 //            MBProgressHUD.yxs_hideHUD()
             weakSelf.contactsModel = list
+            YXSCacheHelper.yxs_cacheChatContactAllCellList(classId: cId, allCellModel: weakSelf.contactsModel)
             weakSelf.processData(list: list)
             weakSelf.tableView.reloadData()
             
