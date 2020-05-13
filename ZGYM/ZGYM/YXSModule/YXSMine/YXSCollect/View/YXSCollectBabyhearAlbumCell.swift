@@ -1,5 +1,5 @@
 //
-//  YXSCollectBabyhearVoiceCell.swift
+//  YXSCollectBabyhearAlbumCell.swift
 //  ZGYM
 //
 //  Created by yihao on 2020/4/14.
@@ -9,33 +9,32 @@
 import Foundation
 import NightNight
 
-class YXSCollectBabyhearVoiceCell: UITableViewCell {
+class YXSCollectBabyhearAlbumCell: YXSBaseTableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
         contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+        contentView.addSubview(headIcon)
         contentView.addSubview(nameLabel)
-        contentView.addSubview(timeImageV)
-        contentView.addSubview(timeLabel)
+        contentView.addSubview(countLabel)
+        
+        headIcon.snp.makeConstraints { (make) in
+            make.top.left.equalTo(15)
+            make.width.height.equalTo(63)
+        }
         
         nameLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(15)
-            make.left.equalTo(15)
+            make.top.equalTo(25)
+            make.left.equalTo(headIcon.snp_right).offset(20)
             make.right.equalTo(-15)
             make.height.equalTo(18)
         }
         
-        timeImageV.snp.makeConstraints { (make) in
+        countLabel.snp.makeConstraints { (make) in
+            make.bottom.equalTo(-25)
+            make.height.equalTo(18)
             make.left.equalTo(nameLabel)
-            make.top.equalTo(nameLabel.snp_bottom).offset(5)
-            make.width.height.equalTo(11)
-        }
-        
-        timeLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(timeImageV.snp_right).offset(5)
-            make.top.equalTo(timeImageV)
-            make.width.equalTo(100)
-            make.height.equalTo(11)
+            make.right.equalTo(-15)
         }
     }
     
@@ -44,11 +43,12 @@ class YXSCollectBabyhearVoiceCell: UITableViewCell {
     }
     
     func setModel(model:YXSMyCollectModel) {
+        headIcon.isHidden = false
         nameLabel.isHidden = false
-        timeLabel.isHidden = false
-        timeImageV.isHidden = false
-        nameLabel.text = model.voiceTitle
-        timeLabel.text = model.voiceTimeStr
+        countLabel.isHidden = false
+        headIcon.sd_setImage(with: URL(string: model.albumCover ?? ""), placeholderImage: UIImage.init(named: "yxs_collect_albumIcon"))
+        nameLabel.text = model.albumTitle
+        countLabel.text = "共\(model.albumNum ?? 0)首"
     }
     
     // MARK: -getter&setter
@@ -60,14 +60,14 @@ class YXSCollectBabyhearVoiceCell: UITableViewCell {
         return label
     }()
     
-    lazy var timeImageV: UIImageView = {
+    lazy var headIcon: UIImageView = {
         let imgV = UIImageView()
-        imgV.image = UIImage.init(named: "yxs_collect_time")
+        imgV.image = UIImage.init(named: "yxs_collect_albumIcon")
         imgV.isHidden = true
         return imgV
     }()
     
-    lazy var timeLabel: YXSLabel = {
+    lazy var countLabel: YXSLabel = {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 13)
         label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))

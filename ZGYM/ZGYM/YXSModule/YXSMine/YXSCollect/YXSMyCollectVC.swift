@@ -53,7 +53,7 @@ class YXSMyCollectVC: YXSBaseTableViewController {
             let vc = YXSCollectBabyhearListVC()
             self.navigationController?.pushViewController(vc)
         case 1:
-            let vc = YXSCollectBabyhearListVC()
+            let vc = YXSCollectArticleListVC()
             self.navigationController?.pushViewController(vc)
         case 2:
             MBProgressHUD.yxs_showMessage(message: "努力开发中，敬请期待...")

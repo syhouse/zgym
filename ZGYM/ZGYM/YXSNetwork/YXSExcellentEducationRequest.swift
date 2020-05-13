@@ -114,3 +114,28 @@ class YXSEducationChildContentPageListRequest: YXSBaseRequset {
         
     }
 }
+
+// MARK: 分页查询育儿好文收藏
+let childContentCollectionArticle = "/article/collection/page"
+class YXSEducationChildContentCollectionArticleRequest: YXSBaseRequset {
+    init(size: Int = 20, current: Int = 1) {
+        super.init()
+        method = .post
+        host = host
+        path = childContentCollectionArticle
+        param = ["current": current,
+                "size": size]
+    }
+}
+
+// MARK: 收藏或取消收藏育儿好文
+let childContentCollectionArticleModify = "/article/collection/save/or/cancel"
+class YXSEducationChildContentCollectionArticleModifyRequest: YXSBaseRequset {
+    init(articleId: Int) {
+        super.init()
+        method = .post
+        host = host
+        path = childContentCollectionArticleModify
+        param = ["articleId": articleId]
+    }
+}
