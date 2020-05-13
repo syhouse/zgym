@@ -1,5 +1,5 @@
 //
-//  YXSMyCollectDetailsCell.swift
+//  YXSCollectBabyhearVoiceCell.swift
 //  ZGYM
 //
 //  Created by yihao on 2020/4/14.
@@ -9,7 +9,7 @@
 import Foundation
 import NightNight
 
-class YXSMyCollectDetailsCell: UITableViewCell {
+class YXSCollectBabyhearVoiceCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none

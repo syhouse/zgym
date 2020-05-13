@@ -318,26 +318,41 @@ extension YXSCacheHelper {
     }
 }
 
+// MARK: - 通知详情
+extension YXSCacheHelper {
+    /// 获取通知详情数据
+    public static func yxs_getCacheNoticeDetailTask(noticeId: Int) -> YXSHomeworkDetailModel{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "NoticeDetailTask\(noticeId)".MD5())) as? YXSHomeworkDetailModel ?? YXSHomeworkDetailModel.init(JSON: ["" : ""])!
+        return model
+    }
+    ///缓存通知详情数据
+    public static func yxs_cacheNoticeDetailTask(data: YXSHomeworkDetailModel, noticeId: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(data, toFile: NSUtil.yxs_archiveFile(file: "NoticeDetailTask\(noticeId)".MD5()))
+        }
+    }
+}
+
 // MARK: - 我的收藏
 extension YXSCacheHelper {
-    /// 获取我的收藏声音数据
+    /// 获取收藏的宝宝听声音数据
     public static func yxs_getCacheMyCollectionVoiceTask() -> [YXSMyCollectModel]{
         let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "MyCollectVoiceTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5())) as? [YXSMyCollectModel] ?? [YXSMyCollectModel]()
         return model
     }
-    ///缓存我的收藏声音数据
+    ///缓存收藏的宝宝听声音数据
     public static func yxs_cacheMyCollectionVoiceTask(dataSource: [YXSMyCollectModel]){
         DispatchQueue.global().async {
             NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "MyCollectVoiceTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5()))
         }
     }
     
-    /// 获取我的收藏专辑数据
+    /// 获取收藏的宝宝听专辑数据
     public static func yxs_getCacheMyCollectionAlbumTask() -> [YXSMyCollectModel]{
         let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "MyCollectAlbumTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5())) as? [YXSMyCollectModel] ?? [YXSMyCollectModel]()
         return model
     }
-    ///缓存我的收藏专辑数据
+    ///缓存收藏的宝宝听专辑数据
     public static func yxs_cacheMyCollectionAlbumTask(dataSource: [YXSMyCollectModel]){
         DispatchQueue.global().async {
             NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "MyCollectAlbumTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5()))

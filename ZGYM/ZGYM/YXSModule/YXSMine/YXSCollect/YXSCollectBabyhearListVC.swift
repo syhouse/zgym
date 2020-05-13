@@ -1,5 +1,5 @@
 //
-//  YXSCollectListVC.swift
+//  YXSCollectBabyhearListVC.swift
 //  ZGYM
 //
 //  Created by yihao on 2020/5/12.
@@ -17,7 +17,7 @@ enum YXSCollectType {
     case album
 }
 
-class YXSCollectListVC: YXSBaseViewController {
+class YXSCollectBabyhearListVC: YXSBaseViewController {
     private var listContainerView: JXCategoryListContainerView!
     ///分类标题
     private var titles: [String] = ["声音", "专辑"]
@@ -25,7 +25,7 @@ class YXSCollectListVC: YXSBaseViewController {
     // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "我的收藏"
+        self.title = "宝宝听"
         congfigUI()
     }
     
@@ -68,7 +68,7 @@ class YXSCollectListVC: YXSBaseViewController {
     }()
 }
 
-extension YXSCollectListVC: JXCategoryListContainerViewDelegate, JXCategoryViewDelegate{
+extension YXSCollectBabyhearListVC: JXCategoryListContainerViewDelegate, JXCategoryViewDelegate{
     func number(ofListsInlistContainerView listContainerView: JXCategoryListContainerView!) -> Int {
         return categoryView.titles.count
     }
@@ -76,7 +76,7 @@ extension YXSCollectListVC: JXCategoryListContainerViewDelegate, JXCategoryViewD
     
     
     func listContainerView(_ listContainerView: JXCategoryListContainerView!, initListFor index: Int) -> JXCategoryListContentViewDelegate! {
-        return YXSMyCollectDetailsVC.init(type: types[index])
+        return YXSCollectBabyhearDetailsVC.init(type: types[index])
     }
     
     func categoryView(_ categoryView: JXCategoryBaseView!, scrollingFromLeftIndex leftIndex: Int, toRightIndex rightIndex: Int, ratio: CGFloat) {

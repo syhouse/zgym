@@ -84,6 +84,7 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
         }
 
         layout()
+        self.model = YXSCacheHelper.yxs_getCacheNoticeDetailTask(noticeId: self.homeModel.serviceId ?? 0)
         refreshData()
 
         NotificationCenter.default.addObserver(self, selector: #selector(homeworkCommitSuccess(obj:)), name: NSNotification.Name(rawValue: kParentSubmitSucessNotification), object: nil)
@@ -112,6 +113,7 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
             guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUD()
             weakSelf.model = model
+            YXSCacheHelper.yxs_cacheNoticeDetailTask(data: model, noticeId: weakSelf.homeModel.serviceId ?? 0)
             if YXSPersonDataModel.sharePerson.personRole == .PARENT && weakSelf.homeModel.isRead != 1{
                 /// 标记页面已读
                 if !(weakSelf.model?.readList?.contains(weakSelf.homeModel.childrenId ?? 0) ?? false) {

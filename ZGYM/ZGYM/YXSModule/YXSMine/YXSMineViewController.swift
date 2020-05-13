@@ -274,7 +274,7 @@ class YXSMineViewController: YXSBaseTableViewController{
     
     /// 我的收藏
     @objc func myCollectClick() {
-        let vc = YXSCollectListVC()
+        let vc = YXSMyCollectVC()
         self.navigationController?.pushViewController(vc)
     }
     
