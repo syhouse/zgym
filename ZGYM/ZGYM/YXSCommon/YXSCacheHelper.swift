@@ -117,6 +117,35 @@ class YXSCacheHelper: NSObject {
     }
 }
 
+// MARK: - 私聊
+extension YXSCacheHelper {
+    /// 缓存所有班级Model
+    public static func yxs_cacheChatContactClassList(classesModel: [YXSClassModel]){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(classesModel, toFile: NSUtil.yxs_archiveFile(file: "ChatContactClass\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)"))
+        }
+    }
+    
+    /// 获取所有班级Model缓存数据
+    public static func yxs_getCacheChatContactClassList() -> [YXSClassModel]{
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "ChatContactClass\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)")) as? [YXSClassModel] ?? [YXSClassModel]()
+        return items
+    }
+    
+    /// 缓存所有Cell
+    public static func yxs_cacheChatContactAllCellList(classId:Int, allCellModel: [YXSContactModel]){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(allCellModel, toFile: NSUtil.yxs_archiveFile(file: "ChatContactAllCell\(classId)\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)"))
+        }
+    }
+    
+    /// 获取所有Cell缓存数据
+    public static func yxs_getCacheChatContactAllCellList(classId:Int) -> [YXSContactModel]{
+        let items = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "ChatContactAllCell\(classId)\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)")) as? [YXSContactModel] ?? [YXSContactModel]()
+        return items
+    }
+}
+
 // MARK: - 班级列表
 extension YXSCacheHelper {
     /// 缓存班级列表数据(加入的班级)
