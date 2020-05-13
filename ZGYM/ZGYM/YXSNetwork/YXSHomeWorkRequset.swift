@@ -89,7 +89,6 @@ class YXSEducationHomeworkQueryHomeworkByIdRequest: YXSBaseRequset {
         super.init()
         method = .post
         host = homeHost
-        isLoadCache = true
         path = homeworkQueryHomeworkById
         param = ["childrenId":childrenId,
                  "homeworkCreateTime": homeworkCreateTime,
@@ -104,7 +103,6 @@ class YXSEducationHomeworkChildrenPageQueryRequest: YXSBaseRequset {
         super.init()
         method = .post
         host = homeHost
-        isLoadCache = true
         path = HomeworkChildrenPageQuery
         param = ["currentPage":currentPage,
         "homeworkCreateTime": homeworkCreateTime,
@@ -157,7 +155,6 @@ class YXSEducationHomeworkQueryHomeworkCommitByIdRequest: YXSBaseRequset {
         super.init()
         method = .post
         host = homeHost
-        isLoadCache = true
         path = homeworkQueryHomeworkCommitById
         param = ["childrenId":childrenId,
                  "homeworkCreateTime": homeworkCreateTime,
@@ -172,7 +169,6 @@ class YXSEducationHomeworkQueryHistoryGoodRequest: YXSBaseRequset {
         super.init()
         method = .post
         host = homeHost
-        isLoadCache = false
         path = homeworkQueryHistoryGood
         param = ["childrenId":childrenId,
                  "classId": classId,

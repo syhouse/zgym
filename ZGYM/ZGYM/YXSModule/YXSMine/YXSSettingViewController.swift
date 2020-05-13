@@ -311,7 +311,25 @@ class YXSSettingViewController: YXSBaseViewController, UITableViewDelegate, UITa
     func cacheFileSize()-> CGFloat {
 //        CGFloat fileSize = [SDImageCache sharedImageCache].getSize;
         let fileSize = SDImageCache.shared.totalDiskSize()
-        return CGFloat(fileSize)/( 1024.0 * 1024.0);
+        
+        var size:UInt = 0
+        let cachePath = NSUtil.yxs_cachePath().appendingPathComponent(yxs_ArchiveFileDirectoryKey)
+        let files:[String] = FileManager.default.subpaths(atPath: cachePath) ?? [String]()
+        for fileName in files {
+            let path = cachePath.appendingPathComponent(fileName)
+            if FileManager.default.fileExists(atPath: path) {
+                do{
+                    let fileDic = try FileManager.default.attributesOfItem(atPath: path)
+                    size += fileDic[FileAttributeKey(rawValue: "NSFileSize")] as! UInt
+                }catch{
+                    
+                }
+                
+                
+            }
+        }
+        size += fileSize
+        return CGFloat(size)/( 1024.0 * 1024.0);
     }
 
     

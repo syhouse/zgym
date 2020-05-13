@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NightNight
 
 let kMaxImageCount = 9
 let kImageOrginTag = 10001

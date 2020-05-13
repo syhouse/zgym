@@ -285,6 +285,85 @@ extension YXSCacheHelper {
 
 }
 
+// MARK: - 接龙详情
+extension YXSCacheHelper {
+    /// 获取接龙详情数据
+    public static func yxs_getCacheSolitaireDetailTask(censusId: Int, childrenId: Int) -> YXSHomeworkDetailModel{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SolitaireDetailTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)\(childrenId)".MD5())) as? YXSHomeworkDetailModel ?? YXSHomeworkDetailModel.init(JSON: ["" : ""])!
+        return model
+    }
+    
+    /// 缓存接龙详情数据
+    public static func yxs_cacheSolitaireDetailTask(model: YXSHomeworkDetailModel,censusId: Int, childrenId: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(model, toFile: NSUtil.yxs_archiveFile(file: "SolitaireDetailTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)\(childrenId)".MD5()))
+        }
+    }
+    
+    /// 获取接龙详情未接龙人员数据
+    public static func yxs_getCacheSolitaireNotJoinStaffListTask(censusId: Int) -> [YXSClassMemberModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SolitaireNotJoinStaffListTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)".MD5())) as? [YXSClassMemberModel] ?? [YXSClassMemberModel]()
+        return model
+    }
+    /// 缓存接龙详情未接龙人员数据
+    public static func yxs_cacheSolitaireNotJoinStaffListTask(dataSource: [YXSClassMemberModel],censusId: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SolitaireNotJoinStaffListTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)".MD5()))
+        }
+    }
+    
+    /// 获取接龙详情已接龙人员数据
+    public static func yxs_getCacheSolitaireJoinStaffListTask(censusId: Int) -> [YXSClassMemberModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SolitaireJoinStaffListTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)".MD5())) as? [YXSClassMemberModel] ?? [YXSClassMemberModel]()
+        return model
+    }
+    /// 缓存接龙详情已接龙人员数据
+    public static func yxs_cacheSolitaireJoinStaffListTask(dataSource: [YXSClassMemberModel],censusId: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SolitaireJoinStaffListTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)".MD5()))
+        }
+    }
+}
+
+// MARK: - 作业详情
+extension YXSCacheHelper {
+    /// 获取老师发布的作业详情数据
+    public static func yxs_getCachePublishHomeworkDetailTask(homeworkId: Int) -> YXSHomeworkDetailModel{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "PublishHomeworkDetailTask\(homeworkId)".MD5())) as? YXSHomeworkDetailModel ?? YXSHomeworkDetailModel.init(JSON: ["" : ""])!
+        return model
+    }
+    ///缓存老师发布的作业详情数据
+    public static func yxs_cachePublishHomeworkDetailTask(data: YXSHomeworkDetailModel, homeworkId: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(data, toFile: NSUtil.yxs_archiveFile(file: "PublishHomeworkDetailTask\(homeworkId)".MD5()))
+        }
+    }
+    
+    /// 获取家长提交的作业详情列表数据
+    public static func yxs_getCacheSubmitHomeworkDetailTask(homeworkId: Int, isGood: Int, isRemark: Int) -> [YXSHomeworkDetailModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SubmitHomeworkDetailTask\(homeworkId)\(isGood)\(isRemark)".MD5())) as? [YXSHomeworkDetailModel] ?? [YXSHomeworkDetailModel]()
+        return model
+    }
+    ///缓存家长提交的作业详情列表数据
+    public static func yxs_cacheSubmitHomeworkDetailTask(data: [YXSHomeworkDetailModel], homeworkId: Int, isGood: Int, isRemark: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(data, toFile: NSUtil.yxs_archiveFile(file: "SubmitHomeworkDetailTask\(homeworkId)\(isGood)\(isRemark)".MD5()))
+        }
+    }
+    
+    /// 获取历史优秀作业列表数据
+    public static func yxs_getCacheHomeworkHistoryGoodListTask(childrenId: Int, classId: Int) -> [YXSHomeworkDetailModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "HomeworkHistoryGoodListTask\(childrenId)\(classId)".MD5())) as? [YXSHomeworkDetailModel] ?? [YXSHomeworkDetailModel]()
+        return model
+    }
+    ///缓存历史优秀作业列表数据
+    public static func yxs_cacheHomeworkHistoryGoodListTask(data: [YXSHomeworkDetailModel], childrenId: Int, classId: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(data, toFile: NSUtil.yxs_archiveFile(file: "HomeworkHistoryGoodListTask\(childrenId)\(classId)".MD5()))
+        }
+    }
+}
+
 // MARK: - 我的收藏
 extension YXSCacheHelper {
     /// 获取我的收藏声音数据
