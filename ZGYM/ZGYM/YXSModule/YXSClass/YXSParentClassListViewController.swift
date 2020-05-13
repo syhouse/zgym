@@ -18,7 +18,7 @@ class YXSParentClassListViewController: YXSBaseTableViewController {
         super.viewDidLoad()
         self.title = "班级列表"
         
-        dataSource = YXSCacheHelper.yxs_getCacheParentClassJoinList()
+        dataSource = YXSCacheHelper.yxs_getCacheClassJoinList()
         
         self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNightBackgroundColor)
         self.tableView.register(YXSParentClassListTableViewCell.classForCoder(), forCellReuseIdentifier: "YXSParentClassListTableViewCell")
@@ -43,7 +43,7 @@ class YXSParentClassListViewController: YXSBaseTableViewController {
         YXSEducationGradeListRequest().request({ [weak self](json) in
             guard let weakSelf = self else {return}
             weakSelf.dataSource = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
-            YXSCacheHelper.yxs_cacheParentClassJoinList(dataSource: weakSelf.dataSource)
+            YXSCacheHelper.yxs_cacheClassJoinList(dataSource: weakSelf.dataSource)
             
             weakSelf.tableView.reloadData()
             weakSelf.yxs_endingRefresh()
