@@ -72,7 +72,11 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
         self.tableView.register(YXSDetailAllTitleCell2.classForCoder(), forCellReuseIdentifier: "YXSDetailAllTitleCell2")
 
         setupRightBarButtonItem()
+        self.detailModel = YXSCacheHelper.yxs_getCacheSolitaireDetailTask(censusId: censusId ?? 0, childrenId: childrenId ?? 0)
+        self.joinCensusResponseList = YXSCacheHelper.yxs_getCacheSolitaireJoinStaffListTask(censusId: censusId ?? 0)
+        self.notJoinCensusResponseList = YXSCacheHelper.yxs_getCacheSolitaireNotJoinStaffListTask(censusId: censusId ?? 0)
         yxs_refreshData()
+        
     }
     
     func setupRightBarButtonItem() {
@@ -102,6 +106,7 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
             guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUD()
             weakSelf.detailModel = model
+            YXSCacheHelper.yxs_cacheSolitaireDetailTask(model: model, censusId: weakSelf.censusId ?? 0, childrenId: weakSelf.childrenId ?? 0)
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
                 MBProgressHUD.yxs_showLoading(ignore: true)
                 YXSEducationCensusTeacherStaffListRequest(censusId: weakSelf.censusId ?? 0).request({ [weak self](json) in
@@ -110,6 +115,8 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
                     
                     strongSelf.joinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["joinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
                     strongSelf.notJoinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["notJoinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
+                    YXSCacheHelper.yxs_cacheSolitaireJoinStaffListTask(dataSource: strongSelf.joinCensusResponseList ?? [YXSClassMemberModel](), censusId: weakSelf.censusId ?? 0)
+                    YXSCacheHelper.yxs_cacheSolitaireNotJoinStaffListTask(dataSource: strongSelf.notJoinCensusResponseList ?? [YXSClassMemberModel](), censusId: weakSelf.censusId ?? 0)
                     strongSelf.checkEmptyData()
                     
                 }) { (msg, code) in
@@ -124,6 +131,8 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
                     
                     strongSelf.joinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["joinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
                     strongSelf.notJoinCensusResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["notJoinCensusResponseList"].rawString()!) ?? [YXSClassMemberModel]()
+                    YXSCacheHelper.yxs_cacheSolitaireJoinStaffListTask(dataSource: strongSelf.joinCensusResponseList ?? [YXSClassMemberModel](), censusId: weakSelf.censusId ?? 0)
+                    YXSCacheHelper.yxs_cacheSolitaireNotJoinStaffListTask(dataSource: strongSelf.notJoinCensusResponseList ?? [YXSClassMemberModel](), censusId: weakSelf.censusId ?? 0)
                     strongSelf.checkEmptyData()
                     
                 }) { (msg, code) in

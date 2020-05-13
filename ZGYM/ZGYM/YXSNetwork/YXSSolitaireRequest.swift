@@ -16,7 +16,6 @@ class YXSEducationCensusCensusDetailRequest: YXSBaseRequset {
         super.init()
         host = homeHost
         method = .post
-        isLoadCache = true
         path = censusCensusDetail
         param = ["censusId":censusId, "childrenId":childrenId]
     }
@@ -30,7 +29,6 @@ class YXSEducationCensusParentStaffListRequest: YXSBaseRequset {
     init(censusId: Int) {
         super.init()
         host = homeHost
-        isLoadCache = true
         method = .post
         path = censusParentStaffList
         param = ["censusId":censusId]
@@ -59,7 +57,6 @@ class YXSEducationCensusTeacherStaffListRequest: YXSBaseRequset {
     init(censusId: Int) {
         super.init()
         host = homeHost
-        isLoadCache = true
         method = .post
         path = censusTeacherStaffList
         param = ["censusId":censusId]

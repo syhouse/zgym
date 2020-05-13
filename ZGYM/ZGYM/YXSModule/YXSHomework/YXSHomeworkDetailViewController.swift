@@ -188,6 +188,8 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         }
         
         layout()
+        self.model = YXSCacheHelper.yxs_getCachePublishHomeworkDetailTask(homeworkId: homeModel.serviceId ?? 0)
+        self.dataSource = YXSCacheHelper.yxs_getCacheSubmitHomeworkDetailTask(homeworkId: homeModel.serviceId ?? 0, isGood: self.isGood, isRemark: self.isRemark)
         yxs_loadClassStarTopHistoryData()
         refreshData()
         
@@ -305,6 +307,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 } else {
                     weakSelf.tableView.tableFooterView = nil
                 }
+                YXSCacheHelper.yxs_cacheSubmitHomeworkDetailTask(data: weakSelf.dataSource, homeworkId: weakSelf.homeModel.serviceId ?? 0, isGood: weakSelf.isGood, isRemark: weakSelf.isRemark)
                 weakSelf.tableView.reloadData()
             }, failureHandler: { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)
@@ -333,6 +336,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 } else {
                     weakSelf.tableView.tableFooterView = nil
                 }
+                YXSCacheHelper.yxs_cacheSubmitHomeworkDetailTask(data: weakSelf.dataSource, homeworkId: weakSelf.homeModel.serviceId ?? 0, isGood: weakSelf.isGood, isRemark: weakSelf.isRemark)
                 weakSelf.tableView.reloadData()
             }, failureHandler: { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)
@@ -362,6 +366,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 } else {
                     weakSelf.tableView.tableFooterView = nil
                 }
+                YXSCacheHelper.yxs_cacheSubmitHomeworkDetailTask(data: weakSelf.dataSource, homeworkId: weakSelf.homeModel.serviceId ?? 0, isGood: weakSelf.isGood, isRemark: weakSelf.isRemark)
                 weakSelf.tableView.reloadData()
             }) { (msg, code) in
                 MBProgressHUD.yxs_showMessage(message: msg)
@@ -424,9 +429,11 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         YXSEducationHomeworkQueryHomeworkByIdRequest(childrenId: homeModel.childrenId ?? 0, homeworkCreateTime: homeModel.createTime ?? "", homeworkId: homeModel.serviceId ?? 0).request({ [weak self](model: YXSHomeworkDetailModel) in
             guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUD()
+            weakSelf.tableViewRefreshHeader.endRefreshing()
             model.topHistoryModel = weakSelf.topHistoryModel
             weakSelf.model = model
             weakSelf.tableHeaderView.setModel(model: model)
+            YXSCacheHelper.yxs_cachePublishHomeworkDetailTask(data: model, homeworkId: weakSelf.homeModel.serviceId ?? 0)
             if YXSPersonDataModel.sharePerson.personRole == .PARENT && weakSelf.homeModel.isRead != 1{
                 /// 标记页面已读
                 if !(weakSelf.model?.readList?.contains(weakSelf.homeModel.childrenId ?? 0) ?? false) {
@@ -447,6 +454,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             
             
         }) { (msg, code) in
+            self.tableViewRefreshHeader.endRefreshing()
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
@@ -1125,6 +1133,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         if #available(iOS 11.0, *){
             tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         }
+        tableView.mj_header = tableViewRefreshHeader
         tableView.estimatedSectionHeaderHeight = 0
         //去除group空白
         tableView.estimatedSectionFooterHeight = 0.0

@@ -39,6 +39,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         tableView.register(YXSHomeworkDetailCell.self, forCellReuseIdentifier: "YXSHomeworkDetailCell")
         tableView.register(YXSHomeworkDetailSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: "YXSHomeworkDetailSectionHeaderViewHistory")
         tableView.register(YXSPunchCardDetialTableFooterView.self, forHeaderFooterViewReuseIdentifier: "YXSPunchCardDetialTableFooterView")
+        self.dataSource = YXSCacheHelper.yxs_getCacheHomeworkHistoryGoodListTask(childrenId: self.childid ?? 0, classId: self.classId ?? 0)
         self.loadData()
     }
     
@@ -81,6 +82,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
             } else {
                 weakSelf.tableView.tableFooterView = weakSelf.tableWhFooterView
             }
+            YXSCacheHelper.yxs_cacheHomeworkHistoryGoodListTask(data: weakSelf.dataSource, childrenId: weakSelf.childid ?? 0, classId: weakSelf.classId ?? 0)
             weakSelf.tableView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()

@@ -10,9 +10,11 @@ import NightNight
 
 class YXSMyCollectVC: YXSBaseTableViewController {
     
+    let titles:[String] = ["宝宝听","文章","同步课堂"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "我的收藏"
+        self.title = "收藏"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
         
     }
@@ -26,12 +28,14 @@ class YXSMyCollectVC: YXSBaseTableViewController {
         return 1
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return titles.count
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell")!
-        cell.textLabel?.text = "宝宝听"
-//        cell.selectionStyle = .none
+        cell.contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+        cell.textLabel?.text = titles[indexPath.row]
+        cell.textLabel?.mixedTextColor = MixedColor(normal: 0x575A60, night: 0x575A60)
+
         if indexPath.row == 0 {
             cell.yxs_addLine(position: LinePosition.top, color: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), leftMargin: 0, rightMargin: 0, lineHeight: 0.5)
         }
@@ -44,23 +48,18 @@ class YXSMyCollectVC: YXSBaseTableViewController {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-//        let vc = YXSMyCollectDetailsVC()
-//        self.navigationController?.pushViewController(vc)
-    }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
-    }
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            
+        switch indexPath.row {
+        case 0:
+            let vc = YXSCollectBabyhearListVC()
+            self.navigationController?.pushViewController(vc)
+        case 1:
+            let vc = YXSCollectBabyhearListVC()
+            self.navigationController?.pushViewController(vc)
+        case 2:
+            MBProgressHUD.yxs_showMessage(message: "努力开发中，敬请期待...")
+        default:
+            break
         }
-    }
-    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        return "取消收藏"
     }
     
 }

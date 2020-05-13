@@ -1,5 +1,5 @@
 //
-//  YXSMyCollectDetailsVC.swift
+//  YXSCollectBabyhearDetailsVC.swift
 //  ZGYM
 //
 //  Created by yihao on 2020/4/14.
@@ -12,7 +12,7 @@ import ObjectMapper
 import SwiftyJSON
 import JXCategoryView
 
-class YXSMyCollectDetailsVC: YXSBaseTableViewController,JXCategoryListContentViewDelegate{
+class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListContentViewDelegate{
 
     var type: YXSCollectType = .voice
     var dataSource: [YXSMyCollectModel] = [YXSMyCollectModel]()
@@ -37,8 +37,8 @@ class YXSMyCollectDetailsVC: YXSBaseTableViewController,JXCategoryListContentVie
         self.scrollView.snp.remakeConstraints { (make) in
             make.edges.equalTo(0)
         }
-        tableView.register(YXSMyCollectDetailsCell.self, forCellReuseIdentifier: "YXSMyCollectDetailsCell")
-        tableView.register(YXSMyCollectAlbumCell.self, forCellReuseIdentifier: "YXSMyCollectAlbumCell")
+        tableView.register(YXSCollectBabyhearVoiceCell.self, forCellReuseIdentifier: "YXSCollectBabyhearVoiceCell")
+        tableView.register(YXSCollectBabyhearAlbumCell.self, forCellReuseIdentifier: "YXSCollectBabyhearAlbumCell")
         if type == .voice {
             self.dataSource = YXSCacheHelper.yxs_getCacheMyCollectionVoiceTask()
         } else {
@@ -156,7 +156,7 @@ class YXSMyCollectDetailsVC: YXSBaseTableViewController,JXCategoryListContentVie
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if type == .voice {
-            let cell: YXSMyCollectDetailsCell = tableView.dequeueReusableCell(withIdentifier: "YXSMyCollectDetailsCell") as! YXSMyCollectDetailsCell
+            let cell: YXSCollectBabyhearVoiceCell = tableView.dequeueReusableCell(withIdentifier: "YXSCollectBabyhearVoiceCell") as! YXSCollectBabyhearVoiceCell
             let model = dataSource[indexPath.row]
             cell.setModel(model: model)
             if indexPath.row == 0 {
@@ -165,7 +165,7 @@ class YXSMyCollectDetailsVC: YXSBaseTableViewController,JXCategoryListContentVie
             cell.yxs_addLine(position: LinePosition.bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), leftMargin: 15, rightMargin: 0, lineHeight: 0.5)
             return cell
         } else {
-            let cell: YXSMyCollectAlbumCell = tableView.dequeueReusableCell(withIdentifier: "YXSMyCollectAlbumCell") as! YXSMyCollectAlbumCell
+            let cell: YXSCollectBabyhearAlbumCell = tableView.dequeueReusableCell(withIdentifier: "YXSCollectBabyhearAlbumCell") as! YXSCollectBabyhearAlbumCell
             let model = dataSource[indexPath.row]
             cell.setModel(model: model)
             if indexPath.row == 0 {

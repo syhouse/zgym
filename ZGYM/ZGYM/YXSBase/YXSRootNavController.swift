@@ -45,7 +45,7 @@ extension YXSRootNavController: UINavigationControllerDelegate{
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
         ///到达收藏页面显示悬浮框
-        if let _ = toVC as? YXSMyCollectDetailsVC{
+        if let _ = toVC as? YXSCollectBabyhearDetailsVC{
             YXSMusicPlayerWindowView.setView(hide: false)
         }
         return nil

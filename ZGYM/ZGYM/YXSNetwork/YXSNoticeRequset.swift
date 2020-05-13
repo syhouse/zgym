@@ -46,7 +46,6 @@ class YXSEducationNoticeQueryNoticeByIdRequest: YXSBaseRequset {
         method = .post
         host = homeHost
         path = noticeQueryNoticeById
-        isLoadCache = true
         param = [
                  "noticeCreateTime": noticeCreateTime,
                  "noticeId":noticeId]
