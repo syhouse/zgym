@@ -202,7 +202,7 @@ extension YXSCacheHelper {
     }
 }
 
-// MARK: - 详情
+// MARK: - 打卡详情
 extension YXSCacheHelper {
     
     /// 缓存打卡任务数据
@@ -236,19 +236,34 @@ extension YXSCacheHelper {
         let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "PunchCardTaskStudentCommintList\(clockInId)\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(type.rawValue))\(childrenId ?? 0)".MD5())) as? [YXSPunchCardCommintListModel] ?? [YXSPunchCardCommintListModel]()
         return model
     }
+
+}
+
+// MARK: - 我的收藏
+extension YXSCacheHelper {
+    /// 获取我的收藏声音数据
+    public static func yxs_getCacheMyCollectionVoiceTask() -> [YXSMyCollectModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "MyCollectVoiceTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5())) as? [YXSMyCollectModel] ?? [YXSMyCollectModel]()
+        return model
+    }
+    ///缓存我的收藏声音数据
+    public static func yxs_cacheMyCollectionVoiceTask(dataSource: [YXSMyCollectModel]){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "MyCollectVoiceTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5()))
+        }
+    }
     
-    
-//    /// 获取打卡任务数据
-//    public static func yxs_getCachePunchCardDetailTask(clockInId: Int, childrenId: Int?) -> YXSPunchCardModel{
-//        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "PunchCardDetailTask\(clockInId)\(childrenId ?? 0)".MD5())) as? YXSPunchCardModel ?? YXSPunchCardModel.init(JSON: ["" : ""])!
-//        return model
-//    }
-//    ///打卡提交列表数据
-//    public static func yxs_cachePunchCardTaskStudentCommintList(dataSource: [YXSPunchCardCommintListModel], clockInId: Int, childrenId: Int? , type: YXSSingleStudentListType){
-//        DispatchQueue.global().async {
-//            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "PunchCardTaskStudentCommintList\(clockInId)\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(type.rawValue))\(childrenId ?? 0)".MD5()))
-//        }
-//    }
+    /// 获取我的收藏专辑数据
+    public static func yxs_getCacheMyCollectionAlbumTask() -> [YXSMyCollectModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "MyCollectAlbumTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5())) as? [YXSMyCollectModel] ?? [YXSMyCollectModel]()
+        return model
+    }
+    ///缓存我的收藏专辑数据
+    public static func yxs_cacheMyCollectionAlbumTask(dataSource: [YXSMyCollectModel]){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "MyCollectAlbumTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5()))
+        }
+    }
 }
 
 

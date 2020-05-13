@@ -44,6 +44,9 @@ class YXSMyCollectDetailsCell: UITableViewCell {
     }
     
     func setModel(model:YXSMyCollectModel) {
+        nameLabel.isHidden = false
+        timeLabel.isHidden = false
+        timeImageV.isHidden = false
         nameLabel.text = model.voiceTitle
         timeLabel.text = model.voiceTimeStr
     }
@@ -53,12 +56,14 @@ class YXSMyCollectDetailsCell: UITableViewCell {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 16)
         label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), night: kNightBCC6D4)
+        label.isHidden = true
         return label
     }()
     
     lazy var timeImageV: UIImageView = {
         let imgV = UIImageView()
         imgV.image = UIImage.init(named: "yxs_collect_time")
+        imgV.isHidden = true
         return imgV
     }()
     
@@ -66,6 +71,7 @@ class YXSMyCollectDetailsCell: UITableViewCell {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 13)
         label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))
+        label.isHidden = true
         return label
     }()
 }

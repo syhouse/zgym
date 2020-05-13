@@ -31,7 +31,9 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
         self.webView.snp.makeConstraints({ (make) in
             make.edges.equalTo(0)
         })
-        
+        if URL(string: self.loadUrl ?? "") != nil {
+            MBProgressHUD.yxs_showLoading(inView: self.view)
+        }
         
     }
     
@@ -46,12 +48,19 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
         completionHandler(self.scriptKey)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if URL(string: self.loadUrl ?? "") != nil {
-            MBProgressHUD.yxs_showLoading(inView: self.view)
-        }
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        if URL(string: self.loadUrl ?? "") != nil {
+//            MBProgressHUD.yxs_showLoading(inView: self.view)
+//        }
+//    }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        if URL(string: self.loadUrl ?? "") != nil {
+//            MBProgressHUD.yxs_showLoading(inView: self.view)
+//        }
+//    }
     
     // MARK: - WKNavigationDelegate
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {

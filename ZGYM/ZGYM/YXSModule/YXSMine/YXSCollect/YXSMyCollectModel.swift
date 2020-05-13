@@ -9,7 +9,7 @@
 import Foundation
 import ObjectMapper
 
-class YXSMyCollectModel: NSObject, Mappable {
+class YXSMyCollectModel: NSObject, NSCoding, Mappable {
     
     // MARK: - 声音相关字段
     /// 声音名称
@@ -63,5 +63,41 @@ class YXSMyCollectModel: NSObject, Mappable {
         albumTitle <- map["albumTitle"]
         albumNum <- map["albumNum"]
         albumId <- map["albumId"]
+    }
+    
+    @objc required init(coder aDecoder: NSCoder)
+    {
+        voiceTitle = aDecoder.decodeObject(forKey: "voiceTitle") as? String
+        voiceDuration = aDecoder.decodeObject(forKey: "voiceDuration") as? Int
+        voiceId = aDecoder.decodeObject(forKey: "voiceId") as? Int
+        albumCover = aDecoder.decodeObject(forKey: "albumCover") as? String
+        albumTitle = aDecoder.decodeObject(forKey: "albumTitle") as? String
+        albumNum = aDecoder.decodeObject(forKey: "albumNum") as? Int
+        albumId = aDecoder.decodeObject(forKey: "albumId") as? Int
+    }
+    
+    @objc func encode(with aCoder: NSCoder)
+    {
+        if voiceTitle != nil{
+            aCoder.encode(voiceTitle, forKey: "voiceTitle")
+        }
+        if voiceDuration != nil{
+            aCoder.encode(voiceDuration, forKey: "voiceDuration")
+        }
+        if voiceId != nil{
+            aCoder.encode(voiceId, forKey: "voiceId")
+        }
+        if albumCover != nil{
+            aCoder.encode(albumCover, forKey: "albumCover")
+        }
+        if albumTitle != nil{
+            aCoder.encode(albumTitle, forKey: "albumTitle")
+        }
+        if albumNum != nil{
+            aCoder.encode(albumNum, forKey: "albumNum")
+        }
+        if albumId != nil{
+            aCoder.encode(albumId, forKey: "albumId")
+        }
     }
 }

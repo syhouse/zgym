@@ -43,6 +43,9 @@ class YXSMyCollectAlbumCell: UITableViewCell {
     }
     
     func setModel(model:YXSMyCollectModel) {
+        headIcon.isHidden = false
+        nameLabel.isHidden = false
+        countLabel.isHidden = false
         headIcon.sd_setImage(with: URL(string: model.albumCover ?? ""), placeholderImage: UIImage.init(named: "yxs_collect_albumIcon"))
         nameLabel.text = model.albumTitle
         countLabel.text = "共\(model.albumNum ?? 0)首"
@@ -53,12 +56,14 @@ class YXSMyCollectAlbumCell: UITableViewCell {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 16)
         label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), night: kNightBCC6D4)
+        label.isHidden = true
         return label
     }()
     
     lazy var headIcon: UIImageView = {
         let imgV = UIImageView()
         imgV.image = UIImage.init(named: "yxs_collect_albumIcon")
+        imgV.isHidden = true
         return imgV
     }()
     
@@ -66,6 +71,7 @@ class YXSMyCollectAlbumCell: UITableViewCell {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 13)
         label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))
+        label.isHidden = true
         return label
     }()
 }
