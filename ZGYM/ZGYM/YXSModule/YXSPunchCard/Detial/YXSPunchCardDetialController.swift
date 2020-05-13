@@ -150,9 +150,9 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
             make.left.right.bottom.equalTo(scrollview)
             make.width.equalTo(scrollview)
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                make.height.equalTo(SCREEN_HEIGHT - kSafeTopHeight - 64 - kSafeBottomHeight)
+                make.height.equalTo(SCREEN_HEIGHT - kSafeTopHeight - 64)
             }else{
-                make.height.equalTo(SCREEN_HEIGHT - kSafeTopHeight - 64 - 60 - kSafeBottomHeight)
+                make.height.equalTo(SCREEN_HEIGHT - kSafeTopHeight - 64 - 60)
             }
         }
         self.addChild(pageController)

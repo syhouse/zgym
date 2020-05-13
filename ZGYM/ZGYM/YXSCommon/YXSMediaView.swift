@@ -64,6 +64,8 @@ class YXSMediaView: UIView {
             make.right.equalTo(0)
             make.bottom.equalTo(0)
         })
+        
+        voiceView.isHidden = true
     }
     
     // MARK: - Setter
