@@ -8,7 +8,7 @@
 
 import UIKit
 
-// MARK: - 列表
+// MARK: - 首页及主功能列表页
 class YXSCacheHelper: NSObject {
     /// 缓存首页列表数据
     /// - Parameter dataSource: 首页列表
@@ -248,7 +248,7 @@ extension YXSCacheHelper {
     }
 }
 
-// MARK: - 打卡详情
+// MARK: - 四大功能详情页缓存
 extension YXSCacheHelper {
     
     /// 缓存打卡任务数据
@@ -280,6 +280,24 @@ extension YXSCacheHelper {
     /// 获取打卡提交列表数据
     public static func yxs_getCachePunchCardTaskStudentCommintList(clockInId: Int, childrenId: Int?, type: YXSSingleStudentListType) -> [YXSPunchCardCommintListModel]{
         let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "PunchCardTaskStudentCommintList\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(clockInId)\(type.rawValue))\(childrenId ?? 0)".MD5())) as? [YXSPunchCardCommintListModel] ?? [YXSPunchCardCommintListModel]()
+        return model
+    }
+    
+    /// 缓存通知详情数据
+    /// - Parameters:
+    ///   - model: 打卡任务Model
+    ///   - clockInId: 打卡任务ID
+    ///   - childrenId: 打卡孩子id  老师传nil
+    public static func yxs_cacheNoticeDetailTask(model: YXSHomeworkDetailModel,serviceId: Int, childrenId: Int?){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(model, toFile: NSUtil.yxs_archiveFile(file: "NoticeDetailTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(serviceId)\(childrenId ?? 0)".MD5()))
+        }
+    }
+    
+    
+    /// 获取通知详情数据
+    public static func yxs_getCacheNoticeDetailTask(serviceId: Int, childrenId: Int?) -> YXSHomeworkDetailModel{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "NoticeDetailTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(serviceId)\(childrenId ?? 0)".MD5())) as? YXSHomeworkDetailModel ?? YXSHomeworkDetailModel.init(JSON: ["" : ""])!
         return model
     }
 

@@ -89,6 +89,10 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(homeworkCommitSuccess(obj:)), name: NSNotification.Name(rawValue: kParentSubmitSucessNotification), object: nil)
         // Do any additional setup after loading the view.
         bottomBtnView.btnCommit.addTarget(self, action: #selector(replyClick), for: .touchUpInside)
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) {
+            self.model = YXSCacheHelper.yxs_getCacheNoticeDetailTask(serviceId: self.homeModel.serviceId ?? 0, childrenId: self.yxs_user.curruntChild?.id ?? 0)
+        }
     }
 
     deinit {
@@ -123,6 +127,7 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
                     UIUtil.yxs_loadReadData(hModel!)
                 }
             }
+            YXSCacheHelper.yxs_cacheNoticeDetailTask(model: model, serviceId: weakSelf.homeModel.serviceId ?? 0, childrenId: weakSelf.yxs_user.curruntChild?.id ?? 0)
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
@@ -248,7 +253,6 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
     // MARK: - Setter
     private var model: YXSHomeworkDetailModel? {
         didSet {
-
             topHeaderView.strGrade = self.model?.className
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
                 var teacherName = "我"
@@ -658,7 +662,7 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
     }()
 
     lazy var mediaView: YXSMediaView = {
-        let view = YXSMediaView()
+        let view = YXSMediaView.init(frame: CGRect.init(x: 0, y: 0, width: self.view.width - 30, height: 0))
         return view
     }()
 
