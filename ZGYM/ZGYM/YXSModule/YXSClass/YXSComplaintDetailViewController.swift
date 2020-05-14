@@ -341,8 +341,6 @@ class SLComplaintImagesView: UIView,YXSSelectMediaHelperDelegate {
     
     // MARK: - Other
     func getItem(_ model: YXSMediaModel? = nil, isAdd: Bool = false) -> YXSFriendDragItem{
-        var publishMedia = SLPublishMediaModel()
-        publishMedia.asset = model?.asset
         
         let item = YXSFriendDragItem.init(frame: CGRect.zero)
         item.contentMode = .scaleAspectFill
@@ -350,6 +348,8 @@ class SLComplaintImagesView: UIView,YXSSelectMediaHelperDelegate {
         if isAdd{
             item.isAdd = isAdd
         }else{
+            let publishMedia = SLPublishMediaModel()
+            publishMedia.asset = model?.asset
             item.model = publishMedia
         }
         item.itemRemoveBlock =  {

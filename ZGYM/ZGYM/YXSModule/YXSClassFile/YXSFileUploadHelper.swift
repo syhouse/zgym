@@ -26,6 +26,10 @@ enum YXSStorageType: String {
     case circle
     /// 头像
     case avatar
+    /// 班级之星
+    case star
+    /// 课表
+    case curriculum
 }
 
 
