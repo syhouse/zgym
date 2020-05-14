@@ -380,6 +380,58 @@ extension YXSCacheHelper {
     }
 }
 
+// MARK: - 同步课堂
+extension YXSCacheHelper {
+    /// 获取同步课堂tab标签数据
+    public static func yxs_getCacheSynClassTabsTask(type:YXSSynClassListType) -> [YXSSynClassTabModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SynClassTabs\(type.rawValue)".MD5())) as? [YXSSynClassTabModel] ?? [YXSSynClassTabModel]()
+        return model
+    }
+    ///缓存同步课堂tab标签数据
+    public static func yxs_cacheSynClassTabsTask(dataSource: [YXSSynClassTabModel], type:YXSSynClassListType){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SynClassTabs\(type.rawValue)".MD5()))
+        }
+    }
+    
+    /// 获取同步课堂列表数据
+    public static func yxs_getCacheSynClassListTask(tabId:Int) -> [YXSSynClassListModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SynClassList\(tabId)".MD5())) as? [YXSSynClassListModel] ?? [YXSSynClassListModel]()
+        return model
+    }
+    ///缓存同步课堂列表数据
+    public static func yxs_cacheSynClassListTask(dataSource: [YXSSynClassListModel], tabId:Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SynClassList\(tabId)".MD5()))
+        }
+    }
+    
+    /// 获取同步课堂详情列表数据
+    public static func yxs_getCacheSynClassDetailListTask(folderId:Int) -> [YXSSynClassFolderModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SynClassDetailList\(folderId)".MD5())) as? [YXSSynClassFolderModel] ?? [YXSSynClassFolderModel]()
+        return model
+    }
+    ///缓存同步课堂详情列表数据
+    public static func yxs_cacheSynClassDetailListTask(dataSource: [YXSSynClassFolderModel], folderId:Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SynClassDetailList\(folderId)".MD5()))
+        }
+    }
+    
+    /// 获取同步课堂详情内容数据
+    public static func yxs_getCacheSynClassDetailInfoTask(folderId:Int) -> YXSSynClassFolderInfoModel{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SynClassDetailInfo\(folderId)".MD5())) as? YXSSynClassFolderInfoModel ?? YXSSynClassFolderInfoModel.init(JSON: ["":""])!
+        return model
+    }
+    ///缓存同步课堂详情内容数据
+    public static func yxs_cacheSynClassDetailInfoTask(dataSource: YXSSynClassFolderInfoModel, folderId:Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SynClassDetailInfo\(folderId)".MD5()))
+        }
+    }
+    
+}
+
 // MARK: - 我的收藏
 extension YXSCacheHelper {
     /// 获取收藏的宝宝听声音数据

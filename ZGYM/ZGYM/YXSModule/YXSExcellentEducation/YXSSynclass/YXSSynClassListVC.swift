@@ -13,11 +13,9 @@ import ObjectMapper
 
 class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDelegate {
     
-    var type: YXSSynClassListType?
+    var type: YXSSynClassListType = .PRIMARY_SCHOOL
     var currentTab: YXSSynClassTabModel?
-    var primarySchoolTabs:[YXSSynClassTabModel] = [YXSSynClassTabModel]()
-    var middleSchoolTabs:[YXSSynClassTabModel] = [YXSSynClassTabModel]()
-    var highSchoolTabs:[YXSSynClassTabModel] = [YXSSynClassTabModel]()
+    var gradeTabs: [YXSSynClassTabModel] = [YXSSynClassTabModel]()
     var dataSource: [YXSSynClassListModel] = [YXSSynClassListModel]()
     
     func listView() -> UIView! {
@@ -34,6 +32,8 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.gradeTabs = YXSCacheHelper.yxs_getCacheSynClassTabsTask(type: type)
+        self.refreshHeaderTab()
         self.loadTabData()
         self.scrollView.snp.remakeConstraints { (make) in
             make.edges.equalTo(0)
@@ -42,6 +42,8 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
         tableView.tableHeaderView = tableHeaderView
         tableHeaderView.tabSelectBlock = { (tab) in
             self.currentTab = tab
+            self.dataSource = YXSCacheHelper.yxs_getCacheSynClassListTask(tabId: tab.id ?? 1)
+            self.tableView.reloadData()
             self.loadData()
         }
     }
@@ -53,19 +55,11 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
 
     
     func refreshHeaderTab() {
-        switch self.type {
-        case .PRIMARY_SCHOOL:
-            self.tableHeaderView.setTabs(tabs: self.primarySchoolTabs)
-            self.currentTab = self.primarySchoolTabs.first
-        case .MIDDLE_SCHOOL:
-            self.tableHeaderView.setTabs(tabs: self.middleSchoolTabs)
-            self.currentTab = self.middleSchoolTabs.first
-        case .HIGH_SCHOOL:
-            self.tableHeaderView.setTabs(tabs: self.highSchoolTabs)
-            self.currentTab = self.highSchoolTabs.first
-        default:
-            print("")
-        }
+        curruntPage = 1
+        self.tableHeaderView.setTabs(tabs: gradeTabs)
+        self.currentTab = gradeTabs.first
+        self.dataSource = YXSCacheHelper.yxs_getCacheSynClassListTask(tabId: self.currentTab?.id ?? 1)
+        self.tableView.reloadData()
         self.loadData()
     }
     
@@ -74,18 +68,13 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
         YXSEducationExcellentTabPageRequest.init().request({ [weak self](json) in
             guard let weakSelf = self else {return}
             let joinList = Mapper<YXSSynClassTabModel>().mapArray(JSONObject: json["tabList"].object) ?? [YXSSynClassTabModel]()
-            weakSelf.primarySchoolTabs.removeAll()
-            weakSelf.middleSchoolTabs.removeAll()
-            weakSelf.highSchoolTabs.removeAll()
+            weakSelf.gradeTabs.removeAll()
             for tab in joinList {
-                if tab.stage == .PRIMARY_SCHOOL {
-                    weakSelf.primarySchoolTabs.append(tab)
-                } else if tab.stage == .MIDDLE_SCHOOL {
-                    weakSelf.middleSchoolTabs.append(tab)
-                } else if tab.stage == .HIGH_SCHOOL {
-                    weakSelf.highSchoolTabs.append(tab)
+                if tab.stage == weakSelf.type {
+                    weakSelf.gradeTabs.append(tab)
                 }
             }
+            YXSCacheHelper.yxs_cacheSynClassTabsTask(dataSource: weakSelf.gradeTabs, type: weakSelf.type)
             weakSelf.refreshHeaderTab()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -111,6 +100,7 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
             }
             self.dataSource += list
             self.loadMore = json["hasNext"].boolValue
+            YXSCacheHelper.yxs_cacheSynClassListTask(dataSource: self.dataSource, tabId: self.currentTab?.id ?? 1)
             self.tableView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()

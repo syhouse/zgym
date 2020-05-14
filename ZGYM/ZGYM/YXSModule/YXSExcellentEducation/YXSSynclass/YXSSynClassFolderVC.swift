@@ -28,11 +28,26 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.dataSource = YXSCacheHelper.yxs_getCacheSynClassDetailListTask(folderId: folderId ?? 0)
+        self.folderInfoModel = YXSCacheHelper.yxs_getCacheSynClassDetailInfoTask(folderId: folderId ?? 0)
+        self.initData()
         self.scrollView.snp.remakeConstraints { (make) in
             make.edges.equalTo(0)
         }
         tableView.register(YXSSynClassFolderCell.self, forCellReuseIdentifier: "YXSSynClassFolderCell")
         tableView.tableHeaderView = tableHeaderView
+    }
+    
+    func initData() {
+        self.tableHeaderView.headerImageV.sd_setImage(with: URL(string: self.folderInfoModel?.homeUrl ?? ""), placeholderImage: UIImage.init(named: "yxs_synclass_folderheader_default"))
+        
+        let paragraphStye = NSMutableParagraphStyle()
+        //调整行间距
+        paragraphStye.lineSpacing = kMainContentLineHeight
+        paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
+        let attributedString = NSMutableAttributedString.init(string: self.folderInfoModel?.synopsis ?? "", attributes: [NSAttributedString.Key.paragraphStyle:paragraphStye,NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
+        self.footerTextView.attributedText = attributedString
+        self.refreshTableViewFooter()
     }
     
     // MARK: -loadData
@@ -57,16 +72,10 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
             }
             self.dataSource += list
             self.loadMore = json["hasNext"].boolValue
-            self.tableHeaderView.headerImageV.sd_setImage(with: URL(string: self.folderInfoModel?.homeUrl ?? ""), placeholderImage: UIImage.init(named: "yxs_synclass_folderheader_default"))
-            
-            let paragraphStye = NSMutableParagraphStyle()
-            //调整行间距
-            paragraphStye.lineSpacing = kMainContentLineHeight
-            paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
-            let attributedString = NSMutableAttributedString.init(string: self.folderInfoModel?.synopsis ?? "", attributes: [NSAttributedString.Key.paragraphStyle:paragraphStye,NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-            self.footerTextView.attributedText = attributedString
-            self.refreshTableViewFooter()
+            self.initData()
             self.tableView.reloadData()
+            YXSCacheHelper.yxs_cacheSynClassDetailListTask(dataSource: self.dataSource, folderId: self.folderId ?? 0)
+            YXSCacheHelper.yxs_cacheSynClassDetailInfoTask(dataSource: self.folderInfoModel ?? YXSSynClassFolderInfoModel.init(JSON: ["":""])!, folderId: self.folderId ?? 0)
         }) { (msg, code) in
             self.yxs_endingRefresh()
             MBProgressHUD.yxs_showMessage(message: msg)
