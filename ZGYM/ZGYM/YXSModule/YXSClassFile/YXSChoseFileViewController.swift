@@ -114,27 +114,10 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     // MARK: - Request
     override func yxs_refreshData() {
         loadData(keyword: "")
-//        searchRequest(keyword: "") { [weak self](list) in
-//            guard let weakSelf = self else {return}
-//            DispatchQueue.main.async {
-//                weakSelf.fileList.removeAll()
-//                weakSelf.fileList = list
-//                weakSelf.tableView.reloadData()
-//                weakSelf.yxs_endingRefresh()
-//            }
-//        }
     }
     
     override func yxs_loadNextPage() {
         loadData(keyword: "")
-//        searchRequest(keyword: "") { [weak self](list) in
-//            guard let weakSelf = self else {return}
-//            DispatchQueue.main.async {
-//                weakSelf.fileList += list
-//                weakSelf.tableView.reloadData()
-//                weakSelf.yxs_endingRefresh()
-//            }
-//        }
     }
     
      @objc func loadData(keyword:String) {
@@ -389,15 +372,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     }
     
     // MARK: - Other
-//    @objc func getSelectedFileList() -> [YXSFileModel] {
-//        var tmpArr = [YXSFileModel]()
-//        for sub in fileList {
-//            if sub.isSelected ?? false {
-//                tmpArr.append(sub)
-//            }
-//        }
-//        return tmpArr
-//    }
+
     
     /*
     // MARK: - Navigation
