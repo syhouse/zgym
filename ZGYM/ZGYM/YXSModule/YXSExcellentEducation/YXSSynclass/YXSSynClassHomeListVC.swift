@@ -18,6 +18,14 @@ enum YXSSynClassListType: String{
     case MIDDLE_SCHOOL
     ///高中
     case HIGH_SCHOOL
+    
+    var description: String {
+        switch self {
+        case .PRIMARY_SCHOOL: return "PRIMARY_SCHOOL"
+        case .MIDDLE_SCHOOL: return "MIDDLE_SCHOOL"
+        case .HIGH_SCHOOL: return "HIGH_SCHOOL"
+        }
+    }
 }
 
 ///学科

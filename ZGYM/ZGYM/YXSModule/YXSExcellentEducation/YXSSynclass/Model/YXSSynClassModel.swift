@@ -9,7 +9,7 @@
 import Foundation
 import ObjectMapper
 
-class YXSSynClassListModel: NSObject, Mappable{
+class YXSSynClassListModel: NSObject, NSCoding, Mappable{
     private override init(){}
     required init?(map: Map){}
 
@@ -24,7 +24,20 @@ class YXSSynClassListModel: NSObject, Mappable{
     var sortIndex: Int?
     var createTime: String?
     var tabId: Int?
-    var subject: YXSSynClassSubjectType?
+    var subject: YXSSynClassSubjectType? {
+        get {
+            if subjectStr == "CHINESE" {
+                return .CHINESE
+            } else if subjectStr == "MATHEMATICS" {
+                return .MATHEMATICS
+            } else if subjectStr == "FOREIGN_LANGUAGES" {
+                return .FOREIGN_LANGUAGES
+            } else {
+                return .CHINESE
+            }
+        }
+    }
+    var subjectStr: String?
     
     func mapping(map: Map) {
         homeUrl <- map["homeUrl"]
@@ -38,11 +51,65 @@ class YXSSynClassListModel: NSObject, Mappable{
         sortIndex <- map["sortIndex"]
         createTime <- map["createTime"]
         tabId <- map["tabId"]
-        subject <- map["subject"]
+        subjectStr <- map["subject"]
+    }
+    
+    @objc required init(coder aDecoder: NSCoder) {
+        homeUrl = aDecoder.decodeObject(forKey: "homeUrl") as? String
+        playCount = aDecoder.decodeObject(forKey: "playCount") as? Int
+        folderName = aDecoder.decodeObject(forKey: "folderName") as? String
+        creator = aDecoder.decodeObject(forKey: "creator") as? Int
+        updateTime = aDecoder.decodeObject(forKey: "updateTime") as? String
+        synopsis = aDecoder.decodeObject(forKey: "synopsis") as? String
+        coverUrl = aDecoder.decodeObject(forKey: "coverUrl") as? String
+        id = aDecoder.decodeObject(forKey: "id") as? Int
+        sortIndex = aDecoder.decodeObject(forKey: "sortIndex") as? Int
+        createTime = aDecoder.decodeObject(forKey: "createTime") as? String
+        tabId = aDecoder.decodeObject(forKey: "tabId") as? Int
+        subjectStr = aDecoder.decodeObject(forKey: "subjectStr") as? String
+    }
+    
+    @objc func encode(with aCoder: NSCoder) {
+        if homeUrl != nil{
+           aCoder.encode(homeUrl, forKey: "homeUrl")
+        }
+        if playCount != nil{
+           aCoder.encode(playCount, forKey: "playCount")
+        }
+        if folderName != nil{
+           aCoder.encode(folderName, forKey: "folderName")
+        }
+        if creator != nil{
+           aCoder.encode(creator, forKey: "creator")
+        }
+        if updateTime != nil{
+           aCoder.encode(updateTime, forKey: "updateTime")
+        }
+        if synopsis != nil{
+           aCoder.encode(synopsis, forKey: "synopsis")
+        }
+        if coverUrl != nil{
+           aCoder.encode(coverUrl, forKey: "coverUrl")
+        }
+        if id != nil{
+           aCoder.encode(id, forKey: "id")
+        }
+        if sortIndex != nil{
+           aCoder.encode(sortIndex, forKey: "sortIndex")
+        }
+        if createTime != nil{
+           aCoder.encode(createTime, forKey: "createTime")
+        }
+        if tabId != nil{
+           aCoder.encode(tabId, forKey: "tabId")
+        }
+        if subjectStr != nil{
+           aCoder.encode(subjectStr, forKey: "subjectStr")
+        }
     }
 }
 
-class YXSSynClassTabModel: NSObject, Mappable {
+class YXSSynClassTabModel: NSObject, NSCoding, Mappable {
     
     var updateTime: String?
     /// tab标签id
@@ -50,7 +117,21 @@ class YXSSynClassTabModel: NSObject, Mappable {
     var createTime: String?
     var creator: Int?
     /// tab标签类型
-    var stage: YXSSynClassListType?
+    var stage: YXSSynClassListType? {
+        get {
+            if stageString == "PRIMARY_SCHOOL" {
+                return .PRIMARY_SCHOOL
+            } else if stageString == "MIDDLE_SCHOOL" {
+                return .MIDDLE_SCHOOL
+            } else if stageString == "HIGH_SCHOOL" {
+                return .HIGH_SCHOOL
+            } else {
+                return .PRIMARY_SCHOOL
+            }
+        }
+    }
+    
+    var stageString: String?
     /// tab标签名字
     var tabName: String?
     var sortIndex: Int?
@@ -63,8 +144,42 @@ class YXSSynClassTabModel: NSObject, Mappable {
         id <- map["id"]
         createTime <- map["createTime"]
         creator <- map["creator"]
-        stage <- map["stage"]
+        stageString <- map["stage"]
         tabName <- map["tabName"]
         sortIndex <- map["sortIndex"]
+    }
+    
+    @objc required init(coder aDecoder: NSCoder) {
+        updateTime = aDecoder.decodeObject(forKey: "updateTime") as? String
+        id = aDecoder.decodeObject(forKey: "id") as? Int
+        createTime = aDecoder.decodeObject(forKey: "createTime") as? String
+        creator = aDecoder.decodeObject(forKey: "creator") as? Int
+        stageString = aDecoder.decodeObject(forKey: "stageString") as? String
+        tabName = aDecoder.decodeObject(forKey: "tabName") as? String
+        sortIndex = aDecoder.decodeObject(forKey: "sortIndex") as? Int
+    }
+    
+    @objc func encode(with aCoder: NSCoder) {
+        if updateTime != nil{
+           aCoder.encode(updateTime, forKey: "updateTime")
+        }
+        if id != nil{
+           aCoder.encode(id, forKey: "id")
+        }
+        if createTime != nil{
+           aCoder.encode(createTime, forKey: "createTime")
+        }
+        if creator != nil{
+           aCoder.encode(creator, forKey: "creator")
+        }
+        if stageString != nil{
+           aCoder.encode(stageString, forKey: "stageString")
+        }
+        if tabName != nil{
+           aCoder.encode(tabName, forKey: "tabName")
+        }
+        if sortIndex != nil{
+           aCoder.encode(sortIndex, forKey: "sortIndex")
+        }
     }
 }

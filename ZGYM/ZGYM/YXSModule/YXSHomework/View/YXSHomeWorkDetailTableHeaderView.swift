@@ -335,6 +335,9 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             readCommitPanel.lbTitle2.text = "提交"
             readCommitPanel.secondValue = String(self.model?.committedList?.count ?? 0)
             readCommitPanel.secondTotal = String(self.model?.memberCount ?? 0)
+            readCommitPanel.lbTitle2.isHidden = false
+            readCommitPanel.lbCommit.isHidden = false
+            readCommitPanel.lbTotal2.isHidden = false
             filterBtnView.isHidden = false
         } else {
             readCommitPanel.lbTitle2.isHidden = true

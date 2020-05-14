@@ -88,6 +88,38 @@ class YXSHomeworkBatchRemarkController: YXSBaseViewController , UITableViewDeleg
     }
     
 
+    func deleteCommetingList(idList: [Int]) {
+//        var list = [SelectModel]()
+//        for sub in childrenIdList ?? [SelectModel]() {
+//            var isOwn = false
+//            for id in idList {
+//                if sub.childrenId == id {
+//                    isOwn = true
+//                    break
+//                }
+//            }
+//            if !isOwn {
+//                list.append(sub)
+//            }
+//        }
+        var uncommeList = [YXSClassMemberModel]()
+        for sub in uncommeListModel ?? [YXSClassMemberModel]() {
+            var isOwn = false
+            for id in idList {
+                if sub.childrenId == id {
+                    isOwn = true
+                    break
+                }
+            }
+            if !isOwn {
+                uncommeList.append(sub)
+            }
+        }
+        uncommeListModel = uncommeList
+//        childrenIdList = list
+        self.tableView.reloadData()
+    }
+    
     @objc func yxs_addCommentClick(sender:YXSButton) {//老师点评
         var idList = [Int]()
         for sub in childrenIdList ?? [SelectModel]() {
@@ -104,7 +136,10 @@ class YXSHomeworkBatchRemarkController: YXSBaseViewController , UITableViewDeleg
         let vc = YXSHomeworkCommentController()
         vc.homeModel = homeModel
         vc.childrenIdList = idList
-        vc.isPop = false
+        vc.commetCallBack = { (list)in
+            self.deleteCommetingList(idList: list)
+        }
+        vc.isPop = true
         //点评成功后 刷新数据
         self.navigationController?.pushViewController(vc)
     }

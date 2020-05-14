@@ -114,3 +114,55 @@ class YXSEducationChildContentPageListRequest: YXSBaseRequset {
         
     }
 }
+
+// MARK: 分页查询育儿好文收藏
+let childContentCollectionArticle = "/article/collection/page"
+class YXSEducationChildContentCollectionArticleRequest: YXSBaseRequset {
+    init(size: Int = 20, current: Int = 1) {
+        super.init()
+        method = .post
+        host = host
+        path = childContentCollectionArticle
+        param = ["current": current,
+                "size": size]
+    }
+}
+
+// MARK: 收藏或取消收藏育儿好文
+let childContentCollectionArticleModify = "/article/collection/save/or/cancel"
+class YXSEducationChildContentCollectionArticleModifyRequest: YXSBaseRequset {
+    init(articleId: Int) {
+        super.init()
+        method = .post
+        host = host
+        path = childContentCollectionArticleModify
+        param = ["articleId": articleId]
+    }
+}
+
+// MARK: - 优期刊
+// MARK: -分页查询优期刊
+let periodicalPage = "/periodical/page"
+class YXSEducationPeriodicalPageRequest: YXSBaseRequset {
+    init(pageSize: Int = kPageSize, currentPage: Int) {
+        super.init()
+        method = .post
+        path = periodicalPage
+        param = ["currentPage": currentPage,
+                 "pageSize":pageSize]
+    }
+}
+
+// MARK: -分页查询优期刊文章
+let periodicalArticlePage = "/periodical/article/page"
+class YXSEducationPeriodicalArticlePageRequest: YXSBaseRequset {
+    init(periodicalId: Int, pageSize: Int = kPageSize, currentPage: Int) {
+        super.init()
+        method = .post
+        path = periodicalArticlePage
+        param = ["currentPage": currentPage,
+                 "pageSize":pageSize,
+                 "periodicalId": periodicalId]
+    }
+}
+

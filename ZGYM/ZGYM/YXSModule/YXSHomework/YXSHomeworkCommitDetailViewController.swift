@@ -497,7 +497,7 @@ class YXSHomeworkCommitDetailViewController: YXSBaseViewController {
         vc.childrenIdList = [(homeModel?.childrenId ?? 0)]
         vc.isPop = true
         //点评成功后 刷新数据
-        vc.commetCallBack = { () -> () in
+        vc.commetCallBack = { (list)in
             self.refreshData()
         }
         self.navigationController?.pushViewController(vc)
@@ -511,6 +511,7 @@ class YXSHomeworkCommitDetailViewController: YXSBaseViewController {
             YXSEducationHomeworkRemarkCancel(homeworkId: self.homeModel?.serviceId ?? 0, childrenId: self.homeModel?.childrenId ?? 0, homeworkCreateTime: self.homeModel?.createTime ?? "").request({ (json) in
                 MBProgressHUD.yxs_hideHUD()
                 MBProgressHUD.yxs_showMessage(message: "删除点评成功")
+                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherRepealRemarkSucessNotification), object: [kValueKey: YXSHomeType.homework])
                 //刷新页面
                 if let viewControllers = self.navigationController?.viewControllers{
                     for vc in viewControllers{

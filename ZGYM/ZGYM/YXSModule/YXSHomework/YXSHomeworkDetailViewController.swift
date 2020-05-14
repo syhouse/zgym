@@ -922,7 +922,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 vc.childrenIdList = [(model.childrenId ?? 0)]
                 vc.isPop = true
                 //点评成功后 刷新数据
-                vc.commetCallBack = { () -> () in
+                vc.commetCallBack = { (list)in
                     weakSelf.refreshData()
                 }
                 weakSelf.navigationController?.pushViewController(vc)
@@ -945,7 +945,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                             vc.childrenIdList = [(model.childrenId ?? 0)]
     //                        vc.isPop = true
                             //点评成功后 刷新数据
-                            vc.commetCallBack = { () -> () in
+                            vc.commetCallBack = { (list)in
                                 weakSelf.refreshData()
                             }
                             weakSelf.navigationController?.pushViewController(vc)
@@ -1310,7 +1310,7 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
                     SLLog(infos)
                     print("123")
                     MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-                    let urlStr = infos.first?["urlKey"] as! String
+                    let urlStr = infos.first?.aliYunUploadBackUrl ?? ""
                     self.graffitiRequest(urlStr: urlStr)
                 }) { (msg, code) in
                     MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)

@@ -42,39 +42,41 @@ class YXSPunchCardSingleStudentListController: YXSPunchCardSingleStudentBaseList
         }
     }
     
+    var isSuperHeaderViewInView = true
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if canScroll == false{
-            scrollView.setContentOffset(CGPoint.zero, animated: true)
-        }
-        
         let offsetY = scrollView.contentOffset.y
         //        print("TableView的偏移量：\(offsetY)")
-        if offsetY < 0 {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: kHomeHeaderInScreenNotification), object: nil, userInfo: [
-                "canScroll": "1"
-            ])
+        if offsetY <= 0 {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: kHomeHeaderWillInScreenNotification), object: nil, userInfo: nil)
         }
+        let transaltePoint = scrollView.panGestureRecognizer.translation(in: scrollView)
+        //向上拖动  当前不可拖动
+        if isSuperHeaderViewInView && transaltePoint.y < 0{
+            scrollView.setContentOffset(CGPoint.zero, animated: false)
+        }
+        
+        //向上拖动 当前不可拖动
+        if !isSuperHeaderViewInView && transaltePoint.y > 0 && offsetY <= 0{
+            scrollView.setContentOffset(CGPoint.zero, animated: false)
+        }
+        
+        SLLog(transaltePoint.y)
         
     }
     
     override func addNotification() {
         super.addNotification()
         NotificationCenter.default.addObserver(self, selector: #selector(acceptMsg), name: NSNotification.Name(rawValue: kHomeHeaderLeaverScreenNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(acceptMsg), name: NSNotification.Name(rawValue: kHomeHeaderInScreenNotification), object: nil)
     }
     
     @objc func acceptMsg(_ notification: Notification?) {
         let notificationName: String = (notification?.name)!.rawValue
         if (notificationName == kHomeHeaderLeaverScreenNotification) {
-            let userInfo = notification?.userInfo
-            let canScroll = userInfo?["canScroll"] as? String
-            if (canScroll == "1") {
-                self.canScroll = true
-                tableView.showsVerticalScrollIndicator = true
-            }
+            isSuperHeaderViewInView = false
         } else if (notificationName == kHomeHeaderInScreenNotification) {
-            //        self.tableView.contentOffset = CGPointZero;
-            self.canScroll = false
-            tableView.showsVerticalScrollIndicator = false
+            isSuperHeaderViewInView = true
         }
     }
 }
@@ -103,7 +105,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     private var calendarModel: YXSCalendarModel?
     
     /// 是否可以滚动
-    fileprivate var canScroll = true
+    fileprivate var canScroll = false
     
     private var dataSource: [YXSPunchCardCommintListModel] = [YXSPunchCardCommintListModel]()
     
@@ -432,7 +434,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         let model = dataSource[section]
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SLPunchCardDetialTableHeaderView") as! YXSPunchCardDetialTableHeaderView
         model.topHistoryModel = topHistoryModel
-        model.isShowLookStudentAllButton = !(type == .myPunchCard || type == .studentPunchCardList)
+        model.isShowLookStudentAllButton = !(type == .myPunchCard || type == .studentPunchCardList || type == .goodHistory)
         model.isShowLookGoodButton = type != .goodHistory
         headerView.setModel(model, type: self.type)
         headerView.headerBlock = {[weak self](type) in
@@ -449,7 +451,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
             case .dealPunCard:
                 strongSelf.dealPunchCardEvent(section)
             case .setUnPunchCardGood:
-                strongSelf.setUnPunchCardGoodEvent(section)
+                strongSelf.showUnPunchAlert(section)
             case .lookAllPunchCardCommint:
                 strongSelf.lookStudentAllPunchCardCommintEvent(section)
             case .lookPunchCardGood:
@@ -560,7 +562,7 @@ extension YXSPunchCardSingleStudentBaseListController{
         })
     }
     
-
+    
     // MARK: - 删除评论
     func showDelectComment(_ commentModel: YXSPunchCardCommentModel,_ point: CGPoint, section: Int){
         var pointInView = point
@@ -593,72 +595,83 @@ extension YXSPunchCardSingleStudentBaseListController{
     }
     
     func setPunchCardGoodEvent(_ section: Int){
-            let model = dataSource[section]
-            if self.type == .calendar || self.type == .studentPunchCardList{
-                model.excellent = true
+        let model = dataSource[section]
+        //            if self.type == .calendar || self.type == .studentPunchCardList{
+        //                model.excellent = true
+        //            }else{
+        //                 self.dataSource.remove(at: section)
+        //            }
+        model.excellent = true
+        self.dealIsShowTime()
+        self.reloadTableView()
+        
+        YXSEducationClockInTeacherApprovalRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0).request({ (result) in
+            if self.type == .studentPunchCardList{
+                self.navigationController?.yxs_existViewController(existClass: YXSPunchCardDetialController.self, complete: { (vc) in
+                    vc.pageController.yxs_punchCardRefresh(type: nil)
+                })
             }else{
-                 self.dataSource.remove(at: section)
+                self.refreshBlock?(nil,self.type)
             }
-            self.dealIsShowTime()
-            self.reloadTableView()
-            
-            YXSEducationClockInTeacherApprovalRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0).request({ (result) in
-                if self.type == .studentPunchCardList{
-                    self.navigationController?.yxs_existViewController(existClass: YXSPunchCardDetialController.self, complete: { (vc) in
-                        vc.pageController.yxs_punchCardRefresh(type: nil)
-                    })
-                }else{
-                    self.refreshBlock?(nil,self.type)
-                }
-            }) { (msg, code) in
-                //            friendCircleModel.isOnRequsetPraise = false
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
+        }) { (msg, code) in
+            //            friendCircleModel.isOnRequsetPraise = false
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
-        func setUnPunchCardGoodEvent(_ section: Int){
-            let model = dataSource[section]
-            if self.type == .calendar || self.type == .studentPunchCardList{
-                model.excellent = false
+    }
+    
+    func showUnPunchAlert(_ section: Int){
+        showAlert(title: "是否取消优秀打卡", leftTitle: "取消", rightTitle: "确定", rightClickBlock: {
+            [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.setUnPunchCardGoodEvent(section)
+        })
+    }
+    
+    func setUnPunchCardGoodEvent(_ section: Int){
+        let model = dataSource[section]
+        //            if self.type == .calendar || self.type == .studentPunchCardList{
+        //                model.excellent = false
+        //            }else{
+        //                 self.dataSource.remove(at: section)
+        //            }
+        model.excellent = false
+        self.reloadTableView()
+        self.dealIsShowTime()
+        
+        YXSEducationClockInTeacherApprovalRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0).request({ (result) in
+            if self.type == .studentPunchCardList{
+                self.navigationController?.yxs_existViewController(existClass: YXSPunchCardDetialController.self, complete: { (vc) in
+                    vc.pageController.yxs_punchCardRefresh(type: nil)
+                })
             }else{
-                 self.dataSource.remove(at: section)
+                self.refreshBlock?(nil,self.type)
             }
-            self.reloadTableView()
-            self.dealIsShowTime()
             
-            YXSEducationClockInTeacherApprovalRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0).request({ (result) in
-                if self.type == .studentPunchCardList{
-                    self.navigationController?.yxs_existViewController(existClass: YXSPunchCardDetialController.self, complete: { (vc) in
-                        vc.pageController.yxs_punchCardRefresh(type: nil)
-                    })
-                }else{
-                    self.refreshBlock?(nil,self.type)
-                }
-                
-            }) { (msg, code) in
-                //            friendCircleModel.isOnRequsetPraise = false
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
+        }) { (msg, code) in
+            //            friendCircleModel.isOnRequsetPraise = false
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
-        
-        func lookStudentAllPunchCardCommintEvent(_ section: Int){
-            let model = dataSource[section]
-            let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
-            vc.title = model.realName
-            UIUtil.curruntNav().pushViewController(vc)
-        }
-        
-        func lookPunchCardGoodEvent(_ section: Int){
-            let model = dataSource[section]
-            let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, childrenId: model.childrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
-            vc.title = "\(model.realName ?? "")"
-            UIUtil.curruntNav().pushViewController(vc)
-        }
-        
-        func lookClassStartRankEvent(_ section: Int){
-            let model = dataSource[section]
-            let vc = YXSClassStarPartentDetialController.init(classId: classId, childrenName: model.realName ?? "", childrenId: model.childrenId ?? 0, avar: model.avatar ?? "", stage: YXSPersonDataModel.sharePerson.personStage, startTime: topHistoryModel?.startTime, endTime: topHistoryModel?.endTime, isLookOtherStudent: true)
-            UIUtil.curruntNav().pushViewController(vc)
-        }
+    }
+    
+    func lookStudentAllPunchCardCommintEvent(_ section: Int){
+        let model = dataSource[section]
+        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
+        vc.title = model.realName
+        UIUtil.curruntNav().pushViewController(vc)
+    }
+    
+    func lookPunchCardGoodEvent(_ section: Int){
+        let model = dataSource[section]
+        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, childrenId: model.childrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
+        vc.title = "\(model.realName ?? "")"
+        UIUtil.curruntNav().pushViewController(vc)
+    }
+    
+    func lookClassStartRankEvent(_ section: Int){
+        let model = dataSource[section]
+        let vc = YXSClassStarPartentDetialController.init(classId: classId, childrenName: model.realName ?? "", childrenId: model.childrenId ?? 0, avar: model.avatar ?? "", stage: YXSPersonDataModel.sharePerson.personStage, startTime: topHistoryModel?.startTime, endTime: topHistoryModel?.endTime, isLookOtherStudent: true)
+        UIUtil.curruntNav().pushViewController(vc)
+    }
     
     // MARK: - loadEventData
     func loadCancelData(_ section: Int = 0){
@@ -794,11 +807,11 @@ extension YXSPunchCardSingleStudentBaseListController{
             if let section = section{
                 let offset = tableView.contentOffset
                 tableView.reloadSections(IndexSet.init(arrayLiteral: section), with: UITableView.RowAnimation.none)
-//                if !scroll{//为什会会跳动 why
-//                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) {
-//                        self.tableView.setContentOffset(offset, animated: false)
-//                    }
-//                }
+                //                if !scroll{//为什会会跳动 why
+                //                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) {
+                //                        self.tableView.setContentOffset(offset, animated: false)
+                //                    }
+                //                }
             }else{
                 tableView.reloadData()
             }

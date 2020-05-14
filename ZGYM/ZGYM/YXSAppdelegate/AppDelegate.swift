@@ -194,6 +194,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         }, fail: { (code, msg) in
             SLLog("Fail----->: \(code)->\(msg ?? "")")
         })
+        
+        //停止音频播放
+        YXSSSAudioPlayer.sharedInstance.stopVoice()
+        YXSSSAudioListPlayer.sharedInstance.stopPlayer()
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {

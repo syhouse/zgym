@@ -133,8 +133,9 @@ class YXSPunchCardDetialPageController: YXSBaseViewController{
             make.height.equalTo(50)
         }
         listContainerView.snp.makeConstraints { (make) in
-            make.left.bottom.right.equalTo(0)
+            make.left.right.equalTo(0)
             make.top.equalTo(50)
+            make.bottom.equalTo(-kSafeTopHeight)
         }
         
         navView.categoryView.contentScrollView = listContainerView.scrollView
