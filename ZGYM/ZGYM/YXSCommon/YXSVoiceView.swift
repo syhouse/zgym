@@ -14,7 +14,13 @@ class YXSVoiceView: YXSVoiceBaseView {
         didSet {
             voiceDuration = model?.voiceDuration
             voiceUlr = model?.voiceUlr
-            lbSecond.text = "\(voiceDuration ?? 0)\""
+            if let voiceDuration = voiceDuration{
+                if voiceDuration > 60{
+                    lbSecond.text = "\(voiceDuration/60)'\(voiceDuration%60)\""
+                }else{
+                    lbSecond.text = "\(voiceDuration)\""
+                }
+            }
             
             /// 装载音频
             if let url = URL(string: model?.voiceUlr ?? "") {

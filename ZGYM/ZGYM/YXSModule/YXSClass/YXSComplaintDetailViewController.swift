@@ -10,7 +10,7 @@ import UIKit
 import NightNight
 
 class YXSComplaintDetailViewController: YXSBaseViewController {
-
+    
     private var respondentId: Int!
     private var respondentType: String!
     private var type: String!
@@ -46,7 +46,7 @@ class YXSComplaintDetailViewController: YXSBaseViewController {
         self.scrollView.snp.makeConstraints { (make) in
             make.left.right.top.bottom.equalTo(0)
         }
-
+        
         self.contentView.snp.makeConstraints({ (make) in
             make.left.right.top.bottom.equalTo(0)
             make.width.equalTo(SCREEN_WIDTH)
@@ -85,7 +85,7 @@ class YXSComplaintDetailViewController: YXSBaseViewController {
                 uploadPaths.append(YXSUploadSourceHelper.expiresImgDoucmentPath)
             }
         }
-
+        
         if infos.count > 0{
             MBProgressHUD.yxs_showLoading(message: "上传中", inView: self.navigationController!.view)
             YXSUploadSourceHelper().uploadMedia(mediaInfos: infos, uploadPaths: uploadPaths, sucess: { [weak self](list) in
@@ -104,23 +104,12 @@ class YXSComplaintDetailViewController: YXSBaseViewController {
         }
     }
     
-    @objc func processMedia(list:[[String: Any]]?)->String {
+    @objc func processMedia(list:[SLNewUploadSourceModel])->String {
         var pictures = [String]()
         
-        if let mediaInfos = list{
-            for model in mediaInfos{
-                if let type = model[typeKey] as? SourceNameType{
-                    if type == .video{
-//                        video = model[urlKey] as? String ?? ""
-                    }else if type == .image{
-                        pictures.append(model[urlKey] as? String ?? "")
-                    }else if type == .voice{
-//                        audioUrl = model[urlKey] as? String ?? ""
-                    }else if type == .firstVideo{
-//                        bgUrl = model[urlKey] as? String ?? ""
-                    }
-                }
-            }
+        for model in list{
+            pictures.append(model.aliYunUploadBackUrl ?? "")
+            
         }
         return pictures.joined(separator: ",")
     }
@@ -188,15 +177,15 @@ class YXSComplaintDetailViewController: YXSBaseViewController {
         return btn
     }()
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 
 // MARK: -
@@ -315,13 +304,13 @@ class SLComplaintImagesView: UIView,YXSSelectMediaHelperDelegate {
     // MARK: - Action
     func showSelectMedia(_ isAdd: Bool){
         let count = maxcount - assets.count
-
+        
         if isAdd{
             YXSSelectMediaHelper.shareHelper.pushImagePickerController(mediaStyle: .onlyImage,maxCount: 3)
         }else{
             YXSSelectMediaHelper.shareHelper.pushImagePickerController(assets,mediaStyle: .onlyImage,maxCount: maxcount)
         }
-
+        
         YXSSelectMediaHelper.shareHelper.delegate = self
     }
     
@@ -398,28 +387,28 @@ class SLComplaintImagesView: UIView,YXSSelectMediaHelperDelegate {
             }
             listView.addItem(getItem(nil, isAdd: true))
         }
-//        if isShowMedia{
-//            //图片 音频绑定
-//            if publishModel.audioModel != nil {
-//                self.publishModel.publishSource = .image
-//            }
-//
-//            if isVedio {
-//                self.publishModel.publishSource = .vedio
-//            }else if publishModel.medias.count != 0 {
-//                self.publishModel.publishSource = .image
-//            }
-//
-//            if assets.count == maxcount{
-//                publishModel.publishSource = .imageMax
-//            }
-//
-//            if publishModel.audioModel == nil && assets.count == 0{
-//                publishModel.publishSource = .none
-//            }
-//        }else{
-//            listView.isHidden = true
-//        }
+        //        if isShowMedia{
+        //            //图片 音频绑定
+        //            if publishModel.audioModel != nil {
+        //                self.publishModel.publishSource = .image
+        //            }
+        //
+        //            if isVedio {
+        //                self.publishModel.publishSource = .vedio
+        //            }else if publishModel.medias.count != 0 {
+        //                self.publishModel.publishSource = .image
+        //            }
+        //
+        //            if assets.count == maxcount{
+        //                publishModel.publishSource = .imageMax
+        //            }
+        //
+        //            if publishModel.audioModel == nil && assets.count == 0{
+        //                publishModel.publishSource = .none
+        //            }
+        //        }else{
+        //            listView.isHidden = true
+        //        }
     }
     
     // MARK: - LazyLoad

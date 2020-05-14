@@ -187,7 +187,7 @@ extension YXSClassStarEvaluationItemLogoViewController: YXSSelectMediaHelperDele
         if let image = images.first{
             if let data = image.yxs_compressImage(image: image, maxLength: imageMax){
                 MBProgressHUD.yxs_showLoading()
-                YXSUploadDataHepler().uploadData(data: data, path: YXSUploadSourceHelper.starDoucmentPath(classId: classId) + Date().toString().MD5() + ".jpg", sucess: { (url) in
+                YXSUploadDataHepler.shareHelper.uploadData(uploadModel: SLNewUploadSourceModel.init(data: data, path: YXSUploadSourceHelper.starDoucmentPath(classId: classId) + Date().toString().MD5() + ".jpg", type: .image), sucess: { (url) in
                     self.curruntIconUrl = url
                     self.curruntSelectIndex = nil
                     self.collectionView.reloadData()

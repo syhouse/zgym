@@ -183,15 +183,16 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
             return
         }
         
-        //音频  图片需要分开传 ？？ why
-        var mediaInfos = [[String: Any]]()
+        var commintMediaInfos = [[String: Any]]()
         //需要上传
-        var localAudio = [SLAudioModel]()
+        var localAudioInfos = [[String: Any]]()
+        var uploadPaths = [String]()
         for model in publishModel.audioModels{
             if let servicePath = model.servicePath{
-                mediaInfos.append([typeKey: SourceNameType.voice,urlKey: servicePath,modelKey: model])
+                commintMediaInfos.append([typeKey: SourceNameType.voice,urlKey: servicePath,modelKey: model])
             }else{
-                localAudio.append(model)
+                localAudioInfos.append([typeKey: SourceNameType.voice,modelKey: model])
+                uploadPaths.append(isFriendCircle ? YXSUploadSourceHelper.classCircleDoucmentPath : YXSUploadSourceHelper.expiresImgDoucmentPath)
             }
         }
         
@@ -204,44 +205,41 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
                 }else{
                     localMeidaInfos.append([typeKey: SourceNameType.image,modelKey: model])
                 }
+                uploadPaths.append(isFriendCircle ? YXSUploadSourceHelper.classCircleDoucmentPath : YXSUploadSourceHelper.expiresImgDoucmentPath)
             }else{//修改的服务器资源
                 if model.type == .video{
-                    mediaInfos.append([typeKey: SourceNameType.video,urlKey: model.serviceUrl ?? ""])
+                    commintMediaInfos.append([typeKey: SourceNameType.video,urlKey: model.serviceUrl ?? ""])
                     
-                    mediaInfos.append([typeKey: SourceNameType.firstVideo,urlKey: model.showImageUrl ?? ""])
+                    commintMediaInfos.append([typeKey: SourceNameType.firstVideo,urlKey: model.showImageUrl ?? ""])
                 }else{
-                    mediaInfos.append([typeKey: SourceNameType.image,urlKey: model.serviceUrl ?? ""])
+                    commintMediaInfos.append([typeKey: SourceNameType.image,urlKey: model.serviceUrl ?? ""])
                 }
             }
         }
         //有本地资源上传
-        if localAudio.count != 0 || localMeidaInfos.count != 0{
+        if localAudioInfos.count != 0 || localMeidaInfos.count != 0{
             self.uploadHud = getUploadHud()
             self.uploadHud.label.text = "上传中(0%)"
             uploadHud.show(animated: true)
         }
         
-        if localAudio.count != 0{
-            YXSUploadSourceHelper().uploadAudios(mediaModels: publishModel.audioModels, uploadPath:  isFriendCircle ? YXSUploadSourceHelper.classCircleDoucmentPath : YXSUploadSourceHelper.expiresVoiceDoucmentPath, progress: {
-                (progress)in
-                DispatchQueue.main.async {
-                    self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int(progress * 100 * CGFloat(localAudio.count)/CGFloat(localAudio.count + localMeidaInfos.count))))%)"
-                }
-            }, sucess: { (urls) in
-                var i = 0
-                for url in urls{
-                    let model = self.publishModel.audioModels[i]
-                    mediaInfos.append([typeKey: SourceNameType.voice,urlKey:url,modelKey: model])
-                    i += 1
-                }
-                self.cheakLoadImageData(mediaInfos:mediaInfos,localMeidaInfos: localMeidaInfos, residueProgess: 1 - CGFloat(localAudio.count)/CGFloat(localAudio.count + localMeidaInfos.count))
-            }) { (msg, code) in
-                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-                MBProgressHUD.yxs_showMessage(message: msg)
+
+        YXSUploadSourceHelper().uploadMedia(mediaInfos: localAudioInfos + localMeidaInfos, uploadPaths: uploadPaths, progress: {
+            (progress)in
+            DispatchQueue.main.async {
+                self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int(progress * 100)))%)"
+            }
+        }, sucess: { (listModels) in
+            SLLog(listModels)
+            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+            for model in listModels{
+                commintMediaInfos.append([typeKey: model.type,urlKey: model.aliYunUploadBackUrl ?? ""])
             }
             
-        }else{
-            cheakLoadImageData(mediaInfos:mediaInfos,localMeidaInfos: localMeidaInfos, residueProgess: 1.0)
+            self.yxs_loadCommintData(mediaInfos: commintMediaInfos)
+        }) { (msg, code) in
+            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     
@@ -249,49 +247,6 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     func yxs_remove(){
         try? FileManager.default.removeItem(atPath: NSUtil.yxs_cachePath(file: self.fileName, directory: "archive"))
     }
-    
-    @objc func cheakLoadImageData(mediaInfos medias: [[String: Any]], localMeidaInfos: [[String: Any]], residueProgess: CGFloat){
-        var mediaInfos = medias
-        if localMeidaInfos.count > 0{
-            var uploadPaths = [String]()
-            for info in localMeidaInfos{
-                if (info[typeKey] as? SourceNameType) == SourceNameType.image{
-                    if isFriendCircle{
-                        uploadPaths.append(YXSUploadSourceHelper.classCircleDoucmentPath)
-                    }else{
-                        uploadPaths.append(YXSUploadSourceHelper.expiresImgDoucmentPath)
-                    }
-                }else{
-                    if isFriendCircle{
-                        uploadPaths.append(YXSUploadSourceHelper.classCircleDoucmentPath)
-                    }else{
-                        uploadPaths.append(YXSUploadSourceHelper.expiresVideoDoucmentPath)
-                    }
-                    
-                }
-            }
-            
-            YXSUploadSourceHelper().uploadMedia(mediaInfos: localMeidaInfos, uploadPaths: uploadPaths, progress: {
-                (progress)in
-                DispatchQueue.main.async {
-                    self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int((residueProgess*progress + (1.0 - residueProgess)) * 100)))%)"
-                }
-            }, sucess: { (infos) in
-                SLLog(infos)
-                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-                mediaInfos.append(contentsOf: infos)
-                self.yxs_loadCommintData(mediaInfos: mediaInfos)
-            }) { (msg, code) in 
-                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
-        }
-        else{
-            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-            self.yxs_loadCommintData(mediaInfos: mediaInfos)
-        }
-    }
-    
     
     @objc func yxs_selectClassClick(){
         let vc = YXSSelectClassController.init(publishModel.classs,dataSource: self.classDataSource)

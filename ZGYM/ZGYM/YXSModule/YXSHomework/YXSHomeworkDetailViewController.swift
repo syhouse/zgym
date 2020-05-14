@@ -1310,7 +1310,7 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
                     SLLog(infos)
                     print("123")
                     MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-                    let urlStr = infos.first?["urlKey"] as! String
+                    let urlStr = infos.first?.aliYunUploadBackUrl ?? ""
                     self.graffitiRequest(urlStr: urlStr)
                 }) { (msg, code) in
                     MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)

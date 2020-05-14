@@ -436,6 +436,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
     
     lazy var commentButton: YXSButton = {
         let button = YXSButton.init()
+        button.yxs_touchInsets = UIEdgeInsets.init(top: 15, left: 12.5, bottom: 15, right: 12.5)
         button.setImage(UIImage.init(named: "yxs_friend_circle_comment"), for: .normal)
         button.addTarget(self, action: #selector(commentClick), for: .touchUpInside)
         return button
@@ -446,7 +447,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
         button.setImage(UIImage.init(named: "yxs_friend_circle_prise_select"), for: .selected)
         button.setImage(UIImage.init(named: "yxs_friend_circle_prise_nomal"), for: .normal)
         button.addTarget(self, action: #selector(praiseClick), for: .touchUpInside)
-        button.yxs_touchInsets = UIEdgeInsets.init(top: 7.5, left: 7.5, bottom: 7.5, right: 7.5)
+        button.yxs_touchInsets = UIEdgeInsets.init(top: 15, left: 12.5, bottom: 15, right: 12.5)
         return button
     }()
     
