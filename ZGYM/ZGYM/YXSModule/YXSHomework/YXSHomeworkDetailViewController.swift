@@ -922,7 +922,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                 vc.childrenIdList = [(model.childrenId ?? 0)]
                 vc.isPop = true
                 //点评成功后 刷新数据
-                vc.commetCallBack = { () -> () in
+                vc.commetCallBack = { (list)in
                     weakSelf.refreshData()
                 }
                 weakSelf.navigationController?.pushViewController(vc)
@@ -945,7 +945,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                             vc.childrenIdList = [(model.childrenId ?? 0)]
     //                        vc.isPop = true
                             //点评成功后 刷新数据
-                            vc.commetCallBack = { () -> () in
+                            vc.commetCallBack = { (list)in
                                 weakSelf.refreshData()
                             }
                             weakSelf.navigationController?.pushViewController(vc)

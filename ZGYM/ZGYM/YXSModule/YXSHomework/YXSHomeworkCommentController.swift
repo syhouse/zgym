@@ -203,7 +203,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
                 if myReviewModel?.isGood != remarkGood {
                     YXSEducationHomeworkInTeacherChangeGoodRequest.init(childrenId: self.myReviewModel?.childrenId ?? 0, homeworkCreateTime: self.homeModel?.createTime ?? "", homeworkId: self.homeModel?.serviceId ?? 0, isGood: remarkGood).request({ (result) in
                         if (self.commetCallBack != nil) {
-                            self.commetCallBack!()
+                            self.commetCallBack!(self.childrenIdList)
                         }
                         
                     }) { (msg, code) in
@@ -256,7 +256,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
                 MBProgressHUD.yxs_showMessage(message: "修改点评成功")
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
                     if (self.commetCallBack != nil) {
-                        self.commetCallBack!()
+                        self.commetCallBack?(self.childrenIdList)
                     }
                     if self.isPop == true {
                         self.navigationController?.popViewController()
@@ -274,8 +274,9 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
                 MBProgressHUD.yxs_showMessage(message: "点评成功")
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
                     if (self.commetCallBack != nil) {
-                        self.commetCallBack!()
+                        self.commetCallBack?(self.childrenIdList)
                     }
+                    NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherRemarkSucessNotification), object: [kValueKey: YXSHomeType.homework])
                     if self.isPop == true {
                         self.navigationController?.popViewController()
                     }else {
@@ -455,7 +456,31 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     
     lazy var dataSource: [String] = {
 //        let arr = ["作业完成很棒，继续保持！","作业完成良好，继续加油！","作业完成合格，继续加油！","作业完成一般，再接再厉！"]
-        let arr = ["只有爱动脑筋的孩子才会有这么精彩的表现!", "知道吗，最近你的进步可真大哦!", "你的解题思路很奇妙!", "你是个爱动脑，会提问的好孩子，掌声送给你!", "聪明肯学，人见人爱，加油!", "你是个好学的学生，作业做的很棒哦!", "继续努力，你很有潜力!", "勤能补拙，从你的作业中我感觉到了你的努力与上进，加油!", "老师喜欢你的认真劲儿。", "这么端正的作业一定下了很大的功夫，不错!", "你的作业由灰姑娘变成了漂亮的公主了~", "没有最好只有更好，相信你就是那个更好的你!", "深受老师喜欢的你进步可真快，要继续噢!", "从容面对失败，就有超越自己的底气。", "你在努力老师能感觉得到~"]
+        let arr = ["只有爱动脑筋的孩子才会有这么精彩的表现!",
+                   "知道吗，最近你的进步可真大哦!",
+                   "你的解题思路很奇妙!",
+                   "你是个爱动脑，会提问的好孩子，掌声送给你!",
+                   "聪明肯学，人见人爱，加油!", "你是个好学的学生，作业做的很棒哦!",
+                   "继续努力，你很有潜力!",
+                   "勤能补拙，从你的作业中我感觉到了你的努力与上进，加油!",
+                   "老师喜欢你的认真劲儿。",
+                   "这么端正的作业一定下了很大的功夫，不错!",
+                   "你的作业由灰姑娘变成了漂亮的公主了~",
+                   "没有最好只有更好，相信你就是那个更好的你!",
+                   "深受老师喜欢的你进步可真快，要继续噢!",
+                   "从容面对失败，就有超越自己的底气。",
+                   "你在努力老师能感觉得到~",
+                   "你的字迹工整，书写认真，作业看上去非常整洁。老师要给你一个大大的赞，看上去很赏心悦目哦。",
+                   "你的作业任何时候看起来都像拓印的书卷一样漂亮，长期练字的习惯，让你的字体看起来横平竖直，遒劲有力。继续加油哦！",
+                   "你的字和你的人一样，看起来特别有精神！字体方正，大方得体，运笔稳中有变化，看你的作业，是一种享受！",
+                   "你的作业看起来就像小鸭子的脚掌—小梅花被印在了作业本上，虽然生动可爱，但是要注意作业书写的工整，写字不要歪歪扭扭哦！",
+                   "你的书写非常漂亮！而且注意了露锋和收笔，这样字看起来骨骼丰满有力。这一定是你长期刻苦练习的结果！希望你继续坚持哦！",
+                   "每次你的作业都书写得一笔一划，工整漂亮。值得表扬。而且老师特别欣赏你写字时专注，入神的样子。小背挺得直直的，姿势非常端正，优美。",
+                   "你是一个聪明又思维敏捷的孩子，但是注意写作业的时候，不要一味地追求速度，字迹太过潦草。期待你越来越优秀哦！",
+                   "作业非常不错，字迹工整清秀，而且注意了运笔，收笔就像凤尾一样饱满！老师想说你真是太棒了，希望你能给我更大的惊喜！",
+                   "练字需要持之以恒，认真的书写能让你更加沉稳，希望你多多练习，书写更上一层楼哦。",
+                   "你写字非常用心，整齐又清秀，可以试试多进行起笔和落笔位置的练习和模仿，这样你的书写会更加大气，看起来更加舒展和有力哦！"]
+        
         return arr
     }()
     
@@ -469,10 +494,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
     
     
     // MARK: - Setter
-    var childrenIdList: [Int]! {
-        didSet {
-        }
-    }
+    var childrenIdList: [Int] = [Int]()
     
 
 //    var homeModel1:YXSHomeListModel? {
@@ -486,7 +508,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         }
     }
     
-    var commetCallBack:(() -> ())?
+    var commetCallBack:((_ childreIdList: [Int]) -> ())?
     
 //    // 是否有录音资源展示
 //    private var isShowAudio: Bool

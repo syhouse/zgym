@@ -51,6 +51,24 @@ class YXSHomeworkContainerViewController: YXSBaseViewController, JXCategoryViewD
             make.left.right.bottom.equalTo(0)
             make.top.equalTo(customNav.snp_bottom)
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(teacheremarkSuccess(obj:)), name: NSNotification.Name(rawValue: kTeacherRemarkSucessNotification), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(teacheremarkSuccess(obj:)), name: NSNotification.Name(rawValue: kTeacherRepealRemarkSucessNotification), object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    /// 老师点评作业和撤销点评成功通知
+    @objc func teacheremarkSuccess(obj:Notification?) {
+        let userInfo = obj?.object as? [String: Any]
+        if let type = userInfo?[kValueKey] as? YXSHomeType{
+            if type == .homework {
+                /// 刷新
+                self.refreshData()
+            }
+        }
     }
     
     // MARK: - Setter

@@ -55,7 +55,7 @@ public enum ServiceType: String {
 
 
 //接口环境
-public let sericeType:ServiceType = .ServiceProduct
+public let sericeType:ServiceType = .ServiceTest
 
 let defaultBaseTimeOutInterval: TimeInterval = 10
 //host 首页相关业务

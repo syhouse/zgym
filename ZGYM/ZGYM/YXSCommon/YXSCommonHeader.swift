@@ -197,6 +197,12 @@ public let kTeacherPublishSucessNotification = "TeacherPublishSucessNotification
 /// 家长提交成功(通知 打卡 接龙 作业 )
 public let kParentSubmitSucessNotification = "ParentSubmitSucessNotification"
 
+/// 老师点评成功（作业）
+public let kTeacherRemarkSucessNotification = "TeacherRemarkSucessNotification"
+
+/// 老师撤销点评成功（作业）
+public let kTeacherRepealRemarkSucessNotification = "TeacherRepealRemarkSucessNotification"
+
 /// 家长阅读成功(通知 作业 )
 public let kParentReadSucessNotification = "ParentReadSucessNotification"
 
