@@ -61,6 +61,28 @@ class SLUploadSourceModel: NSObject{
     }
 }
 
+class SLNewUploadSourceModel: NSObject{
+    ///需要上传的data
+    let data: Data?
+    ///上传到阿里云的路径
+    let path: String
+    ///上传资源类型
+    let type: SourceNameType
+    
+    ///阿里云返回的url
+    var aliYunUploadBackUrl: String?
+    
+    ///上传多个资源排序时使用
+    var index: Int = 0
+    
+    init(data: Data?, path: String, type: SourceNameType) {
+        self.data = data
+        self.path = path
+        self.type = type
+        super.init()
+    }
+}
+
 
 /// 上传资源类型(存放在阿里云不同文件夹)
 enum SourceNameType:String {
@@ -89,23 +111,7 @@ class YXSUploadSourceHelper: NSObject {
     static func curriculumDoucmentPath(classId: Int) -> String{
         return "\(productPrefix)curriculum/ios/\(classId)/"
     }
-    
-    //现在一次请求 生成一个token
-    private static var ossClient: OSSClient?
-    private static var oSSAuth: YXSOSSAuthModel!
-    private func initClient(){
-        let conf = OSSClientConfiguration()
-        conf.maxRetryCount = 2
-        conf.timeoutIntervalForRequest = 300
-        conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
-        conf.maxConcurrentRequestCount = 50
-        let credential2:OSSCredentialProvider =  OSSStsTokenCredentialProvider.init(accessKeyId: YXSUploadSourceHelper.oSSAuth.accessKeyId ?? "", secretKeyId: YXSUploadSourceHelper.oSSAuth.accessKeySecret ?? "", securityToken: YXSUploadSourceHelper.oSSAuth.securityToken ?? "")
-        
-        //实例化
-        YXSUploadSourceHelper.ossClient = OSSClient(endpoint: YXSUploadSourceHelper.oSSAuth.endpoint ?? "", credentialProvider: credential2, clientConfiguration: conf)
-    }
-    
-    
+
     /// 上传图片
     /// - Parameter mediaModel: YXSMediaModel
     ///   - uploadPath: 上传路径 除文件名称类型
@@ -113,7 +119,7 @@ class YXSUploadSourceHelper: NSObject {
     /// - Parameter failureHandler: 失败错误信息
     func uploadImage(mediaModel:YXSMediaModel, uploadPath: String, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
         uploadMedia(mediaInfos: [[modelKey:mediaModel, typeKey: SourceNameType.image]], uploadPaths: [uploadPath],  sucess: { (urls) in
-            sucess?((urls.first?[urlKey] as? String) ?? "")
+            sucess?(urls.first?.aliYunUploadBackUrl ?? "" )
         }, failureHandler: failureHandler)
     }
     
@@ -133,21 +139,11 @@ class YXSUploadSourceHelper: NSObject {
         uploadMedia(mediaInfos: infos, uploadPaths: uploadPaths, progress: progress, sucess: { (urls) in
             var paths = [String]()
             for url in urls{
-                paths.append((url[urlKey] as? String) ?? "")
+                paths.append(url.aliYunUploadBackUrl ?? "")
             }
             sucess?(paths)
         }, failureHandler: failureHandler)
     }
-    
-    
-    /// 上传多张图片
-    /// - Parameters:
-    ///   - mediaModels: 多张图片资源类型
-    ///   - uploadPaths: 上传路径 除文件名称类型
-    ///   - progress: 进度
-    ///   - sucess: 成功
-    ///   - failureHandler: 失败
-    
     
     /// 上传视频
     /// - Parameters:
@@ -155,7 +151,7 @@ class YXSUploadSourceHelper: NSObject {
     ///   - uploadPath: 上传路径 除文件名称类型
     func uploadVedio(mediaModel:YXSMediaModel, uploadPath: String, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
         uploadMedia(mediaInfos: [[modelKey:mediaModel, typeKey: SourceNameType.video]], uploadPaths: [uploadPath],progress: progress, sucess: { (urls) in
-            sucess?((urls.first?[urlKey] as? String) ?? "")
+            sucess?(urls.first?.aliYunUploadBackUrl ?? "")
         }, failureHandler: failureHandler)
     }
     
@@ -166,7 +162,7 @@ class YXSUploadSourceHelper: NSObject {
     ///   - uploadPath: 上传路径 除文件名称类型
     func uploadAudio(mediaModel:SLAudioModel, uploadPath: String, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
         uploadMedia(mediaInfos: [[modelKey:mediaModel, typeKey: SourceNameType.voice]], uploadPaths: [uploadPath],progress: progress, sucess: { (urls) in
-            sucess?((urls.first?[urlKey] as? String) ?? "")
+            sucess?(urls.first?.aliYunUploadBackUrl ?? "")
         }, failureHandler: failureHandler)
     }
     
@@ -185,38 +181,11 @@ class YXSUploadSourceHelper: NSObject {
         uploadMedia(mediaInfos: infos, uploadPaths: uploadPaths,progress: progress, sucess: { (urls) in
             var paths = [String]()
             for url in urls{
-                paths.append((url[urlKey] as? String) ?? "")
+                paths.append(url.aliYunUploadBackUrl ?? "")
             }
             sucess?(paths)
         }, failureHandler: failureHandler)
     }
-    
-    /// 上传多个媒体文件
-    /// - Parameters:
-    ///   - mediaModels: 媒体models
-    ///   - uploadPaths: 上传路径 除文件名称类型
-    func uploadMedias(mediaModels:[YXSMediaModel], uploadPaths: [String], progress : ((_ progress: CGFloat)->())? = nil, sucess:(([String])->())?,failureHandler: ((String, String) -> ())?){
-        var infos = [[String: Any]]()
-        for model in mediaModels{
-            if model.asset.mediaType == .image {
-                infos.append([typeKey: SourceNameType.image, modelKey: model])
-                
-            } else if model.asset.mediaType == .video {
-                infos.append([typeKey: SourceNameType.video, modelKey: model])
-                
-            } else if model.asset.mediaType == .audio {
-                infos.append([typeKey: SourceNameType.voice, modelKey: model])
-            }
-        }
-        uploadMedia(mediaInfos: infos, uploadPaths: uploadPaths,progress: progress, sucess: { (urls) in
-            var paths = [String]()
-            for url in urls{
-                paths.append((url[urlKey] as? String) ?? "")
-            }
-            sucess?(paths)
-        }, failureHandler: failureHandler)
-    }
-    
     
     /// 上传媒体文件
     /// - Parameters:
@@ -225,31 +194,10 @@ class YXSUploadSourceHelper: NSObject {
     ///   - progressBlock: 上传进度
     ///   - sucess: 成功
     ///   - failureHandler: 失败
-    func uploadMedia(mediaInfos: [[String: Any]] , uploadPaths: [String],progress progressBlock : ((_ progress: CGFloat)->())? = nil, sucess:(([[String: Any]])->())?,failureHandler: ((String, String) -> ())?) {
-        ///判断tokenModel是否过期
-        if YXSUploadSourceHelper.oSSAuth != nil{
-            if YXSUploadSourceHelper.oSSAuth.expirationDate.timeIntervalSince1970 <= Date().timeIntervalSince1970{
-                YXSUploadSourceHelper.oSSAuth = nil
-            }
-        }
-        
-        
-        if YXSUploadSourceHelper.oSSAuth == nil{
-            YXSEducationOssAuthTokenRequest().request({ (model: YXSOSSAuthModel) in
-                YXSUploadSourceHelper.oSSAuth = model
-                self.uploadMedia(mediaInfos: mediaInfos, uploadPaths: uploadPaths, progress: progressBlock,sucess: sucess,failureHandler: failureHandler)
-            }, failureHandler: failureHandler)
-            return
-        }
-        initClient()
-        var urls = [[String: Any]]()
-        let queue = DispatchQueue.global()
-        let group = DispatchGroup()
-        
-        var failureHandlerMsg: String?
-        
+    func uploadMedia(mediaInfos: [[String: Any]] , uploadPaths: [String],progress progressBlock : ((_ progress: CGFloat)->())? = nil, sucess:(([SLNewUploadSourceModel])->())?,failureHandler: ((String, String) -> ())?) {
         var uploadModels = [SLUploadSourceModel]()
         
+        ///整理上传需要的资源 (视频多传一个第一帧的数据)
         for (index,info) in mediaInfos.enumerated(){
             let sourceType: SourceNameType = info[typeKey] as! SourceNameType
             
@@ -287,73 +235,113 @@ class YXSUploadSourceHelper: NSObject {
             }
         }
         
-        /// 单次任务上传进度
+        var failureHandlerMsg: String?
+
+        let queue = DispatchQueue.global()
+        let group = DispatchGroup()
+        var newUploadModels: [SLNewUploadSourceModel] = [SLNewUploadSourceModel]()
+        for uploadModel in uploadModels{
+            let sourceType: SourceNameType = uploadModel.type
+                            switch sourceType {
+                            case .image,.firstVideo:
+                                let data = uploadModel.model.showImg?.yxs_compressImage(image: uploadModel.model.showImg!, maxLength: imageMax)
+                                newUploadModels.append(SLNewUploadSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
+                            case .video:
+                                group.enter()
+                                queue.async {
+                                    PHImageManager.default().requestExportSession(forVideo: uploadModel.model.asset, options: nil, exportPreset: AVAssetExportPresetMediumQuality) { (exportSession, info) in
+                                    //将asset转换为AVAssetExportSession对象,用AVAssetExportSession转化为Data
+                                    HMVideoCompression().compressVideo(exportSession) { (data) in
+                                        if data.count > 0 {//做判断,判断是否转化成功
+                                            //进行视频上传
+                                            newUploadModels.append(SLNewUploadSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
+                                        }else{
+                                            failureHandlerMsg = "视频资源请传mediaModel"
+                                            
+                                        }
+                                        group.leave()
+                                    }
+                                }
+                                
+                                }
+
+                            case .voice:
+                                let url = URL.init(fileURLWithPath: uploadModel.audioModel.path ?? "")
+                                newUploadModels.append(SLNewUploadSourceModel.init(data: try? Data.init(contentsOf: url), path: uploadModel.path, type: uploadModel.type))
+                            }
+        }
+        
+        group.notify(queue: queue){
+            DispatchQueue.main.async {
+                if let failureHandlerMsg = failureHandlerMsg{
+                    failureHandler?(failureHandlerMsg, "500")
+                }else{
+                    self.uploadMedia(uploadModels: newUploadModels, progress: progressBlock, sucess: sucess, failureHandler: failureHandler)
+                }
+            }
+        }
+    }
+    
+    
+    /// 上传资源多个资源
+    /// - Parameters:
+    ///   - uploadModels: 资源model列表
+    ///   - progressBlock: 进度
+    ///   - sucess: 成功 返回资源model列表  里面带有成功上传的路径
+    ///   - failureHandler: 上传失败
+    /// - Returns:
+    func uploadMedia(uploadModels: [SLNewUploadSourceModel],progress progressBlock : ((_ progress: CGFloat)->())? = nil, sucess:((_ uploadModels: [SLNewUploadSourceModel])->())?,failureHandler: ((String, String) -> ())?) {
+        if let oSSAuth = YXSUploadDataHepler.shareHelper.oSSAuth{
+            if oSSAuth.expirationDate.timeIntervalSince1970 <= Date().timeIntervalSince1970{
+                YXSUploadDataHepler.shareHelper.oSSAuth = nil
+            }
+        }
+        
+        if YXSUploadDataHepler.shareHelper.oSSAuth == nil{
+            YXSEducationOssAuthTokenRequest().request({ (model: YXSOSSAuthModel) in
+                YXSUploadDataHepler.shareHelper.oSSAuth = model
+                YXSUploadDataHepler.shareHelper.initClient()
+                self.uploadMedia(uploadModels: uploadModels, progress: progressBlock, sucess: sucess, failureHandler: failureHandler)
+            }, failureHandler: failureHandler)
+            return
+        }
+        
+        
+        let ossClient = YXSUploadDataHepler.shareHelper.ossClient
+        
+        let queue = DispatchQueue.global()
+        let group = DispatchGroup()
+        
+        var failureHandlerMsg: String?
+        
+        ///任务上传进度
         var progress: CGFloat = 0
         
         /// 上传数量
         let count = uploadModels.count
-        
-        for uploadModel in uploadModels{
-            let ossPutObj: OSSPutObjectRequest = OSSPutObjectRequest()
-            //path为上传到阿里云的路径
-            let semaphore = DispatchSemaphore(value: 0)
+        for (index,uploadModel) in uploadModels.enumerated(){
             group.enter()
+            uploadModel.index = index
+            
+            ///上一次上传进度
+            var lastProgress: CGFloat = 0.0
             queue.async {
-                let sourceType: SourceNameType = uploadModel.type
-                switch sourceType {
-                case .image,.firstVideo:
-                    let data = uploadModel.model.showImg?.yxs_compressImage(image: uploadModel.model.showImg!, maxLength: imageMax)
-                    ossPutObj.uploadingData = data
-                case .video:
-                    PHImageManager.default().requestExportSession(forVideo: uploadModel.model.asset, options: nil, exportPreset: AVAssetExportPresetMediumQuality) { (exportSession, info) in
-                        //将asset转换为AVAssetExportSession对象,用AVAssetExportSession转化为Data
-                        HMVideoCompression().compressVideo(exportSession) { (data) in
-                            if data.count > 0 {//做判断,判断是否转化成功
-                                //进行视频上传
-                                ossPutObj.uploadingData = data
-                            }else{
-                                failureHandlerMsg = "视频资源请传mediaModel"
-                                
-                            }
-                            semaphore.signal()
-                        }
-                    }
-                    semaphore.wait()
-                case .voice:
-                    ossPutObj.uploadingFileURL = URL.init(string: uploadModel.audioModel.path ?? "")!
-                }
-                
-                ossPutObj.bucketName = YXSUploadSourceHelper.oSSAuth.bucket
-                ossPutObj.objectKey = uploadModel.path
-                
-                ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
-                    progress += (CGFloat(bytesSent)/CGFloat(totalBytesExpectedToSend))/CGFloat(count)
-                    //                    SLLog(progress)
-                    progressBlock?(progress)
-                }
-                
-                let uploadTask = YXSUploadSourceHelper.ossClient?.putObject(ossPutObj)
-                
-                uploadTask?.continue({ (uploadTask) -> Any? in
-                    if let _err = uploadTask.error {
-                        failureHandlerMsg = _err.localizedDescription
-                        group.leave()
-                    } else {
-                        if  let _:OSSPutObjectResult  = uploadTask.result as? OSSPutObjectResult {
-                            var point: NSString = (YXSUploadSourceHelper.oSSAuth.endpoint ?? "") as NSString
-                            point = point.replacingOccurrences(of: "http://", with: "") as NSString
-                            point = point.replacingOccurrences(of: "https://", with: "") as NSString
-                            let picUrlStr = "http://\(YXSUploadSourceHelper.oSSAuth.bucket ?? "").\(point)/\(uploadModel.path)"
-                            urls.append([typeKey: sourceType, urlKey: picUrlStr,"index" : uploadModel.index])
-                        }else{
-                            failureHandlerMsg = "链接拼接失败"
-                        }
-                        group.leave()
-                    }
+                YXSUploadDataHepler.shareHelper.uploadData(uploadModel: uploadModel, ossClient: ossClient, progress: { (singleProgress) in
+                    progress += singleProgress/CGFloat(count) - lastProgress
+                    lastProgress = singleProgress/CGFloat(count)
                     
-                    return uploadTask
-                })
-                
+                    if progress >= 1.0{
+                        progress = 1.0
+                    }
+                    progressBlock?(progress)
+                    SLLog("totalprogress = \(progress)")
+                }, sucess: { (url) in
+                    uploadModel.aliYunUploadBackUrl = url
+                    group.leave()
+                }) { (msg, code) in
+                    failureHandlerMsg = msg
+                    group.leave()
+                }
             }
         }
         
@@ -362,10 +350,10 @@ class YXSUploadSourceHelper: NSObject {
                 if let failureHandlerMsg = failureHandlerMsg{
                     failureHandler?(failureHandlerMsg, "500")
                 }else{
-                    let newUrls = urls.sorted(by: {(a,b) -> Bool in
-                        return (a["index"] as? Int ?? 0) < (b["index"] as? Int ?? 0)
+                    let sortModels = uploadModels.sorted(by: {(a,b) -> Bool in
+                        return (a.index) < (b.index)
                     })
-                    sucess?(newUrls)
+                    sucess?(sortModels)
                 }
             }
         }
@@ -443,49 +431,78 @@ class HMVideoCompression: NSObject {
 
 
 
-///请求单个 等 YXSFileUploadHelper 工具构建好 移植
-class YXSUploadDataHepler{
+///上传data
+class YXSUploadDataHepler: NSObject{
     //现在一次请求 生成一个token
-    private var ossClient: OSSClient?
-    private var oSSAuth: YXSOSSAuthModel!
-    private func initClient(){
+     var ossClient: OSSClient?
+     var oSSAuth: YXSOSSAuthModel?
+    static let shareHelper = YXSUploadDataHepler()
+    private override init(){
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    fileprivate func initClient(){
         let conf = OSSClientConfiguration()
         conf.maxRetryCount = 2
         conf.timeoutIntervalForRequest = 300
         conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
         conf.maxConcurrentRequestCount = 50
-        let credential2:OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: self.oSSAuth.accessKeyId ?? "", secretKeyId: self.oSSAuth.accessKeySecret ?? "", securityToken: self.oSSAuth.securityToken ?? "")
+        let credential2:OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: self.oSSAuth?.accessKeyId ?? "", secretKeyId: self.oSSAuth?.accessKeySecret ?? "", securityToken: self.oSSAuth?.securityToken ?? "")
         
         //实例化
-        ossClient = OSSClient(endpoint: oSSAuth.endpoint ?? "", credentialProvider: credential2, clientConfiguration: conf)
+        ossClient = OSSClient(endpoint: oSSAuth?.endpoint ?? "", credentialProvider: credential2, clientConfiguration: conf)
     }
     
-    func uploadData(data: Data, path: String, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
+    
+    /// 上传资源model
+    /// - Parameters:
+    ///   - uploadModel: 资源model
+    ///   - progress: 进度
+    ///   - sucess: 成功回调 返回model 里面带有上传成功路径
+    ///   - failureHandler: 失败回调
+    func uploadData(uploadModel: SLNewUploadSourceModel, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
+        if let oSSAuth = oSSAuth{
+            if oSSAuth.expirationDate.timeIntervalSince1970 <= Date().timeIntervalSince1970{
+                self.oSSAuth = nil
+            }
+        }
+
         if oSSAuth == nil{
             YXSEducationOssAuthTokenRequest().request({ (model: YXSOSSAuthModel) in
                 self.oSSAuth = model
-                self.uploadData(data: data, path: path, progress: progress,sucess: sucess,failureHandler: failureHandler)
+                self.initClient()
+                self.uploadData(uploadModel: uploadModel, progress: progress,sucess: sucess,failureHandler: failureHandler)
             }, failureHandler: failureHandler)
             return
         }
         
-        initClient()
+        
+        uploadData(uploadModel: uploadModel,ossClient: self.ossClient, progress: progress, sucess: sucess, failureHandler: failureHandler)
+    }
+    
+    
+        /// 上传资源model
+    /// - Parameters:
+    ///   - uploadModel: 资源model
+    ///   - ossClient:  阿里云的ossClient
+    ///   - progress: 进度
+    ///   - sucess: 成功回调 返回model 里面带有上传成功路径
+    ///   - failureHandler: 失败回调
+    fileprivate func uploadData(uploadModel: SLNewUploadSourceModel, ossClient: OSSClient?, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
         
         let ossPutObj: OSSPutObjectRequest = OSSPutObjectRequest()
-        //path为上传到阿里云的路径
-        var ossPath: String = productPrefix
-        ossPutObj.uploadingData = data
-        ossPath += path
-        
-        ossPutObj.bucketName = self.oSSAuth.bucket
-        ossPutObj.objectKey = path
+        ossPutObj.uploadingData = uploadModel.data
+        ossPutObj.bucketName = oSSAuth?.bucket
+        ossPutObj.objectKey = uploadModel.path
         
         ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
-            //                            progress?(bytesSent/totalBytesSent)
-            progress?(CGFloat(bytesSent)/CGFloat(totalBytesSent))
+            progress?(CGFloat(totalBytesSent)/CGFloat(totalBytesExpectedToSend))
         }
         
-        let uploadTask = self.ossClient?.putObject(ossPutObj)
+        let uploadTask = ossClient?.putObject(ossPutObj)
         uploadTask?.continue({ (uploadTask) -> Any? in
             if let _err = uploadTask.error {
                 DispatchQueue.main.async {
@@ -494,10 +511,10 @@ class YXSUploadDataHepler{
                 
             } else {
                 if  let _:OSSPutObjectResult  = uploadTask.result as? OSSPutObjectResult {
-                    var point: NSString = (self.oSSAuth.endpoint ?? "") as NSString
+                    var point: NSString = (self.oSSAuth?.endpoint ?? "") as NSString
                     point = point.replacingOccurrences(of: "http://", with: "") as NSString
                     point = point.replacingOccurrences(of: "https://", with: "") as NSString
-                    let picUrlStr = "http://\(self.oSSAuth.bucket ?? "").\(point)/\(path)"
+                    let picUrlStr = "http://\(self.oSSAuth?.bucket ?? "").\(point)/\(uploadModel.path)"
                     DispatchQueue.main.async {
                         sucess?(picUrlStr)
                     }
