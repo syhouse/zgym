@@ -182,13 +182,8 @@ class YXSBaseScrollViewController: YXSBaseViewController, UITableViewDelegate, U
     
     func yxs_endingRefresh(endSucess: (() ->())? = nil){
         showEmptyDataSource = true
-        if self.curruntPage == 1{
-            if hasRefreshHeader{
-                tableViewRefreshHeader.endRefreshing(completionBlock: endSucess ?? {()})
-            }
-        }else{
-            tableRefreshFooter.endRefreshing(completionBlock: endSucess ?? {()})
-        }
+        tableViewRefreshHeader.endRefreshing(completionBlock: endSucess ?? {()})
+        tableRefreshFooter.endRefreshing(completionBlock: endSucess ?? {()})
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
