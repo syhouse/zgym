@@ -193,7 +193,7 @@ class YXSMineViewController: YXSBaseTableViewController{
         /// 班级文件
         let cacheJoinList = YXSCacheHelper.yxs_getCacheClassJoinList()
         let cacheCreateList = YXSCacheHelper.yxs_getCacheClassCreateList()
-        if cacheJoinList.count > 1 || cacheCreateList.count > 1 {
+        if cacheJoinList.count > 0 || cacheCreateList.count > 0 {
             var list:[YXSClassModel] = [YXSClassModel]()
             list += cacheCreateList
             list += cacheJoinList
