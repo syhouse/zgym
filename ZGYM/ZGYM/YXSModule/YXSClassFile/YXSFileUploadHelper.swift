@@ -97,7 +97,7 @@ class YXSFileUploadHelper: NSObject {
                 /// 拼接路径
                 switch storageType {
                 case .temporary:
-                    path = self.getTmpVideoUrl(fullName: fullName)
+                    path = YXSFileUploadHelper.sharedInstance.getTmpVideoUrl(fullName: fullName)
                     
                 case .album:
                     if classId == nil {

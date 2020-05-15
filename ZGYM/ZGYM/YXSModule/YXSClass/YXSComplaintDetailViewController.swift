@@ -77,18 +77,16 @@ class YXSComplaintDetailViewController: YXSBaseViewController {
     
     // MARK: - Request
     @objc func uploadImagesRequest(completionHandler:((_ result:String)->())?) {
-        var infos = [[String: Any]]()
-        var uploadPaths = [String]()
+        var infos = [SLUploadSourceModel]()
         if var medias = secondView.publishModel.medias {
             for model in medias{
-                infos.append([typeKey: SourceNameType.image,modelKey: model])
-                uploadPaths.append(YXSUploadSourceHelper.expiresImgDoucmentPath)
+                infos.append(SLUploadSourceModel.init(model: model, type: SourceNameType.image, storageType: YXSStorageType.temporary, fileName: model.fileName))
             }
         }
         
         if infos.count > 0{
             MBProgressHUD.yxs_showLoading(message: "上传中", inView: self.navigationController!.view)
-            YXSUploadSourceHelper().uploadMedia(mediaInfos: infos, uploadPaths: uploadPaths, sucess: { [weak self](list) in
+            YXSUploadSourceHelper().uploadMedia(mediaInfos: infos, sucess: { [weak self](list) in
                 guard let weakSelf = self else {return}
                 SLLog(infos)
                 MBProgressHUD.yxs_hideHUDInView(view: weakSelf.navigationController!.view)
@@ -104,7 +102,7 @@ class YXSComplaintDetailViewController: YXSBaseViewController {
         }
     }
     
-    @objc func processMedia(list:[SLNewUploadSourceModel])->String {
+    @objc func processMedia(list:[SLUploadDataSourceModel])->String {
         var pictures = [String]()
         
         for model in list{

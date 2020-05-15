@@ -1297,11 +1297,10 @@ extension YXSHomeworkDetailViewController: YXSRouterEventProtocol,LFPhotoEditing
             uploadHud.show(animated: true)
             let mediaModel = SLPublishMediaModel.init()
             mediaModel.showImg = photoEdit.editPreviewImage
-            var localMeidaInfos = [[String: Any]]()
-            localMeidaInfos.append([typeKey: SourceNameType.image,modelKey: mediaModel])
-        
+            var localMeidaInfos = [SLUploadSourceModel]()
+            localMeidaInfos.append(SLUploadSourceModel.init(model: mediaModel, type: .image, storageType: .temporary, fileName: mediaModel.fileName))
             if localMeidaInfos.count > 0{
-                YXSUploadSourceHelper().uploadMedia(mediaInfos: localMeidaInfos, uploadPaths: [YXSUploadSourceHelper.expiresImgDoucmentPath], progress: {
+                YXSUploadSourceHelper().uploadMedia(mediaInfos: localMeidaInfos, progress: {
                     (progress)in
                     DispatchQueue.main.async {
                         self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int((1.0*progress + (1.0 - 1.0)) * 100)))%)"

@@ -221,7 +221,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
 //        }
         MBProgressHUD.yxs_showLoading()
         if self.audioModel != nil && self.audioModel.servicePath?.count ?? 0 <= 0{
-            YXSUploadSourceHelper().uploadAudio(mediaModel: audioModel, uploadPath: YXSUploadSourceHelper.expiresVoiceDoucmentPath, sucess: { (url) in
+            YXSUploadSourceHelper().uploadAudio(mediaModel: audioModel, storageType: YXSStorageType.temporary, sucess: { (url) in
                 MBProgressHUD.yxs_hideHUD()
                 self.remarkAudioDuration = self.audioModel.time
                 self.remarkAudioUrl = url;
