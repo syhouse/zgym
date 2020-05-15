@@ -40,11 +40,11 @@ class YXSPeriodicalListDetialController: YXSBaseTableViewController{
     }
     
     func loadData(){
-        YXSEducationPeriodicalArticlePageRequest.init(periodicalId: listModel.id ?? 0, currentPage: curruntPage).request({ (json) in
+        YXSEducationPeriodicalArticlePageRequest.init(periodicalId: listModel.id ?? 0, currentPage: currentPage).request({ (json) in
             self.yxs_endingRefresh()
             let list = Mapper<YXSChildContentHomeListModel>().mapArray(JSONObject: json["records"].object) ?? [YXSChildContentHomeListModel]()
 
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             self.dataSource += list

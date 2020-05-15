@@ -118,13 +118,13 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     @objc func loadData2() {
         if folderHasNext {
             /// 请求文件夹
-            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
+            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: self.currentPage, folderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 weakSelf.folderHasNext = json["hasNext"].boolValue
 
                 let tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
                 
-                if weakSelf.curruntPage == 1 {
+                if weakSelf.currentPage == 1 {
                     weakSelf.folderList.removeAll()
                 }
                 weakSelf.folderList += tmpFolderList
@@ -152,7 +152,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                     
                 } else {
                     /// 文件夹没了 请求文件数据
-                    weakSelf.curruntPage = 1
+                    weakSelf.currentPage = 1
                     weakSelf.requestFile()
                 }
                 
@@ -171,14 +171,14 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     
     @objc func requestFile(completionHandler:(([YXSFileModel])->())? = nil) {
         
-        YXSFilePageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
+        YXSFilePageQueryRequest(classId: self.classId, currentPage: self.currentPage, folderId: self.parentFolderId).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             
             let hasNext = json["hasNext"].boolValue
             weakSelf.loadMore = hasNext
             
             let tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
-            if weakSelf.curruntPage == 1 {
+            if weakSelf.currentPage == 1 {
                 weakSelf.fileList.removeAll()
             }
             weakSelf.fileList += tmpFileList
@@ -236,7 +236,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         workingGroup.enter()
         workingQueue.async {
             // 出组
-            YXSFilePageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
+            YXSFilePageQueryRequest(classId: self.classId, currentPage: self.currentPage, folderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 
                 let hasNext = json["hasNext"].boolValue
@@ -275,7 +275,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                     }
                 }
                 
-                if self.curruntPage == 1{
+                if self.currentPage == 1{
                     self.fileList.removeAll()
                 }
                 
@@ -828,7 +828,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 let item = fileList[indexPath.row]
                 
                 if item.fileType == "jpg" {
-                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], curruntIndex: 0)
+                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], currentIndex: 0)
                     
                 } else if item.fileType == "mp4" {
                     // 视频

@@ -218,9 +218,9 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
     
     /// 日历vc切换日历
     /// - Parameter calendarModel: l日历model
-    public func selectCalendarModel(_ calendarModel: YXSCalendarModel?, isCurruntCalendarVC: Bool = true){
+    public func selectCalendarModel(_ calendarModel: YXSCalendarModel?, iscurrentCalendarVC: Bool = true){
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-            punchCardFooter.isCurruntCalendarVC = isCurruntCalendarVC
+            punchCardFooter.iscurrentCalendarVC = iscurrentCalendarVC
             punchCardFooter.calendarModel = calendarModel
         }
     }
@@ -267,7 +267,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         
         var request: YXSBaseRequset!
         if let childrenId = childId{
-            request = YXSEducationClockInParentTaskDetailRequest.init(clockInId: clockInId, childrenId: childrenId, currentPage: curruntPage)
+            request = YXSEducationClockInParentTaskDetailRequest.init(clockInId: clockInId, childrenId: childrenId, currentPage: currentPage)
         }else{
             request = YXSEducationClockInTeacherTaskDetailRequest.init(clockInId: clockInId)
         }
@@ -325,7 +325,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
             }
             //从日历跳转过去的打卡
             if patchTime != nil{
-                strongSelf.punchCardFooter.isCurruntCalendarVC = true
+                strongSelf.punchCardFooter.iscurrentCalendarVC = true
             }
             
             strongSelf.loadData()

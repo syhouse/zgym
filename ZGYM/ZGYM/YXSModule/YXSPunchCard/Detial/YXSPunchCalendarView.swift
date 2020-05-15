@@ -105,18 +105,18 @@ class YXSPunchCalendarView: UICollectionView,UICollectionViewDelegate,UICollecti
         totalCalendars.removeAll()
         for index in 0..<totalCell{
             let model = YXSCalendarModel()
-            model.startTime = yxs_startTime(date, curruntDay: "\(tempDay)")
+            model.startTime = yxs_startTime(date, currentDay: "\(tempDay)")
             if index >= self.weekday && index < self.weekday + self.days{
                 model.text = "\(tempDay)"
-                let todayCompare = yxs_isToDay(date, curruntDay: "\(tempDay)")
+                let todayCompare = yxs_isToDay(date, currentDay: "\(tempDay)")
                 model.toDayDateCompare = todayCompare
                 if let punchModel = self.model{
-                    let compeletSmall = yxs_isToDay(date, compareDate: (punchModel.startTime ?? "").yxs_Date(), curruntDay: "\(tempDay)")
-                    let compeletEnd = yxs_isToDay(date, compareDate: (punchModel.endTime ?? "").yxs_Date(), curruntDay: "\(tempDay)")
+                    let compeletSmall = yxs_isToDay(date, compareDate: (punchModel.startTime ?? "").yxs_Date(), currentDay: "\(tempDay)")
+                    let compeletEnd = yxs_isToDay(date, compareDate: (punchModel.endTime ?? "").yxs_Date(), currentDay: "\(tempDay)")
                     if  compeletSmall != .Small && compeletEnd != .Big{
                         if let clockInDateStatusResponseList = punchModel.clockInDateStatusResponseList{
                             for listModel in clockInDateStatusResponseList{
-                                if yxs_isToDay(date, compareDate: (listModel.clockInTime ?? "").yxs_Date(), curruntDay: "\(tempDay)") == .Today{
+                                if yxs_isToDay(date, compareDate: (listModel.clockInTime ?? "").yxs_Date(), currentDay: "\(tempDay)") == .Today{
                                     
                                     model.status = .gray
                                     if YXSPersonDataModel.sharePerson.personRole == .TEACHER{

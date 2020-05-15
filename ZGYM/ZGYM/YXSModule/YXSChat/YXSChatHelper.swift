@@ -127,7 +127,7 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
             }
             unReadCount += Int(sub.getUnReadMessageNum())
         }
-        self.yxs_showBadgeOnItem(index: 2, count: unReadCount)
+        self.yxs_showBadgeOnItem(index: 3, count: unReadCount)
     }
     
     /// 上传 Token 到腾讯云

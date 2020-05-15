@@ -300,15 +300,15 @@ extension AppDelegate{
     /// 切换根视图控制器
     public func showTabRoot(){
         let loginNav = YXSRootNavController.init(rootViewController: YXSLoginViewController())
-        var curruntRootVc:UIViewController?
+        var currentRootVc:UIViewController?
         
         if isFirst{
             //首次登录
-            curruntRootVc = YXSFirstLaunchController()
+            currentRootVc = YXSFirstLaunchController()
             UserDefaults.standard.set(true, forKey: kIsNotFirstLuanchKey)
         }else if yxs_user.accessToken == nil || yxs_user.type == nil || !YXSPersonDataModel.sharePerson.isLogin{
             //未登录或未选身份
-            curruntRootVc = loginNav
+            currentRootVc = loginNav
             
         }else if yxs_user.name == nil || yxs_user.name?.count ?? 0 == 0{
             //未选昵称和学段
@@ -328,14 +328,14 @@ extension AppDelegate{
                     weakSelf.showTabRoot()
                 }
             }
-            curruntRootVc = YXSRootNavController(rootViewController: vc)
+            currentRootVc = YXSRootNavController(rootViewController: vc)
             
         } else {
             //正常进入首页
-            curruntRootVc = YXSBaseTabBarController()
+            currentRootVc = YXSBaseTabBarController()
                 
         }
-        window?.rootViewController = curruntRootVc
+        window?.rootViewController = currentRootVc
         
         
         let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false

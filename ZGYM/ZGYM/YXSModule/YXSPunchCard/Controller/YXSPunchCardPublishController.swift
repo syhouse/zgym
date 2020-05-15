@@ -341,16 +341,16 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     }
     
     @objc func selectRemindTimeClick(){
-        var curruntModel: YXSPunchCardDay?
+        var currentModel: YXSPunchCardDay?
         var selectTimes = [YXSPunchCardDay]()
         for index in 0..<24{
             let model = YXSPunchCardDay.init(String.init(format: "%02d", index) + ":00", 0)
             selectTimes.append(model)
             if model.text == publishModel.remindPanchCardTime{
-                curruntModel = model
+                currentModel = model
             }
         }
-        YXSPunchCardSelectDaysView.showAlert(curruntModel,yxs_dataSource: selectTimes, title: "选择提醒时间", compelect: {  [weak self] (modle, _) in
+        YXSPunchCardSelectDaysView.showAlert(currentModel,yxs_dataSource: selectTimes, title: "选择提醒时间", compelect: {  [weak self] (modle, _) in
             guard let strongSelf = self else { return }
             strongSelf.publishModel.remindPanchCardTime = modle.text
             strongSelf.remindTimeSection.rightLabel.text =  modle.text
@@ -361,16 +361,16 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     @objc func patchSelectTimeClick(){
         
         if let patchCardTimeList = patchCardTimeList{
-            var curruntModel: YXSPunchCardDay?
+            var currentModel: YXSPunchCardDay?
             var selectTimes = [YXSPunchCardDay]()
             for time in patchCardTimeList{
                 let model = YXSPunchCardDay.init(time.date(withFormat: kCommonDateFormatString)?.toString(format: DateFormatType.custom("MM月dd日")) ?? "", 0)
                 selectTimes.append(model)
                 if time == patchCardTime{
-                    curruntModel = model
+                    currentModel = model
                 }
             }
-            YXSPunchCardSelectDaysView.showAlert(curruntModel,yxs_dataSource: selectTimes, title: "选择补卡时间", compelect: {  [weak self] (modle, index) in
+            YXSPunchCardSelectDaysView.showAlert(currentModel,yxs_dataSource: selectTimes, title: "选择补卡时间", compelect: {  [weak self] (modle, index) in
                 guard let strongSelf = self else { return }
                 strongSelf.patchCardTime = patchCardTimeList[index]
                 strongSelf.patchSelectTimeSection.rightLabel.text =  modle.text
@@ -483,7 +483,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
             self.navigationController?.popViewController()
             
             self.punchCardComplete?(HMRequestShareModel.init(clockInId: self.punchCardModel?.clockInId ?? 0, childrenId: self.punchCardModel?.childrenId ?? 0)
-                ,YXSPunchCardShareModel.init(downLoadUrl: result["appDownloadUrl"].stringValue, name: self.yxs_user.curruntChild?.realName ?? "", avar: self.yxs_user.curruntChild?.avatar ?? "", title: self.punchCardModel?.title ?? "", clockInDayCount: result["clockInDayCount"].intValue, percentOver: result["percentOver"].stringValue, bgUrl: result["bgUrl"].stringValue))
+                ,YXSPunchCardShareModel.init(downLoadUrl: result["appDownloadUrl"].stringValue, name: self.yxs_user.currentChild?.realName ?? "", avar: self.yxs_user.currentChild?.avatar ?? "", title: self.punchCardModel?.title ?? "", clockInDayCount: result["clockInDayCount"].intValue, percentOver: result["percentOver"].stringValue, bgUrl: result["bgUrl"].stringValue))
         }) { (msg, code) in
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_showMessage(message: msg)

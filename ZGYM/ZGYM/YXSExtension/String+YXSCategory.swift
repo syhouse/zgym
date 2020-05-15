@@ -48,12 +48,12 @@ extension String {
     }
     
     func yxs_lengtToChars(length: Int) -> String {
-        var curruntLength = 0
+        var currentLength = 0
         var characters = [Character]()
         for char in self.charactersArray {
             // 判断是否中文，是中文+2 ，不是+1
-            curruntLength += "\(char)".lengthOfBytes(using: String.Encoding.utf8) == 3 ? 2 : 1
-            if curruntLength > length{
+            currentLength += "\(char)".lengthOfBytes(using: String.Encoding.utf8) == 3 ? 2 : 1
+            if currentLength > length{
                 break
             }
             characters.append(char)

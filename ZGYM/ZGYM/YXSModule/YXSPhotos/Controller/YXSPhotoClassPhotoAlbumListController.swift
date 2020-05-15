@@ -39,7 +39,7 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     }
     
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         yxs_loadData()
     }
     
@@ -48,9 +48,9 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     }
     
     func yxs_loadData() {
-        YXSEducationAlbumPagequeryRequest.init(classId: classId, currentPage: curruntPage).request({ (result) in
+        YXSEducationAlbumPagequeryRequest.init(classId: classId, currentPage: currentPage).request({ (result) in
             self.yxs_endingRefresh()
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             let list = Mapper<YXSPhotoAlbumsModel>().mapArray(JSONObject: result["classAlbumList"].object) ?? [YXSPhotoAlbumsModel]()

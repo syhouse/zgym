@@ -104,7 +104,7 @@ class YXSCommonScreenListBaseController: YXSBaseTableViewController{
     
     @objc func yxs_publishClick(){
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER && (yxs_user.gradeIds == nil || yxs_user.gradeIds!.count == 0){
-            UIUtil.curruntNav().pushViewController(YXSTeacherClassListViewController())
+            UIUtil.currentNav().pushViewController(YXSTeacherClassListViewController())
             return
         }
         yxs_dealPublishAction(actionEvent,classId: classId)
@@ -160,7 +160,7 @@ class YXSCommonScreenListBaseController: YXSBaseTableViewController{
     }
     
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         loadData()
     }
     
@@ -182,7 +182,7 @@ class YXSCommonScreenListBaseController: YXSBaseTableViewController{
         }
         
         
-        if curruntPage == 1 {
+        if currentPage == 1 {
             self.group.enter()
             queue.async {
                 DispatchQueue.main.async {

@@ -41,7 +41,7 @@ extension AppDelegate{
                     playerVc.btnPlayPause.isSelected = !playerVc.btnPlayPause.isSelected
                     playerVc.pause()
                 }else{
-                    YXSMusicPlayerWindowView.curruntWindowView().playerClick()
+                    YXSMusicPlayerWindowView.currentWindowView().playerClick()
                 }
                 UIUtil.configNowPlayingIsPause(isPlaying: false)
             case .remoteControlPlay:
@@ -49,21 +49,21 @@ extension AppDelegate{
                     playerVc.btnPlayPause.isSelected = !playerVc.btnPlayPause.isSelected
                     playerVc.resume()
                 }else{
-                    YXSMusicPlayerWindowView.curruntWindowView().playerClick()
+                    YXSMusicPlayerWindowView.currentWindowView().playerClick()
                 }
                 UIUtil.configNowPlayingIsPause(isPlaying: true)
             case .remoteControlNextTrack:
                 if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
                     playerVc.playNextTrack(sender: YXSButton())
                 }else{
-                    YXSMusicPlayerWindowView.curruntWindowView().playerNextClick()
+                    YXSMusicPlayerWindowView.currentWindowView().playerNextClick()
                 }
             case .remoteControlPreviousTrack:
                 if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
                     playerVc.playNextTrack(sender: YXSButton())
                 }else{
                     XMSDKPlayer.shared()?.playPrevTrack()
-                    YXSMusicPlayerWindowView.curruntWindowView().isPlayingMusic = true
+                    YXSMusicPlayerWindowView.currentWindowView().isPlayingMusic = true
                 }
             default:
                 break

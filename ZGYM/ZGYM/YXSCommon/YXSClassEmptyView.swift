@@ -65,7 +65,7 @@ class YXSClassEmptyView: SLBaseEmptyView {
     }
     
     private func pushVC(vc: UIViewController){
-        UIUtil.curruntNav().pushViewController(vc)
+        UIUtil.currentNav().pushViewController(vc)
     }
  */
 }

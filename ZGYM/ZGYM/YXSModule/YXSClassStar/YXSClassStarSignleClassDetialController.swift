@@ -80,7 +80,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
     }
     
     override func yxs_refreshData() {
-        curruntPage = 1
+        currentPage = 1
         loadData()
     }
     
@@ -89,7 +89,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
     }
     
     override func uploadData(){
-        curruntPage = 1
+        currentPage = 1
         classModel?.dateType = DateType.init(rawValue: selectModel.paramsKey) ?? DateType.W
         self.tableHeaderView.setHeaderModel(self.classModel)
         loadClassTopData()
@@ -145,7 +145,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
     let queue = DispatchQueue.global()
     let group = DispatchGroup()
     override func loadData() {
-        if curruntPage == 1{
+        if currentPage == 1{
             group.enter()
             queue.async {
                 DispatchQueue.main.async {
@@ -182,8 +182,8 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
     }
     
     func loadListData(){
-        YXSEducationClassStarTeacherEvaluationHistoryListPageRequest.init(classId: classId, currentPage: curruntPage,dateType: classModel?.dateType ?? DateType.W).requestCollection({ (list:[YXSClassStarHistoryModel]) in
-            if self.curruntPage == 1{
+        YXSEducationClassStarTeacherEvaluationHistoryListPageRequest.init(classId: classId, currentPage: currentPage,dateType: classModel?.dateType ?? DateType.W).requestCollection({ (list:[YXSClassStarHistoryModel]) in
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             self.dataSource += list

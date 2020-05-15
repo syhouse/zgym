@@ -358,7 +358,7 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
     /// 头像点击
     @objc func tapClick(){
         let vc = YXSFriendsCircleInfoController.init(userId:   model.custodianId ?? 0, childId: model.childrenId ?? 0, type: PersonRole.PARENT.rawValue)
-        UIUtil.curruntNav().pushViewController(vc)
+        UIUtil.currentNav().pushViewController(vc)
     }
     
     @objc func dealPunchCardBtnClick(){

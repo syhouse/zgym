@@ -32,21 +32,21 @@ extension NSObject{
         }
     }
     
-    func yxs_startTime(_ curruntDate: Date = Date(), curruntDay: String? = nil) -> String{
+    func yxs_startTime(_ currentDate: Date = Date(), currentDay: String? = nil) -> String{
         let dateFormatter = DateFormatter()
-        if let curruntDay = curruntDay{
+        if let currentDay = currentDay{
             
             dateFormatter.dateFormat = "yyyy-MM"
             
             
-            var curruntStr = dateFormatter.string(from: curruntDate)
-            curruntStr += "-\(curruntDay) 00:00:00"
-            return curruntStr
+            var currentStr = dateFormatter.string(from: currentDate)
+            currentStr += "-\(currentDay) 00:00:00"
+            return currentStr
         }else{
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            var curruntStr = dateFormatter.string(from: curruntDate)
-            curruntStr += " 00:00:00"
-            return curruntStr
+            var currentStr = dateFormatter.string(from: currentDate)
+            currentStr += " 00:00:00"
+            return currentStr
         }
         
     }
@@ -159,25 +159,25 @@ extension NSObject{
     }
     
     //当前时间 和传入的date比较
-    func yxs_isToDay(_ curruntDate: Date = Date(), compareDate: Date? = Date(),curruntDay dayCount: String? = nil) -> YXSCalendarDateCompare{
-        var curruntDay = "1"
+    func yxs_isToDay(_ currentDate: Date = Date(), compareDate: Date? = Date(),currentDay dayCount: String? = nil) -> YXSCalendarDateCompare{
+        var currentDay = "1"
         let dateFormatter = DateFormatter()
-        var curruntYear = ""
-        var curruntMonth = ""
+        var currentYear = ""
+        var currentMonth = ""
         if let dayCount = dayCount{
             
             dateFormatter.dateFormat = "yyyy-MM"
             
-            let curruntStr = dateFormatter.string(from: curruntDate)
-            curruntYear = String(curruntStr.split(separator: "-").first ?? "")
-            curruntMonth = String(curruntStr.split(separator: "-").last ?? "")
-            curruntDay = dayCount
+            let currentStr = dateFormatter.string(from: currentDate)
+            currentYear = String(currentStr.split(separator: "-").first ?? "")
+            currentMonth = String(currentStr.split(separator: "-").last ?? "")
+            currentDay = dayCount
         }else{
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let curruntStr = dateFormatter.string(from: curruntDate)
-            curruntYear = String(curruntStr.split(separator: "-").first ?? "")
-            curruntMonth = String(curruntStr.split(separator: "-")[1] )
-            curruntDay = String(curruntStr.split(separator: "-").last ?? "")
+            let currentStr = dateFormatter.string(from: currentDate)
+            currentYear = String(currentStr.split(separator: "-").first ?? "")
+            currentMonth = String(currentStr.split(separator: "-")[1] )
+            currentDay = String(currentStr.split(separator: "-").last ?? "")
         }
         
         
@@ -187,9 +187,9 @@ extension NSObject{
         let todayMonth = String(todayStr.split(separator: "-")[1] )
         let todayDay = String(todayStr.split(separator: "-").last ?? "")
         
-        let yearCount = Int(curruntYear)! - Int(todayYear)!
-        let monthCount = Int(curruntMonth)! - Int(todayMonth)!
-        let dayCount = Int(curruntDay)! - Int(todayDay)!
+        let yearCount = Int(currentYear)! - Int(todayYear)!
+        let monthCount = Int(currentMonth)! - Int(todayMonth)!
+        let dayCount = Int(currentDay)! - Int(todayDay)!
         if  yearCount > 0  || (yearCount == 0 && monthCount > 0)  || (yearCount == 0 && monthCount == 0 && dayCount > 0)
         {
             return .Big

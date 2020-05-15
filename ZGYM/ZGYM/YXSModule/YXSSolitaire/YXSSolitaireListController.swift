@@ -53,7 +53,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
         tableView.register(YXSSolitaireListCell.self, forCellReuseIdentifier: "YXSSolitaireListCell")
         
         ///后期优化主线程时间 1.高度计算  2.截止日期 时间  ....
-        self.solitaireLists = YXSCacheHelper.yxs_getCacheSolitaireList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
+        self.solitaireLists = YXSCacheHelper.yxs_getCacheSolitaireList(childrenId: self.yxs_user.currentChild?.id, isAgent: isAgenda)
     }
     
     
@@ -85,7 +85,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
     
     // MARK: -loadData
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         loadData()
     }
     
@@ -101,9 +101,9 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
         var request: YXSBaseRequset!
         if isAgenda{
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                request = YXSEducationCensusTeacherTodoTodoRequest.init(currentPage: curruntPage)
+                request = YXSEducationCensusTeacherTodoTodoRequest.init(currentPage: currentPage)
             }else{
-                request = YXSEducationCensusParentTodoRequest.init(currentPage: curruntPage)
+                request = YXSEducationCensusParentTodoRequest.init(currentPage: currentPage)
             }
         }else{
             var state: Int = 0
@@ -122,15 +122,15 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
                 break
             }
             if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-                request = YXSEducationCensusParentCensusListRequest.init(currentPage: curruntPage, state: state, childrenId: childId ?? 0)
+                request = YXSEducationCensusParentCensusListRequest.init(currentPage: currentPage, state: state, childrenId: childId ?? 0)
             }else{
-                request = YXSEducationCensusTeacherCensusListRequest.init(currentPage: curruntPage, state: state, classId: classId,stage: YXSPersonDataModel.sharePerson.personStage)
+                request = YXSEducationCensusTeacherCensusListRequest.init(currentPage: currentPage, state: state, classId: classId,stage: YXSPersonDataModel.sharePerson.personStage)
             }
         }
         
         request.requestCollection({ (list: [YXSSolitaireModel]) in
             self.yxs_endingRefresh()
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.solitaireLists.removeAll()
             }
             
@@ -138,7 +138,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
             
             self.loadMore = list.count >= kPageSize
             self.tableView.reloadData()
-            YXSCacheHelper.yxs_cacheSolitaireList(dataSource: self.solitaireLists, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
+            YXSCacheHelper.yxs_cacheSolitaireList(dataSource: self.solitaireLists, childrenId: self.yxs_user.currentChild?.id, isAgent: self.isAgenda)
         }) { (msg, code) in
             self.yxs_endingRefresh()
         }
@@ -164,7 +164,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
     // MARK: -private
     override func reloadTableView(_ indexPath: IndexPath? = nil, isScroll : Bool = false) {
         super.reloadTableView(indexPath,isScroll: isScroll)
-        YXSCacheHelper.yxs_cacheSolitaireList(dataSource: self.solitaireLists, childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
+        YXSCacheHelper.yxs_cacheSolitaireList(dataSource: self.solitaireLists, childrenId: self.yxs_user.currentChild?.id, isAgent: isAgenda)
     }
     
     // MARK: -public

@@ -65,7 +65,7 @@ class YXSAgendaListController: YXSBaseTableViewController {
     
     // MARK: -loadData
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         yxs_loadData()
     }
     

@@ -275,7 +275,7 @@ class ClassDetialParentView: UIControl{
     func setViewModel(_ model: YXSClassDetailModel?, classModel: YXSClassModel){
         nameLabel.isHidden = true
         
-        imageView.sd_setImage(with: URL.init(string: model?.getCurruntChild(classModel: classModel)?.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage, completed: nil)
+        imageView.sd_setImage(with: URL.init(string: model?.getcurrentChild(classModel: classModel)?.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage, completed: nil)
         memberLabel.text = "成员:\(model?.members ?? 0)"
         classNumberLabel.text = "班级号：\(model?.num ?? "")"
     }

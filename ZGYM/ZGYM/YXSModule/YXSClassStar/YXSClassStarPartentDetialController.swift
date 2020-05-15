@@ -148,7 +148,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
                 guard let strongSelf = self else { return }
                 strongSelf.selectTypeModels = selectTypeModels
                 strongSelf.selectTypeModel = selectTypeModel
-                strongSelf.curruntPage = 1
+                strongSelf.currentPage = 1
                 MBProgressHUD.showAdded(to: strongSelf.view, animated: true)
                 strongSelf.loadListData()
                 strongSelf.tableView.scrollToTop()
@@ -163,14 +163,14 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     }
     
     override func uploadData() {
-        curruntPage = 1
+        currentPage = 1
         startTime = nil
         endTime = nil
         loadClassChildrensData()
     }
     func loadClassChildrensData(){
-        let curruntType = startTime == nil ? self.dateType : nil
-        YXSEducationClassStarParentClassChildrenTopRequest.init(childrenId:  childrenId,classId: classId, dateType: curruntType, startTime: startTime, endTime: endTime).request({ (partentModel: YXSClassStarPartentModel) in
+        let currentType = startTime == nil ? self.dateType : nil
+        YXSEducationClassStarParentClassChildrenTopRequest.init(childrenId:  childrenId,classId: classId, dateType: currentType, startTime: startTime, endTime: endTime).request({ (partentModel: YXSClassStarPartentModel) in
             self.partentModel = partentModel
             MBProgressHUD.hide(for: self.view, animated: true)
             if self.partentModel.mapTop3?.first == nil{
@@ -189,10 +189,10 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     }
     
     func loadListData(){
-        let curruntType = startTime == nil ? self.dateType : nil
-        YXSEducationClassStarTeacherEvaluationHistoryListPageRequest.init(category: Int(selectTypeModel.paramsKey),childrenId:childrenId,classId: classId, currentPage: curruntPage,dateType: curruntType, startTime: startTime, endTime: endTime).requestCollection({ (list:[YXSClassStarHistoryModel]) in
+        let currentType = startTime == nil ? self.dateType : nil
+        YXSEducationClassStarTeacherEvaluationHistoryListPageRequest.init(category: Int(selectTypeModel.paramsKey),childrenId:childrenId,classId: classId, currentPage: currentPage,dateType: currentType, startTime: startTime, endTime: endTime).requestCollection({ (list:[YXSClassStarHistoryModel]) in
             MBProgressHUD.hide(for: self.view, animated: true)
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             self.loadMore = list.count == kPageSize

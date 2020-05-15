@@ -21,9 +21,9 @@ class YXSCountDownTool: NSObject {
     
     /// 距离结束剩余时间(s)
     public func yxs_startCountDown(residueTime: Int, complete:@escaping (Int, Bool) ->()) {
-        let curruntDate = Date()
+        let currentDate = Date()
 
-        let timestamp: TimeInterval  = curruntDate.timeIntervalSince1970 + Double(residueTime)
+        let timestamp: TimeInterval  = currentDate.timeIntervalSince1970 + Double(residueTime)
         yxs_startCountDown(timestamp: timestamp, complete: complete)
     }
     /// 结束时间戳
@@ -52,11 +52,11 @@ class YXSCountDownTool: NSObject {
     /// 开始计时
     /// - Parameter complete: 计时回调
     public func yxs_startKeepTime(complete:((Int) ->())? = nil) {
-        let curruntDate = Date()
+        let currentDate = Date()
         self.timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global()) as? DispatchSource
         self.timer?.schedule(wallDeadline: DispatchWallTime.now(), repeating: .milliseconds(100))
         self.timer?.setEventHandler(handler: {
-            self.keepTime = Int(Date().timeIntervalSince1970 - curruntDate.timeIntervalSince1970)
+            self.keepTime = Int(Date().timeIntervalSince1970 - currentDate.timeIntervalSince1970)
             complete?(self.keepTime)
         })
         self.timer?.resume()

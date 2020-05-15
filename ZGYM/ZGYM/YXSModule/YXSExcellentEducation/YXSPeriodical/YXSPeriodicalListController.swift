@@ -29,11 +29,11 @@ class YXSPeriodicalListController: YXSBaseTableViewController{
     }
     
     func loadData(){
-        YXSEducationPeriodicalPageRequest.init(currentPage: curruntPage).request({ (json) in
+        YXSEducationPeriodicalPageRequest.init(currentPage: currentPage).request({ (json) in
             self.yxs_endingRefresh()
             let list = Mapper<YXSPeriodicalListModel>().mapArray(JSONObject: json["records"].object) ?? [YXSPeriodicalListModel]()
             
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             self.dataSource += list

@@ -52,7 +52,7 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
         
         rightButton.isHidden = isAgenda
         
-        self.yxs_punchCardDataSource = YXSCacheHelper.yxs_getCachePunchCardList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
+        self.yxs_punchCardDataSource = YXSCacheHelper.yxs_getCachePunchCardList(childrenId: self.yxs_user.currentChild?.id, isAgent: isAgenda)
     }
     
     override func yxs_updateList(_ notification: Notification) {
@@ -71,7 +71,7 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
     
     // MARK: -loadData
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         loadData()
     }
     
@@ -84,9 +84,9 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
         var request: YXSBaseRequset!
         if isAgenda{
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                request = YXSEducationClockInTeacherTodoRequest.init(currentPage: curruntPage)
+                request = YXSEducationClockInTeacherTodoRequest.init(currentPage: currentPage)
             }else{
-                request = YXSEducationClockInParentTodoRequest.init(currentPage: curruntPage)
+                request = YXSEducationClockInParentTodoRequest.init(currentPage: currentPage)
             }
         }else{
             var state: Int = 0
@@ -103,19 +103,19 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
                 break
             }
             if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-                request = YXSEducationClockInParentTaskListRequest.init(state: state, childrenId: childId ?? 0, currentPage: curruntPage)
+                request = YXSEducationClockInParentTaskListRequest.init(state: state, childrenId: childId ?? 0, currentPage: currentPage)
             }else{
-                request = YXSEducationClockInTeacherTaskListRequest.init(state: state, classId: classId, currentPage: curruntPage,stage: YXSPersonDataModel.sharePerson.personStage)
+                request = YXSEducationClockInTeacherTaskListRequest.init(state: state, classId: classId, currentPage: currentPage,stage: YXSPersonDataModel.sharePerson.personStage)
             }
         }
         request.requestCollection({ (list: [YXSPunchCardModel]) in
             self.yxs_endingRefresh()
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.yxs_punchCardDataSource.removeAll()
             }
             self.yxs_punchCardDataSource += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
             self.loadMore = list.count >= kPageSize
-            YXSCacheHelper.yxs_cachePunchCardList(dataSource: self.yxs_punchCardDataSource,childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
+            YXSCacheHelper.yxs_cachePunchCardList(dataSource: self.yxs_punchCardDataSource,childrenId: self.yxs_user.currentChild?.id, isAgent: self.isAgenda)
             self.tableView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()
@@ -125,7 +125,7 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
     
     override func reloadTableView(_ indexPath: IndexPath? = nil, isScroll : Bool = false) {
         super.reloadTableView(indexPath,isScroll: isScroll)
-        YXSCacheHelper.yxs_cachePunchCardList(dataSource: self.yxs_punchCardDataSource,childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
+        YXSCacheHelper.yxs_cachePunchCardList(dataSource: self.yxs_punchCardDataSource,childrenId: self.yxs_user.currentChild?.id, isAgent: isAgenda)
     }
     
     // MARK: -action

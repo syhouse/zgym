@@ -55,7 +55,7 @@
 ////    [editVC setEditImage:self.image durations:self.durations];
 //    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:editVC];
 //    [navi setNavigationBarHidden:YES];
-//    [UIUtil.curruntNav presentViewController:navi animated:YES completion:nil];
+//    [UIUtil.currentNav presentViewController:navi animated:YES completion:nil];
 }
 
 #pragma mark - LFPhotoEditingControllerDelegate

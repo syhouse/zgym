@@ -52,7 +52,7 @@ class YXSClassStarDetailListController: YXSClassStarSignleClassCommonController 
     
     // MARK: -loadData
     override func uploadData() {
-        curruntPage = 1
+        currentPage = 1
         classModel.dateType = DateType.init(rawValue: selectModel.paramsKey) ?? DateType.W
         dayLabel.text = "\(NSUtil.yxs_timePeriodText(dateType: classModel.dateType))(\(NSUtil.yxs_getDateText(dateType: classModel.dateType)))"
         yxs_loadClassChildrensData()

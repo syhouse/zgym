@@ -156,7 +156,7 @@ class YXSPunchCardDetialPageController: YXSBaseViewController{
         }
     }
     
-    var lastCurruntVC: YXSPunchCardSingleStudentListController!
+    var lastcurrentVC: YXSPunchCardSingleStudentListController!
     
     public func yxs_punchCardRefresh(changeModel: YXSPunchCardCommintListModel){
         for vc in vcs{
@@ -182,12 +182,12 @@ extension YXSPunchCardDetialPageController: JXCategoryListContainerViewDelegate,
         //         self.navView.categoryView.delegate = self
         let vc = YXSPunchCardSingleStudentListController.init(punchCardModel: punchModel,isMyPublish: isMyPublish, type: listVCTypes[index], topHistoryModel: topHistoryModel)
         vc.refreshBlock = {
-            [weak self] (changeModel, curruntType)in
+            [weak self] (changeModel, currentType)in
             guard let strongSelf = self else { return }
             if let changeModel = changeModel{
                 strongSelf.yxs_punchCardRefresh(changeModel: changeModel)
             }else{
-                strongSelf.yxs_punchCardRefresh(type: curruntType)
+                strongSelf.yxs_punchCardRefresh(type: currentType)
             }
             
         }

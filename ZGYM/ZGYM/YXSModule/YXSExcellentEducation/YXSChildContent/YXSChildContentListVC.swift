@@ -46,7 +46,7 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
     
     // MARK: -loadData
     override func yxs_refreshData() {
-        curruntPage = 1
+        currentPage = 1
         loadData()
         
     }
@@ -57,16 +57,16 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
     
     func loadData(){
         
-        YXSEducationChildContentPageListRequest.init(current: curruntPage, type: typeModel?.id ?? 0).request({ [weak self](json) in
+        YXSEducationChildContentPageListRequest.init(current: currentPage, type: typeModel?.id ?? 0).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             weakSelf.yxs_endingRefresh()
             let list = Mapper<YXSChildContentHomeListModel>().mapArray(JSONObject: json["records"].object) ?? [YXSChildContentHomeListModel]()
             
-            if weakSelf.curruntPage == 1{
+            if weakSelf.currentPage == 1{
                 weakSelf.dataSource.removeAll()
             }
             weakSelf.dataSource += list
-            if json["pages"].intValue > weakSelf.curruntPage {
+            if json["pages"].intValue > weakSelf.currentPage {
                 weakSelf.loadMore = true
             } else {
                 weakSelf.loadMore = false
@@ -76,7 +76,7 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
             self.yxs_endingRefresh()
             MBProgressHUD.yxs_showMessage(message: msg)
         }
-//        YXSEducationChildContentPageListRequest.init(currentPage: curruntPage, tabId: self.currentTab?.id ?? 1).request({ (json) in
+//        YXSEducationChildContentPageListRequest.init(currentPage: currentPage, tabId: self.currentTab?.id ?? 1).request({ (json) in
 //            self.yxs_endingRefresh()
 //            let list = Mapper<YXSSynClassListModel>().mapArray(JSONObject: json["folderList"].object) ?? [YXSSynClassListModel]()
 

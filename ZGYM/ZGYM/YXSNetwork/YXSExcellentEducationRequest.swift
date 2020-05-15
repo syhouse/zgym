@@ -86,7 +86,7 @@ class YXSEducationChildContentPageListRequest: YXSBaseRequset {
         path = childContentPageList
         var stage = YXSPersonDataModel.sharePerson.userModel.stage
         if YXSPersonDataModel.sharePerson.personRole == .PARENT {
-            let st = YXSPersonDataModel.sharePerson.userModel.curruntChild?.stage
+            let st = YXSPersonDataModel.sharePerson.userModel.currentChild?.stage
             switch st {
             case .KINDERGARTEN:
                 stage = "KINDERGARTEN"

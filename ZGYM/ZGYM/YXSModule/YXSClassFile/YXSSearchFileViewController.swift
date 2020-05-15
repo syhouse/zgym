@@ -84,7 +84,7 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
     @objc func searchRequest(keyword:String, completionHandler:((_ result: [YXSFileModel])->())?) {
         
         if searchType == SearchType.satchel {
-            YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: -1, keyword: keyword).request({ [weak self](json) in
+            YXSSatchelFilePageQueryRequest(currentPage: self.currentPage, parentFolderId: -1, keyword: keyword).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
@@ -100,7 +100,7 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
                 MBProgressHUD.yxs_showMessage(message: "缺少班级ID")
                 return
             }
-            YXSFilePageQueryRequest(classId: self.classId ?? 0, currentPage: self.curruntPage, folderId: -1, keyword: keyword).request({ [weak self](json) in
+            YXSFilePageQueryRequest(classId: self.classId ?? 0, currentPage: self.currentPage, folderId: -1, keyword: keyword).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
@@ -182,7 +182,7 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
         let item = fileList[indexPath.row]
         
         if item.fileType == "jpg" {
-            YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], curruntIndex: 0)
+            YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], currentIndex: 0)
             
         } else if item.fileType == "mp4" {
             // 视频

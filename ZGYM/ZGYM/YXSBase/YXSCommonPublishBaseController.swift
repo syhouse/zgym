@@ -34,7 +34,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     /// 保存的文件名称
     var fileName: String{
         get{
-            return "\(saveDirectory)\(serviceId ?? 0)\(yxs_user.id ?? 0)\(yxs_user.curruntChild?.id ?? 0)\(yxs_user.type ?? "")\(yxs_user.stage ?? "")"
+            return "\(saveDirectory)\(serviceId ?? 0)\(yxs_user.id ?? 0)\(yxs_user.currentChild?.id ?? 0)\(yxs_user.type ?? "")\(yxs_user.stage ?? "")"
         }
     }
     
@@ -136,18 +136,18 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     
     // MARK: -loadData
     func yxs_loadTeachClassData(){
-        var curruntClassId: Int = 0
+        var currentClassId: Int = 0
         if let classId = singlePublishClassId{
-            curruntClassId = classId
+            currentClassId = classId
             
         }else{
-            curruntClassId = yxs_user.gradeIds?.first ?? 0
+            currentClassId = yxs_user.gradeIds?.first ?? 0
         }
         
         yxs_loadPublishClassListData(isFriendCircle) { (classes) in
             var selectClasses = [YXSClassModel]()
             for classModel in classes{
-                if classModel.id == curruntClassId{
+                if classModel.id == currentClassId{
                     selectClasses.append(classModel)
                     break
                 }

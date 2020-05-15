@@ -168,10 +168,10 @@ class NSUtil {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        let curruntStr = dateFormatter.string(from: date1)
-        let curruntYear = String(curruntStr.split(separator: "-").first ?? "")
-        let curruntMonth = String(curruntStr.split(separator: "-")[1] )
-        let curruntDay = String(curruntStr.split(separator: "-").last ?? "")
+        let currentStr = dateFormatter.string(from: date1)
+        let currentYear = String(currentStr.split(separator: "-").first ?? "")
+        let currentMonth = String(currentStr.split(separator: "-")[1] )
+        let currentDay = String(currentStr.split(separator: "-").last ?? "")
         
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let todayStr = dateFormatter.string(from: date2)
@@ -179,7 +179,7 @@ class NSUtil {
         let todayMonth = String(todayStr.split(separator: "-")[1] )
         let todayDay = String(todayStr.split(separator: "-").last ?? "")
         
-        if curruntYear != todayYear || curruntMonth != todayMonth || curruntDay != todayDay{
+        if currentYear != todayYear || currentMonth != todayMonth || currentDay != todayDay{
             return false
         }
         return true

@@ -93,10 +93,10 @@ class YXSClassDetialListController: YXSHomeBaseController {
     }
     ///瀑布流
     func yxs_loadListData(){
-        YXSEducationwaterfallPageQueryV2Request.init(currentPage: self.curruntPage,classIdList: [self.classModel.id ?? 0],stage: self.stage.rawValue, userType: self.yxs_user.type ?? "", childrenId: self.classModel.childrenId ?? 0, lastRecordId: self.lastRecordId, lastRecordTime: self.lastRecordTime, tsLast: self.tsLast).request({ (result) in
+        YXSEducationwaterfallPageQueryV2Request.init(currentPage: self.currentPage,classIdList: [self.classModel.id ?? 0],stage: self.stage.rawValue, userType: self.yxs_user.type ?? "", childrenId: self.classModel.childrenId ?? 0, lastRecordId: self.lastRecordId, lastRecordTime: self.lastRecordTime, tsLast: self.tsLast).request({ (result) in
             var list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["waterfallList"].object) ?? [YXSHomeListModel]()
             self.loadMore = result["hasNext"].boolValue
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.tsLast = result["tsLast"].intValue
                 self.yxs_removeAll()
                 
@@ -141,7 +141,7 @@ class YXSClassDetialListController: YXSHomeBaseController {
                 self.yxs_tableHeaderView.teacherView.setViewModel(self.classDetialModel)
             }else{
                 self.yxs_tableHeaderView.parentView.setViewModel(self.classDetialModel,classModel: self.classModel)
-                self.yxs_tableHeaderView.childModel = self.classDetialModel.getCurruntChild(classModel: self.classModel)
+                self.yxs_tableHeaderView.childModel = self.classDetialModel.getcurrentChild(classModel: self.classModel)
                 
             }
             //更新学段

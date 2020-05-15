@@ -64,7 +64,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     }
     
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         yxs_loadData()
     }
     
@@ -73,14 +73,14 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     }
     
     func yxs_loadData() {
-        YXSEducationAlbumPagequeryResourceRequest.init(albumId: albumModel.id ?? 0, currentPage: curruntPage).request({ (result) in
+        YXSEducationAlbumPagequeryResourceRequest.init(albumId: albumModel.id ?? 0, currentPage: currentPage).request({ (result) in
             self.yxs_endingRefresh()
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             let list = Mapper<YXSPhotoAlbumsDetailListModel>().mapArray(JSONObject: result["classAlbumResourceList"].object) ?? [YXSPhotoAlbumsDetailListModel]()
             //编辑全选状态默认选中当前model
-            if self.footerView.isCurruntSelectAll{
+            if self.footerView.iscurrentSelectAll{
                 for model in list{
                     model.isSelected = true
                 }
@@ -261,7 +261,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             footerView.rightButton.setTitle("删除(\(resourceIdList.count))", for: .normal)
             collectionView.reloadItems(at: [indexPath])
         }else{
-            let vc = YXSPhotoShowAlbumController(dataSource: self.dataSource, curruntIndex: indexPath.row)
+            let vc = YXSPhotoShowAlbumController(dataSource: self.dataSource, currentIndex: indexPath.row)
             self.navigationController?.pushViewController(vc)
         }
     }

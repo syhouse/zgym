@@ -149,7 +149,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         workingGroup.enter()
         workingQueue.async {
             // 出组
-            YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+            YXSSatchelFilePageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"].boolValue
                 weakSelf.loadMore = hasNext
@@ -176,7 +176,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
                     }
                 }
                 
-                if self.curruntPage == 1{
+                if self.currentPage == 1{
                     self.fileList.removeAll()
                 }
                 
@@ -191,7 +191,7 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     
     @objc func searchRequest(keyword:String, completionHandler:((_ result: [YXSFileModel])->())?) {
         
-        YXSSatchelDocFilePageQueryRequest(currentPage: self.curruntPage, keyword: keyword).request({ [weak self](json) in
+        YXSSatchelDocFilePageQueryRequest(currentPage: self.currentPage, keyword: keyword).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             let hasNext = json["hasNext"].boolValue
             weakSelf.loadMore = hasNext

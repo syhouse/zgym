@@ -110,7 +110,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     private var dataSource: [YXSPunchCardCommintListModel] = [YXSPunchCardCommintListModel]()
     
     /// 当前操作的 IndexPath
-    private var curruntIndexPath: IndexPath!
+    private var currentIndexPath: IndexPath!
     
     
     /// 初始化page list vc
@@ -160,7 +160,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         super.viewWillAppear(animated)
         if type == .calendar{
             let detialVc = UIUtil.TopViewController() as? YXSPunchCardDetialController
-            detialVc?.selectCalendarModel(calendarModel, isCurruntCalendarVC: true)
+            detialVc?.selectCalendarModel(calendarModel, iscurrentCalendarVC: true)
         }
     }
     
@@ -168,7 +168,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         super.viewWillDisappear(animated)
         if type == .calendar{
             let detialVc = UIUtil.TopViewController() as? YXSPunchCardDetialController
-            detialVc?.selectCalendarModel(calendarModel, isCurruntCalendarVC: false)
+            detialVc?.selectCalendarModel(calendarModel, iscurrentCalendarVC: false)
         }
         
         YXSSSAudioListPlayer.sharedInstance.stopPlayer()
@@ -221,7 +221,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     
     // MARK: - loadData
     override func yxs_refreshData() {
-        curruntPage = 1
+        currentPage = 1
         loadData()
         
     }
@@ -235,7 +235,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         if type == .detial{
             YXSEducationClockInSingleCommitDetailRequest.init(clockInId: clockInId, clockInCommitId: clockInCommitId ?? 0).request({ (model: YXSPunchCardCommintListModel) in
                 self.yxs_endingRefresh()
-                if self.curruntPage == 1{
+                if self.currentPage == 1{
                     self.dataSource.removeAll()
                 }
                 model.isMyPublish = self.isMyPublish
@@ -255,15 +255,15 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
             switch type {
             case .all:
                 if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                    request = YXSEducationClockInTeacherAllCommentsListRequest.init(clockInId: clockInId, currentPage: curruntPage)
+                    request = YXSEducationClockInTeacherAllCommentsListRequest.init(clockInId: clockInId, currentPage: currentPage)
                 }else{
-                    request = YXSEducationClockInParentAllCommentsListRequest.init(clockInId: clockInId, currentPage: curruntPage)
+                    request = YXSEducationClockInParentAllCommentsListRequest.init(clockInId: clockInId, currentPage: currentPage)
                 }
             case .good:
-                request = YXSEducationClockInExcellentCommentsListRequest.init(clockInId: clockInId, currentPage: curruntPage)
+                request = YXSEducationClockInExcellentCommentsListRequest.init(clockInId: clockInId, currentPage: currentPage)
             case .myPunchCard:
                 
-                request = YXSEducationClockInParentMyCommentsListRequest.init(clockInId: clockInId, currentPage: curruntPage, childrenId: childrenId ?? 0)
+                request = YXSEducationClockInParentMyCommentsListRequest.init(clockInId: clockInId, currentPage: currentPage, childrenId: childrenId ?? 0)
             case .calendar:
                 var endTime = yxs_startTime().yxs_tomorrow()
                 var startTime = yxs_startTime()
@@ -271,18 +271,18 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
                     startTime = calendarModel.startTime ?? ""
                     endTime = calendarModel.endTime
                 }
-                request = YXSEducationClockInCalendarCommentsListRequest.init(clockInId: clockInId, currentPage: curruntPage, endTime: endTime, startTime: startTime)
+                request = YXSEducationClockInCalendarCommentsListRequest.init(clockInId: clockInId, currentPage: currentPage, endTime: endTime, startTime: startTime)
             case .studentPunchCardList:
-                request = YXSEducationClockInSingleChildCommitListPageRequest.init(childrenId: childrenId ?? 0, clockInId: clockInId, currentPage: curruntPage)
+                request = YXSEducationClockInSingleChildCommitListPageRequest.init(childrenId: childrenId ?? 0, clockInId: clockInId, currentPage: currentPage)
             case .goodHistory:
-                request = YXSEducationClockInMyExcellentCommentsListRequest.init(childrenId: childrenId ?? 0, classId: classId, currentPage: curruntPage)
+                request = YXSEducationClockInMyExcellentCommentsListRequest.init(childrenId: childrenId ?? 0, classId: classId, currentPage: currentPage)
             default:
                 break
             }
             
             request.requestCollection({ (list:[YXSPunchCardCommintListModel]) in
                 self.yxs_endingRefresh()
-                if self.curruntPage == 1{
+                if self.currentPage == 1{
                     self.dataSource.removeAll()
                 }
                 for model in list{
@@ -327,7 +327,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     // MARK: - public
     // MARK:刷新  打卡或者修改打卡
     /// 刷新  打卡或者修改打卡
-    public var refreshBlock: ((_ changePunchCardModel: YXSPunchCardCommintListModel?,_ curruntType: YXSSingleStudentListType)->())?
+    public var refreshBlock: ((_ changePunchCardModel: YXSPunchCardCommintListModel?,_ currentType: YXSSingleStudentListType)->())?
     
     // MARK:修改打卡刷新当前列表数据
     ///修改打卡刷新当前列表数据
@@ -367,13 +367,13 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
                 cell.commentBlock = {
                     [weak self] in
                     guard let strongSelf = self else { return }
-                    strongSelf.curruntIndexPath = indexPath
+                    strongSelf.currentIndexPath = indexPath
                     strongSelf.showComment(comments[indexPath.row], section: indexPath.section)
                 }
                 cell.cellLongTapEvent = {
                     [weak self](point) in
                     guard let strongSelf = self else { return }
-                    strongSelf.curruntIndexPath = indexPath
+                    strongSelf.currentIndexPath = indexPath
                     strongSelf.showDelectComment(comments[indexPath.row], point, section: indexPath.section)
                 }
                 
@@ -566,10 +566,10 @@ extension YXSPunchCardSingleStudentBaseListController{
     // MARK: - 删除评论
     func showDelectComment(_ commentModel: YXSPunchCardCommentModel,_ point: CGPoint, section: Int){
         var pointInView = point
-        if let curruntIndexPath = self.curruntIndexPath{
-            let cell = self.tableView.cellForRow(at: curruntIndexPath)
+        if let currentIndexPath = self.currentIndexPath{
+            let cell = self.tableView.cellForRow(at: currentIndexPath)
             if let listCell  = cell as? YXSPunchCardSingleStudentListCell{
-                let rc = listCell.convert(listCell.comentLabel.frame, to: UIUtil.curruntNav().view)
+                let rc = listCell.convert(listCell.comentLabel.frame, to: UIUtil.currentNav().view)
                 pointInView.y = rc.minY + 14.0
             }
         }
@@ -657,20 +657,20 @@ extension YXSPunchCardSingleStudentBaseListController{
         let model = dataSource[section]
         let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
         vc.title = model.realName
-        UIUtil.curruntNav().pushViewController(vc)
+        UIUtil.currentNav().pushViewController(vc)
     }
     
     func lookPunchCardGoodEvent(_ section: Int){
         let model = dataSource[section]
         let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, childrenId: model.childrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
         vc.title = "\(model.realName ?? "")"
-        UIUtil.curruntNav().pushViewController(vc)
+        UIUtil.currentNav().pushViewController(vc)
     }
     
     func lookClassStartRankEvent(_ section: Int){
         let model = dataSource[section]
         let vc = YXSClassStarPartentDetialController.init(classId: classId, childrenName: model.realName ?? "", childrenId: model.childrenId ?? 0, avar: model.avatar ?? "", stage: YXSPersonDataModel.sharePerson.personStage, startTime: topHistoryModel?.startTime, endTime: topHistoryModel?.endTime, isLookOtherStudent: true)
-        UIUtil.curruntNav().pushViewController(vc)
+        UIUtil.currentNav().pushViewController(vc)
     }
     
     // MARK: - loadEventData
@@ -699,8 +699,8 @@ extension YXSPunchCardSingleStudentBaseListController{
             requset = YXSEducationClockInParentDeleteCommentsRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0, clockInCommentsId: commentModel.id ?? 0)
         }
         requset.request({ (result) in
-            if let curruntIndexPath  = self.curruntIndexPath{
-                listModel.comments?.remove(at: curruntIndexPath.row)
+            if let currentIndexPath  = self.currentIndexPath{
+                listModel.comments?.remove(at: currentIndexPath.row)
             }
             self.reloadTableView(section: section, scroll: false)
         }) { (msg, code) in
@@ -721,10 +721,10 @@ extension YXSPunchCardSingleStudentBaseListController{
             }
         }else{
             if let commentModel = commentModel{
-                requset = YXSEducationClockInParentReplyCommentsRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: self.yxs_user.curruntChild?.id ?? 0, clockInCommentsId:  commentModel.id ?? 0)
+                requset = YXSEducationClockInParentReplyCommentsRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: self.yxs_user.currentChild?.id ?? 0, clockInCommentsId:  commentModel.id ?? 0)
                 
             }else{
-                requset = YXSEducationClockInParentReplyClockContentRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: self.yxs_user.curruntChild?.id ?? 0)
+                requset = YXSEducationClockInParentReplyClockContentRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: self.yxs_user.currentChild?.id ?? 0)
             }
         }
         requset.request({ (model:YXSPunchCardCommentModel) in
@@ -770,7 +770,7 @@ extension YXSPunchCardSingleStudentBaseListController{
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
                 result.userName = YXSPersonDataModel.sharePerson.userModel.name
             }else{
-                result.userName = "\(self.yxs_user.curruntChild?.realName ?? "")的\((self.yxs_user.curruntChild?.grade?.relationship ?? "").yxs_RelationshipValue())"
+                result.userName = "\(self.yxs_user.currentChild?.realName ?? "")的\((self.yxs_user.currentChild?.grade?.relationship ?? "").yxs_RelationshipValue())"
                 
             }
             if model.praises == nil{
@@ -787,7 +787,7 @@ extension YXSPunchCardSingleStudentBaseListController{
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             requset = YXSEducationClockInTeacherPraiseCommentsRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0)
         }else{
-            requset = YXSEducationClockInParentPraiseCommentsRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0, childrenId: self.yxs_user.curruntChild?.id ?? 0)
+            requset = YXSEducationClockInParentPraiseCommentsRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0, childrenId: self.yxs_user.currentChild?.id ?? 0)
         }
         
         requset.request({ (result:YXSFriendsPraiseModel) in
@@ -879,8 +879,8 @@ extension YXSPunchCardSingleStudentBaseListController{
         DispatchQueue.main.async {
             let user_info = notification.userInfo
             let keyboardRect = (user_info?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-            if let curruntIndexPath = self.curruntIndexPath{
-                let cell = self.tableView.cellForRow(at: curruntIndexPath)
+            if let currentIndexPath = self.currentIndexPath{
+                let cell = self.tableView.cellForRow(at: currentIndexPath)
                 if let listCell  = cell as? YXSPunchCardSingleStudentListCell{
                     
                     let rc = listCell.convert(listCell.comentLabel.frame, to: self.view)

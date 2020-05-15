@@ -72,7 +72,7 @@ class YXSShareExtensionHelper: NSObject {
     @objc func shareToSatchel(files:[String], completionHandler:((()->())?)) {
         /// ShareExtension
         let vc = YXSSatchelFileViewController()
-        UIUtil.curruntNav().pushViewController(vc)
+        UIUtil.currentNav().pushViewController(vc)
         
         let uploadArr = files2UploadDatas(files: files)
         
@@ -160,7 +160,7 @@ class YXSShareExtensionHelper: NSObject {
                 if let classModel = list.first {
                     let vc = YXSClassFileViewController(classId: classModel.id ?? 0, parentFolderId: -1)
                     completionHandler?(vc, classModel)
-                    UIUtil.curruntNav().pushViewController(vc)
+                    UIUtil.currentNav().pushViewController(vc)
                 }
 
             } else if list.count > 1 {
@@ -168,9 +168,9 @@ class YXSShareExtensionHelper: NSObject {
                     let classModel = list[idx]
                     let cfVc = YXSClassFileViewController(classId: classModel.id ?? 0, parentFolderId: -1)
                     completionHandler?(cfVc, classModel)
-                    UIUtil.curruntNav().pushViewController(cfVc)
+                    UIUtil.currentNav().pushViewController(cfVc)
                 }
-                UIUtil.curruntNav().pushViewController(vc)
+                UIUtil.currentNav().pushViewController(vc)
                 
             } else {
                 MBProgressHUD.yxs_showMessage(message: "暂未班级")

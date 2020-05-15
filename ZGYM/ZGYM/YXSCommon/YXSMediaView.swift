@@ -126,7 +126,7 @@ class YXSMediaView: UIView {
             urls.append(URL.init(string: url)!)
             
         }
-        YXSShowBrowserHelper.showImage(urls: urls, curruntIndex: index)
+        YXSShowBrowserHelper.showImage(urls: urls, currentIndex: index)
     }
     
     func showVideoBrowser() {

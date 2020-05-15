@@ -52,7 +52,7 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
     
     // MARK: -loadData
     override func yxs_refreshData() {
-        curruntPage = 1
+        currentPage = 1
         loadData()
         
     }
@@ -62,12 +62,12 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
     }
     
     func loadData(){
-        YXSEducationResourcePageQueryRequest.init(currentPage: curruntPage, folderId: folderId ?? 0).request({ (json) in
+        YXSEducationResourcePageQueryRequest.init(currentPage: currentPage, folderId: folderId ?? 0).request({ (json) in
             self.yxs_endingRefresh()
             let list = Mapper<YXSSynClassFolderModel>().mapArray(JSONObject: json["resourceList"].object) ?? [YXSSynClassFolderModel]()
             let infoModel = Mapper<YXSSynClassFolderInfoModel>().map(JSONObject:json["folderInfo"].object) ?? YXSSynClassFolderInfoModel.init(JSON: ["": ""])!
             self.folderInfoModel = infoModel
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             self.dataSource += list

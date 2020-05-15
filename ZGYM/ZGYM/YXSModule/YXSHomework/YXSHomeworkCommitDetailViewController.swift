@@ -528,8 +528,8 @@ class YXSHomeworkCommitDetailViewController: YXSBaseViewController {
                 MBProgressHUD.yxs_showMessage(message: msg)
             })
         }))
-        alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
-        UIUtil.curruntNav().present(alert, animated: true, completion: nil)
+        alert.popoverPresentationController?.sourceView = UIUtil.currentNav().view
+        UIUtil.currentNav().present(alert, animated: true, completion: nil)
     }
     
     @objc func yxs_deleteWorkClick(sender:YXSButton) {//学生作业撤销
@@ -579,8 +579,8 @@ class YXSHomeworkCommitDetailViewController: YXSBaseViewController {
                 MBProgressHUD.yxs_showMessage(message: msg)
             })
         }))
-        alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
-        UIUtil.curruntNav().present(alert, animated: true, completion: nil)
+        alert.popoverPresentationController?.sourceView = UIUtil.currentNav().view
+        UIUtil.currentNav().present(alert, animated: true, completion: nil)
         
     }
     

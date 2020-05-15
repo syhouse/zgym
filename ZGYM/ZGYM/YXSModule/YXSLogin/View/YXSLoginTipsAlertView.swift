@@ -87,7 +87,7 @@ class YXSLoginTipsAlertView: UIView {
     
     // MARK: -public
     public func beginAnimation() {
-        let superVc: UIViewController = UIUtil.TopViewController()//.presentedViewController ?? UIUtil.curruntNav()
+        let superVc: UIViewController = UIUtil.TopViewController()//.presentedViewController ?? UIUtil.currentNav()
         superVc.view.addSubview(bgWindow)
         
         bgWindow.addSubview(self)

@@ -199,7 +199,7 @@ class YXSProfileViewController: YXSBaseViewController, UITableViewDelegate, UITa
             cell.cellStyle = .ImageViews
             cell.imgAvatar.sd_setImage(with: URL(string: dic["avatar"] ?? ""), placeholderImage:YXSPersonDataModel.sharePerson.personRole == .TEACHER ? kImageUserIconTeacherDefualtImage : kImageUserIconStudentDefualtImage)
             cell.avatarTap = { (avatar) in
-                YXSShowBrowserHelper.showImage(images: [avatar], curruntIndex: 0)
+                YXSShowBrowserHelper.showImage(images: [avatar], currentIndex: 0)
             }
             
         } else {

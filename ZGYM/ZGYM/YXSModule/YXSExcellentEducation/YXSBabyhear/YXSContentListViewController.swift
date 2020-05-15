@@ -66,7 +66,7 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     }
     
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         loadData()
     }
     
@@ -103,8 +103,8 @@ class YXSContentListViewController: YXSBaseCollectionViewController {
     }
     
     func yxs_loadListData() {
-        YXSEducationXMLYOperationColumnsListRequest.init(page: curruntPage, id: id).requestCollection({ (list:[YXSColumnContentModel], pageCount) in
-            if self.curruntPage == 1{
+        YXSEducationXMLYOperationColumnsListRequest.init(page: currentPage, id: id).requestCollection({ (list:[YXSColumnContentModel], pageCount) in
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             self.dataSource += list

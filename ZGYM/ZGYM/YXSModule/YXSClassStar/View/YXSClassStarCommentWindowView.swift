@@ -135,7 +135,7 @@ class YXSClassStarCommentWindowView: UIView {
             newModel.dataSource[1].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Delect, title: "删除"), at: 0)
             newModel.dataSource[1].insert(YXSClassStarCommentItemModel.getYMClassStarCommentItemModel(.Add, title: "添加"), at: 0)
         }
-        UIUtil.curruntNav().pushViewController(YXSClassStarCommentEditItemListController.init(totalModel: newModel, defultIndex: categoryView.selectedIndex))
+        UIUtil.currentNav().pushViewController(YXSClassStarCommentEditItemListController.init(totalModel: newModel, defultIndex: categoryView.selectedIndex))
         dismiss()
     }
     

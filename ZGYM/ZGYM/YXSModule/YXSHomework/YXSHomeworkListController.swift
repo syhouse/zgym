@@ -49,7 +49,7 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
         
         rightButton.isHidden = isAgenda
         
-        self.dataSource = YXSCacheHelper.yxs_getCacheHomeWorkList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
+        self.dataSource = YXSCacheHelper.yxs_getCacheHomeWorkList(childrenId: self.yxs_user.currentChild?.id, isAgent: isAgenda)
     }
     
     // MARK: - loadData
@@ -58,9 +58,9 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
         var request: YXSBaseRequset!
         if isAgenda{
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                request = YXSEducationHomeworkPageQueryTeacherTodoRequest.init(currentPage: curruntPage)
+                request = YXSEducationHomeworkPageQueryTeacherTodoRequest.init(currentPage: currentPage)
             }else{
-                request = YXSEducationHomeworkPageQueryChildrenTodoRequest.init(currentPage: curruntPage, childrenClassList: yxs_childrenClassList)
+                request = YXSEducationHomeworkPageQueryChildrenTodoRequest.init(currentPage: currentPage, childrenClassList: yxs_childrenClassList)
             }
         }else{
             var classIdList = classId == nil ? (yxs_user.gradeIds ?? []) : [classId!]
@@ -78,16 +78,16 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
                 filterType = 1
             default: break
             }
-            request = YXSEducationHomeworkPageQueryRequest.init(currentPage: curruntPage, classIdList: classIdList, userType: yxs_user.type ?? "", childrenId:childId , filterType: filterType)
+            request = YXSEducationHomeworkPageQueryRequest.init(currentPage: currentPage, classIdList: classIdList, userType: yxs_user.type ?? "", childrenId:childId , filterType: filterType)
         }
         request.request({ (result) in
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             let list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["homeworkList"].object) ?? [YXSHomeListModel]()
             self.dataSource += self.yxs_dealList(list: list, childId: self.childId, isAgenda: self.isAgenda)
             self.loadMore = result["hasNext"].boolValue
-            YXSCacheHelper.yxs_cacheHomeWorkList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
+            YXSCacheHelper.yxs_cacheHomeWorkList(dataSource: self.dataSource, childrenId: self.yxs_user.currentChild?.id, isAgent: self.isAgenda)
             self.group.leave()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -103,7 +103,7 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
     
     override func reloadTableView(_ indexPath: IndexPath? = nil, isScroll : Bool = false) {
         super.reloadTableView(indexPath,isScroll: isScroll)
-        YXSCacheHelper.yxs_cacheHomeWorkList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
+        YXSCacheHelper.yxs_cacheHomeWorkList(dataSource: self.dataSource, childrenId: self.yxs_user.currentChild?.id, isAgent: isAgenda)
     }
     
     override func addNotification() {

@@ -92,7 +92,7 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
         bottomBtnView.btnCommit.addTarget(self, action: #selector(replyClick), for: .touchUpInside)
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) {
-            self.model = YXSCacheHelper.yxs_getCacheNoticeDetailTask(serviceId: self.homeModel.serviceId ?? 0, childrenId: self.yxs_user.curruntChild?.id ?? 0)
+            self.model = YXSCacheHelper.yxs_getCacheNoticeDetailTask(serviceId: self.homeModel.serviceId ?? 0, childrenId: self.yxs_user.currentChild?.id ?? 0)
         }
     }
 
@@ -129,7 +129,7 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
                     UIUtil.yxs_loadReadData(hModel!)
                 }
             }
-            YXSCacheHelper.yxs_cacheNoticeDetailTask(model: model, serviceId: weakSelf.homeModel.serviceId ?? 0, childrenId: weakSelf.yxs_user.curruntChild?.id ?? 0)
+            YXSCacheHelper.yxs_cacheNoticeDetailTask(model: model, serviceId: weakSelf.homeModel.serviceId ?? 0, childrenId: weakSelf.yxs_user.currentChild?.id ?? 0)
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
@@ -559,7 +559,7 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
         } else {
             let wk = YXSBaseWebViewController()
             wk.loadUrl = model.fileUrl
-            UIUtil.curruntNav().pushViewController(wk)
+            UIUtil.currentNav().pushViewController(wk)
         }
     }
     

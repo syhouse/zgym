@@ -253,7 +253,7 @@ class YXSInviteViewController: YXSBaseViewController {
     }
     
     @objc func showBigImage(){
-        YXSShowBrowserHelper.showImage(images: [self.imgQRCode.image], curruntIndex: 0)
+        YXSShowBrowserHelper.showImage(images: [self.imgQRCode.image], currentIndex: 0)
     }
     
    @objc private func saveImage(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: AnyObject) {

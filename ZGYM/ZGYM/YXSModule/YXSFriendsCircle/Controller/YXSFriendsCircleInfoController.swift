@@ -68,25 +68,25 @@ class YXSFriendsCircleInfoController: YXSBaseTableViewController {
     }
     
     // MARK: -UI
-    var curruntStudent: YXSChildrenModel?
+    var currentStudent: YXSChildrenModel?
     func yxs_changeUI(){
         dataSource.removeAll()
         if let children = YXSFriendCircleUserInfoModel.children{
             for model in children{
                 if model.id == childId{
-                    curruntStudent = model
+                    currentStudent = model
                     break
                 }
             }
             
-            if let curruntStudent = curruntStudent{
+            if let currentStudent = currentStudent{
                 //家长修改学号 先不做
-                dataSource.append(YXSFriendsCircleInfoCellModel.init(type: .name, leftText: "孩子名", canEdit: false,rightText: curruntStudent.realName))
-                if curruntStudent.headmaster ?? false && YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                    dataSource.append(YXSFriendsCircleInfoCellModel.init(type: .studentId, leftText: "学号", canEdit: true,rightText: curruntStudent.studentId))
+                dataSource.append(YXSFriendsCircleInfoCellModel.init(type: .name, leftText: "孩子名", canEdit: false,rightText: currentStudent.realName))
+                if currentStudent.headmaster ?? false && YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+                    dataSource.append(YXSFriendsCircleInfoCellModel.init(type: .studentId, leftText: "学号", canEdit: true,rightText: currentStudent.studentId))
                     dataSource.append(YXSFriendsCircleInfoCellModel.init(type: .exitClass, leftText: "请出班级", canEdit: true,rightText: nil))
                 }else{
-                    dataSource.append(YXSFriendsCircleInfoCellModel.init(type: .studentId, leftText: "学号", canEdit: false,rightText: curruntStudent.studentId))
+                    dataSource.append(YXSFriendsCircleInfoCellModel.init(type: .studentId, leftText: "学号", canEdit: false,rightText: currentStudent.studentId))
                 }
             }
         }
@@ -105,11 +105,11 @@ class YXSFriendsCircleInfoController: YXSBaseTableViewController {
     // MARK: -loadData
     func yxs_loadOutData(){
         MBProgressHUD.showAdded(to: self.view, animated: true)
-        YXSEducationGradeOutRequest.init(gradeId: curruntStudent?.classId ?? 0, uid: userId, childrenId: curruntStudent?.id ?? 0).request({ [weak self](result) in
+        YXSEducationGradeOutRequest.init(gradeId: currentStudent?.classId ?? 0, uid: userId, childrenId: currentStudent?.id ?? 0).request({ [weak self](result) in
             guard let weakSelf = self else {return}
             MBProgressHUD.hide(for: weakSelf.view, animated: false)
             MBProgressHUD.yxs_showMessage(message: "请出成功")
-            weakSelf.curruntStudent?.headmaster = false
+            weakSelf.currentStudent?.headmaster = false
             weakSelf.yxs_changeUI()
             
         }) { [weak self](msg, code) in
@@ -189,7 +189,7 @@ class YXSFriendsCircleInfoController: YXSBaseTableViewController {
                 vc.sucess = {[weak self](studentId) in
                     
                     guard let strongSelf = self else { return }
-                    strongSelf.curruntStudent?.studentId = studentId
+                    strongSelf.currentStudent?.studentId = studentId
                     strongSelf.yxs_changeUI()
                 }
                 self.navigationController?.pushViewController(vc)

@@ -40,7 +40,7 @@ class YXSHomeController: YXSHomeBaseController {
     ///最近更新时间
     var tsLast: Int?{
         get{
-            return tsLastSets[self.yxs_user.curruntChild?.id ?? 0] ?? nil
+            return tsLastSets[self.yxs_user.currentChild?.id ?? 0] ?? nil
         }
     }
     
@@ -82,7 +82,7 @@ class YXSHomeController: YXSHomeBaseController {
             self.yxs_showBadgeOnItem(index: 0, count: 0)
         }
         
-        self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList(childrenId: yxs_user.curruntChild?.id)
+        self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList(childrenId: yxs_user.currentChild?.id)
         
         //引导
         ysx_showGuide()
@@ -124,19 +124,19 @@ class YXSHomeController: YXSHomeBaseController {
     }
     
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         self.yxs_loadUserData()
     }
     
     // MARK: - refresh 不刷用户信息
     @objc func yxs_refreshListWithOutUserData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         self.yxs_loadData()
     }
     
     // MARK: - loadData
     @objc override func yxs_loadData(){
-        if curruntPage == 1 {
+        if currentPage == 1 {
             
             yxs_cheakLoadLocation()
             
@@ -162,7 +162,7 @@ class YXSHomeController: YXSHomeBaseController {
                 if YXSPersonDataModel.sharePerson.personRole == .PARENT{
                     for section in self.yxs_dataSource{
                         for model in section.items{
-                            model.childrenId = self.yxs_user.curruntChild?.id
+                            model.childrenId = self.yxs_user.currentChild?.id
                         }
                     }
                 }
@@ -185,7 +185,7 @@ class YXSHomeController: YXSHomeBaseController {
         let isParent = YXSPersonDataModel.sharePerson.personRole == .PARENT
         
         //无数据
-        if yxs_user.gradeIds == nil || yxs_user.gradeIds?.count == 0 || (isParent && yxs_user.curruntChild?.grade == nil){
+        if yxs_user.gradeIds == nil || yxs_user.gradeIds?.count == 0 || (isParent && yxs_user.currentChild?.grade == nil){
             self.yxs_removeAll()
             self.group.leave()
             return
@@ -194,25 +194,25 @@ class YXSHomeController: YXSHomeBaseController {
         var classIdList: [Int]!
         var stage: String!
         if isParent{
-            classIdList = [yxs_user.curruntChild?.classId ?? 0]
-            stage = yxs_user.curruntChild?.grade?.stage ?? ""
+            classIdList = [yxs_user.currentChild?.classId ?? 0]
+            stage = yxs_user.currentChild?.grade?.stage ?? ""
         }else{
             classIdList = yxs_user.gradeIds ?? []
             stage = yxs_user.stage ?? ""
         }
-        YXSEducationwaterfallPageQueryV2Request.init(currentPage: curruntPage,classIdList: classIdList,stage: stage,userType: yxs_user.type ?? "", childrenId: yxs_user.curruntChild?.id, lastRecordId: lastRecordId,lastRecordTime: lastRecordTime, tsLast: tsLast).request({ (result) in
+        YXSEducationwaterfallPageQueryV2Request.init(currentPage: currentPage,classIdList: classIdList,stage: stage,userType: yxs_user.type ?? "", childrenId: yxs_user.currentChild?.id, lastRecordId: lastRecordId,lastRecordTime: lastRecordTime, tsLast: tsLast).request({ (result) in
             
             var list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["waterfallList"].object) ?? [YXSHomeListModel]()
             self.loadMore = result["hasNext"].boolValue
-            if self.curruntPage == 1{
-                self.tsLastSets[self.yxs_user.curruntChild?.id ?? 0] = result["tsLast"].intValue
+            if self.currentPage == 1{
+                self.tsLastSets[self.yxs_user.currentChild?.id ?? 0] = result["tsLast"].intValue
                  self.yxs_removeAll()
                 
                 if list.count == 0{///没有更新 取缓存数据
-                    list = self.firstPageCacheSource["\(self.yxs_user.curruntChild?.id ?? 0)"] ?? [YXSHomeListModel]()
+                    list = self.firstPageCacheSource["\(self.yxs_user.currentChild?.id ?? 0)"] ?? [YXSHomeListModel]()
                     self.loadMore = list.count >= kPageSize ? true : false
                 }else{
-                    self.firstPageCacheSource["\(self.yxs_user.curruntChild?.id ?? 0)"] = list
+                    self.firstPageCacheSource["\(self.yxs_user.currentChild?.id ?? 0)"] = list
                 }
             }else{
                 self.loadMore = result["hasNext"].boolValue
@@ -238,7 +238,7 @@ class YXSHomeController: YXSHomeBaseController {
                 //更早
                 self.yxs_dataSource[2].items.append(model)
             }
-            YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource, childrenId: self.yxs_user.curruntChild?.id)
+            YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource, childrenId: self.yxs_user.currentChild?.id)
             self.group.leave()
         }) { (msg, code) in
             self.group.leave()
@@ -294,7 +294,7 @@ class YXSHomeController: YXSHomeBaseController {
     
     // MARK: - tableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dealSelectRow(didSelectRowAt: indexPath, childModel: yxs_user.curruntChild)
+        dealSelectRow(didSelectRowAt: indexPath, childModel: yxs_user.currentChild)
     }
     
     
@@ -352,8 +352,8 @@ extension YXSHomeController: YXSRouterEventProtocol{
     func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
         switch eventName {
         case kYXSHomeTableHeaderViewLookClassEvent:
-            if YXSPersonDataModel.sharePerson.personRole == .PARENT && self.yxs_user.curruntChild?.grade?.id == nil{
-                UIUtil.curruntNav().pushViewController(YXSClassAddController())
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT && self.yxs_user.currentChild?.grade?.id == nil{
+                UIUtil.currentNav().pushViewController(YXSClassAddController())
                 return
             }
             let vc:UIViewController = YXSPersonDataModel.sharePerson.personRole == .PARENT ? YXSParentClassListViewController(): YXSTeacherClassListViewController()
@@ -367,14 +367,14 @@ extension YXSHomeController: YXSRouterEventProtocol{
             ///先清除缓存记录
              lastRecordId = 0
              lastRecordTime = Date().toString(format: DateFormatType.custom(kCommonDateFormatString))
-             self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList(childrenId: yxs_user.curruntChild?.id)
+             self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList(childrenId: yxs_user.currentChild?.id)
              self.tableView.reloadData()
              
             yxs_refreshData()
         case kYXSHomeTableHeaderViewReloadLocationEvent:
             yxs_cheakLocationAlert()
         case kYXSHomeChildViewAddChild:
-            UIUtil.curruntNav().pushViewController(YXSClassAddController())
+            UIUtil.currentNav().pushViewController(YXSClassAddController())
         case kYXSHomeTableHeaderViewPublishEvent:
             yxs_publishClick()
         default:
@@ -390,7 +390,7 @@ extension YXSHomeController{
         YXSEducationFWeatherCurrentRequest.init(city: city).request({ (model:YXSWeathModel) in
             self.tableHeaderView.yxs_dayLabel.isUserInteractionEnabled = false
             self.yxs_weathModel = model
-            model.curruntRequestData = Date()
+            model.currentRequestData = Date()
             NSKeyedArchiver.archiveRootObject(model, toFile: NSUtil.yxs_archiveFile(file: "weatherModel"))
         }) { (msg, code) in
             
@@ -511,7 +511,7 @@ extension YXSHomeController{
             }
             
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                var curruntModel: YXSHomeListModel?
+                var currentModel: YXSHomeListModel?
                 var indexSection = 0
                 var indexRow = 0
                 for (section,sectionModel) in self.yxs_dataSource.enumerated(){
@@ -519,27 +519,27 @@ extension YXSHomeController{
                         if rowModel.serviceId == model.serviceId{
                             indexSection = section
                             indexRow = index
-                            curruntModel = rowModel
+                            currentModel = rowModel
                             break
                         }
                     }
                 }
                 
-                if let curruntModel = curruntModel{
+                if let currentModel = currentModel{
                     if model.msgType == 0{
-                        if !(curruntModel.committedList?.contains(model.childrenId ?? 0) ?? false){
-                                curruntModel.committedList?.append(model.childrenId ?? 0)
+                        if !(currentModel.committedList?.contains(model.childrenId ?? 0) ?? false){
+                                currentModel.committedList?.append(model.childrenId ?? 0)
                         }
                         
-                        if !(curruntModel.readList?.contains(model.childrenId ?? 0) ?? false){
-                            curruntModel.readList?.append(model.childrenId ?? 0)
+                        if !(currentModel.readList?.contains(model.childrenId ?? 0) ?? false){
+                            currentModel.readList?.append(model.childrenId ?? 0)
                         }
                     }
                     
                     if model.msgType == 5{
-                        if curruntModel.commitCount > 0, (curruntModel.committedList?.contains(model.childrenId ?? 0) ?? false){
-                            let index = curruntModel.committedList?.firstIndex(of: model.childrenId ?? 0) ?? 0
-                            curruntModel.committedList?.remove(at: index)
+                        if currentModel.commitCount > 0, (currentModel.committedList?.contains(model.childrenId ?? 0) ?? false){
+                            let index = currentModel.committedList?.firstIndex(of: model.childrenId ?? 0) ?? 0
+                            currentModel.committedList?.remove(at: index)
                         }
                     }
                     yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))

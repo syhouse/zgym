@@ -72,13 +72,13 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     @objc override func loadData2() {
         if folderHasNext {
             /// 请求文件夹
-            YXSSatchelFolderPageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+            YXSSatchelFolderPageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 weakSelf.folderHasNext = json["hasNext"].boolValue
 
                 let tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
                 
-                if weakSelf.curruntPage == 1 {
+                if weakSelf.currentPage == 1 {
                     weakSelf.folderList.removeAll()
                 }
                 weakSelf.folderList += tmpFolderList
@@ -106,7 +106,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                     
                 } else {
                     /// 文件夹没了 请求文件数据
-                    weakSelf.curruntPage = 1
+                    weakSelf.currentPage = 1
                     weakSelf.requestFile()
                 }
                 
@@ -124,13 +124,13 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     }
     
     @objc override func requestFile(completionHandler:(([YXSFileModel])->())? = nil) {
-        YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+        YXSSatchelFilePageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             let hasNext = json["hasNext"].boolValue
             weakSelf.loadMore = hasNext
             
             let tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
-            if weakSelf.curruntPage == 1 {
+            if weakSelf.currentPage == 1 {
                 weakSelf.fileList.removeAll()
             }
             weakSelf.fileList += tmpFileList
@@ -187,7 +187,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         workingGroup.enter()
         workingQueue.async {
             // 出组
-            YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+            YXSSatchelFilePageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"].boolValue
                 weakSelf.loadMore = hasNext
@@ -225,7 +225,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                     }
                 }
                 
-                if self.curruntPage == 1{
+                if self.currentPage == 1{
                     self.fileList.removeAll()
                 }
                 
@@ -599,7 +599,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 let item = fileList[indexPath.row]
                 
                 if item.fileType == "jpg" {
-                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], curruntIndex: 0)
+                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], currentIndex: 0)
                     
                 } else if item.fileType == "mp4" {
                     // 视频

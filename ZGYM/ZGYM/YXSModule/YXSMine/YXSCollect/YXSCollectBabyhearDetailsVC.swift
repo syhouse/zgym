@@ -52,7 +52,7 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
     
     // MARK: -loadData
     override func yxs_refreshData() {
-        curruntPage = 1
+        currentPage = 1
         loadData()
         
     }
@@ -63,14 +63,14 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
     
     func loadData() {
         if type == .voice {
-            YXSEducationBabyVoiceCollectionPageRequest.init(current: self.curruntPage, size: 20).request({ [weak self](json) in
+            YXSEducationBabyVoiceCollectionPageRequest.init(current: self.currentPage, size: 20).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 weakSelf.yxs_endingRefresh()
-                if weakSelf.curruntPage == 1 {
+                if weakSelf.currentPage == 1 {
                     weakSelf.dataSource.removeAll()
                 }
                 let joinList = Mapper<YXSMyCollectModel>().mapArray(JSONObject: json["records"].object) ?? [YXSMyCollectModel]()
-                if json["pages"].intValue > weakSelf.curruntPage {
+                if json["pages"].intValue > weakSelf.currentPage {
                     weakSelf.loadMore = true
                 } else {
                     weakSelf.loadMore = false
@@ -82,14 +82,14 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
         } else {
-            YXSEducationBabyAlbumCollectionPageRequset.init(current: self.curruntPage, size: 20).request({ [weak self](json) in
+            YXSEducationBabyAlbumCollectionPageRequset.init(current: self.currentPage, size: 20).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 weakSelf.yxs_endingRefresh()
-                if weakSelf.curruntPage == 1 {
+                if weakSelf.currentPage == 1 {
                     weakSelf.dataSource.removeAll()
                 }
                 let joinList = Mapper<YXSMyCollectModel>().mapArray(JSONObject: json["records"].object) ?? [YXSMyCollectModel]()
-                if json["pages"].intValue > weakSelf.curruntPage {
+                if json["pages"].intValue > weakSelf.currentPage {
                     weakSelf.loadMore = true
                 } else {
                     weakSelf.loadMore = false
@@ -192,8 +192,8 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
                 guard let weakSelf = self else {return}
                 let joinList = Mapper<YXSTrackModel>().mapArray(JSONObject: json["tracks"].object) ?? [YXSTrackModel]()
                 if joinList.count > 0 {
-                    let curruntTrack = joinList.first
-                    if let  track = XMTrack.init(dictionary: curruntTrack?.toJSON()){
+                    let currentTrack = joinList.first
+                    if let  track = XMTrack.init(dictionary: currentTrack?.toJSON()){
                         let vc = YXSPlayingViewController.init(track: track, trackList: [track])
                         weakSelf.navigationController?.pushViewController(vc)
                     }

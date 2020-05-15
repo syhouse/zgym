@@ -92,7 +92,7 @@ class YXSClassScheduleCardDetialController: YXSBaseViewController{
     }
     
     @objc func showImage(){
-        YXSShowBrowserHelper.showImage(urls: [URL.init(string: yxs_model?.imageUrl ?? "")!], curruntIndex: nil)
+        YXSShowBrowserHelper.showImage(urls: [URL.init(string: yxs_model?.imageUrl ?? "")!], currentIndex: nil)
     }
     
     // MARK: -yxs_loadData
