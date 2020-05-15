@@ -16,7 +16,7 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
         print(message.name) //name : nativeMethod
         print(message.body) //js回传参数
     }
-    
+    var onBackBlock:(()->())?
     var isCache: Bool = false
     var scriptKey: String = ""
     override func viewDidLoad() {
@@ -34,7 +34,6 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
         if URL(string: self.loadUrl ?? "") != nil {
             MBProgressHUD.yxs_showLoading(inView: self.view)
         }
-        
     }
     
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
@@ -124,9 +123,12 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
             webView.goBack()
             
         } else {
+            onBackBlock?()
             self.navigationController?.popViewController()
         }
     }
+    
+    
     
     // MARK: - LazyLoad
     lazy private var webView: WKWebView = {

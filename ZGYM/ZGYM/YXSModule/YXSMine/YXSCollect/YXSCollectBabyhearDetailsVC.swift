@@ -216,11 +216,18 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
         if editingStyle == .delete {
             let model = dataSource[indexPath.row]
             currentIndex = indexPath.row
-            if type == .voice {
-                self.cancelCollect(id: model.voiceId ?? 0, Type: .voice)
-            } else {
-                self.cancelCollect(id: model.albumId ?? 0, Type: .album)
-            }
+            let alert = UIAlertController.init(title: "是否取消该收藏", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction.init(title: "取消", style: .default, handler: { (action) in
+                
+            }))
+            alert.addAction(UIAlertAction.init(title: "确定", style: .default, handler: { (action) in
+                if self.type == .voice {
+                    self.cancelCollect(id: model.voiceId ?? 0, Type: .voice)
+                } else {
+                    self.cancelCollect(id: model.albumId ?? 0, Type: .album)
+                }
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {

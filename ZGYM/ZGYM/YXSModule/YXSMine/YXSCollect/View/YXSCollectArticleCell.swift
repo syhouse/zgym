@@ -26,7 +26,7 @@ class YXSCollectArticleCell: YXSBaseTableViewCell {
             make.top.equalTo(15)
             make.left.equalTo(15)
             make.right.equalTo(iconImageV.snp_left).offset(-15)
-            make.height.equalTo(40)
+            make.height.equalTo(60)
         }
         
         subTitleLabel.snp.makeConstraints { (make) in
@@ -44,13 +44,18 @@ class YXSCollectArticleCell: YXSBaseTableViewCell {
     func setModel(model: YXSChildContentHomeListModel) {
         iconImageV.sd_setImage(with: URL(string: model.cover ?? ""), placeholderImage: UIImage.init(named: "yxs_synclass_foldercell_default"), options: .refreshCached, completed: nil)
         titleLabel.text = model.title
-        subTitleLabel.text = "育儿好文"
+        if model.type ?? 1 == 1 {
+            subTitleLabel.text = "育儿好文"
+        } else {
+            subTitleLabel.text = "优期刊第\(model.numPeriods ?? 1)期"
+        }
+        
     }
     
     // MARK: -getter&setter
     lazy var titleLabel: YXSLabel = {
        let label = YXSLabel()
-        label.numberOfLines = 2
+        label.numberOfLines = 0
        label.font = UIFont.systemFont(ofSize: 16)
        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), night: kNightBCC6D4)
        return label

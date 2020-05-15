@@ -31,7 +31,7 @@ class YXSCollectBabyhearListVC: YXSBaseViewController {
     
     func congfigUI(){
         listContainerView = JXCategoryListContainerView.init(type: .collectionView, delegate: self)
-        
+        listContainerView.scrollView.isScrollEnabled = false
         self.view.addSubview(categoryView)
         self.view.addSubview(listContainerView)
         categoryView.snp.makeConstraints { (make) in
@@ -79,9 +79,9 @@ extension YXSCollectBabyhearListVC: JXCategoryListContainerViewDelegate, JXCateg
         return YXSCollectBabyhearDetailsVC.init(type: types[index])
     }
     
-    func categoryView(_ categoryView: JXCategoryBaseView!, scrollingFromLeftIndex leftIndex: Int, toRightIndex rightIndex: Int, ratio: CGFloat) {
-        self.listContainerView?.scrolling(fromLeftIndex: leftIndex, toRightIndex: rightIndex, ratio: ratio, selectedIndex: categoryView.selectedIndex)
-    }
+//    func categoryView(_ categoryView: JXCategoryBaseView!, scrollingFromLeftIndex leftIndex: Int, toRightIndex rightIndex: Int, ratio: CGFloat) {
+//        self.listContainerView?.scrolling(fromLeftIndex: leftIndex, toRightIndex: rightIndex, ratio: ratio, selectedIndex: categoryView.selectedIndex)
+//    }
     
     func categoryView(_ categoryView: JXCategoryBaseView!, didSelectedItemAt index: Int) {
         self.listContainerView?.didClickSelectedItem(at: index)
