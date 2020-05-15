@@ -133,13 +133,13 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         praiseButton.snp.makeConstraints { (make) in
             make.right.equalTo(-15)
             make.centerY.equalTo(reviewControl)
-            make.width.height.equalTo(18)
+            make.width.height.equalTo(30)
         }
 
         commentButton.snp.makeConstraints { (make) in
-            make.right.equalTo(praiseButton.snp_left).offset(-15)
+            make.right.equalTo(praiseButton.snp_left).offset(-30)
             make.centerY.equalTo(reviewControl)
-            make.width.height.equalTo(18)
+            make.width.height.equalTo(30)
         }
 
         remarkView.snp.makeConstraints { (make) in
@@ -194,6 +194,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         finishView.isHidden = true
         classStartLabelBtn.isHidden = true
         goodHomeworkLabelBtn.isHidden = true
+        showAllButton.isHidden = true
         ///是否展示修改按钮
         if self.model?.isRemark == 1 || self.model?.isGood == 1{
             homeWorkChangeButton.isHidden = true
@@ -604,6 +605,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         let button = YXSButton.init()
         button.setImage(UIImage.init(named: "yxs_friend_circle_comment"), for: .normal)
         button.addTarget(self, action: #selector(commentClick), for: .touchUpInside)
+        button.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
         return button
     }()
 
@@ -611,6 +613,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         let button = YXSButton.init()
         button.setImage(UIImage.init(named: "yxs_friend_circle_prise_select"), for: .selected)
         button.setImage(UIImage.init(named: "yxs_friend_circle_prise_nomal"), for: .normal)
+        button.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
         button.addTarget(self, action: #selector(praiseClick), for: .touchUpInside)
         return button
     }()

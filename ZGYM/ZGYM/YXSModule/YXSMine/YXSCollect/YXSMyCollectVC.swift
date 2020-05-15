@@ -10,12 +10,13 @@ import NightNight
 
 class YXSMyCollectVC: YXSBaseTableViewController {
     
-    let titles:[String] = ["宝宝听","文章","同步课堂"]
+    let dataSouer = [["title":"宝宝听", "imgName":"yxs_babyhear_icon"],["title":"文章", "imgName":"yxs_childcontent_icon"]]
+//    ,["title":"同步课堂", "imgName":"yxs_synclass_icon"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "收藏"
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
+        self.title = "我的收藏"
+        tableView.register(YXSBaseTableViewCell.self, forCellReuseIdentifier: "YXSMyCollectVCCell")
         
     }
     
@@ -28,14 +29,15 @@ class YXSMyCollectVC: YXSBaseTableViewController {
         return 1
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return titles.count
+        return dataSouer.count
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell")!
+        let cell: YXSBaseTableViewCell = tableView.dequeueReusableCell(withIdentifier: "YXSMyCollectVCCell") as! YXSBaseTableViewCell
         cell.contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
-        cell.textLabel?.text = titles[indexPath.row]
+        cell.imageView?.image = UIImage.init(named: dataSouer[indexPath.row]["imgName"] ?? "")
+        cell.textLabel?.text = dataSouer[indexPath.row]["title"]
         cell.textLabel?.mixedTextColor = MixedColor(normal: 0x575A60, night: 0x575A60)
-
+        cell.accessoryType = .disclosureIndicator
         if indexPath.row == 0 {
             cell.yxs_addLine(position: LinePosition.top, color: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), leftMargin: 0, rightMargin: 0, lineHeight: 0.5)
         }
@@ -47,7 +49,6 @@ class YXSMyCollectVC: YXSBaseTableViewController {
         return 55.0
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
             let vc = YXSCollectBabyhearListVC()

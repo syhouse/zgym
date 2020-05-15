@@ -49,6 +49,8 @@ target 'ZGYM' do
     pod 'AMap3DMap'
     pod 'Masonry'
 
+    pod 'Popover', '~> 1.3.0'
+    
 #   分享
     pod 'WechatOpenSDK' , '~> 1.8.6'
     

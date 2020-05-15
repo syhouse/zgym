@@ -338,6 +338,10 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
                     fileFirstView.setModel(model: (self.model?.fileList[index])!)
                     fileSecondView.isHidden = true
                     fileThirdView.isHidden = true
+                    fileFirstView.snp.updateConstraints({ (make) in
+                        make.top.equalTo(self.linkView.snp_bottom).offset(10)
+                        make.height.equalTo(44)
+                    })
                     fileSecondView.snp.updateConstraints({ (make) in
                         make.top.equalTo(self.fileFirstView.snp_bottom).offset(0)
                         make.height.equalTo(0)

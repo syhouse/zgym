@@ -457,6 +457,18 @@ extension YXSCacheHelper {
             NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "MyCollectAlbumTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5()))
         }
     }
+    
+    /// 获取收藏的育儿文章数据
+    public static func yxs_getCacheMyCollectionChildContentTask() -> [YXSChildContentHomeListModel]{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "MyCollectChildContentTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5())) as? [YXSChildContentHomeListModel] ?? [YXSChildContentHomeListModel]()
+        return model
+    }
+    ///缓存收藏的育儿文章数据
+    public static func yxs_cacheMyCollectionChildContentTask(dataSource: [YXSChildContentHomeListModel]){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "MyCollectChildContentTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)".MD5()))
+        }
+    }
 }
 
 

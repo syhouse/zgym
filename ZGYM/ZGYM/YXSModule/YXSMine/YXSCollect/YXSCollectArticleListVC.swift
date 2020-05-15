@@ -16,11 +16,17 @@ class YXSCollectArticleListVC: YXSBaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "育儿文章"
-        self.loadData()
+//        self.loadData()
         self.scrollView.snp.remakeConstraints { (make) in
             make.edges.equalTo(0)
         }
         tableView.register(YXSCollectArticleCell.self, forCellReuseIdentifier: "YXSCollectArticleCell")
+        self.dataSource = YXSCacheHelper.yxs_getCacheMyCollectionChildContentTask()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.loadData()
     }
     
     // MARK: -loadData
@@ -54,6 +60,7 @@ class YXSCollectArticleListVC: YXSBaseTableViewController {
                 weakSelf.loadMore = false
             }
             weakSelf.tableView.reloadData()
+            YXSCacheHelper.yxs_cacheMyCollectionChildContentTask(dataSource: weakSelf.dataSource)
         }) { (msg, code) in
             self.yxs_endingRefresh()
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -123,7 +130,15 @@ class YXSCollectArticleListVC: YXSBaseTableViewController {
         if editingStyle == .delete {
             let model = dataSource[indexPath.row]
             currentIndex = indexPath.row
-            self.cancelCollect(articleId: model.id ?? 0)
+            let alert = UIAlertController.init(title: "是否取消该收藏", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction.init(title: "取消", style: .default, handler: { (action) in
+                
+            }))
+            alert.addAction(UIAlertAction.init(title: "确定", style: .default, handler: { (action) in
+                self.cancelCollect(articleId: model.id ?? 0)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            
         }
     }
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
