@@ -387,7 +387,7 @@ class YXSFileUploadHelper: NSObject {
     
     /**
      *  注意！
-     *  当storageType 为 classFile时 classId必填；
+     *  当storageType 为 classFile、star、curriculum时 classId必填；
      *  当storageType 为 album时 classId、albumId必填
      */
     func uploadPHAssetDataSource(mediaAssets:[PHAsset],storageType: YXSStorageType, classId: Int? = nil, albumId: Int? = nil, progress : ((_ progress: CGFloat)->())?, sucess:(([YXSFileModel])->())?,failureHandler: ((String, String) -> ())?) {
