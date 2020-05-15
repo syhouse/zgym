@@ -13,14 +13,18 @@ import ObjectMapper
 enum SearchType {
     case classFile
     case satchel
+//    case satchelToClass
 }
-/// 文件搜索界面
+/// 文件搜索界面(班级文件、书包)
 class YXSSearchFileViewController: YXSBaseTableViewController {
 
     /// 文件列表
     var fileList: [YXSFileModel] = [YXSFileModel]()
     var searchType: SearchType?
     var classId: Int?
+//    /// 选中的文件
+//    var selectedFileList: [YXSFileModel] = [YXSFileModel]()
+//    var completionHandler:(([YXSFileModel])->())?
     
     init(searchType: SearchType, classId: Int? = nil) {
         super.init()
@@ -28,6 +32,13 @@ class YXSSearchFileViewController: YXSBaseTableViewController {
         self.classId = classId
     }
     
+//    init(searchType: SearchType, selectedFileList: [YXSFileModel], completionHandler:(([YXSFileModel])->())?) {
+//        super.init()
+//        self.searchType = .satchelToClass
+//        self.selectedFileList = selectedFileList
+//        self.completionHandler = 
+//    }
+//    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

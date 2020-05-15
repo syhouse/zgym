@@ -207,90 +207,90 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         }
     }
     
-    @objc func loadData() {
-        
-        let workingGroup = DispatchGroup()
-        let workingQueue = DispatchQueue(label: "request_queue")
-        
-        var tmpFolderList = [YXSFolderModel]()
-        var tmpFileList = [YXSFileModel]()
-        
-        // 入组
-        workingGroup.enter()
-        workingQueue.async {
-            // 出组
-            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: 1, folderId: self.parentFolderId).request({ [weak self](json) in
-                guard let weakSelf = self else {return}
-                weakSelf.folderHasNext = json["hasNext"].boolValue
-                
-                
-                tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
-                workingGroup.leave()
-                
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
-        }
-        
-        // 入组
-        workingGroup.enter()
-        workingQueue.async {
-            // 出组
-            YXSFilePageQueryRequest(classId: self.classId, currentPage: self.currentPage, folderId: self.parentFolderId).request({ [weak self](json) in
-                guard let weakSelf = self else {return}
-                
-                let hasNext = json["hasNext"].boolValue
-                weakSelf.loadMore = hasNext
-                
-                tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
-                workingGroup.leave()
-                
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
-        }
-
-        // 调度组里的任务都执行完毕
-        workingGroup.notify(queue: workingQueue) {
-            DispatchQueue.main.async {
-                if self.isTbViewEditing {
-                    /// 编辑状态 下拉刷新 填充选中的Cell
-                    for sub in self.getSelectedFolerList() {
-                        for obj in tmpFolderList {
-                            if sub.id == obj.id {
-                                obj.isSelected = true
-                                break
-                            }
-                        }
-                    }
-                    
-
-                    for sub in self.getSelectedFileList() {
-                        for obj in tmpFileList {
-                            if sub.id == obj.id {
-                                obj.isSelected = true
-                                break
-                            }
-                        }
-                    }
-                }
-                
-                if self.currentPage == 1{
-                    self.fileList.removeAll()
-                }
-                
-                self.folderList = tmpFolderList
-                self.fileList += tmpFileList
-                
-                self.tableView.reloadData()
-                
-                YXSCacheHelper.yxs_cacheClassFolderList(dataSource: self.folderList, classId: self.classId, parentFolderId: self.parentFolderId)
-                YXSCacheHelper.yxs_cacheClassFileList(dataSource: self.fileList, classId: self.classId, parentFolderId: self.parentFolderId)
-                
-                self.yxs_endingRefresh()
-            }
-        }
-    }
+//    @objc func loadData() {
+//
+//        let workingGroup = DispatchGroup()
+//        let workingQueue = DispatchQueue(label: "request_queue")
+//
+//        var tmpFolderList = [YXSFolderModel]()
+//        var tmpFileList = [YXSFileModel]()
+//
+//        // 入组
+//        workingGroup.enter()
+//        workingQueue.async {
+//            // 出组
+//            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: 1, folderId: self.parentFolderId).request({ [weak self](json) in
+//                guard let weakSelf = self else {return}
+//                weakSelf.folderHasNext = json["hasNext"].boolValue
+//
+//
+//                tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
+//                workingGroup.leave()
+//
+//            }) { (msg, code) in
+//                MBProgressHUD.yxs_showMessage(message: msg)
+//            }
+//        }
+//
+//        // 入组
+//        workingGroup.enter()
+//        workingQueue.async {
+//            // 出组
+//            YXSFilePageQueryRequest(classId: self.classId, currentPage: self.currentPage, folderId: self.parentFolderId).request({ [weak self](json) in
+//                guard let weakSelf = self else {return}
+//
+//                let hasNext = json["hasNext"].boolValue
+//                weakSelf.loadMore = hasNext
+//
+//                tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
+//                workingGroup.leave()
+//
+//            }) { (msg, code) in
+//                MBProgressHUD.yxs_showMessage(message: msg)
+//            }
+//        }
+//
+//        // 调度组里的任务都执行完毕
+//        workingGroup.notify(queue: workingQueue) {
+//            DispatchQueue.main.async {
+//                if self.isTbViewEditing {
+//                    /// 编辑状态 下拉刷新 填充选中的Cell
+//                    for sub in self.getSelectedFolerList() {
+//                        for obj in tmpFolderList {
+//                            if sub.id == obj.id {
+//                                obj.isSelected = true
+//                                break
+//                            }
+//                        }
+//                    }
+//
+//
+//                    for sub in self.getSelectedFileList() {
+//                        for obj in tmpFileList {
+//                            if sub.id == obj.id {
+//                                obj.isSelected = true
+//                                break
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                if self.currentPage == 1{
+//                    self.fileList.removeAll()
+//                }
+//
+//                self.folderList = tmpFolderList
+//                self.fileList += tmpFileList
+//
+//                self.tableView.reloadData()
+//
+//                YXSCacheHelper.yxs_cacheClassFolderList(dataSource: self.folderList, classId: self.classId, parentFolderId: self.parentFolderId)
+//                YXSCacheHelper.yxs_cacheClassFileList(dataSource: self.fileList, classId: self.classId, parentFolderId: self.parentFolderId)
+//
+//                self.yxs_endingRefresh()
+//            }
+//        }
+//    }
     
     /// 批量删除
     @objc func batchDeleteRequest(fileIdList:[Int] = [Int](), folderIdList:[Int] = [Int](), completionHandler:(()->Void)?) {
@@ -359,7 +359,8 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             YXSFileUploadFileRequest(classId: weakSelf.classId, folderId: weakSelf.parentFolderId, classFileList: choseFileList).request({ (json) in
                 DispatchQueue.main.async {
                     MBProgressHUD.yxs_showMessage(message: "上传成功")
-                    weakSelf.loadData()
+//                    weakSelf.loadData()
+                    weakSelf.loadData2()
                     DispatchQueue.main.asyncAfter(deadline: .now()+0.89) {
                         vc.navigationController?.popToViewController(weakSelf, animated: true)
                     }
@@ -378,8 +379,8 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             if btn.titleLabel?.text == "创建" {
                 YXSFileCreateFolderRequest(classId: weakSelf.classId, folderName: result, parentId: weakSelf.parentFolderId).request({ [weak self](json) in
                     guard let weakSelf = self else {return}
-                    weakSelf.loadData()
-                    
+//                    weakSelf.loadData()
+                    weakSelf.loadData2()
                 }) { (msg, code) in
                     MBProgressHUD.yxs_showMessage(message: msg)
                 }
@@ -561,7 +562,8 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 DispatchQueue.main.async {
                     MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
                     MBProgressHUD.yxs_showMessage(message: "上传成功")
-                    weakSelf.loadData()
+//                    weakSelf.loadData()
+                    weakSelf.loadData2()
                 }
                 
             }) { (msg, code) in

@@ -20,6 +20,8 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     var fileList: [YXSFileModel] = [YXSFileModel]()
     /// 选中的文件集合
     var selectedFileList: [YXSFileModel] = [YXSFileModel]()
+    /// 文件夹是否有加载更多
+    var folderHasNext: Bool = true
     
     /// 侦听下一级页面 选中的文件发生变化 刷新底部View
     var selectedItemsDidChangeBlock:((_ selectedFileList: [YXSFileModel])->())?
@@ -48,29 +50,42 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
         view.mixedBackgroundColor = MixedColor(normal: kNightFFFFFF, night: kNightBackgroundColor)
         
         self.view.addSubview(searchBar)
+        searchBar.editingDidBeginBlock = {[weak self](view) in
+            guard let weakSelf = self else {return}
+            weakSelf.loadMore = false
+            weakSelf.folderList.removeAll()
+            weakSelf.searchRequest(keyword: "", completionHandler: nil)
+//            weakSelf.searchRequest(keyword: "") { (list) in
+//                weakSelf.fileList = list
+//                weakSelf.tableView.reloadData()
+//            }
+        }
+        
         searchBar.editingChangedBlock = {[weak self](view) in
             guard let weakSelf = self else {return}
-            // 出组
-            YXSSatchelFilePageQueryRequest(currentPage: 1, parentFolderId: weakSelf.parentFolderId, keyword: view.text ?? "").request({ [weak self](json) in
-                guard let weakSelf = self else {return}
-//                let hasNext = json["hasNext"].boolValue
-//                weakSelf.loadMore = hasNext
-                DispatchQueue.main.async {
-                    weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
-                    for sub in weakSelf.selectedFileList {
-                        for obj in weakSelf.fileList {
-                            if sub.id == obj.id {
-                                obj.isSelected = true
-                                break
-                            }
-                        }
-                    }
-                    weakSelf.tableView.reloadData()
-                }
-                
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
+            weakSelf.searchRequest(keyword: view.text ?? "", completionHandler: nil)
+//            weakSelf.searchRequest(keyword: "") { (list) in
+//                weakSelf.fileList = list
+//                weakSelf.tableView.reloadData()
+//            }
+//            YXSSatchelFilePageQueryRequest(currentPage: 1, parentFolderId: weakSelf.parentFolderId, keyword: view.text ?? "").request({ [weak self](json) in
+//                guard let weakSelf = self else {return}
+//                DispatchQueue.main.async {
+//                    weakSelf.fileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+//                    for sub in weakSelf.selectedFileList {
+//                        for obj in weakSelf.fileList {
+//                            if sub.id == obj.id {
+//                                obj.isSelected = true
+//                                break
+//                            }
+//                        }
+//                    }
+//                    weakSelf.tableView.reloadData()
+//                }
+//
+//            }) { (msg, code) in
+//                MBProgressHUD.yxs_showMessage(message: msg)
+//            }
         }
         
         searchBar.snp.makeConstraints({ (make) in
@@ -113,88 +128,97 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
     
     // MARK: - Request
     override func yxs_refreshData() {
-        loadData(keyword: "")
+        loadMore = true
+        folderHasNext = true
+        loadData()
     }
     
     override func yxs_loadNextPage() {
-        loadData(keyword: "")
+        loadData()
     }
     
-     @objc func loadData(keyword:String) {
-            
-        let workingGroup = DispatchGroup()
-        let workingQueue = DispatchQueue(label: "request_queue")
-        
-        var tmpFolderList = [YXSFolderModel]()
-        var tmpFileList = [YXSFileModel]()
-        
-        // 入组
-        workingGroup.enter()
-        workingQueue.async {
-            // 出组
-            YXSSatchelFolderPageQueryRequest(currentPage: 1, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+    @objc func loadData() {
+        if folderHasNext {
+            /// 请求文件夹
+            YXSSatchelFolderPageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
-//                let hasNext = json["hasNext"].boolValue
-//                weakSelf.loadMore = hasNext
-                
-                tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
-                workingGroup.leave()
-                
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
-        }
-        
-        // 入组
-        workingGroup.enter()
-        workingQueue.async {
-            // 出组
-            YXSSatchelFilePageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
-                guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"].boolValue
-                weakSelf.loadMore = hasNext
-                
-                tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
-                workingGroup.leave()
-                
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
-            
-        }
+                weakSelf.folderHasNext = json["hasNext"].boolValue
 
-        // 调度组里的任务都执行完毕
-        workingGroup.notify(queue: workingQueue) {
-            DispatchQueue.main.async {
-                /// 填充选中的Cell
-                for sub in self.selectedFileList {
-                    for obj in tmpFileList {
-                        if sub.id == obj.id {
-                            obj.isSelected = true
-                            break
-                        }
+                let tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                
+                if weakSelf.currentPage == 1 {
+                    weakSelf.folderList.removeAll()
+                }
+                weakSelf.folderList += tmpFolderList
+                
+//                YXSCacheHelper.yxs_cacheSatchelFolderList(dataSource: weakSelf.folderList, parentFolderId: weakSelf.parentFolderId)
+                
+                if weakSelf.folderHasNext {
+                    /// 文件夹还有
+                    weakSelf.fileList.removeAll()
+//                    YXSCacheHelper.yxs_cacheSatchelFileList(dataSource: weakSelf.fileList, parentFolderId: weakSelf.parentFolderId)
+                    weakSelf.tableView.reloadData()
+                    weakSelf.yxs_endingRefresh()
+                    
+                } else {
+                    /// 文件夹没了 请求文件数据
+                    weakSelf.currentPage = 1
+                    weakSelf.requestFile()
+                }
+                
+            }) { [weak self](msg, code) in
+                guard let weakSelf = self else {return}
+                
+                MBProgressHUD.yxs_showMessage(message: msg)
+                weakSelf.yxs_endingRefresh()
+            }
+            
+        } else {
+            /// 请求文件
+            requestFile()
+        }
+    }
+    
+    @objc func requestFile(completionHandler:(([YXSFileModel])->())? = nil) {
+        
+        YXSSatchelFilePageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            let hasNext = json["hasNext"].boolValue
+            weakSelf.loadMore = hasNext
+            
+            let tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+            if weakSelf.currentPage == 1{
+                weakSelf.fileList.removeAll()
+            }
+            weakSelf.fileList += tmpFileList
+            
+            /// 填充选中状态
+            for sub in weakSelf.selectedFileList {
+                for item in weakSelf.fileList {
+                    if sub.id == item.id {
+                        item.isSelected = sub.isSelected
+                        break
                     }
                 }
-                
-                if self.currentPage == 1{
-                    self.fileList.removeAll()
-                }
-                
-                self.folderList = tmpFolderList
-                self.fileList += tmpFileList
-                
-                self.tableView.reloadData()
-                self.yxs_endingRefresh()
             }
+            completionHandler?(tmpFileList)
+            weakSelf.tableView.reloadData()
+            weakSelf.yxs_endingRefresh()
+            
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+            
+            MBProgressHUD.yxs_showMessage(message: msg)
+            weakSelf.yxs_endingRefresh()
         }
     }
     
     @objc func searchRequest(keyword:String, completionHandler:((_ result: [YXSFileModel])->())?) {
         
-        YXSSatchelDocFilePageQueryRequest(currentPage: self.currentPage, keyword: keyword).request({ [weak self](json) in
+        YXSSatchelDocFilePageQueryRequest(currentPage: 1, keyword: keyword).request({ [weak self](json) in
             guard let weakSelf = self else {return}
-            let hasNext = json["hasNext"].boolValue
-            weakSelf.loadMore = hasNext
+//            let hasNext = json["hasNext"].boolValue
+//            weakSelf.loadMore = hasNext
             
             let list = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
             
@@ -208,8 +232,9 @@ class YXSChoseFileViewController: YXSBaseTableViewController {
                 }
             }
             
+            weakSelf.fileList = list
             completionHandler?(list)
-            
+            weakSelf.tableView.reloadData()
             
         }) { [weak self](msg, code) in
             guard let weakSelf = self else {return}

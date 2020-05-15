@@ -11,14 +11,14 @@ import NightNight
 
 class YXSSearchView: UIView {
 
-    
+    var editingDidBeginBlock: ((_ view:UITextField)->())?
     var editingChangedBlock: ((_ view:UITextField)->())?
     override init(frame: CGRect) {
         super.init(frame: frame)
 //        self.backgroundColor = UIColor.white
         self.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
         
-//        self.tfInput.addTarget(self, action: #selector(editingDidBegin), for: .editingDidBegin)
+        self.tfInput.addTarget(self, action: #selector(editingDidBegin), for: .editingDidBegin)
 //        self.tfInput.addTarget(self, action: #selector(editingDidEnd), for: .editingDidEnd)
         self.tfInput.addTarget(self, action: #selector(editingChanged), for: .editingChanged)
         
@@ -52,7 +52,19 @@ class YXSSearchView: UIView {
             make.left.equalTo(self.bgMask.snp_right).offset(10)
         })
      
-        editingDidBegin()
+        UIView.animate(withDuration: 0.3) {
+            self.bgMask.snp.updateConstraints({ (make) in
+                make.right.equalTo(-50)
+            })
+
+            self.panel.snp.remakeConstraints({ (make) in
+                make.left.equalTo(self.bgMask.snp_left).offset(15)
+                make.centerY.equalTo(self.bgMask.snp_centerY)
+            })
+
+            self.layoutIfNeeded()
+        }
+//        editingDidBegin()
     }
     
     required init?(coder: NSCoder) {
@@ -65,18 +77,8 @@ class YXSSearchView: UIView {
     }
     
     @objc func editingDidBegin() {
-        UIView.animate(withDuration: 0.3) {
-            self.bgMask.snp.updateConstraints({ (make) in
-                make.right.equalTo(-50)
-            })
-            
-            self.panel.snp.remakeConstraints({ (make) in
-                make.left.equalTo(self.bgMask.snp_left).offset(15)
-                make.centerY.equalTo(self.bgMask.snp_centerY)
-            })
-              
-            self.layoutIfNeeded()
-        }
+        editingDidBeginBlock?(self.tfInput)
+
     }
     
     @objc func editingDidEnd() {

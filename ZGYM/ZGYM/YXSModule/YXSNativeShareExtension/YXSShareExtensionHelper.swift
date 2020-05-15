@@ -86,7 +86,7 @@ class YXSShareExtensionHelper: NSObject {
                     MBProgressHUD.yxs_hideHUDInView(view: vc.view)
                     MBProgressHUD.yxs_showMessage(message: "上传成功")
                     completionHandler?()
-                    vc.loadData()
+                    vc.loadData2()
                 }
                 
             }) { (msg, code) in
@@ -124,7 +124,7 @@ class YXSShareExtensionHelper: NSObject {
                         MBProgressHUD.yxs_hideHUDInView(view: vc.view)
                         MBProgressHUD.yxs_showMessage(message: "上传成功")
                         completionHandler?()
-                        vc.loadData()
+                        vc.loadData2()
                     }
 
                 }) { (msg, code) in
