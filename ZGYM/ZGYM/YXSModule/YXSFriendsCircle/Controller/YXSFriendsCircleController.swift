@@ -26,7 +26,7 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
     var classCircleId: Int?
     
     /// 当前操作的IndexPath
-    var curruntIndexPath: IndexPath?
+    var currentIndexPath: IndexPath?
     
     /// 筛选数据
     var selectModels:[YXSSelectModel]!
@@ -35,7 +35,7 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
     var classes: [YXSClassModel] = [YXSClassModel]()
     
     /// 当前选择条件
-    var curruntSelectModel:YXSSelectModel = YXSSelectModel.init(text: "全部", isSelect: true, paramsKey: "all")
+    var currentSelectModel:YXSSelectModel = YXSSelectModel.init(text: "全部", isSelect: true, paramsKey: "all")
     
     /// 是单个详情
     var isDetial: Bool = false
@@ -150,7 +150,7 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
     
     // MARK: - loadData
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         loadData()
     }
     
@@ -164,18 +164,18 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
             return
         }
         
-        let own = curruntSelectModel.paramsKey == "own" ? true : nil
-        let paramsIndex: Int? = Int(curruntSelectModel.paramsKey)
+        let own = currentSelectModel.paramsKey == "own" ? true : nil
+        let paramsIndex: Int? = Int(currentSelectModel.paramsKey)
         var typePublisher: PersonRole?
         if let userType = userType{
             typePublisher = userType == PersonRole.TEACHER.rawValue ? PersonRole.TEACHER : .PARENT
         }else{
-            typePublisher = curruntSelectModel.paramsKey == PersonRole.TEACHER.rawValue ? PersonRole.TEACHER : nil
+            typePublisher = currentSelectModel.paramsKey == PersonRole.TEACHER.rawValue ? PersonRole.TEACHER : nil
         }
         
-        YXSEducationClassCircleTimeAxisPageRequest.init(current: curruntPage, own: own, typePublisher: typePublisher, gradeId: paramsIndex, userIdPublisher: userIdPublisher).request({ (json) in
+        YXSEducationClassCircleTimeAxisPageRequest.init(current: currentPage, own: own, typePublisher: typePublisher, gradeId: paramsIndex, userIdPublisher: userIdPublisher).request({ (json) in
             self.yxs_endingRefresh()
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             let list = Mapper<YXSFriendCircleModel>().mapArray(JSONObject: json["records"].object) ?? [YXSFriendCircleModel]()
@@ -209,8 +209,8 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
         let YXSFriendCircleModel = dataSource[section]
         UIUtil.yxs_changeCommentFriendCirclePrise(YXSFriendCircleModel.classCircleId ?? 0, commentId: commentModel.id ?? 0,positon: positon) { [weak self](model) in
             guard let strongSelf = self else { return }
-            if let curruntIndexPath  = strongSelf.curruntIndexPath{
-                YXSFriendCircleModel.comments?.remove(at: curruntIndexPath.row)
+            if let currentIndexPath  = strongSelf.currentIndexPath{
+                YXSFriendCircleModel.comments?.remove(at: currentIndexPath.row)
             }
             strongSelf.reloadTableView()
         }
@@ -287,7 +287,7 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
     func showSelectView(){
         var isExit = false
         for model in selectModels{
-            if model.paramsKey == curruntSelectModel.paramsKey{
+            if model.paramsKey == currentSelectModel.paramsKey{
                 model.isSelect = true
                 isExit = true
                 break
@@ -299,7 +299,7 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
         YXSHomeListSelectView.showAlert(offset: CGPoint.init(x: 8, y: 58 + kSafeTopHeight), selects: selectModels) { [weak self](selectModel,selectModels) in
             guard let strongSelf = self else { return }
             strongSelf.selectModels = selectModels
-            strongSelf.curruntSelectModel = selectModel
+            strongSelf.currentSelectModel = selectModel
             strongSelf.yxs_refreshData()
             strongSelf.tableView.scrollToTop()
         }
@@ -307,8 +307,8 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
     // MARK: - private
     func showDelectComment(_ commentModel: YXSFriendsCommentModel,_ point: CGPoint, section: Int){
         var pointInView = point
-        if let curruntIndexPath = self.curruntIndexPath{
-            let cell = self.tableView.cellForRow(at: curruntIndexPath)
+        if let currentIndexPath = self.currentIndexPath{
+            let cell = self.tableView.cellForRow(at: currentIndexPath)
             if let friendCell  = cell as? YXSFriendsCircleCell{
                 
                 let rc = friendCell.convert(friendCell.comentLabel.frame, to: self.view)
@@ -490,13 +490,13 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
                 cell.commentBlock = {
                     [weak self] in
                     guard let strongSelf = self else { return }
-                    strongSelf.curruntIndexPath = indexPath
+                    strongSelf.currentIndexPath = indexPath
                     strongSelf.showComment(comments[indexPath.row], section: indexPath.section)
                 }
                 cell.cellLongTapEvent = {
                     [weak self](point) in
                     guard let strongSelf = self else { return }
-                    strongSelf.curruntIndexPath = indexPath
+                    strongSelf.currentIndexPath = indexPath
                     strongSelf.showDelectComment(comments[indexPath.row], point, section: indexPath.section)
                 }
                 
@@ -512,7 +512,7 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let comments = dataSource[indexPath.section].comments{
-            self.curruntIndexPath = indexPath
+            self.currentIndexPath = indexPath
             self.showComment(comments[indexPath.row], section: indexPath.section)
         }
     }
@@ -748,8 +748,8 @@ extension YXSFriendsCircleController{
                DispatchQueue.main.async {
                    let user_info = notification.userInfo
                    let keyboardRect = (user_info?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-                   if let curruntIndexPath = self.curruntIndexPath{
-                       let cell = self.tableView.cellForRow(at: curruntIndexPath)
+                   if let currentIndexPath = self.currentIndexPath{
+                       let cell = self.tableView.cellForRow(at: currentIndexPath)
                        if let friendCell  = cell as? YXSFriendsCircleCell{
                            
                            let rc = friendCell.convert(friendCell.comentLabel.frame, to: self.view)

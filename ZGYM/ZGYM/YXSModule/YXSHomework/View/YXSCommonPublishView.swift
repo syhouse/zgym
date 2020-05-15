@@ -374,7 +374,7 @@ class YXSCommonPublishView: UIView{
             let nav = UINavigationController.init(rootViewController: vc)
             nav.modalPresentationStyle = .fullScreen
             UIUtil.RootController().present(nav, animated: true, completion: nil)
-//            UIUtil.curruntNav().pushViewController(vc)
+//            UIUtil.currentNav().pushViewController(vc)
 
         case .vedio:
             let vc = YXSRecordVideoController.init(complete: { [weak self](asset) in
@@ -483,7 +483,7 @@ class YXSCommonPublishView: UIView{
                         urls.append(URL.init(string: url)!)
                     }
                 }
-                YXSShowBrowserHelper.showImage(urls: urls, assets: assets, curruntIndex: item.tag)
+                YXSShowBrowserHelper.showImage(urls: urls, assets: assets, currentIndex: item.tag)
                 
             }else{
                 //本地预览

@@ -17,14 +17,14 @@ class YXSPhotoAlbumDetialFooterView: UIView {
     var selectAllBlock: ((_ isSelectAll: Bool)->())?
     
     /// 当前是否全选中
-    var isCurruntSelectAll: Bool = false
+    var iscurrentSelectAll: Bool = false
     var isEdit = false{
         didSet{
             selectPhotoButton.isHidden = true
             selectAllControl.isHidden = true
             cancelSelectButton.isHidden = true
             selectAllControl.isSelected = false
-            isCurruntSelectAll = false
+            iscurrentSelectAll = false
             if isEdit{
                 selectAllControl.isHidden = false
                 cancelSelectButton.isHidden = false
@@ -83,8 +83,8 @@ class YXSPhotoAlbumDetialFooterView: UIView {
     }
     
     @objc func selectAllControlClick(){
-        isCurruntSelectAll = !selectAllControl.isSelected
-        selectAllControl.isSelected = isCurruntSelectAll
+        iscurrentSelectAll = !selectAllControl.isSelected
+        selectAllControl.isSelected = iscurrentSelectAll
         
         selectAllBlock?(selectAllControl.isSelected)
     }

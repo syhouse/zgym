@@ -70,7 +70,7 @@ class YXSClassSelectChildView: UIView {
     }
     
     func beginAnimation() {
-        UIUtil.curruntNav().view.addSubview(bgWindow)
+        UIUtil.currentNav().view.addSubview(bgWindow)
         
         bgWindow.addSubview(self)
         bgWindow.snp.makeConstraints { (make) in
@@ -189,8 +189,8 @@ extension YXSClassSelectChildView: UITableViewDelegate,UITableViewDataSource{
         for model in childs {
              model.isSelect = false
         }
-        let curruntModel = childs[indexPath.row]
-        curruntModel.isSelect = true
+        let currentModel = childs[indexPath.row]
+        currentModel.isSelect = true
         tableView.reloadData()
     }
     

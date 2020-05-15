@@ -153,9 +153,9 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
                 self.pushImagePickerController(mediaStyle: .all, maxCount: maxCount)
             }))
         }
-        alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
+        alert.popoverPresentationController?.sourceView = UIUtil.currentNav().view
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-        UIUtil.curruntNav().present(alert, animated: true, completion: nil)
+        UIUtil.currentNav().present(alert, animated: true, completion: nil)
     }
     
     private func pushRecordVideo(complete: ((YXSMediaModel) -> Void)?){

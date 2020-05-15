@@ -12,7 +12,7 @@ import SDWebImage
 class YXSMusicPlayerWindowView: UIControl {
     
     /// 展示播放窗 当前播放时间
-    public static func showPlayerWindow(curruntTime: UInt){
+    public static func showPlayerWindow(currentTime: UInt){
         let instanceView = YXSMusicPlayerWindowView.instanceView
         UIUtil.RootController().view.addSubview(instanceView)
         instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT, width: SCREEN_WIDTH - 30, height: 49)
@@ -28,7 +28,7 @@ class YXSMusicPlayerWindowView: UIControl {
             instanceView.isPlayingMusic = false
         }
         
-        instanceView.curruntTime = curruntTime
+        instanceView.currentTime = currentTime
         instanceView.isHidden = false
         XMSDKPlayer.shared()?.trackPlayDelegate = instanceView
         
@@ -94,12 +94,12 @@ class YXSMusicPlayerWindowView: UIControl {
         }
     }
     
-    public static func curruntWindowView() -> YXSMusicPlayerWindowView{
+    public static func currentWindowView() -> YXSMusicPlayerWindowView{
         return instanceView
     }
     
     private static let instanceView: YXSMusicPlayerWindowView = YXSMusicPlayerWindowView()
-    private var curruntTime: UInt = 0
+    private var currentTime: UInt = 0
     
     private init() {
         super.init(frame: CGRect.zero)
@@ -226,8 +226,8 @@ class YXSMusicPlayerWindowView: UIControl {
     }
     
     @objc func showPlayerView(){
-        let vc = YXSPlayingViewController(curruntTime: curruntTime)
-        UIUtil.curruntNav().pushViewController(vc)
+        let vc = YXSPlayingViewController(currentTime: currentTime)
+        UIUtil.currentNav().pushViewController(vc)
     }
     
     
@@ -300,8 +300,8 @@ extension YXSMusicPlayerWindowView{
 extension YXSMusicPlayerWindowView: XMTrackPlayerDelegate{
     // MARK: - Delegate
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
-        YXSRemoteControlInfoHelper.curruntTime = currentSecond
-        curruntTime = currentSecond
+        YXSRemoteControlInfoHelper.currentTime = currentSecond
+        currentTime = currentSecond
         
         UIUtil.configNowPlayingCenterUI()
     }

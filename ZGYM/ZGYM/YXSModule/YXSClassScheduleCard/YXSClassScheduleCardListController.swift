@@ -45,13 +45,13 @@ class YXSClassScheduleCardListController: YXSBaseTableViewController {
     func yxs_loadData() {
         var request: YXSBaseRequset!
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-            request = YXSEducationClassScheduleCardTeacherClassScheduleCardListRequest.init(currentPage: curruntPage, stage: YXSPersonDataModel.sharePerson.personStage,classId:yxs_classId)
+            request = YXSEducationClassScheduleCardTeacherClassScheduleCardListRequest.init(currentPage: currentPage, stage: YXSPersonDataModel.sharePerson.personStage,classId:yxs_classId)
         }else{
-            request = YXSEducationClassScheduleCardParentsClassScheduleCardListRequest.init(currentPage: curruntPage, stage: YXSPersonDataModel.sharePerson.personStage,childrenId: yxs_childrenId,classId:yxs_classId)
+            request = YXSEducationClassScheduleCardParentsClassScheduleCardListRequest.init(currentPage: currentPage, stage: YXSPersonDataModel.sharePerson.personStage,childrenId: yxs_childrenId,classId:yxs_classId)
         }
         request.requestCollection({ (list:[YXSClassScheduleCardModel]) in
         self.yxs_endingRefresh()
-        if self.curruntPage == 1{
+        if self.currentPage == 1{
             self.yxs_dataSource.removeAll()
         }
 

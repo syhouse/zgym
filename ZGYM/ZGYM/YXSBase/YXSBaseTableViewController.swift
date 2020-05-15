@@ -123,7 +123,7 @@ class YXSBaseCollectionViewController: YXSBaseScrollViewController {
 
 class YXSBaseScrollViewController: YXSBaseViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource {
     //当前页码
-    var curruntPage: Int = 1
+    var currentPage: Int = 1
     // 是否有下拉刷新
     var hasRefreshHeader = true
     //是否一创建就刷新
@@ -140,13 +140,13 @@ class YXSBaseScrollViewController: YXSBaseViewController, UITableViewDelegate, U
     
     lazy var tableViewRefreshHeader: MJRefreshNormalHeader = MJRefreshNormalHeader.init(refreshingBlock:{ [weak self] in
         guard let strongSelf = self else { return }
-        strongSelf.curruntPage = 1
+        strongSelf.currentPage = 1
         strongSelf.yxs_refreshData()
     })
     
     lazy var tableRefreshFooter = MJRefreshBackStateFooter.init(refreshingBlock: {[weak self] in
         guard let strongSelf = self else { return }
-        strongSelf.curruntPage += 1
+        strongSelf.currentPage += 1
         strongSelf.yxs_loadNextPage()
     })
     
@@ -182,13 +182,8 @@ class YXSBaseScrollViewController: YXSBaseViewController, UITableViewDelegate, U
     
     func yxs_endingRefresh(endSucess: (() ->())? = nil){
         showEmptyDataSource = true
-        if self.curruntPage == 1{
-            if hasRefreshHeader{
-                tableViewRefreshHeader.endRefreshing(completionBlock: endSucess ?? {()})
-            }
-        }else{
-            tableRefreshFooter.endRefreshing(completionBlock: endSucess ?? {()})
-        }
+        tableViewRefreshHeader.endRefreshing(completionBlock: endSucess ?? {()})
+        tableRefreshFooter.endRefreshing(completionBlock: endSucess ?? {()})
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

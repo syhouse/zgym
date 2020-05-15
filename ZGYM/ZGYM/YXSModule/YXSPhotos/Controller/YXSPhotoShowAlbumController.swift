@@ -36,15 +36,15 @@ class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate,
     
     var dataSource: [YXSPhotoAlbumsDetailListModel]
     var titles:[String]
-    var curruntIndex: Int
+    var currentIndex: Int
     var praisesModels = [Int: YXSPhotoAlbumsPraiseModel]()
     
     
     
     /// 当前是否展示工具栏
-    var isCurruntShowTool: Bool = true
-    init(dataSource: [YXSPhotoAlbumsDetailListModel], curruntIndex: Int) {
-        self.curruntIndex = curruntIndex
+    var iscurrentShowTool: Bool = true
+    init(dataSource: [YXSPhotoAlbumsDetailListModel], currentIndex: Int) {
+        self.currentIndex = currentIndex
         self.dataSource = dataSource
         self.titles = [String].init(repeating: "", count: dataSource.count)
         super.init()
@@ -64,7 +64,7 @@ class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate,
         }
         self.categoryView.listContainer = listContainerView
         self.categoryView.delegate = self
-        categoryView.defaultSelectedIndex = curruntIndex
+        categoryView.defaultSelectedIndex = currentIndex
         
         self.view.addSubview(customNav)
         customNav.snp.makeConstraints { (make) in
@@ -107,16 +107,16 @@ class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate,
     
     // MARK: -private
     func updateUI(){
-        if isCurruntShowTool{
+        if iscurrentShowTool{
             customNav.isHidden = false
             footerView.isHidden = false
         }else{
             customNav.isHidden = true
             footerView.isHidden = true
         }
-        customNav.title = "\(curruntIndex + 1)/\(self.dataSource.count)"
+        customNav.title = "\(currentIndex + 1)/\(self.dataSource.count)"
         
-        let model = praisesModels[dataSource[curruntIndex].id ?? 0]
+        let model = praisesModels[dataSource[currentIndex].id ?? 0]
         if let model = model{
             footerView.setModel(model: model)
         }
@@ -153,7 +153,7 @@ class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate,
 //    }
 //
 //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        isCurruntShowTool = !isCurruntShowTool
+//        iscurrentShowTool = !iscurrentShowTool
 //        updateUI()
 //    }
 //

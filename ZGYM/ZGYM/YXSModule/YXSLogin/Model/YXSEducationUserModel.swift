@@ -26,7 +26,7 @@ import ObjectMapper
     var timestamp : Int?
     
     /// 家长当前选中孩子
-    var curruntChild: YXSChildrenModel?
+    var currentChild: YXSChildrenModel?
     var gradeNum : String?
     
 	class func newInstance(map: Map) -> Mappable?{
@@ -81,7 +81,7 @@ import ObjectMapper
         gradeNum = aDecoder.decodeObject(forKey: "gradeNum") as? String
         
         
-        curruntChild = aDecoder.decodeObject(forKey: "curruntChild") as? YXSChildrenModel
+        currentChild = aDecoder.decodeObject(forKey: "currentChild") as? YXSChildrenModel
 	}
 
     /**
@@ -140,8 +140,8 @@ import ObjectMapper
             aCoder.encode(gradeNum, forKey: "gradeNum")
         }
         
-        if curruntChild != nil{
-            aCoder.encode(curruntChild, forKey: "curruntChild")
+        if currentChild != nil{
+            aCoder.encode(currentChild, forKey: "currentChild")
         }
 	}
 }

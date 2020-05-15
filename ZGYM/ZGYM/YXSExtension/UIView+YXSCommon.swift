@@ -11,11 +11,11 @@ import UIKit
 extension UIView {
      func yxs_dealHomeAction(_ action: YXSHomeHeaderActionEvent, classId: Int?, childModel: YXSChildrenModel?){
         if YXSPersonDataModel.sharePerson.personRole == .PARENT && classId == nil{
-            UIUtil.curruntNav().pushViewController(YXSClassAddController())
+            UIUtil.currentNav().pushViewController(YXSClassAddController())
             return
         }
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER && (yxs_user.gradeIds == nil || yxs_user.gradeIds!.count == 0){
-            UIUtil.curruntNav().pushViewController(YXSTeacherClassListViewController())
+            UIUtil.currentNav().pushViewController(YXSTeacherClassListViewController())
             return
         }
         
@@ -25,51 +25,51 @@ extension UIView {
         case .course:
             
             if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-                UIUtil.curruntNav().pushViewController(YXSClassScheduleCardDetialController.init( nil,childrenId: childId, classId: classId))
+                UIUtil.currentNav().pushViewController(YXSClassScheduleCardDetialController.init( nil,childrenId: childId, classId: classId))
             }else{
-                var curruntClassId: Int? = classId
+                var currentClassId: Int? = classId
                 if yxs_user.gradeIds!.count == 1{
-                    curruntClassId = yxs_user.gradeIds?.first
+                    currentClassId = yxs_user.gradeIds?.first
                 }
-                if let curruntClassId = curruntClassId{
-                    UIUtil.curruntNav().pushViewController(YXSClassScheduleCardDetialController.init( nil,childrenId: childId, classId: curruntClassId))
+                if let currentClassId = currentClassId{
+                    UIUtil.currentNav().pushViewController(YXSClassScheduleCardDetialController.init( nil,childrenId: childId, classId: currentClassId))
                 }else{
-                    UIUtil.curruntNav().pushViewController(YXSClassScheduleCardListController.init(childId,classId: classId))
+                    UIUtil.currentNav().pushViewController(YXSClassScheduleCardListController.init(childId,classId: classId))
                 }
                 
             }
             
         case .solitaire:
-            UIUtil.curruntNav().pushViewController(YXSSolitaireListController(classId: classId,childId: childId))
+            UIUtil.currentNav().pushViewController(YXSSolitaireListController(classId: classId,childId: childId))
         case .homework:
-            UIUtil.curruntNav().pushViewController(YXSHomeworkListController(classId: classId,childId: childId))
+            UIUtil.currentNav().pushViewController(YXSHomeworkListController(classId: classId,childId: childId))
         case .punchCard:
-            UIUtil.curruntNav().pushViewController(YXSPunchCardListController(classId: classId,childId: childId))
+            UIUtil.currentNav().pushViewController(YXSPunchCardListController(classId: classId,childId: childId))
         case .notice:
-            UIUtil.curruntNav().pushViewController(YXSNoticeListController(classId: classId,childId: childId))
+            UIUtil.currentNav().pushViewController(YXSNoticeListController(classId: classId,childId: childId))
         case .photo:
-            UIUtil.curruntNav().pushViewController(YXSPhotoClassListController())
+            UIUtil.currentNav().pushViewController(YXSPhotoClassListController())
         case .score:
-            UIUtil.curruntNav().pushViewController(YXSScoreDetialController())
+            UIUtil.currentNav().pushViewController(YXSScoreDetialController())
             
         case .addressbook:
-            UIUtil.curruntNav().pushViewController(YXSContactController.init(classId: classId))
+            UIUtil.currentNav().pushViewController(YXSContactController.init(classId: classId))
             break
         case .classstart:
             if YXSPersonDataModel.sharePerson.personRole == .PARENT{
                 
                 if let childModel = childModel{
-                    UIUtil.curruntNav().pushViewController(YXSClassStarPartentDetialController.init(childrenModel: childModel))
+                    UIUtil.currentNav().pushViewController(YXSClassStarPartentDetialController.init(childrenModel: childModel))
                 }
             }else{
-                var curruntClassId: Int? = classId
+                var currentClassId: Int? = classId
                 if yxs_user.gradeIds!.count == 1{
-                    curruntClassId = yxs_user.gradeIds?.first
+                    currentClassId = yxs_user.gradeIds?.first
                 }
-                if let curruntClassId = curruntClassId{
-                    UIUtil.curruntNav().pushViewController(YXSClassStarSignleClassDetialController.init(classId: curruntClassId))
+                if let currentClassId = currentClassId{
+                    UIUtil.currentNav().pushViewController(YXSClassStarSignleClassDetialController.init(classId: currentClassId))
                 }else{
-                    UIUtil.curruntNav().pushViewController(YXSClassStartTeacherClassListController())
+                    UIUtil.currentNav().pushViewController(YXSClassStartTeacherClassListController())
                 }
                 
             }

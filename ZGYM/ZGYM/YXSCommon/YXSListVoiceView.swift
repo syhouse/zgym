@@ -64,15 +64,15 @@ class YXSSSAudioListPlayer: NSObject {
             }
         }
         
-        if let curruntPlayer = listPlayer[id]{
-            if curruntPlayer.isFinish{
-                curruntPlayer.play(url: url, cacheAudio: true,finish: finishAnimation)
+        if let currentPlayer = listPlayer[id]{
+            if currentPlayer.isFinish{
+                currentPlayer.play(url: url, cacheAudio: true,finish: finishAnimation)
                 startAnimation?()
-            }else if curruntPlayer.isPause{
-                curruntPlayer.resumeVoice()
+            }else if currentPlayer.isPause{
+                currentPlayer.resumeVoice()
                 startAnimation?()
             }else{
-                curruntPlayer.pauseVoice()
+                currentPlayer.pauseVoice()
                 finishAnimation?()
             }
         }else{

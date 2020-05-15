@@ -71,7 +71,7 @@ class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassCom
     }
     
     override func uploadData() {
-        curruntPage = 1
+        currentPage = 1
         childrenModel.dateType = DateType.init(rawValue: selectModel.paramsKey) ?? DateType.W
         reloadChildrenInfo = true
         loadData()
@@ -91,7 +91,7 @@ class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassCom
         }
         
         group.enter()
-        if curruntPage == 1{
+        if currentPage == 1{
         }
         queue.async {
             DispatchQueue.main.async {
@@ -127,8 +127,8 @@ class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassCom
     }
     
     func loadListData(){
-        YXSEducationClassStarTeacherEvaluationHistoryListPageRequest.init(childrenId:childrenModel.childrenId ?? 0,classId: classId, currentPage: curruntPage,dateType: childrenModel.dateType).requestCollection({ (list:[YXSClassStarHistoryModel]) in
-            if self.curruntPage == 1{
+        YXSEducationClassStarTeacherEvaluationHistoryListPageRequest.init(childrenId:childrenModel.childrenId ?? 0,classId: classId, currentPage: currentPage,dateType: childrenModel.dateType).requestCollection({ (list:[YXSClassStarHistoryModel]) in
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             self.dataSource += list

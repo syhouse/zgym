@@ -37,12 +37,12 @@ class YXSWeathModel : NSObject,NSCoding , Mappable{
     
     
     /// 天气请求时间
-    var curruntRequestData: Date?
+    var currentRequestData: Date?
     
     /// 天气请求时间
     var isToDay: Bool{
         get {
-            return curruntRequestData == nil ? false : NSUtil.yxs_isSameDay(curruntRequestData ?? Date(), date2: Date())
+            return currentRequestData == nil ? false : NSUtil.yxs_isSameDay(currentRequestData ?? Date(), date2: Date())
         }
     }
     
@@ -108,7 +108,7 @@ class YXSWeathModel : NSObject,NSCoding , Mappable{
         win = aDecoder.decodeObject(forKey: "win") as? String
         winMeter = aDecoder.decodeObject(forKey: "win_meter") as? String
         winSpeed = aDecoder.decodeObject(forKey: "win_speed") as? String
-        curruntRequestData = aDecoder.decodeObject(forKey: "curruntRequestData") as? Date
+        currentRequestData = aDecoder.decodeObject(forKey: "currentRequestData") as? Date
         
     }
     
@@ -187,8 +187,8 @@ class YXSWeathModel : NSObject,NSCoding , Mappable{
         if winSpeed != nil{
             aCoder.encode(winSpeed, forKey: "win_speed")
         }
-        if curruntRequestData != nil{
-            aCoder.encode(curruntRequestData, forKey: "curruntRequestData")
+        if currentRequestData != nil{
+            aCoder.encode(currentRequestData, forKey: "currentRequestData")
         }
     }
 }

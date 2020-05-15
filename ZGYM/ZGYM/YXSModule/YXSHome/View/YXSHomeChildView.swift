@@ -34,9 +34,9 @@ class YXSHomeChildView: UIControl {
             childView.addTaget(target: self, selctor: #selector(imageClick))
             addSubview(childView)
         }
-        addSubview(curruntLabel)
+        addSubview(currentLabel)
         nameLabel.isHidden = true
-        curruntLabel.isHidden = true
+        currentLabel.isHidden = true
     }
     
     required init?(coder: NSCoder) {
@@ -46,14 +46,14 @@ class YXSHomeChildView: UIControl {
     @objc func imageClick(_ tap: UITapGestureRecognizer){
         let index = (tap.view?.tag ?? 0) - kYXSHomeChildViewImageTag
         print("\(index)")
-        let curruntId = childs[index].id ?? 0
-        if let userCurruntId = yxs_user.curruntChild?.id{
-            if userCurruntId == curruntId{
+        let currentId = childs[index].id ?? 0
+        if let usercurrentId = yxs_user.currentChild?.id{
+            if usercurrentId == currentId{
                 return
             }
         }
-        UserDefaults.standard.set(curruntId, forKey: kHomeChildKey)
-        yxs_user.curruntChild = childs[index]
+        UserDefaults.standard.set(currentId, forKey: kHomeChildKey)
+        yxs_user.currentChild = childs[index]
         next?.yxs_routerEventWithName(eventName: kYXSHomeChildViewUpdateEvent)
     }
     ///孩子数组
@@ -65,7 +65,7 @@ class YXSHomeChildView: UIControl {
             image!.snp.removeConstraints()
         }
         nameLabel.isHidden = true
-        curruntLabel.isHidden = true
+        currentLabel.isHidden = true
         addChildButton.isHidden = true
         
         childs = models
@@ -83,7 +83,7 @@ class YXSHomeChildView: UIControl {
                 var imageSize = CGSize.init(width: 41, height: 41)
                 if index == selectIndex{
                     nameLabel.text = model.realName
-                    curruntLabel.isHidden = false
+                    currentLabel.isHidden = false
                     childView.isSelect = true
                     childView.snp.remakeConstraints { (make) in
                         if let last = last{
@@ -103,18 +103,18 @@ class YXSHomeChildView: UIControl {
                             make.right.equalTo(-15)
                         }
                     }
-                    curruntLabel.snp.remakeConstraints { (make) in
+                    currentLabel.snp.remakeConstraints { (make) in
                         make.centerX.equalTo(childView)
                         make.size.equalTo(CGSize.init(width: 32, height: 14))
                         make.top.equalTo(nameLabel.snp_bottom).offset(3)
                     }
                     switch model.stage {
                     case .KINDERGARTEN:
-                        curruntLabel.text = "幼儿"
+                        currentLabel.text = "幼儿"
                     case .PRIMARY_SCHOOL:
-                        curruntLabel.text = "小学"
+                        currentLabel.text = "小学"
                     case .MIDDLE_SCHOOL:
-                        curruntLabel.text = "中学"
+                        currentLabel.text = "中学"
                     }
                 }else{
                     childView.isSelect = false
@@ -179,7 +179,7 @@ class YXSHomeChildView: UIControl {
         return label
     }()
     
-    lazy var curruntLabel: YXSLabel = {
+    lazy var currentLabel: YXSLabel = {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 10)
         label.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)

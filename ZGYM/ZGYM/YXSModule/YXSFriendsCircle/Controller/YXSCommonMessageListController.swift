@@ -78,7 +78,7 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
     // MARK: -UI
     // MARK: -loadData
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         loadData()
     }
     

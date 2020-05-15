@@ -51,7 +51,7 @@ class YXSBaseSelectView: UIView {
     
     func beginAnimation() {
         UIUtil.TopViewController().fd_interactivePopDisabled = true
-        UIUtil.curruntNav().view.addSubview(bgWindow)
+        UIUtil.currentNav().view.addSubview(bgWindow)
         
         bgWindow.addSubview(self)
         bgWindow.snp.makeConstraints { (make) in

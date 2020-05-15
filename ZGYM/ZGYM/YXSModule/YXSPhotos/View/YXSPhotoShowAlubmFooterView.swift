@@ -17,7 +17,7 @@ class YXSPhotoShowAlubmFooterView: UIView {
         self.backgroundColor = UIColor.black
         addSubview(minePriseButton)
         addSubview(commentButton)
-        addSubview(curruntPriseButton)
+        addSubview(currentPriseButton)
         addSubview(moreActionButton)
         
         minePriseButton.snp.makeConstraints { (make) in
@@ -32,7 +32,7 @@ class YXSPhotoShowAlubmFooterView: UIView {
             make.height.equalTo(22)
         }
         
-        curruntPriseButton.snp.makeConstraints { (make) in
+        currentPriseButton.snp.makeConstraints { (make) in
             make.right.equalTo(-56)
             make.centerY.equalTo(minePriseButton)
             make.height.equalTo(22)
@@ -56,7 +56,7 @@ class YXSPhotoShowAlubmFooterView: UIView {
         minePriseButton.isSelected = model.isPraise == 1
         commentButton.title = "评论\(model.commentList?.count ?? 0)"
         let praiseCount = model.praiseCount ?? 0
-        curruntPriseButton.title = praiseCount > 99 ? "99+" : "\(praiseCount)"
+        currentPriseButton.title = praiseCount > 99 ? "99+" : "\(praiseCount)"
     }
     
     var cellBlock: ((_ isComment: Bool)->())?
@@ -102,13 +102,13 @@ class YXSPhotoShowAlubmFooterView: UIView {
         return commentButton
     }()
     
-    lazy var curruntPriseButton: YXSCustomImageControl = {
-        let curruntPriseButton = YXSCustomImageControl.init(imageSize: CGSize.init(width: 22, height: 22), position: YXSImagePositionType.left, padding: 7)
-        curruntPriseButton.textColor = UIColor.white
-        curruntPriseButton.title = "0"
-        curruntPriseButton.font = UIFont.systemFont(ofSize: 16)
-        curruntPriseButton.locailImage = "yxs_photo_praise_normal"
-        return curruntPriseButton
+    lazy var currentPriseButton: YXSCustomImageControl = {
+        let currentPriseButton = YXSCustomImageControl.init(imageSize: CGSize.init(width: 22, height: 22), position: YXSImagePositionType.left, padding: 7)
+        currentPriseButton.textColor = UIColor.white
+        currentPriseButton.title = "0"
+        currentPriseButton.font = UIFont.systemFont(ofSize: 16)
+        currentPriseButton.locailImage = "yxs_photo_praise_normal"
+        return currentPriseButton
     }()
     
     lazy var moreActionButton: UIButton = {

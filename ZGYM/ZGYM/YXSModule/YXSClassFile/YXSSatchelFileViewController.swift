@@ -27,6 +27,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         super.viewDidLoad()
         self.title = "我的文件"
         
+        /// 取出缓存数据赋值
         folderList = YXSCacheHelper.yxs_getCacheSatchelFolderList(parentFolderId: parentFolderId)
         fileList = YXSCacheHelper.yxs_getCacheSatchelFileList(parentFolderId: parentFolderId)
 
@@ -59,11 +60,102 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
     
     // MARK: - Request
     override func yxs_refreshData() {
-        loadData()
+        loadMore = true
+        folderHasNext = true
+        loadData2()
     }
     
     override func yxs_loadNextPage() {
-        loadData()
+        loadData2()
+    }
+    
+    @objc override func loadData2() {
+        if folderHasNext {
+            /// 请求文件夹
+            YXSSatchelFolderPageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                weakSelf.folderHasNext = json["hasNext"].boolValue
+
+                let tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                
+                if weakSelf.currentPage == 1 {
+                    weakSelf.folderList.removeAll()
+                }
+                weakSelf.folderList += tmpFolderList
+                
+                if weakSelf.isTbViewEditing {
+                    /// 编辑状态 下拉刷新 填充选中的Cell
+                    for sub in weakSelf.selectedFolderList {
+                        for obj in weakSelf.folderList {
+                            if sub.id == obj.id {
+                                obj.isSelected = true
+                                break
+                            }
+                        }
+                    }
+                }
+                
+                YXSCacheHelper.yxs_cacheSatchelFolderList(dataSource: weakSelf.folderList, parentFolderId: weakSelf.parentFolderId)
+                
+                if weakSelf.folderHasNext {
+                    /// 文件夹还有
+                    weakSelf.fileList.removeAll()
+                    YXSCacheHelper.yxs_cacheSatchelFileList(dataSource: weakSelf.fileList, parentFolderId: weakSelf.parentFolderId)
+                    weakSelf.tableView.reloadData()
+                    weakSelf.yxs_endingRefresh()
+                    
+                } else {
+                    /// 文件夹没了 请求文件数据
+                    weakSelf.currentPage = 1
+                    weakSelf.requestFile()
+                }
+                
+            }) { [weak self](msg, code) in
+                guard let weakSelf = self else {return}
+                
+                MBProgressHUD.yxs_showMessage(message: msg)
+                weakSelf.yxs_endingRefresh()
+            }
+            
+        } else {
+            /// 请求文件
+            requestFile()
+        }
+    }
+    
+    @objc override func requestFile(completionHandler:(([YXSFileModel])->())? = nil) {
+        YXSSatchelFilePageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            let hasNext = json["hasNext"].boolValue
+            weakSelf.loadMore = hasNext
+            
+            let tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
+            if weakSelf.currentPage == 1 {
+                weakSelf.fileList.removeAll()
+            }
+            weakSelf.fileList += tmpFileList
+            if weakSelf.isTbViewEditing {
+                /// 填充Cell的选中
+                for sub in weakSelf.selectedFileList {
+                    for obj in weakSelf.fileList {
+                        if sub.id == obj.id {
+                            obj.isSelected = true
+                            break
+                        }
+                    }
+                }
+            }
+            YXSCacheHelper.yxs_cacheSatchelFileList(dataSource: weakSelf.fileList, parentFolderId: weakSelf.parentFolderId)
+            
+            completionHandler?(tmpFileList)
+            weakSelf.tableView.reloadData()
+            weakSelf.yxs_endingRefresh()
+            
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+            MBProgressHUD.yxs_showMessage(message: msg)
+            weakSelf.yxs_endingRefresh()
+        }
     }
     
     @objc override func loadData() {
@@ -95,7 +187,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
         workingGroup.enter()
         workingQueue.async {
             // 出组
-            YXSSatchelFilePageQueryRequest(currentPage: self.curruntPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
+            YXSSatchelFilePageQueryRequest(currentPage: self.currentPage, parentFolderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"].boolValue
                 weakSelf.loadMore = hasNext
@@ -133,7 +225,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                     }
                 }
                 
-                if self.curruntPage == 1{
+                if self.currentPage == 1{
                     self.fileList.removeAll()
                 }
                 
@@ -507,7 +599,7 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
                 let item = fileList[indexPath.row]
                 
                 if item.fileType == "jpg" {
-                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], curruntIndex: 0)
+                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], currentIndex: 0)
                     
                 } else if item.fileType == "mp4" {
                     // 视频
@@ -523,11 +615,63 @@ class YXSSatchelFileViewController: YXSClassFileViewController {
             if indexPath.section == 0 {
                 let item = folderList[indexPath.row]
                 item.isSelected = item.isSelected == true ? false : true
+                if item.isSelected ?? false {
+                    /// 选中
+                     var tmpIdx: Int? = nil
+                     for (index, sub) in selectedFolderList.enumerated() {
+                         if sub.id == item.id {
+                             tmpIdx = index
+                             break
+                         }
+                     }
+                     if tmpIdx == nil {
+                         selectedFolderList.append(item)
+                     }
+                    
+                } else {
+                    /// 取消选中
+                    var tmpIdx: Int? = nil
+                    for (index, sub) in selectedFolderList.enumerated() {
+                        if sub.id == item.id {
+                            tmpIdx = index
+                            break
+                        }
+                    }
+                    if let idx = tmpIdx {
+                        selectedFolderList.remove(at: idx)
+                    }
+                }
                 tableView.reloadRows(at: [indexPath], with: .none)
                 
             } else {
                 let item = fileList[indexPath.row]
                 item.isSelected = item.isSelected == true ? false : true
+                if item.isSelected ?? false {
+                    /// 选中
+                     var tmpIdx: Int? = nil
+                     for (index, sub) in selectedFileList.enumerated() {
+                         if sub.id == item.id {
+                             tmpIdx = index
+                             break
+                         }
+                     }
+                     if tmpIdx == nil {
+                         selectedFileList.append(item)
+                     }
+                    
+                } else {
+                    /// 取消选中
+                    var tmpIdx: Int? = nil
+                    for (index, sub) in selectedFileList.enumerated() {
+                        if sub.id == item.id {
+                            tmpIdx = index
+                            break
+                        }
+                    }
+                    if let idx = tmpIdx {
+                        selectedFileList.remove(at: idx)
+                    }
+                }
                 tableView.reloadRows(at: [indexPath], with: .none)
             }
             verifyBottomViewBtnEnable()

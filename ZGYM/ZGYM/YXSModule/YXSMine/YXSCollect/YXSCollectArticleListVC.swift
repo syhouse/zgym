@@ -31,7 +31,7 @@ class YXSCollectArticleListVC: YXSBaseTableViewController {
     
     // MARK: -loadData
     override func yxs_refreshData() {
-        curruntPage = 1
+        currentPage = 1
         loadData()
     }
     
@@ -40,21 +40,21 @@ class YXSCollectArticleListVC: YXSBaseTableViewController {
     }
     
     func loadData(){
-        YXSEducationChildContentCollectionArticleRequest.init(current: curruntPage).request({ [weak self](json) in
+        YXSEducationChildContentCollectionArticleRequest.init(current: currentPage).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             weakSelf.yxs_endingRefresh()
             let list = Mapper<YXSChildContentHomeListModel>().mapArray(JSONObject: json["records"].object) ?? [YXSChildContentHomeListModel]()
             
-            if weakSelf.curruntPage == 1{
+            if weakSelf.currentPage == 1{
                 weakSelf.dataSource.removeAll()
             }
             weakSelf.dataSource += list
-            if json["pages"].intValue > weakSelf.curruntPage {
+            if json["pages"].intValue > weakSelf.currentPage {
                 weakSelf.loadMore = true
             } else {
                 weakSelf.loadMore = false
             }
-            if json["pages"].intValue > weakSelf.curruntPage {
+            if json["pages"].intValue > weakSelf.currentPage {
                 weakSelf.loadMore = true
             } else {
                 weakSelf.loadMore = false

@@ -14,10 +14,10 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     
     /// 提交完成后的block
     var complete: ((_ imageUrl: String) -> ())?
-    var curruntIconUrl: String?{
+    var currentIconUrl: String?{
         didSet{
-            if let curruntIconUrl = curruntIconUrl{
-                logoImageView.sd_setImage(with: URL.init(string: curruntIconUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!), placeholderImage:
+            if let currentIconUrl = currentIconUrl{
+                logoImageView.sd_setImage(with: URL.init(string: currentIconUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!), placeholderImage:
                     kImageDefualtImage)
             }
             
@@ -26,7 +26,7 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     
     var items: [String] = [String]()
     
-    var curruntSelectIndex: Int?
+    var currentSelectIndex: Int?
     var classId: Int
     
     init(classId: Int) {
@@ -106,8 +106,8 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     func loadData(){
         YXSEducationClassStarEvaluationListListImageRequest().request({ (result) in
             self.items = result.arrayObject as? [String] ?? [String]()
-            self.curruntIconUrl = self.items.first
-            self.curruntSelectIndex = 0
+            self.currentIconUrl = self.items.first
+            self.currentSelectIndex = 0
             self.collectionView.reloadData()
             self.tipsLabel.text = "系统图标（\(self.items.count)）"
         }) { (msg, code) in
@@ -120,8 +120,8 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     }
     
     @objc func rightClick(){
-        if let curruntIconUrl = curruntIconUrl{
-            complete?(curruntIconUrl)
+        if let currentIconUrl = currentIconUrl{
+            complete?(currentIconUrl)
             self.navigationController?.popViewController()
         }else{
             MBProgressHUD.yxs_showMessage(message: "请选择点评图标")
@@ -136,12 +136,12 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     
     // MARK: - UICol
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if curruntSelectIndex == indexPath.row{
+        if currentSelectIndex == indexPath.row{
             return
         }
-        curruntSelectIndex = indexPath.row
+        currentSelectIndex = indexPath.row
         collectionView.reloadData()
-        curruntIconUrl = items[indexPath.row]
+        currentIconUrl = items[indexPath.row]
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -151,7 +151,7 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "YXSItemUrlCell", for: indexPath) as! YXSItemUrlCell
-        cell.isItemSelect = curruntSelectIndex == indexPath.row
+        cell.isItemSelect = currentSelectIndex == indexPath.row
         cell.imageUrl = items[indexPath.row]
         return cell
     }
@@ -187,23 +187,17 @@ extension YXSClassStarEvaluationItemLogoViewController: YXSSelectMediaHelperDele
         if let image = images.first{
             if let data = image.yxs_compressImage(image: image, maxLength: imageMax){
                 MBProgressHUD.yxs_showLoading()
-                YXSUploadDataHepler.shareHelper.uploadData(uploadModel: SLNewUploadSourceModel.init(data: data, path: YXSUploadSourceHelper.starDoucmentPath(classId: classId) + Date().toString().MD5() + ".jpg", type: .image), sucess: { (url) in
-                    self.curruntIconUrl = url
-                    self.curruntSelectIndex = nil
+                YXSUploadDataHepler.shareHelper.uploadData(uploadModel: SLUploadDataSourceModel.init(data: data, path: YXSFileUploadHelper.sharedInstance.getStarUrl(fullName: Date().toString().MD5() + ".jpg", classId: classId), type: .image), sucess: { (url) in
+                    self.currentIconUrl = url
+                    self.currentSelectIndex = nil
                     self.collectionView.reloadData()
                     self.logoImageView.image = image
                     MBProgressHUD.yxs_hideHUD()
                 }) { (msg, code) in
                     MBProgressHUD.yxs_showMessage(message: msg)
                 }
-                ///等 YXSFileUploadHelper 工具构建好 移植
-                //                let resourceModel = YXSUploadDataResourceModel()
-                //                resourceModel.dataSource =
-                //                YXSFileUploadHelper().uploadDataSource(dataSource: [YXSUploadDataResourceModel.], progress: <#T##((CGFloat) -> ())?##((CGFloat) -> ())?##(CGFloat) -> ()#>, sucess: <#T##(([YXSFileModel]) -> ())?##(([YXSFileModel]) -> ())?##([YXSFileModel]) -> ()#>, failureHandler: <#T##((String, String) -> ())?##((String, String) -> ())?##(String, String) -> ()#>)
             }
         }
-        
-        //        YXSUploadSourceHelper().uploadIm
     }
 }
 

@@ -23,7 +23,7 @@ class YXSPunchCardDetialHeaderView: UIView {
         addSubview(bottomView)
         bottomView.addSubview(surplusTipsLabel)
         bottomView.addSubview(surplusCountLabel)
-        bottomView.addSubview(curruntPunchCountLabel)
+        bottomView.addSubview(currentPunchCountLabel)
         bottomView.addSubview(rightButton)
         bottomView.addSubview(statusLabel)
         layout()
@@ -40,7 +40,7 @@ class YXSPunchCardDetialHeaderView: UIView {
             make.left.equalTo(0)
             make.top.equalTo(26)
         }
-        curruntPunchCountLabel.snp.makeConstraints { (make) in
+        currentPunchCountLabel.snp.makeConstraints { (make) in
             make.right.equalTo(0)
             make.top.equalTo(surplusTipsLabel)
             make.left.equalTo(surplusTipsLabel.snp_right)
@@ -51,12 +51,12 @@ class YXSPunchCardDetialHeaderView: UIView {
             make.top.equalTo(surplusTipsLabel.snp_bottom).offset(16)
         }
         rightButton.snp.makeConstraints { (make) in
-            make.centerX.equalTo(curruntPunchCountLabel)
-            make.top.equalTo(curruntPunchCountLabel.snp_bottom).offset(11.5)
+            make.centerX.equalTo(currentPunchCountLabel)
+            make.top.equalTo(currentPunchCountLabel.snp_bottom).offset(11.5)
             make.size.equalTo(CGSize.init(width: 79, height: 31))
         }
         statusLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(curruntPunchCountLabel)
+            make.centerX.equalTo(currentPunchCountLabel)
             make.centerY.equalTo(surplusCountLabel)
         }
     }
@@ -73,7 +73,7 @@ class YXSPunchCardDetialHeaderView: UIView {
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             if model.hasNeedPunch{
-                curruntPunchCountLabel.text = "今日已打卡\(model.currentClockInPeopleCount ?? 0)/\(model.currentClockInTotalCount ?? 0)人"
+                currentPunchCountLabel.text = "今日已打卡\(model.currentClockInPeopleCount ?? 0)/\(model.currentClockInTotalCount ?? 0)人"
                 if model.hasPunchAll{
                     statusLabel.isHidden = false
                     statusLabel.text = "已完成"
@@ -82,16 +82,16 @@ class YXSPunchCardDetialHeaderView: UIView {
                 }
             }else{
                 statusLabel.isHidden = false
-                curruntPunchCountLabel.text = "今日无需打卡"
+                currentPunchCountLabel.text = "今日无需打卡"
                 statusLabel.text = "进行中"
             }
         }else{
-            curruntPunchCountLabel.text = "今日已打卡\(model.currentClockInPeopleCount ?? 0)/\(model.currentClockInTotalCount ?? 0)人"
+            currentPunchCountLabel.text = "今日已打卡\(model.currentClockInPeopleCount ?? 0)/\(model.currentClockInTotalCount ?? 0)人"
             rightButton.isHidden = false
             rightButton.setTitle("查看排行", for: .normal)
             rightButton.snp.remakeConstraints { (make) in
-                make.centerX.equalTo(curruntPunchCountLabel)
-                make.top.equalTo(curruntPunchCountLabel.snp_bottom).offset(11.5)
+                make.centerX.equalTo(currentPunchCountLabel)
+                make.top.equalTo(currentPunchCountLabel.snp_bottom).offset(11.5)
                 make.size.equalTo(CGSize.init(width: 89, height: 31))
             }
         }
@@ -160,7 +160,7 @@ class YXSPunchCardDetialHeaderView: UIView {
         return label
     }()
     
-    lazy var curruntPunchCountLabel: UILabel = {
+    lazy var currentPunchCountLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))

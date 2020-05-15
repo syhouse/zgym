@@ -78,7 +78,7 @@ class YXSMoveToViewController: YXSBaseTableViewController {
     // MARK: - Request
     @objc func loadData() {
         if classId == nil {
-            YXSSatchelFolderPageQueryRequest(currentPage: curruntPage, parentFolderId: parentFolderId).request({ [weak self](json) in
+            YXSSatchelFolderPageQueryRequest(currentPage: currentPage, parentFolderId: parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 
@@ -90,7 +90,7 @@ class YXSMoveToViewController: YXSBaseTableViewController {
             }
             
         } else {
-            YXSFileFolderPageQueryRequest(classId: classId ?? 0, currentPage: curruntPage, folderId: parentFolderId).request({ [weak self](json) in
+            YXSFileFolderPageQueryRequest(classId: classId ?? 0, currentPage: currentPage, folderId: parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 let hasNext = json["hasNext"]
                 

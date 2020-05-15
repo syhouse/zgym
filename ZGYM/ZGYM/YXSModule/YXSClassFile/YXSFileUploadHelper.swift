@@ -26,6 +26,10 @@ enum YXSStorageType: String {
     case circle
     /// 头像
     case avatar
+    /// 班级之星
+    case star
+    /// 课表
+    case curriculum
 }
 
 
@@ -68,7 +72,7 @@ class YXSFileUploadHelper: NSObject {
     // MARK: - Method 上传文件方法
     /**
      *  注意！
-     *  当storageType 为 classFile时 classId必填；
+     *  当storageType 为 classFile、star、curriculum时 classId必填；
      *  当storageType 为 album时 classId、albumId必填
      */
     func uploadDataSource(dataSource: [YXSUploadDataResourceModel], storageType: YXSStorageType, classId: Int? = nil, albumId: Int? = nil, progress : ((_ progress: CGFloat)->())?, sucess: (([YXSFileModel])->())?, failureHandler: ((String, String) -> ())?) {
@@ -93,7 +97,7 @@ class YXSFileUploadHelper: NSObject {
                 /// 拼接路径
                 switch storageType {
                 case .temporary:
-                    path = self.getTmpVideoUrl(fullName: fullName)
+                    path = YXSFileUploadHelper.sharedInstance.getTmpVideoUrl(fullName: fullName)
                     
                 case .album:
                     if classId == nil {
@@ -119,7 +123,21 @@ class YXSFileUploadHelper: NSObject {
                     
                 case .circle:
                     path = self.getCircleUrl(fullName: fullName)
-
+                    
+                case .star:
+                    if classId == nil {
+                        failureHandler?("star没有班级ID", "400")
+                        return
+                    }
+                    path = self.getStarUrl(fullName: fullName, classId: classId ?? 0)
+                    
+                case .curriculum:
+                    if classId == nil {
+                        failureHandler?("curriculum班级ID", "400")
+                        return
+                    }
+                    path = self.getCurriculumUrl(fullName: fullName, classId: classId ?? 0)
+                    
                 default:
                     path = self.getAvatarUrl(fullName: fullName)
                 }
@@ -193,7 +211,21 @@ class YXSFileUploadHelper: NSObject {
                     
                 case .circle:
                     path = self.getCircleUrl(fullName: fullName)
-
+                    
+                case .star:
+                    if classId == nil {
+                        failureHandler?("star没有班级ID", "400")
+                        return
+                    }
+                    path = self.getStarUrl(fullName: fullName, classId: classId ?? 0)
+                    
+                case .curriculum:
+                    if classId == nil {
+                        failureHandler?("curriculum班级ID", "400")
+                        return
+                    }
+                    path = self.getCurriculumUrl(fullName: fullName, classId: classId ?? 0)
+                        
                 default:
                     path = self.getAvatarUrl(fullName: fullName)
                 }
@@ -243,7 +275,21 @@ class YXSFileUploadHelper: NSObject {
                     
                 case .circle:
                     path = self.getCircleUrl(fullName: fullName)
-
+                    
+                case .star:
+                    if classId == nil {
+                        failureHandler?("star没有班级ID", "400")
+                        return
+                    }
+                    path = self.getStarUrl(fullName: fullName, classId: classId ?? 0)
+                    
+                case .curriculum:
+                    if classId == nil {
+                        failureHandler?("curriculum班级ID", "400")
+                        return
+                    }
+                    path = self.getCurriculumUrl(fullName: fullName, classId: classId ?? 0)
+                        
                 default:
                     path = self.getAvatarUrl(fullName: fullName)
                 }
@@ -295,7 +341,21 @@ class YXSFileUploadHelper: NSObject {
                     
                 case .circle:
                     path = self.getCircleUrl(fullName: fullName)
-
+                    
+                case .star:
+                    if classId == nil {
+                        failureHandler?("star没有班级ID", "400")
+                        return
+                    }
+                    path = self.getStarUrl(fullName: fullName, classId: classId ?? 0)
+                    
+                case .curriculum:
+                    if classId == nil {
+                        failureHandler?("curriculum班级ID", "400")
+                        return
+                    }
+                    path = self.getCurriculumUrl(fullName: fullName, classId: classId ?? 0)
+                           
                 default:
                     path = self.getAvatarUrl(fullName: fullName)
                 }
@@ -327,7 +387,7 @@ class YXSFileUploadHelper: NSObject {
     
     /**
      *  注意！
-     *  当storageType 为 classFile时 classId必填；
+     *  当storageType 为 classFile、star、curriculum时 classId必填；
      *  当storageType 为 album时 classId、albumId必填
      */
     func uploadPHAssetDataSource(mediaAssets:[PHAsset],storageType: YXSStorageType, classId: Int? = nil, albumId: Int? = nil, progress : ((_ progress: CGFloat)->())?, sucess:(([YXSFileModel])->())?,failureHandler: ((String, String) -> ())?) {
@@ -640,6 +700,28 @@ class YXSFileUploadHelper: NSObject {
         return "test-env/avatar/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
         #else
         return "product-env/avatar/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).\(extName)"
+        #endif
+    }
+    
+    /// 班级之星
+    @objc func getStarUrl(fullName:String, classId:Int)-> String {
+        let name = fullName.deletingPathExtension
+        let extName = fullName.pathExtension.lowercased()
+        #if isTest
+        return "test-env/star/ios/\(classId)/\(name).\(extName)"
+        #else
+        return "product-env/star/ios/\(classId)/\(name).\(extName)"
+        #endif
+    }
+    
+    /// 课表
+    @objc func getCurriculumUrl(fullName:String, classId:Int)-> String {
+        let name = fullName.deletingPathExtension
+        let extName = fullName.pathExtension.lowercased()
+        #if isTest
+        return "test-env/curriculum/ios/\(classId)/\(name).\(extName)"
+        #else
+        return "product-env/curriculum/ios/\(classId)/\(name).\(extName)"
         #endif
     }
     

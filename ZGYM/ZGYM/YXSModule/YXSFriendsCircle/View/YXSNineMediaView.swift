@@ -112,7 +112,7 @@ class YXSNineMediaView: UIView{
                     }
                 }
             }
-            YXSShowBrowserHelper.showImage(urls: urls, images: images, curruntIndex: index)
+            YXSShowBrowserHelper.showImage(urls: urls, images: images, currentIndex: index)
         }
     }
 }

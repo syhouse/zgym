@@ -20,8 +20,15 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     var parentFolderId: Int = -1
     /// 文件夹列表
     var folderList: [YXSFolderModel] = [YXSFolderModel]()
+    /// 选中的文件夹集合
+    var selectedFolderList: [YXSFolderModel] = [YXSFolderModel]()
+    /// 是否有加载更多 (ps:文件夹请求完才请求文件)
+    var folderHasNext: Bool = true
+    
     /// 文件列表
     var fileList: [YXSFileModel] = [YXSFileModel]()
+    /// 选中的文件集合
+    var selectedFileList: [YXSFileModel] = [YXSFileModel]()
     
     private var navRightBtn: YXSButton = YXSButton()
     
@@ -99,11 +106,105 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     
     // MARK: - Request
     override func yxs_refreshData() {
-        loadData()
+        loadMore = true
+        folderHasNext = true
+        loadData2()
     }
     
     override func yxs_loadNextPage() {
-        loadData()
+        loadData2()
+    }
+    
+    @objc func loadData2() {
+        if folderHasNext {
+            /// 请求文件夹
+            YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: self.currentPage, folderId: self.parentFolderId).request({ [weak self](json) in
+                guard let weakSelf = self else {return}
+                weakSelf.folderHasNext = json["hasNext"].boolValue
+
+                let tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
+                
+                if weakSelf.currentPage == 1 {
+                    weakSelf.folderList.removeAll()
+                }
+                weakSelf.folderList += tmpFolderList
+                
+                if weakSelf.isTbViewEditing {
+                    /// 编辑状态 下拉刷新 填充选中的Cell
+                    for sub in weakSelf.selectedFolderList {
+                        for obj in weakSelf.folderList {
+                            if sub.id == obj.id {
+                                obj.isSelected = true
+                                break
+                            }
+                        }
+                    }
+                }
+                
+                YXSCacheHelper.yxs_cacheClassFolderList(dataSource: weakSelf.folderList, classId: weakSelf.classId, parentFolderId: weakSelf.parentFolderId)
+                
+                if weakSelf.folderHasNext {
+                    /// 文件夹还有
+                    weakSelf.fileList.removeAll()
+                    YXSCacheHelper.yxs_cacheClassFileList(dataSource: weakSelf.fileList, classId: weakSelf.classId, parentFolderId: weakSelf.parentFolderId)
+                    weakSelf.tableView.reloadData()
+                    weakSelf.yxs_endingRefresh()
+                    
+                } else {
+                    /// 文件夹没了 请求文件数据
+                    weakSelf.currentPage = 1
+                    weakSelf.requestFile()
+                }
+                
+            }) { [weak self](msg, code) in
+                guard let weakSelf = self else {return}
+                
+                MBProgressHUD.yxs_showMessage(message: msg)
+                weakSelf.yxs_endingRefresh()
+            }
+            
+        } else {
+            /// 请求文件
+            requestFile()
+        }
+    }
+    
+    @objc func requestFile(completionHandler:(([YXSFileModel])->())? = nil) {
+        
+        YXSFilePageQueryRequest(classId: self.classId, currentPage: self.currentPage, folderId: self.parentFolderId).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            
+            let hasNext = json["hasNext"].boolValue
+            weakSelf.loadMore = hasNext
+            
+            let tmpFileList = Mapper<YXSFileModel>().mapArray(JSONString: json["classFileList"].rawString()!) ?? [YXSFileModel]()
+            if weakSelf.currentPage == 1 {
+                weakSelf.fileList.removeAll()
+            }
+            weakSelf.fileList += tmpFileList
+            if weakSelf.isTbViewEditing {
+                /// 填充Cell的选中
+                for sub in weakSelf.selectedFileList {
+                    for obj in weakSelf.fileList {
+                        if sub.id == obj.id {
+                            obj.isSelected = true
+                            break
+                        }
+                    }
+                }
+            }
+            YXSCacheHelper.yxs_cacheClassFileList(dataSource: weakSelf.fileList, classId: weakSelf.classId, parentFolderId: weakSelf.parentFolderId)
+            
+            completionHandler?(tmpFileList)
+            weakSelf.tableView.reloadData()
+            weakSelf.yxs_endingRefresh()
+            
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+            
+            MBProgressHUD.yxs_showMessage(message: msg)
+            weakSelf.yxs_endingRefresh()
+        }
     }
     
     @objc func loadData() {
@@ -120,7 +221,8 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             // 出组
             YXSFileFolderPageQueryRequest(classId: self.classId, currentPage: 1, folderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"]
+                weakSelf.folderHasNext = json["hasNext"].boolValue
+                
                 
                 tmpFolderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
                 workingGroup.leave()
@@ -134,7 +236,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
         workingGroup.enter()
         workingQueue.async {
             // 出组
-            YXSFilePageQueryRequest(classId: self.classId, currentPage: self.curruntPage, folderId: self.parentFolderId).request({ [weak self](json) in
+            YXSFilePageQueryRequest(classId: self.classId, currentPage: self.currentPage, folderId: self.parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 
                 let hasNext = json["hasNext"].boolValue
@@ -173,7 +275,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                     }
                 }
                 
-                if self.curruntPage == 1{
+                if self.currentPage == 1{
                     self.fileList.removeAll()
                 }
                 
@@ -726,7 +828,7 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
                 let item = fileList[indexPath.row]
                 
                 if item.fileType == "jpg" {
-                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], curruntIndex: 0)
+                    YXSShowBrowserHelper.showImage(urls: [URL(string: item.fileUrl ?? "")!], currentIndex: 0)
                     
                 } else if item.fileType == "mp4" {
                     // 视频
@@ -741,11 +843,63 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
             if indexPath.section == 0 {
                 let item = folderList[indexPath.row]
                 item.isSelected = item.isSelected == true ? false : true
+                if item.isSelected ?? false {
+                    /// 选中
+                     var tmpIdx: Int? = nil
+                     for (index, sub) in selectedFolderList.enumerated() {
+                         if sub.id == item.id {
+                             tmpIdx = index
+                             break
+                         }
+                     }
+                     if tmpIdx == nil {
+                         selectedFolderList.append(item)
+                     }
+                    
+                } else {
+                    /// 取消选中
+                    var tmpIdx: Int? = nil
+                    for (index, sub) in selectedFolderList.enumerated() {
+                        if sub.id == item.id {
+                            tmpIdx = index
+                            break
+                        }
+                    }
+                    if let idx = tmpIdx {
+                        selectedFolderList.remove(at: idx)
+                    }
+                }
                 tableView.reloadRows(at: [indexPath], with: .none)
                 
             } else {
                 let item = fileList[indexPath.row]
                 item.isSelected = item.isSelected == true ? false : true
+                if item.isSelected ?? false {
+                    /// 选中
+                     var tmpIdx: Int? = nil
+                     for (index, sub) in selectedFileList.enumerated() {
+                         if sub.id == item.id {
+                             tmpIdx = index
+                             break
+                         }
+                     }
+                     if tmpIdx == nil {
+                         selectedFileList.append(item)
+                     }
+                    
+                } else {
+                    /// 取消选中
+                    var tmpIdx: Int? = nil
+                    for (index, sub) in selectedFileList.enumerated() {
+                        if sub.id == item.id {
+                            tmpIdx = index
+                            break
+                        }
+                    }
+                    if let idx = tmpIdx {
+                        selectedFileList.remove(at: idx)
+                    }
+                }
                 tableView.reloadRows(at: [indexPath], with: .none)
             }
             verifyBottomViewBtnEnable()

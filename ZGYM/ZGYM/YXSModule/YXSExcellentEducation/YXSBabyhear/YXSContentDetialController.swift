@@ -66,12 +66,12 @@ class YXSContentDetialController: YXSBaseTableViewController {
     
     var headerHeight: CGFloat = 220 + kSafeTopHeight
     func loadData(){
-        YXSEducationXMLYAlbumsBrowseDetialRequest.init(album_id: id, page: curruntPage).request({ (result: YXSAlbumsBrowseModel) in
+        YXSEducationXMLYAlbumsBrowseDetialRequest.init(album_id: id, page: currentPage).request({ (result: YXSAlbumsBrowseModel) in
             self.yxs_endingRefresh()
             self.albumsModel = result
             self.customNav.title = result.albumTitle
             
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.listSource.removeAll()
             }
             
@@ -164,8 +164,8 @@ class YXSContentDetialController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let curruntTrack = listSource[indexPath.row]
-        let track: XMTrack = XMTrack.init(dictionary: curruntTrack.toJSON())!
+        let currentTrack = listSource[indexPath.row]
+        let track: XMTrack = XMTrack.init(dictionary: currentTrack.toJSON())!
         var trackList = [XMTrack]()
         for model in listSource{
             trackList.append(XMTrack.init(dictionary: model.toJSON()))

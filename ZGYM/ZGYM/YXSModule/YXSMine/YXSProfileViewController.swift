@@ -48,7 +48,7 @@ class YXSProfileViewController: YXSBaseViewController, UITableViewDelegate, UITa
     
     @objc func requestUploadImage(asset: YXSMediaModel) {
         MBProgressHUD.yxs_showLoading(inView: self.view)
-        YXSUploadSourceHelper().uploadImage(mediaModel: asset, uploadPath: YXSUploadSourceHelper.avatarDoucmentPath, sucess: { [weak self](successUrl) in
+        YXSUploadSourceHelper().uploadImage(mediaModel: asset, storageType: YXSStorageType.avatar, sucess: { [weak self](successUrl) in
             guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
             weakSelf.requestsEditProfile(parameter: ["avatar":successUrl]) {
@@ -199,7 +199,7 @@ class YXSProfileViewController: YXSBaseViewController, UITableViewDelegate, UITa
             cell.cellStyle = .ImageViews
             cell.imgAvatar.sd_setImage(with: URL(string: dic["avatar"] ?? ""), placeholderImage:YXSPersonDataModel.sharePerson.personRole == .TEACHER ? kImageUserIconTeacherDefualtImage : kImageUserIconStudentDefualtImage)
             cell.avatarTap = { (avatar) in
-                YXSShowBrowserHelper.showImage(images: [avatar], curruntIndex: 0)
+                YXSShowBrowserHelper.showImage(images: [avatar], currentIndex: 0)
             }
             
         } else {

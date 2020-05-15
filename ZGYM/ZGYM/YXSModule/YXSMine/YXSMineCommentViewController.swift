@@ -37,10 +37,10 @@ class YXSMineCommentViewController: YXSBaseTableViewController {
     
     // MARK: - Request
     @objc func requestData() {
-        YXSEducationTeacherMyEvaluationHistoryListRequest(currentPage: curruntPage, stage: self.yxs_user.stage ?? "").requestCollection({ [weak self](list:[YXSClassStarHistoryModel]) in
+        YXSEducationTeacherMyEvaluationHistoryListRequest(currentPage: currentPage, stage: self.yxs_user.stage ?? "").requestCollection({ [weak self](list:[YXSClassStarHistoryModel]) in
             guard let weakSelf = self else {return}
             weakSelf.yxs_endingRefresh()
-            if weakSelf.curruntPage == 1{
+            if weakSelf.currentPage == 1{
                 weakSelf.dataSource.removeAll()
             }
 //            let list = Mapper<SLHomeListModel>().mapArray(JSONObject: result["homeworkList"].object) ?? [SLHomeListModel]()

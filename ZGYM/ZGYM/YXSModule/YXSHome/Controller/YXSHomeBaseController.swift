@@ -76,7 +76,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     
     // MARK: - loadData
     override func yxs_refreshData() {
-        curruntPage = 1
+        currentPage = 1
         yxs_loadData()
     }
     
@@ -273,7 +273,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         case .classstart:
             if let childModel = childModel{
                 UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: childModel.id ?? 0)
-                UIUtil.curruntNav().pushViewController(YXSClassStarPartentDetialController.init(childrenModel: childModel, startTime: model.startTime,endTime: model.endTime))
+                UIUtil.currentNav().pushViewController(YXSClassStarPartentDetialController.init(childrenModel: childModel, startTime: model.startTime,endTime: model.endTime))
             }
         case .friendCicle:
             yxs_showComment(indexPath)
@@ -298,7 +298,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     /// 老师发布
     @objc func yxs_publishClick(){
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER && (yxs_user.gradeIds == nil || yxs_user.gradeIds!.count == 0){
-            UIUtil.curruntNav().pushViewController(YXSTeacherClassListViewController())
+            UIUtil.currentNav().pushViewController(YXSTeacherClassListViewController())
             return
         }
         YXSHomePublishView.showAlert {[weak self] (event) in
@@ -360,17 +360,17 @@ class YXSHomeBaseController: YXSBaseTableViewController{
 //            for items in self.yxs_dataSource{
 //                totalCount += items.items.count
 //            }
-//            var curruntCounts = 0
+//            var currentCounts = 0
 //            for index in 0...indexPath.section{
 //                if index < indexPath.section{
-//                    curruntCounts += yxs_dataSource[index].items.count
+//                    currentCounts += yxs_dataSource[index].items.count
 //                }else{
-//                    curruntCounts += indexPath.row + 1
+//                    currentCounts += indexPath.row + 1
 //                }
 //
 //            }
 //
-//            if curruntCounts >= totalCount - kPreloadSize{
+//            if currentCounts >= totalCount - kPreloadSize{
 //                if !isSingleHome{///单个详情页 tableview 会滑动跳到底部
 ////                    tableView.mj_footer?.beginRefreshing()
 //                }

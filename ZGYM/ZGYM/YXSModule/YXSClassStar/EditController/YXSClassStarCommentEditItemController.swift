@@ -27,14 +27,14 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
         }
     }
     ///当前item的图标地址   为空的话默认使用当前所属类型的item图标
-    var curruntItemUrl: String?
+    var currentItemUrl: String?
     init(classId: Int,itemModel: YXSClassStarCommentItemModel?, index:Int,stage: StageType) {
         self.stage = stage
         self.classId = classId
         self.itemModel = itemModel
         self.index = index
         
-        self.curruntItemUrl = itemModel?.evaluationUrl
+        self.currentItemUrl = itemModel?.evaluationUrl
         super.init()
     }
     
@@ -53,7 +53,7 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
             nameFieldLabel.contentField.text = itemModel.evaluationItem
             buttonView.selectIndex = (Int(abs(itemModel.score ?? 1)) ) - 1
             allSwitch.swt.isOn = (itemModel.type ?? "") == "20"
-            logoImageView.sd_setImage(with: URL.init(string: (curruntItemUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!),placeholderImage: kImageDefualtImage, completed: nil)
+            logoImageView.sd_setImage(with: URL.init(string: (currentItemUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!),placeholderImage: kImageDefualtImage, completed: nil)
         }
         
         loadData()
@@ -144,8 +144,8 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
         }
         
         var evaluationUrl = ""
-        if let curruntItemUrl = curruntItemUrl{
-            evaluationUrl = curruntItemUrl
+        if let currentItemUrl = currentItemUrl{
+            evaluationUrl = currentItemUrl
         }else{
             evaluationUrl = selectTypeModel.iconUrl ?? ""
         }
@@ -213,7 +213,7 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
         vc.complete = {
             [weak self] (imageUrl) in
             guard let strongSelf = self else { return }
-            strongSelf.curruntItemUrl = imageUrl
+            strongSelf.currentItemUrl = imageUrl
             strongSelf.changeItemImageLogo()
         }
         self.navigationController?.pushViewController(vc)
@@ -223,9 +223,9 @@ class YXSClassStarCommentEditItemController: YXSBaseViewController {
     ///修改item url
     func changeItemImageLogo(){
         var newUrl = ""
-        //当前有curruntItemUrl  (修改item 或者编辑选择了)
-        if let curruntItemUrl = curruntItemUrl{
-            newUrl = curruntItemUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        //当前有currentItemUrl  (修改item 或者编辑选择了)
+        if let currentItemUrl = currentItemUrl{
+            newUrl = currentItemUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         }else{
             newUrl = (selectTypeModel.iconUrl ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         }

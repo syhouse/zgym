@@ -28,11 +28,15 @@ class YXSChildContentHomeListModel: NSObject, NSCoding, Mappable {
     /// 文章类型（1:育儿好文 2:优期刊）
     var type: Int?
 
+    var uploadTime: String?
+
+
     func mapping(map: Map) {
         cover <- map["cover"]
         id <- map["id"]
         title <- map["title"]
         publishTime <- map["publishTime"]
+        uploadTime <- map["uploadTime"]
         numPeriods <- map["numPeriods"]
         type <- map["type"]
     }
@@ -45,6 +49,7 @@ class YXSChildContentHomeListModel: NSObject, NSCoding, Mappable {
         publishTime = aDecoder.decodeObject(forKey: "publishTime") as? String
         numPeriods = aDecoder.decodeObject(forKey: "numPeriods") as? Int
         type = aDecoder.decodeObject(forKey: "type") as? Int
+        uploadTime = aDecoder.decodeObject(forKey: "uploadTime") as? String
     }
     
     @objc func encode(with aCoder: NSCoder)
@@ -67,8 +72,12 @@ class YXSChildContentHomeListModel: NSObject, NSCoding, Mappable {
         if type != nil{
             aCoder.encode(type, forKey: "type")
         }
+        if uploadTime != nil{
+            aCoder.encode(uploadTime, forKey: "uploadTime")
+        }
     }
 }
+
 
 
 class YXSChildContentHomeTypeModel: NSObject, Mappable {

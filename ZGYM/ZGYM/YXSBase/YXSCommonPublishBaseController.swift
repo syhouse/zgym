@@ -34,7 +34,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     /// 保存的文件名称
     var fileName: String{
         get{
-            return "\(saveDirectory)\(serviceId ?? 0)\(yxs_user.id ?? 0)\(yxs_user.curruntChild?.id ?? 0)\(yxs_user.type ?? "")\(yxs_user.stage ?? "")"
+            return "\(saveDirectory)\(serviceId ?? 0)\(yxs_user.id ?? 0)\(yxs_user.currentChild?.id ?? 0)\(yxs_user.type ?? "")\(yxs_user.stage ?? "")"
         }
     }
     
@@ -136,18 +136,18 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     
     // MARK: -loadData
     func yxs_loadTeachClassData(){
-        var curruntClassId: Int = 0
+        var currentClassId: Int = 0
         if let classId = singlePublishClassId{
-            curruntClassId = classId
+            currentClassId = classId
             
         }else{
-            curruntClassId = yxs_user.gradeIds?.first ?? 0
+            currentClassId = yxs_user.gradeIds?.first ?? 0
         }
         
         yxs_loadPublishClassListData(isFriendCircle) { (classes) in
             var selectClasses = [YXSClassModel]()
             for classModel in classes{
-                if classModel.id == curruntClassId{
+                if classModel.id == currentClassId{
                     selectClasses.append(classModel)
                     break
                 }
@@ -185,27 +185,23 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         
         var commintMediaInfos = [[String: Any]]()
         //需要上传
-        var localAudioInfos = [[String: Any]]()
-        var uploadPaths = [String]()
+        var localMedias = [SLUploadSourceModel]()
+
         for model in publishModel.audioModels{
             if let servicePath = model.servicePath{
                 commintMediaInfos.append([typeKey: SourceNameType.voice,urlKey: servicePath,modelKey: model])
             }else{
-                localAudioInfos.append([typeKey: SourceNameType.voice,modelKey: model])
-                uploadPaths.append(isFriendCircle ? YXSUploadSourceHelper.classCircleDoucmentPath : YXSUploadSourceHelper.expiresImgDoucmentPath)
+                localMedias.append(SLUploadSourceModel.init(model: model, type: .voice, storageType: isFriendCircle ? YXSStorageType.circle : .temporary, fileName: model.fileName ?? ""))
             }
         }
         
-        //本地图片视频资源
-        var localMeidaInfos = [[String: Any]]()
         for model in publishModel.medias{
             if !model.isService{//本地资源 需要先上传获取url
                 if model.type == .video{
-                    localMeidaInfos.append([typeKey: SourceNameType.video,modelKey: model])
+                   localMedias.append(SLUploadSourceModel.init(model: model, type: .video, storageType: isFriendCircle ? YXSStorageType.circle : .temporary, fileName: model.fileName))
                 }else{
-                    localMeidaInfos.append([typeKey: SourceNameType.image,modelKey: model])
+                    localMedias.append(SLUploadSourceModel.init(model: model, type: .image, storageType: isFriendCircle ? YXSStorageType.circle : .temporary, fileName: model.fileName))
                 }
-                uploadPaths.append(isFriendCircle ? YXSUploadSourceHelper.classCircleDoucmentPath : YXSUploadSourceHelper.expiresImgDoucmentPath)
             }else{//修改的服务器资源
                 if model.type == .video{
                     commintMediaInfos.append([typeKey: SourceNameType.video,urlKey: model.serviceUrl ?? ""])
@@ -217,14 +213,14 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
             }
         }
         //有本地资源上传
-        if localAudioInfos.count != 0 || localMeidaInfos.count != 0{
+        if localMedias.count != 0{
             self.uploadHud = getUploadHud()
             self.uploadHud.label.text = "上传中(0%)"
             uploadHud.show(animated: true)
         }
         
 
-        YXSUploadSourceHelper().uploadMedia(mediaInfos: localAudioInfos + localMeidaInfos, uploadPaths: uploadPaths, progress: {
+        YXSUploadSourceHelper().uploadMedia(mediaInfos: localMedias, progress: {
             (progress)in
             DispatchQueue.main.async {
                 self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int(progress * 100)))%)"

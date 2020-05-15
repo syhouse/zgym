@@ -87,7 +87,7 @@ class YXSHomeListSelectView: UIView {
     func beginAnimation() {
         UIUtil.TopViewController().fd_interactivePopDisabled = true
         
-        UIUtil.curruntNav().view.addSubview(bgWindow)
+        UIUtil.currentNav().view.addSubview(bgWindow)
         
         bgWindow.addSubview(self)
         bgWindow.snp.makeConstraints { (make) in
@@ -179,17 +179,17 @@ extension YXSHomeListSelectView: UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let curruntModel = selects[indexPath.row]
+        let currentModel = selects[indexPath.row]
         var selectModels = [YXSSelectModel]()
         for model in selects{
-            if model.text == curruntModel.text{
+            if model.text == currentModel.text{
                 model.isSelect = true
             }else{
                 model.isSelect = false
             }
             selectModels.append(model)
         }
-        selectComplete?(curruntModel,selectModels)
+        selectComplete?(currentModel,selectModels)
         dismiss()
     }
 }

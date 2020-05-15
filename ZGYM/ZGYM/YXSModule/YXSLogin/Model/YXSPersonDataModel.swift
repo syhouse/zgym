@@ -93,7 +93,7 @@ enum StageType: String {
     
     public var showKINDERGARTENUI: Bool {
         get{
-            return (YXSPersonDataModel.sharePerson.personRole == .PARENT && (StageType.init(rawValue:yxs_user.curruntChild?.grade?.stage ?? "") ?? StageType.PRIMARY_SCHOOL) == StageType.KINDERGARTEN) || (YXSPersonDataModel.sharePerson.personRole == .TEACHER && self.personStage == .KINDERGARTEN)
+            return (YXSPersonDataModel.sharePerson.personRole == .PARENT && (StageType.init(rawValue:yxs_user.currentChild?.grade?.stage ?? "") ?? StageType.PRIMARY_SCHOOL) == StageType.KINDERGARTEN) || (YXSPersonDataModel.sharePerson.personRole == .TEACHER && self.personStage == .KINDERGARTEN)
         }
     }
     
@@ -103,7 +103,7 @@ enum StageType: String {
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
                 return StageType.init(rawValue: yxs_user.stage ?? "") ?? .PRIMARY_SCHOOL
             }else{
-                return yxs_user.curruntChild?.stage ?? .PRIMARY_SCHOOL
+                return yxs_user.currentChild?.stage ?? .PRIMARY_SCHOOL
             }
         }
     }

@@ -40,9 +40,9 @@ class YXSFriendCircleInfoHeaderView: UIView {
     
     @objc func imageClick(){
         if model.avatar?.count ?? 0 > 0 {
-            YXSShowBrowserHelper.showImage(urls: [URL.init(string: model.avatar ?? "")!], curruntIndex: nil)
+            YXSShowBrowserHelper.showImage(urls: [URL.init(string: model.avatar ?? "")!], currentIndex: nil)
         } else  {
-            YXSShowBrowserHelper.showImage(images: [self.headerImageSection.rightImage.image], curruntIndex: nil)
+            YXSShowBrowserHelper.showImage(images: [self.headerImageSection.rightImage.image], currentIndex: nil)
         }
     }
     

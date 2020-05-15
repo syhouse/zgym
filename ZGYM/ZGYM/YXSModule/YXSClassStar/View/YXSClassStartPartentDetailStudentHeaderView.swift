@@ -77,13 +77,13 @@ class YXSClassStartPartentDetailStudentHeaderView: UIView {
     }
     
     @objc func lookFirst(){
-        YXSClassStarApposeView.showAlert(childs: model.mapTop3?.first ?? [YXSClassStarChildrenModel](), curruntChild: model.currentChildren, sort:1, stage:  stage)
+        YXSClassStarApposeView.showAlert(childs: model.mapTop3?.first ?? [YXSClassStarChildrenModel](), currentChild: model.currentChildren, sort:1, stage:  stage)
     }
     @objc func lookSecend(){
-        YXSClassStarApposeView.showAlert(childs: model.mapTop3?.secend ?? [YXSClassStarChildrenModel](), curruntChild: model.currentChildren, sort:2,stage:  stage)
+        YXSClassStarApposeView.showAlert(childs: model.mapTop3?.secend ?? [YXSClassStarChildrenModel](), currentChild: model.currentChildren, sort:2,stage:  stage)
     }
     @objc func lookThrid(){
-        YXSClassStarApposeView.showAlert(childs: model.mapTop3?.thrid ?? [YXSClassStarChildrenModel](), curruntChild: model.currentChildren, sort:3,stage:  stage)
+        YXSClassStarApposeView.showAlert(childs: model.mapTop3?.thrid ?? [YXSClassStarChildrenModel](), currentChild: model.currentChildren, sort:3,stage:  stage)
     }
     
     @objc func shareClick(){
@@ -214,12 +214,12 @@ class ClassStartPartentRankView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setViewModel(_ models: [YXSClassStarChildrenModel]?,_ curruntChild: YXSClassStarChildrenModel?, index: Int,stage: StageType){
+    func setViewModel(_ models: [YXSClassStarChildrenModel]?,_ currentChild: YXSClassStarChildrenModel?, index: Int,stage: StageType){
         if let models = models{
             var model = models.first!
-            if let curruntChild = curruntChild{
-                if curruntChild.topNo ?? 101 == index{
-                    model = curruntChild
+            if let currentChild = currentChild{
+                if currentChild.topNo ?? 101 == index{
+                    model = currentChild
                 }
             }
             iconImageView.sd_setImage(with: URL.init(string: model.avatar ?? ""),placeholderImage: kImageUserIconStudentDefualtImage, completed: nil)

@@ -21,8 +21,8 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
     ///   - urls: 服务器地址
     ///   - images: UIImage
     ///   - assets: 相册assets
-    ///   - curruntIndex: 当前index
-    static func showImage(urls: [URL]? = nil, images: [UIImage?]? = nil, assets: [PHAsset]? = nil, curruntIndex: Int?){
+    ///   - currentIndex: 当前index
+    static func showImage(urls: [URL]? = nil, images: [UIImage?]? = nil, assets: [PHAsset]? = nil, currentIndex: Int?){
         let browser = YBImageBrowser()
         if let urls = urls{
             for url in urls{
@@ -52,8 +52,8 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
         }
         
         
-        if let curruntIndex = curruntIndex{
-            browser.currentPage = curruntIndex
+        if let currentIndex = currentIndex{
+            browser.currentPage = currentIndex
         }
         browser.delegate = YXSShowBrowserHelper.helper
         browser.show()

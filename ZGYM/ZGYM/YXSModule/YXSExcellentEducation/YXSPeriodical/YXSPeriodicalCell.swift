@@ -49,13 +49,13 @@ class YXSPeriodicalCell : UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func yxs_setCellModel(_ model: XMTrack?){
-        yxs_nameLabel.text = "优期刊第8期"
-        yxs_desLabel.text = "数学素养课数学素养课数学素养课数学素养课数学素养课数学素养课数学素养课"
-        timeLabel.text = "03.29 14:30"
-        rightImageView.sd_setImage(with: URL.init(string: ""), placeholderImage: kImageDefualtImage)
+    func yxs_setCellModel(_ model: YXSPeriodicalListModel){
+        yxs_nameLabel.text = "优期刊第\(model.numPeriods ?? 1)期"
+        yxs_desLabel.text = model.theme
+        timeLabel.text = model.publishTime?.yxs_Date().toString(format: DateFormatType.custom("MM.dd HH:mm"))
+        rightImageView.sd_setImage(with: URL.init(string: model.cover ?? ""), placeholderImage: kImageDefualtImage)
     }
-    
+
     // MARK: -getter&setter
     lazy var rightImageView: UIImageView = {
         let rightImageView = UIImageView()

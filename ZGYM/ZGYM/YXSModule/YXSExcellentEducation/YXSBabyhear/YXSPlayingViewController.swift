@@ -19,7 +19,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     private var radioSchedule: XMRadioSchedule?
     
     ///当前播放时间
-    private var curruntTime: UInt
+    private var currentTime: UInt
     /// 播放列表菜单
     var playListVC: YXSPlayListViewController?
     
@@ -27,9 +27,9 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     
     /// 展示当前喜马拉雅专辑播放UI
-    /// - Parameter curruntTime: 当前播放进度时间
-    init(curruntTime: UInt) {
-        self.curruntTime = curruntTime
+    /// - Parameter currentTime: 当前播放进度时间
+    init(currentTime: UInt) {
+        self.currentTime = currentTime
         super.init()
     }
     
@@ -39,7 +39,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     ///   - track: 当前声音
     ///   - trackList: 声音列表
     convenience init(track: XMTrack, trackList: [Any] = []){
-        self.init(curruntTime: 0)
+        self.init(currentTime: 0)
         self.track = track
         self.trackList = trackList
     }
@@ -63,7 +63,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         
         UIApplication.shared.endReceivingRemoteControlEvents()
         
-        YXSMusicPlayerWindowView.showPlayerWindow(curruntTime: curruntTime)
+        YXSMusicPlayerWindowView.showPlayerWindow(currentTime: currentTime)
     }
     
     override func viewDidLoad() {
@@ -131,8 +131,8 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             xmTrackPlayerDidStart()
             updatePlayerModelUI()
             if let shared = XMSDKPlayer.shared(){
-                progressView.value = Float(curruntTime)/Float(shared.currentTrack()?.duration ?? 1)
-                lbCurrentDuration.text = stringWithDuration(duration: UInt(curruntTime))
+                progressView.value = Float(currentTime)/Float(shared.currentTrack()?.duration ?? 1)
+                lbCurrentDuration.text = stringWithDuration(duration: UInt(currentTime))
                 btnPlayPause.isSelected = !shared.isPaused()
                 
                 if shared.isPlaying(){
@@ -400,8 +400,8 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         progressView.value = Float(percent)
         lbCurrentDuration.text = stringWithDuration(duration: currentSecond)
         
-        YXSRemoteControlInfoHelper.curruntTime = currentSecond
-        curruntTime = currentSecond
+        YXSRemoteControlInfoHelper.currentTime = currentSecond
+        currentTime = currentSecond
         
         UIUtil.configNowPlayingCenterUI()
     }

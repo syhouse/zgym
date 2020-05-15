@@ -46,7 +46,7 @@ class UIUtil: NSObject {
     }
     
     /// 当前导航栏控制器
-    @objc static func curruntNav() -> UINavigationController{
+    @objc static func currentNav() -> UINavigationController{
         
         if RootController() is UITabBarController{
             return (RootController() as! UITabBarController).selectedViewController as? UINavigationController ?? UINavigationController()
@@ -58,7 +58,7 @@ class UIUtil: NSObject {
     }
     /// 当前顶层控制器
     @objc static func TopViewController() -> UIViewController{
-        return curruntNav().topViewController ?? UIViewController()
+        return currentNav().topViewController ?? UIViewController()
     }
 }
 
@@ -309,7 +309,7 @@ extension UIUtil{
             if keys.count == 1 {
                 defaultIndex = 0
             }
-            YXSSolitaireSelectReasonView(items: keys, selectedIndex: defaultIndex, title: "要拨打\(list.first?.realName ?? "")的电话吗？", inTarget: curruntNav().view) { (view, index) in
+            YXSSolitaireSelectReasonView(items: keys, selectedIndex: defaultIndex, title: "要拨打\(list.first?.realName ?? "")的电话吗？", inTarget: currentNav().view) { (view, index) in
                 if keys.count > 0 {
                     var mobile = dic[keys[index]]
                     mobile = "telprompt://\(mobile ?? "")"
@@ -346,7 +346,7 @@ extension UIUtil{
             if keys.count == 1 {
                 defaultIndex = 0
             }
-            YXSSolitaireSelectReasonView(items: keys, selectedIndex: defaultIndex, title: "要联系\(list.first?.realName ?? "")的私聊吗？", inTarget: curruntNav().view) { (view, index) in
+            YXSSolitaireSelectReasonView(items: keys, selectedIndex: defaultIndex, title: "要联系\(list.first?.realName ?? "")的私聊吗？", inTarget: currentNav().view) { (view, index) in
                 let imId = dic[keys[index]]
                 UIUtil.TopViewController().yxs_pushChatVC(imId: imId ?? "")
                 view.cancelClick()
@@ -410,7 +410,7 @@ extension UIUtil{
                 YXSEducationNoticeCustodianUpdateReadRequest.init( childrenId: model.childrenId ?? 0, noticeCreateTime: model.createTime ?? "", noticeId: model.serviceId ?? 0).request(nil, failureHandler: nil)
             }
             if showLoading{
-                MBProgressHUD.yxs_showMessage(message: "已阅读", inView: UIUtil.curruntNav().view)
+                MBProgressHUD.yxs_showMessage(message: "已阅读", inView: UIUtil.currentNav().view)
             }
             
             NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentReadSucessNotification), object: [kNotificationModelKey: model])
@@ -489,7 +489,7 @@ extension UIUtil{
         YXSEducationClassCircleMessageTipsRequest().request({ (result: YXSFriendsTipsModel) in
             YXSPersonDataModel.sharePerson.friendsTips = result
             if result.count ?? 0 > 0 {
-//                RootController().yxs_showBadgeOnItem(index: 1, count: result.count!)
+                RootController().yxs_showBadgeOnItem(index: 1, count: result.count!)
                 completion?()
             }
         }, failureHandler: nil)
@@ -515,13 +515,13 @@ extension UIUtil{
                     for model in children{
                         if model.id == childId{
                             hasChild = true
-                            resultModel.curruntChild = model
+                            resultModel.currentChild = model
                             model.isSelect = true
                             break
                         }
                     }
                     if !hasChild{
-                        resultModel.curruntChild = children.first
+                        resultModel.currentChild = children.first
                         children.first?.isSelect = true
                     }
                 }
@@ -761,7 +761,7 @@ extension UIUtil{
     public static func pushOpenVideo(url: String){
         let vc = SLVideoPlayController()
         vc.videoUrl = url
-        self.curruntNav().pushViewController(vc)
+        self.currentNav().pushViewController(vc)
     }
 }
 
@@ -776,15 +776,15 @@ extension UIUtil{
         }
         
         if let image = SDImageCache.shared.imageFromCache(forKey: YXSRemoteControlInfoHelper.imageUrl){
-            UIUtil.configNowPlayingCenter(title: YXSRemoteControlInfoHelper.title, author: YXSRemoteControlInfoHelper.author, curruntTime: YXSRemoteControlInfoHelper.curruntTime, totalTIme: YXSRemoteControlInfoHelper.totalTime, image: image)
+            UIUtil.configNowPlayingCenter(title: YXSRemoteControlInfoHelper.title, author: YXSRemoteControlInfoHelper.author, currentTime: YXSRemoteControlInfoHelper.currentTime, totalTIme: YXSRemoteControlInfoHelper.totalTime, image: image)
         }else{
             UIImageView().sd_setImage(with: URL(string: YXSRemoteControlInfoHelper.imageUrl), completed: { (image, error, type, url) in
-                UIUtil.configNowPlayingCenter(title: YXSRemoteControlInfoHelper.title, author: YXSRemoteControlInfoHelper.author, curruntTime: YXSRemoteControlInfoHelper.curruntTime, totalTIme: YXSRemoteControlInfoHelper.totalTime, image: image)
+                UIUtil.configNowPlayingCenter(title: YXSRemoteControlInfoHelper.title, author: YXSRemoteControlInfoHelper.author, currentTime: YXSRemoteControlInfoHelper.currentTime, totalTIme: YXSRemoteControlInfoHelper.totalTime, image: image)
             })
         }
     }
     
-    static private func configNowPlayingCenter(title: String, author: String, curruntTime: UInt, totalTIme: Int, image: UIImage?){
+    static private func configNowPlayingCenter(title: String, author: String, currentTime: UInt, totalTIme: Int, image: UIImage?){
         //  Converted to Swift 5.2 by Swiftify v5.2.18740 - https://swiftify.com/
         var info: [String : Any] = [:]
         //音乐的标题
@@ -793,7 +793,7 @@ extension UIUtil{
         let author = author
         info[MPMediaItemPropertyArtist] = author
         //音乐的播放时间
-        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: curruntTime)
+        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
         
         //音乐的播放速度
         if XMSDKPlayer.shared()?.isPlaying() ?? false{

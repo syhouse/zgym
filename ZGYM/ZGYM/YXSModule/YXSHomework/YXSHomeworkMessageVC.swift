@@ -19,7 +19,7 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
     /// 老师发布作业详情模型
     var deModel: YXSHomeworkDetailModel?
     /// 当前操作的 IndexPath
-    var curruntIndexPath: IndexPath!
+    var currentIndexPath: IndexPath!
     
     init(deModel: YXSHomeworkDetailModel, model: YXSHomeListModel, messageModel:YXSHomeworkMessageModel) {
         self.deModel = deModel
@@ -74,10 +74,10 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
     
     func showDelectComment(_ commentModel: YXSHomeworkCommentModel,_ point: CGPoint, section: Int){
         var pointInView = point
-        if let curruntIndexPath = self.curruntIndexPath{
-            let cell = self.tableView.cellForRow(at: curruntIndexPath)
+        if let currentIndexPath = self.currentIndexPath{
+            let cell = self.tableView.cellForRow(at: currentIndexPath)
             if let listCell  = cell as? YXSHomeworkDetailCell{
-                let rc = listCell.convert(listCell.comentLabel.frame, to: UIUtil.curruntNav().view)
+                let rc = listCell.convert(listCell.comentLabel.frame, to: UIUtil.currentNav().view)
                 pointInView.y = rc.minY + 14.0
             }
         }
@@ -126,8 +126,8 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
         var requset: YXSBaseRequset!
         requset = YXSEducationHomeworkCommentDeleteRequest.init(childrenId: listModel?.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, homeworkId: self.homeModel.serviceId ?? 0, id: commentModel.id ?? 0)
         requset.request({ (result) in
-            if let curruntIndexPath  = self.curruntIndexPath{
-                listModel?.commentJsonList?.remove(at: curruntIndexPath.row)
+            if let currentIndexPath  = self.currentIndexPath{
+                listModel?.commentJsonList?.remove(at: currentIndexPath.row)
             }
             self.detailModel = listModel
             self.reloadTableView(section: section, scroll: false)
@@ -212,13 +212,13 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
                 cell.commentBlock = {
                     [weak self] in
                     guard let strongSelf = self else { return }
-                    strongSelf.curruntIndexPath = indexPath
+                    strongSelf.currentIndexPath = indexPath
                     strongSelf.showComment(comments[indexPath.row], section: indexPath.section)
                 }
                 cell.cellLongTapEvent = {
                     [weak self](point) in
                     guard let strongSelf = self else { return }
-                    strongSelf.curruntIndexPath = indexPath
+                    strongSelf.currentIndexPath = indexPath
                     strongSelf.showDelectComment(comments[indexPath.row], point, section: indexPath.section)
                 }
 
@@ -294,8 +294,8 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
                                     MBProgressHUD.yxs_showMessage(message: msg)
                                 })
                             }))
-                            alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
-                            UIUtil.curruntNav().present(alert, animated: true, completion: nil)
+                            alert.popoverPresentationController?.sourceView = UIUtil.currentNav().view
+                            UIUtil.currentNav().present(alert, animated: true, completion: nil)
                         }
                     }
                 }
@@ -338,8 +338,8 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
                                     MBProgressHUD.yxs_showMessage(message: msg)
                                 })
                             }))
-                            alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
-                            UIUtil.curruntNav().present(alert, animated: true, completion: nil)
+                            alert.popoverPresentationController?.sourceView = UIUtil.currentNav().view
+                            UIUtil.currentNav().present(alert, animated: true, completion: nil)
                         }
                     }
                 }

@@ -18,7 +18,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     /// 班级id
     var classId: Int?
     /// 当前操作的 IndexPath
-    var curruntIndexPath: IndexPath!
+    var currentIndexPath: IndexPath!
     var cancelGoodBlock: ((_ homeworkId: Int) ->())?
     init(classId: Int,childid: Int,cancelGoodBlock:((_ homeworkId: Int) ->())? = nil) {
         self.childid = childid
@@ -52,7 +52,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     
     // MARK: -loadData
     override func yxs_refreshData() {
-        curruntPage = 1
+        currentPage = 1
         loadData()
         
     }
@@ -62,7 +62,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     }
     
     func loadData(){
-        YXSEducationHomeworkQueryHistoryGoodRequest.init(childrenId: self.childid ?? 0, classId: self.classId ?? 0, currentPage: curruntPage).request({ [weak self](json) in
+        YXSEducationHomeworkQueryHistoryGoodRequest.init(childrenId: self.childid ?? 0, classId: self.classId ?? 0, currentPage: currentPage).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             weakSelf.yxs_endingRefresh()
             let joinList = Mapper<YXSHomeworkDetailModel>().mapArray(JSONObject: json["homeworkCommitList"].object) ?? [YXSHomeworkDetailModel]()
@@ -73,7 +73,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                 }
             }
             weakSelf.loadMore = json["hasNext"].boolValue
-            if weakSelf.curruntPage == 1 {
+            if weakSelf.currentPage == 1 {
                 weakSelf.dataSource.removeAll()
             }
             weakSelf.dataSource += joinList
@@ -104,10 +104,10 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
     
     func showDelectComment(_ commentModel: YXSHomeworkCommentModel,_ point: CGPoint, section: Int){
         var pointInView = point
-        if let curruntIndexPath = self.curruntIndexPath{
-            let cell = self.tableView.cellForRow(at: curruntIndexPath)
+        if let currentIndexPath = self.currentIndexPath{
+            let cell = self.tableView.cellForRow(at: currentIndexPath)
             if let listCell  = cell as? YXSHomeworkDetailCell{
-                let rc = listCell.convert(listCell.comentLabel.frame, to: UIUtil.curruntNav().view)
+                let rc = listCell.convert(listCell.comentLabel.frame, to: UIUtil.currentNav().view)
                 pointInView.y = rc.minY + 14.0
             }
         }
@@ -155,8 +155,8 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         var requset: YXSBaseRequset!
         requset = YXSEducationHomeworkCommentDeleteRequest.init(childrenId: listModel.childrenId ?? 0, homeworkCreateTime: listModel.homeworkCreateTime ?? "", homeworkId: listModel.homeworkId ?? 0, id: commentModel.id ?? 0)
         requset.request({ (result) in
-            if let curruntIndexPath  = self.curruntIndexPath{
-                listModel.commentJsonList?.remove(at: curruntIndexPath.row)
+            if let currentIndexPath  = self.currentIndexPath{
+                listModel.commentJsonList?.remove(at: currentIndexPath.row)
             }
             self.reloadTableView(section: section, scroll: false)
         }) { (msg, code) in
@@ -274,13 +274,13 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                 cell.commentBlock = {
                     [weak self] in
                     guard let strongSelf = self else { return }
-                    strongSelf.curruntIndexPath = indexPath
+                    strongSelf.currentIndexPath = indexPath
                     strongSelf.showComment(comments[indexPath.row], section: indexPath.section)
                 }
                 cell.cellLongTapEvent = {
                     [weak self](point) in
                     guard let strongSelf = self else { return }
-                    strongSelf.curruntIndexPath = indexPath
+                    strongSelf.currentIndexPath = indexPath
                     strongSelf.showDelectComment(comments[indexPath.row], point, section: indexPath.section)
                 }
 
@@ -298,7 +298,7 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         let model = dataSource[section]
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkDetailSectionHeaderViewHistory") as? YXSHomeworkDetailSectionHeaderView
         if let headerView = headerView{
-            headerView.curruntSection = section
+            headerView.currentSection = section
             headerView.hmModel = model
             model.isShowLookGoodButton = false
             headerView.setModel(model: model)
@@ -373,8 +373,8 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
                                     MBProgressHUD.yxs_showMessage(message: msg)
                                 })
                             }))
-                            alert.popoverPresentationController?.sourceView = UIUtil.curruntNav().view
-                            UIUtil.curruntNav().present(alert, animated: true, completion: nil)
+                            alert.popoverPresentationController?.sourceView = UIUtil.currentNav().view
+                            UIUtil.currentNav().present(alert, animated: true, completion: nil)
                         }
                     }
                     

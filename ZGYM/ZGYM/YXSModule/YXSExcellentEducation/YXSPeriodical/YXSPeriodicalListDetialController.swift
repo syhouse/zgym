@@ -9,11 +9,23 @@
 
 import UIKit
 import NightNight
+import ObjectMapper
 
 class YXSPeriodicalListDetialController: YXSBaseTableViewController{
-    var dataSource: [Any] = [Any]()
+    var dataSource: [YXSChildContentHomeListModel] = [YXSChildContentHomeListModel]()
+    let listModel: YXSPeriodicalListModel
+    init(listModel: YXSPeriodicalListModel){
+        self.listModel = listModel
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: -leftCicle
     override func viewDidLoad() {
+        self.title = listModel.theme
         super.viewDidLoad()
         
         tableView.register(YXSPeriodicalDetialCell.self, forCellReuseIdentifier: "YXSPeriodicalDetialCell")
@@ -28,9 +40,20 @@ class YXSPeriodicalListDetialController: YXSBaseTableViewController{
     }
     
     func loadData(){
-        dataSource = [1,1,1,1,1]
-        yxs_endingRefresh()
-        tableView.reloadData()
+        YXSEducationPeriodicalArticlePageRequest.init(periodicalId: listModel.id ?? 0, currentPage: currentPage).request({ (json) in
+            self.yxs_endingRefresh()
+            let list = Mapper<YXSChildContentHomeListModel>().mapArray(JSONObject: json["records"].object) ?? [YXSChildContentHomeListModel]()
+
+            if self.currentPage == 1{
+                self.dataSource.removeAll()
+            }
+            self.dataSource += list
+            self.loadMore = json["total"].intValue > self.dataSource.count
+            self.tableView.reloadData()
+        }) { (msg, code) in
+            self.yxs_endingRefresh()
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -39,7 +62,7 @@ class YXSPeriodicalListDetialController: YXSBaseTableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "YXSPeriodicalDetialCell", for: indexPath) as! YXSPeriodicalDetialCell
-        cell.yxs_setCellModel(dataSource[indexPath.row] as? XMTrack)
+        cell.yxs_setCellModel(dataSource[indexPath.row] )
         return cell
     }
     
@@ -84,10 +107,10 @@ class YXSPeriodicalDetialCell : UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func yxs_setCellModel(_ model: XMTrack?){
-        yxs_nameLabel.text = "培养孩子自信心，从理解“毛遂自培养孩子自信心，从理解“毛遂自培养孩子自信心，从理解“毛遂自培养孩子自信心，从理解“毛遂自"
-        timeLabel.text = "03.29 14:30"
-        rightImageView.sd_setImage(with: URL.init(string: ""), placeholderImage: kImageDefualtImage)
+    func yxs_setCellModel(_ model: YXSChildContentHomeListModel){
+        yxs_nameLabel.text = model.title
+        timeLabel.text = model.uploadTime?.yxs_Date().toString(format: DateFormatType.custom("MM.dd HH:mm"))
+        rightImageView.sd_setImage(with: URL.init(string: model.cover ?? ""), placeholderImage: kImageDefualtImage)
     }
     
     // MARK: -getter&setter

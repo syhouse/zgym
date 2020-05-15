@@ -24,7 +24,7 @@ class YXSGoToPunchCardFooterView: UIView{
     }
     
     /// 当前展示的是日历
-    var isCurruntCalendarVC: Bool = false{
+    var iscurrentCalendarVC: Bool = false{
         didSet{
             setFooterModel(model)
         }
@@ -56,7 +56,7 @@ class YXSGoToPunchCardFooterView: UIView{
     
     var footerBlock: ((_ type: YXSPunchCardFooterType, _ patchTime: String?)->())?
     @objc func goPunchCardClick(){
-        if let calendarModel = calendarModel, isCurruntCalendarVC,calendarModel.toDayDateCompare != .Today{
+        if let calendarModel = calendarModel, iscurrentCalendarVC,calendarModel.toDayDateCompare != .Today{
             footerBlock?(.goPatchAppointDay, calendarModel.responseModel?.clockInTime)
         }else{
             if model.hasPunch{
@@ -94,7 +94,7 @@ class YXSGoToPunchCardFooterView: UIView{
             return
         }
         
-        if let calendarModel = calendarModel, isCurruntCalendarVC, calendarModel.toDayDateCompare != .Today{
+        if let calendarModel = calendarModel, iscurrentCalendarVC, calendarModel.toDayDateCompare != .Today{
             if calendarModel.toDayDateCompare == .Big{
                 statusLabel.isHidden = false
                 statusLabel.text = "未到打卡时间"

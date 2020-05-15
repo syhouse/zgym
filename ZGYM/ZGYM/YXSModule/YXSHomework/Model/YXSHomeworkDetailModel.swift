@@ -236,7 +236,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
     /// 当前作业是否是我提交的
     var isMySubmit : Bool {
         get {
-            if childrenId == YXSPersonDataModel.sharePerson.userModel.curruntChild?.id && YXSPersonDataModel.sharePerson.personRole == .PARENT {
+            if childrenId == YXSPersonDataModel.sharePerson.userModel.currentChild?.id && YXSPersonDataModel.sharePerson.personRole == .PARENT {
                 return true
             } else {
                 return false

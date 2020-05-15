@@ -80,7 +80,7 @@ class YXSSelectAccessoryVC: YXSBaseTableViewController, UISearchBarDelegate {
     }
     
     func loadData(searchString:String = "") {
-        YXSSatchelDocFilePageQueryRequest(currentPage: self.curruntPage,keyword: searchString).request({ [weak self](json) in
+        YXSSatchelDocFilePageQueryRequest(currentPage: self.currentPage,keyword: searchString).request({ [weak self](json) in
             guard let weakSelf = self else {return}
             weakSelf.yxs_endingRefresh()
             let list = Mapper<YXSFileModel>().mapArray(JSONString: json["satchelFileList"].rawString()!) ?? [YXSFileModel]()
@@ -92,12 +92,12 @@ class YXSSelectAccessoryVC: YXSBaseTableViewController, UISearchBarDelegate {
             }
 
             if weakSelf.isSearching {
-                if weakSelf.curruntPage == 1{
+                if weakSelf.currentPage == 1{
                     weakSelf.searchFileList.removeAll()
                 }
                 weakSelf.searchFileList += list
             } else {
-                if weakSelf.curruntPage == 1{
+                if weakSelf.currentPage == 1{
                     weakSelf.fileList.removeAll()
                 }
                 weakSelf.fileList += list

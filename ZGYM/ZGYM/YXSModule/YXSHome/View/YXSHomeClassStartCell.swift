@@ -171,7 +171,7 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
                 }
                 UIUtil.yxs_setLabelAttributed(yxs_scoreLabel, text: ["\(NSUtil.yxs_getDateText(dateType: dateType))获得", " 暂无"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#575A60"),UIColor.yxs_hexToAdecimalColor(hex: "#575A60")], fonts: [UIFont.systemFont(ofSize: 13),UIFont.boldSystemFont(ofSize: 21)])
                 UIUtil.yxs_setLabelAttributed(yxs_overLabel, text: ["超越全班", " 未知 ", "同学"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#575A60"),UIColor.yxs_hexToAdecimalColor(hex: "#575A60"),UIColor.yxs_hexToAdecimalColor(hex: "#575A60")], fonts: [UIFont.systemFont(ofSize: 14),UIFont.boldSystemFont(ofSize: 21),UIFont.systemFont(ofSize: 14)])
-                UIUtil.yxs_setLabelAttributed(yxs_tipsLabel, text: ["您的孩子\((model.childrenRealName ?? self.yxs_user.curruntChild?.realName) ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))暂无评价数据，全国已有 ", "200万", "名学生正在使用此功能，班级之星是学生德育培养的重要辅助功能，赶快去提醒老师使用吧！"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),kRedMainColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: nil)
+                UIUtil.yxs_setLabelAttributed(yxs_tipsLabel, text: ["您的孩子\((model.childrenRealName ?? self.yxs_user.currentChild?.realName) ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))暂无评价数据，全国已有 ", "200万", "名学生正在使用此功能，班级之星是学生德育培养的重要辅助功能，赶快去提醒老师使用吧！"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"),kRedMainColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: nil)
             }else{
                 yxs_title.isHidden = false
                 yxs_lookDetial.isHidden = false
@@ -190,7 +190,7 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
                     if let text = text{
                         UIUtil.yxs_setLabelAttributed(yxs_title, text: ["恭喜！\(currentChildren.childrenName ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))荣获\(text)", "\n您的孩子\(NSUtil.yxs_getDateText(dateType: dateType))在班级表现非常棒"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
                     }else{
-                        UIUtil.yxs_setLabelAttributed(yxs_title, text: ["\(self.yxs_user.curruntChild?.realName ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
+                        UIUtil.yxs_setLabelAttributed(yxs_title, text: ["\(self.yxs_user.currentChild?.realName ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
                     }
                     let textString: String = (stage == .KINDERGARTEN) ? "朵" : "分"
                     UIUtil.yxs_setLabelAttributed(yxs_scoreLabel, text: ["\(NSUtil.yxs_getDateText(dateType: dateType))获得", "\(classStarModel.currentChildren?.score ?? 0)", textString], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#575A60"),kRedMainColor,kRedMainColor], fonts: [UIFont.systemFont(ofSize: 13),UIFont.systemFont(ofSize: 21),UIFont.systemFont(ofSize: 14)])
@@ -210,7 +210,7 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
                         make.height.equalTo(23.5)
                     }
                 }else{
-                    UIUtil.yxs_setLabelAttributed(yxs_title, text: ["\((model.childrenRealName ?? self.yxs_user.curruntChild?.realName) ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
+                    UIUtil.yxs_setLabelAttributed(yxs_title, text: ["\((model.childrenRealName ?? self.yxs_user.currentChild?.realName) ?? "")\(NSUtil.yxs_getDateText(dateType: dateType))暂未上榜，请再接再厉！", "\n你的孩子\(NSUtil.yxs_getDateText(dateType: dateType))表现还有进步空间！"], colors: [kTextMainBodyColor,UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")], fonts: [UIFont.boldSystemFont(ofSize: 20),UIFont.boldSystemFont(ofSize: 15)],paragraphLineSpacing: 13)
                     yxs_lookDetial.snp.remakeConstraints { (make) in
                         make.top.equalTo(yxs_title.snp_bottom).offset(10)
                         make.left.equalTo(15)

@@ -66,7 +66,7 @@ class FriendsCircleFavView: UIView{
         favBgView.addSubview(favLabel)
         favBgView.snp.makeConstraints { (make) in
             make.top.equalTo(7.5)
-            make.right.left.equalTo(0).priorityHigh()
+            make.right.left.equalTo(0)
             make.bottom.equalTo(0).priorityHigh()
         }
         favUpImageView.snp.makeConstraints { (make) in

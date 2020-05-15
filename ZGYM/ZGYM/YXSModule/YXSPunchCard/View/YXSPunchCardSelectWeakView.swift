@@ -47,7 +47,7 @@ class YXSPunchCardSelectWeakView: UIView {
         return view
     }
     
-    private var yxs_curruntIndex: Int!
+    private var yxs_currentIndex: Int!
     private var yxs_selectweaks:[YXSPunchCardWeak]?
     private var yxs_dataSource:[YXSPunchCardWeak] = kYXSPunCardDefultWeaks
     

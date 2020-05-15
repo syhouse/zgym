@@ -32,7 +32,7 @@ enum HomeworkCommentCellBlockType: Int {
 
 class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
 
-    var curruntSection: Int!
+    var currentSection: Int!
     var hmModel : YXSHomeworkDetailModel?
     var goodClick:((_ model:YXSHomeworkDetailModel)->())?
     var homeWorkChangeBlock:((_ sender: UIButton,_ model:YXSHomeworkDetailModel)->())?
@@ -666,7 +666,7 @@ extension YXSHomeworkDetailSectionHeaderView: YXSRouterEventProtocol{
                 let model = info!["imgModel"]
                 let index = info!["imgIndex"]
                 if model is YXSFriendsMediaModel {
-                    next?.yxs_routerEventWithName(eventName: kHomeworkPictureGraffitiNextEvent, info: ["imgModel":model,"imgIndex":index,"hmModel":self.model,"curruntSection":self.curruntSection])
+                    next?.yxs_routerEventWithName(eventName: kHomeworkPictureGraffitiNextEvent, info: ["imgModel":model,"imgIndex":index,"hmModel":self.model,"currentSection":self.currentSection])
                 }
             }
         default:

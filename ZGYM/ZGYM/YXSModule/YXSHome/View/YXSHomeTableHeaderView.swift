@@ -164,7 +164,7 @@ class YXSHomeTableHeaderView: UIView {
     @objc func yxs_controlClick(control: UIControl){
         let index = control.tag - kYXSHomeTableHeaderViewOrginTag
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-            yxs_dealHomeAction(kHeaderActions[index], classId: yxs_user.curruntChild?.classId, childModel: yxs_user.curruntChild)
+            yxs_dealHomeAction(kHeaderActions[index], classId: yxs_user.currentChild?.classId, childModel: yxs_user.currentChild)
         }else{
             yxs_dealHomeAction(kHeaderActions[index], classId: nil, childModel: nil)
         }

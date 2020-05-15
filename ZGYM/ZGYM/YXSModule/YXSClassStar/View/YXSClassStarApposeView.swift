@@ -10,24 +10,24 @@ import UIKit
 private let kMaxtCount = 5
 private let rowHeight: CGFloat = 57
 class YXSClassStarApposeView: UIView {
-    @discardableResult static func showAlert(childs: [YXSClassStarChildrenModel] ,curruntChild: YXSClassStarChildrenModel? = nil, sort:Int,stage: StageType) -> YXSClassStarApposeView{
-        let view = YXSClassStarApposeView.init(childs: childs,curruntChild: curruntChild, sort:sort,stage: stage)
+    @discardableResult static func showAlert(childs: [YXSClassStarChildrenModel] ,currentChild: YXSClassStarChildrenModel? = nil, sort:Int,stage: StageType) -> YXSClassStarApposeView{
+        let view = YXSClassStarApposeView.init(childs: childs,currentChild: currentChild, sort:sort,stage: stage)
         view.beginAnimation()
         return view
     }
     var childs:[YXSClassStarChildrenModel]
-    var curruntChild: YXSClassStarChildrenModel? = nil
+    var currentChild: YXSClassStarChildrenModel? = nil
     var sort: Int// 排名
     var stage: StageType
-    init(childs: [YXSClassStarChildrenModel],curruntChild: YXSClassStarChildrenModel? = nil, sort:Int,stage: StageType) {
+    init(childs: [YXSClassStarChildrenModel],currentChild: YXSClassStarChildrenModel? = nil, sort:Int,stage: StageType) {
         var isExit = false
         self.childs = childs
         var lists = [YXSClassStarChildrenModel]()
         self.sort = sort
         self.stage = stage
-        if let curruntChild = curruntChild{
+        if let currentChild = currentChild{
             for model in childs{
-                if curruntChild.childrenId == model.childrenId{
+                if currentChild.childrenId == model.childrenId{
                     isExit = true
                 }else{
                     model.topNo = sort
@@ -35,13 +35,13 @@ class YXSClassStarApposeView: UIView {
                 }
             }
             if isExit{
-                lists.insert(curruntChild, at: 0)
+                lists.insert(currentChild, at: 0)
             }
             self.childs = lists
         }
         
         
-        self.curruntChild = curruntChild
+        self.currentChild = currentChild
         super.init(frame: CGRect.zero)
         self.addSubview(titleLabel)
         
@@ -73,7 +73,7 @@ class YXSClassStarApposeView: UIView {
     }
     
     func beginAnimation() {
-        UIUtil.curruntNav().view.addSubview(bgWindow)
+        UIUtil.currentNav().view.addSubview(bgWindow)
         
         bgWindow.addSubview(self)
         bgWindow.snp.makeConstraints { (make) in

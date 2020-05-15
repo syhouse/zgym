@@ -50,14 +50,14 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             rightButton.isHidden = true
         }
         
-        self.dataSource = YXSCacheHelper.yxs_getCacheNoticeList(childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
+        self.dataSource = YXSCacheHelper.yxs_getCacheNoticeList(childrenId: self.yxs_user.currentChild?.id, isAgent: isAgenda)
     }
     
     // MARK: -UI
     
     // MARK: -loadData
     override func yxs_refreshData() {
-        self.curruntPage = 1
+        self.currentPage = 1
         loadData()
     }
     
@@ -69,9 +69,9 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
         var request: YXSBaseRequset!
         if isAgenda{
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                request = YXSEducationNoticePageQueryTeacherTodoRequest.init(currentPage: curruntPage)
+                request = YXSEducationNoticePageQueryTeacherTodoRequest.init(currentPage: currentPage)
             }else{
-                request = YXSEducationNoticePageQueryChildrenTodoRequest.init(currentPage: curruntPage, childrenClassList: yxs_childrenClassList)
+                request = YXSEducationNoticePageQueryChildrenTodoRequest.init(currentPage: currentPage, childrenClassList: yxs_childrenClassList)
             }
         }else{
             let classIdList = classId == nil ? (yxs_user.gradeIds ?? []) : [classId!]
@@ -84,11 +84,11 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             default:
                 break
             }
-            request = YXSEducationNoticePageQueryRequest.init(currentPage: curruntPage, classIdList: classIdList, userType: yxs_user.type ?? "", filterType: filterType)
+            request = YXSEducationNoticePageQueryRequest.init(currentPage: currentPage, classIdList: classIdList, userType: yxs_user.type ?? "", filterType: filterType)
         }
         request.request({ (result) in
             self.yxs_endingRefresh()
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             let list = Mapper<YXSHomeListModel>().mapArray(JSONObject: result["noticeList"].object) ?? [YXSHomeListModel]()
@@ -96,7 +96,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
             self.loadMore = result["hasNext"].boolValue
             self.tableView.reloadData()
             
-            YXSCacheHelper.yxs_cacheNoticeList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: self.isAgenda)
+            YXSCacheHelper.yxs_cacheNoticeList(dataSource: self.dataSource, childrenId: self.yxs_user.currentChild?.id, isAgent: self.isAgenda)
             
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -106,7 +106,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
     
     override func reloadTableView(_ indexPath: IndexPath? = nil, isScroll : Bool = false) {
         super.reloadTableView(indexPath, isScroll :isScroll)
-        YXSCacheHelper.yxs_cacheNoticeList(dataSource: self.dataSource, childrenId: self.yxs_user.curruntChild?.id, isAgent: isAgenda)
+        YXSCacheHelper.yxs_cacheNoticeList(dataSource: self.dataSource, childrenId: self.yxs_user.currentChild?.id, isAgent: isAgenda)
     }
     
     // MARK: -action

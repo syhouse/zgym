@@ -55,7 +55,7 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
 
     
     func refreshHeaderTab() {
-        curruntPage = 1
+        currentPage = 1
         self.tableHeaderView.setTabs(tabs: gradeTabs)
         self.currentTab = gradeTabs.first
         self.dataSource = YXSCacheHelper.yxs_getCacheSynClassListTask(tabId: self.currentTab?.id ?? 1)
@@ -82,7 +82,7 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
     }
     
     override func yxs_refreshData() {
-        curruntPage = 1
+        currentPage = 1
         loadData()
         
     }
@@ -92,10 +92,10 @@ class YXSSynClassListVC: YXSBaseTableViewController,JXCategoryListContentViewDel
     }
     
     func loadData(){
-        YXSEducationFolderPageQueryRequest.init(currentPage: curruntPage, tabId: self.currentTab?.id ?? 1).request({ (json) in
+        YXSEducationFolderPageQueryRequest.init(currentPage: currentPage, tabId: self.currentTab?.id ?? 1).request({ (json) in
             self.yxs_endingRefresh()
             let list = Mapper<YXSSynClassListModel>().mapArray(JSONObject: json["folderList"].object) ?? [YXSSynClassListModel]()
-            if self.curruntPage == 1{
+            if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
             self.dataSource += list

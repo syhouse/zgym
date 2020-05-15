@@ -15,7 +15,7 @@ class YXSPunchCardMembersListViewController: YXSBaseTableViewController{
     let clockInId: Int
     let classId: Int
     /// 当前选中按钮
-    var yxs_curruntHeaderIndex: Int = 0
+    var yxs_currentHeaderIndex: Int = 0
     var yxs_calendarModel: YXSCalendarModel?
     var yxs_punchModel: YXSPunchCardModel?
     var yxs_clockInList = [YXSPunchCardChildModel]()
@@ -91,7 +91,7 @@ class YXSPunchCardMembersListViewController: YXSBaseTableViewController{
     
     // MARK: - Delegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return yxs_dataSource[yxs_curruntHeaderIndex].count
+        return yxs_dataSource[yxs_currentHeaderIndex].count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -100,7 +100,7 @@ class YXSPunchCardMembersListViewController: YXSBaseTableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:YXSHomeworkCommitListCell = tableView.dequeueReusableCell(withIdentifier: "SLHomeworkCommitListCell") as! YXSHomeworkCommitListCell
-        let model = yxs_dataSource[yxs_curruntHeaderIndex][indexPath.row]
+        let model = yxs_dataSource[yxs_currentHeaderIndex][indexPath.row]
         cell.lbName.text = "\(model.realName ?? "")"
         cell.imgAvatar.sd_setImage(with: URL.init(string: model.avatar ?? ""),placeholderImage: kImageUserIconStudentDefualtImage, completed: nil)
         cell.chatBlock = {[weak self] in
@@ -122,7 +122,7 @@ class YXSPunchCardMembersListViewController: YXSBaseTableViewController{
         let header: YXSHomeworkReadListSectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkReadListSectionHeader") as! YXSHomeworkReadListSectionHeader
         header.selectedBlock = {[weak self](selectedIndex) in
             guard let strongSelf = self else { return }
-            strongSelf.yxs_curruntHeaderIndex = selectedIndex
+            strongSelf.yxs_currentHeaderIndex = selectedIndex
             strongSelf.tableView.reloadData()
         }
         header.alertClick = {[weak self](_) in
@@ -131,7 +131,7 @@ class YXSPunchCardMembersListViewController: YXSBaseTableViewController{
         }
         header.btnTitle2.setTitle(yxs_buttonTitles[1], for: .normal)
         header.btnTitle1.setTitle(yxs_buttonTitles[0], for: .normal)
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER && yxs_punchModel?.state != 100 && yxs_curruntHeaderIndex == 0{
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER && yxs_punchModel?.state != 100 && yxs_currentHeaderIndex == 0{
             header.btnAlert.isHidden = false
         } else {
             header.btnAlert.isHidden = true
