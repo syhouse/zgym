@@ -21,15 +21,18 @@ class YXSChildContentHomeListModel: NSObject, Mappable {
     /// 标题
     var title: String?
     var publishTime: String?
+    
+    var uploadTime: String?
 
     func mapping(map: Map) {
         cover <- map["cover"]
         id <- map["id"]
         title <- map["title"]
         publishTime <- map["publishTime"]
-
+        uploadTime <- map["uploadTime"]
     }
 }
+
 
 
 class YXSChildContentHomeTypeModel: NSObject, Mappable {

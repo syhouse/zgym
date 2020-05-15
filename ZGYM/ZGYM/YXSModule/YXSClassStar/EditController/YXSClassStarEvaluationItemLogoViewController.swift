@@ -187,7 +187,7 @@ extension YXSClassStarEvaluationItemLogoViewController: YXSSelectMediaHelperDele
         if let image = images.first{
             if let data = image.yxs_compressImage(image: image, maxLength: imageMax){
                 MBProgressHUD.yxs_showLoading()
-                YXSUploadDataHepler.shareHelper.uploadData(uploadModel: SLNewUploadSourceModel.init(data: data, path: YXSUploadSourceHelper.starDoucmentPath(classId: classId) + Date().toString().MD5() + ".jpg", type: .image), sucess: { (url) in
+                YXSUploadDataHepler.shareHelper.uploadData(uploadModel: SLUploadDataSourceModel.init(data: data, path: YXSFileUploadHelper.sharedInstance.getStarUrl(fullName: Date().toString().MD5() + ".jpg", classId: classId), type: .image), sucess: { (url) in
                     self.curruntIconUrl = url
                     self.curruntSelectIndex = nil
                     self.collectionView.reloadData()
@@ -196,14 +196,8 @@ extension YXSClassStarEvaluationItemLogoViewController: YXSSelectMediaHelperDele
                 }) { (msg, code) in
                     MBProgressHUD.yxs_showMessage(message: msg)
                 }
-                ///等 YXSFileUploadHelper 工具构建好 移植
-                //                let resourceModel = YXSUploadDataResourceModel()
-                //                resourceModel.dataSource =
-                //                YXSFileUploadHelper().uploadDataSource(dataSource: [YXSUploadDataResourceModel.], progress: <#T##((CGFloat) -> ())?##((CGFloat) -> ())?##(CGFloat) -> ()#>, sucess: <#T##(([YXSFileModel]) -> ())?##(([YXSFileModel]) -> ())?##([YXSFileModel]) -> ()#>, failureHandler: <#T##((String, String) -> ())?##((String, String) -> ())?##(String, String) -> ()#>)
             }
         }
-        
-        //        YXSUploadSourceHelper().uploadIm
     }
 }
 

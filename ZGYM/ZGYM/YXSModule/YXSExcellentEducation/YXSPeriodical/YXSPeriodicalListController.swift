@@ -8,9 +8,10 @@
 
 import UIKit
 import NightNight
+import ObjectMapper
 
 class YXSPeriodicalListController: YXSBaseTableViewController{
-    var dataSource: [Any] = [Any]()
+    var dataSource: [YXSPeriodicalListModel] = [YXSPeriodicalListModel]()
     // MARK: -leftCicle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +29,15 @@ class YXSPeriodicalListController: YXSBaseTableViewController{
     }
     
     func loadData(){
-        YXSEducationPeriodicalPageRequest.init(currentPage: curruntPage).requestCollection({ (list:[YXSClassModel]) in
+        YXSEducationPeriodicalPageRequest.init(currentPage: curruntPage).request({ (json) in
             self.yxs_endingRefresh()
+            let list = Mapper<YXSPeriodicalListModel>().mapArray(JSONObject: json["records"].object) ?? [YXSPeriodicalListModel]()
+            
+            if self.curruntPage == 1{
+                self.dataSource.removeAll()
+            }
+            self.dataSource += list
+            self.loadMore = json["total"].intValue > self.dataSource.count
             self.tableView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()
@@ -57,7 +65,7 @@ class YXSPeriodicalListController: YXSBaseTableViewController{
             make.top.equalTo(yxs_imageView.snp_bottom).offset(15.5)
         }
     }
-  
+    
     lazy var yxs_scheduleImage: UIImageView = {
         let yxs_imageView = UIImageView()
         yxs_imageView.contentMode = .scaleAspectFit
@@ -84,13 +92,12 @@ class YXSPeriodicalListController: YXSBaseTableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "YXSPeriodicalCell", for: indexPath) as! YXSPeriodicalCell
-        cell.yxs_setCellModel(dataSource[indexPath.row] as? XMTrack)
+        cell.yxs_setCellModel(dataSource[indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = YXSPeriodicalListDetialController()
-        vc.title = "第六期刊物"
+        let vc = YXSPeriodicalListDetialController.init(listModel: dataSource[indexPath.row])
         self.navigationController?.pushViewController(vc)
     }
     

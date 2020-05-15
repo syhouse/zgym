@@ -18,6 +18,10 @@ class YXSClassScheduleCardDetialController: YXSBaseViewController{
         self.yxs_model = model
         self.yxs_childrenId = childrenId
         self.yxs_classId = classId
+        
+        if classId == nil{
+            self.yxs_classId = model?.classId
+        }
         super.init()
     }
     
@@ -125,9 +129,11 @@ class YXSClassScheduleCardDetialController: YXSBaseViewController{
     }
     
     func yxs_loadSourceData(_ mediaModel: YXSMediaModel){
-        YXSUploadSourceHelper().uploadImage(mediaModel: mediaModel, uploadPath: YXSUploadSourceHelper.curriculumDoucmentPath(classId: yxs_classId ?? 0), sucess: { (url) in
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        YXSUploadSourceHelper().uploadImage(mediaModel: mediaModel,storageType: YXSStorageType.curriculum, classId:self.yxs_classId ?? 0, sucess: { (url) in
             self.yxs_loadPublishData(url)
         }) { (msg, code) in
+            MBProgressHUD.hide(for: self.view, animated: false)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }

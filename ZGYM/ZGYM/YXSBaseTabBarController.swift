@@ -17,7 +17,7 @@ class YXSBaseTabBarController: UITabBarController {
         YXSVersionUpdateManager.sharedInstance.checkUpdate()
         
         ///朋友圈红点
-//        UIUtil.yxs_loadClassCircleMessageListData()
+        UIUtil.yxs_loadClassCircleMessageListData()
         
         tabBar.tintColor = kRedMainColor
         tabBar.mixedBarTintColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
@@ -25,17 +25,13 @@ class YXSBaseTabBarController: UITabBarController {
         self.view.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         
         self.addChildVC(childVC: YXSHomeController(), titleName: "首页", imageName: "yxs_home_normal", imageSelectName: "yxs_home_select")
-//        YXSExcellentEducationVC YXSContentHomeController
-        self.addChildVC(childVC: YXSExcellentEducationVC(), titleName: "优教育", imageName: "yxs_education_normal", imageSelectName: "yxs_education_select")
-//        self.addChildVC(childVC: YXSFriendsCircleController(), titleName: "优成长", imageName: "yxs_friend_normal", imageSelectName: "yxs_friend_select")
 
-        
+        self.addChildVC(childVC: YXSFriendsCircleController(), titleName: "优成长", imageName: "yxs_friend_normal", imageSelectName: "yxs_friend_select")
+
+        self.addChildVC(childVC: YXSExcellentEducationVC(), titleName: "优教育", imageName: "yxs_education_normal", imageSelectName: "yxs_education_select")
         
         self.addChildVC(childVC: YXSConversationListController(), titleName: "私聊", imageName: "yxs_chat_normal", imageSelectName: "yxs_chat_select")
         
-        
-//        self.addChildVC(childVC: YXSContactController(), titleName: "通讯录", imageName: "yxs_chat_normal", imageSelectName: "yxs_chat_select")
-
         self.addChildVC(childVC: YXSMineViewController(), titleName: "我的", imageName: "yxs_mine_normal", imageSelectName: "yxs_mine_select")
 
         /// IM登录

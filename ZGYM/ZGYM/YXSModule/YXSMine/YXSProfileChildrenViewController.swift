@@ -67,7 +67,7 @@ class YXSProfileChildrenViewController: YXSProfileViewController {
     
     @objc override func requestUploadImage(asset: YXSMediaModel) {
         MBProgressHUD.yxs_showLoading()
-        YXSUploadSourceHelper().uploadImage(mediaModel: asset, uploadPath: YXSUploadSourceHelper.avatarDoucmentPath, sucess: { [weak self](successUrl) in
+        YXSUploadSourceHelper().uploadImage(mediaModel: asset, storageType: YXSStorageType.avatar, sucess: { [weak self](successUrl) in
             guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUD()
             weakSelf.requestsEditProfile(parameter: ["avatar":successUrl]) {
