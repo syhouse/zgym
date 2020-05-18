@@ -35,6 +35,15 @@ class YXSClassMembersViewController: YXSBaseTableViewController {
             weakSelf.yxs_endingRefresh()
 
             weakSelf.teacherList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["detailForTeacher"].rawString()!) ?? [YXSClassMemberModel]()
+            for sub in weakSelf.teacherList {
+                /// 班主任置顶
+                if sub.position == "HEADMASTER" {
+                    let idx = weakSelf.teacherList.firstIndex(of: sub)
+                    weakSelf.teacherList.remove(at: idx ?? 0)
+                    weakSelf.teacherList.insert(sub, at: 0)
+                    break
+                }
+            }
             weakSelf.studentList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["detailForParent"].rawString()!) ?? [YXSClassMemberModel]()
             weakSelf.tableView.reloadData()
             
