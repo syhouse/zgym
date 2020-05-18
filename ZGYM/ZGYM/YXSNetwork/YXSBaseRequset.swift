@@ -35,9 +35,9 @@ public enum ServiceType: String {
         case .ServiceProduct:
             return "https://pro.c989.cn:50009/"
         case .ServiceTest:
-            return "https://pro.c989.cn:50009/"
+            return "http://www.ym698.com/"
         case .ServiceLocal:
-            return "https://pro.c989.cn:50009/"
+            return "http://www.ym698.com/"
         }
     }
     /// 获取育儿好文地址

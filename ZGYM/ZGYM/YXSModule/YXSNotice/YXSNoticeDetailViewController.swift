@@ -329,6 +329,12 @@ class YXSNoticeDetailViewController: YXSBaseViewController {
             
         } else {
             linkView.isHidden = false
+            self.linkView.snp.remakeConstraints({ (make) in
+                make.top.equalTo(self.mediaView.snp_bottom).offset(20)
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.height.equalTo(44)
+            })
         }
         if self.model?.fileList.count ?? 0 > 0 {
             for index in 0..<(self.model?.fileList.count)!{

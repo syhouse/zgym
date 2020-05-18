@@ -242,7 +242,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
     var messageModel: YXSPunchCardMessageTipsModel? {
         didSet {
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-                if let messageModel = messageModel,messageModel.count != 0{
+                if let messageModel = messageModel,messageModel.count ?? 0 > 0{
                     messageView.snp.remakeConstraints { (make) in
                         make.left.right.top.equalTo(0).priorityHigh()
                         make.height.equalTo(42.5)
@@ -265,7 +265,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
                     messageView.isHidden = true
                 }
             } else {
-                if let messageModel = messageModel,messageModel.count != 0{
+                if let messageModel = messageModel,messageModel.count ?? 0 > 0{
                     messageView.snp.remakeConstraints { (make) in
                         make.left.right.top.equalTo(0).priorityHigh()
                         make.height.equalTo(42.5)
@@ -299,32 +299,43 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
         self.messageModel = messagemodel
         filterBtnView.model = self.model
 
-        if self.model?.endTimeIsUnlimited ?? false {
-            dateView.title = "截止日期：不限时"
+        if model.endTime?.count ?? 0 > 0 {
+            dateView.isHidden = false
+            if self.model?.endTimeIsUnlimited ?? false {
+                dateView.title = "截止日期：不限时"
+            } else {
+                let endDateStr = self.model?.endTime?.yxs_Date().toString(format: .custom("yyyy-MM-dd HH:mm"))
+                dateView.title = "截止日期：\(endDateStr ?? "")"
+            }
         } else {
-            let endDateStr = self.model?.endTime?.yxs_Date().toString(format: .custom("yyyy-MM-dd HH:mm"))
-            dateView.title = "截止日期：\(endDateStr ?? "")"
+            dateView.isHidden = true
         }
         
+        
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            var teacherName = "我"
-            if self.model?.teacherName != YXSPersonDataModel.sharePerson.userModel.name {
-                teacherName = self.model?.teacherName ?? ""
+            if model.createTime?.count ?? 0 > 0 {
+                var teacherName = "我"
+                if self.model?.teacherName != YXSPersonDataModel.sharePerson.userModel.name {
+                    teacherName = self.model?.teacherName ?? ""
+                }
+                avatarView.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
+                avatarView.lbTitle.text = "\(teacherName) ｜ \(self.model?.createTime?.yxs_Time() ?? "")"
+                avatarView.lbSubTitle.text = self.model?.className
+                avatarView.isHidden = false
+            } else {
+                avatarView.isHidden = true
             }
-            avatarView.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
-            avatarView.lbTitle.text = "\(teacherName) ｜ \(self.model?.createTime?.yxs_Time() ?? "")"
-            avatarView.lbSubTitle.text = self.model?.className
-//                topHeaderView.strSubTitle = "\(teacherName) ｜ \(self.model?.createTime?.yxs_Time() ?? "")"
-
-//                contactTeacher.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
-//                contactTeacher.lbTitle.text = self.model?.teacherName
-//                contactTeacher.lbSubTitle.text = self.model?.createTime?.yxs_Time()
-
         } else {
-            contactTeacher.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
-            contactTeacher.lbTitle.text = self.model?.teacherName
-            contactTeacher.lbSubTitle.text = self.model?.className
-            contactTeacher.lbThirdTitle.text = "| \(self.model?.createTime?.yxs_Time() ?? "")"
+            if model.createTime?.count ?? 0 > 0 {
+                contactTeacher.isHidden = false
+                contactTeacher.imgAvatar.sd_setImage(with: URL(string: self.model?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
+                contactTeacher.lbTitle.text = self.model?.teacherName
+                contactTeacher.lbSubTitle.text = self.model?.className
+                contactTeacher.lbThirdTitle.text = "| \(self.model?.createTime?.yxs_Time() ?? "")"
+            } else {
+                contactTeacher.isHidden = true
+            }
+            
         }
 
 
@@ -475,6 +486,12 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             })
         } else {
             linkView.isHidden = false
+            linkView.snp.remakeConstraints({ (make) in
+                make.top.equalTo(self.nineMediaView.snp_bottom).offset(20)
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.height.equalTo(44)
+            })
         }
         
         if self.model?.fileList.count ?? 0 > 0 {
@@ -653,7 +670,6 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
 
     lazy var linkView: YXSLinkView = {
         let link = YXSLinkView()
-        link.isHidden = true
         return link
     }()
     
@@ -693,11 +709,13 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
         let chat = SLAvatarContactView()
         chat.btnChat.setTitle("联系老师", for: .normal)
         chat.btnChat.addTarget(self, action: #selector(contactClick(sender:)), for: .touchUpInside)
+        chat.isHidden = true
         return chat
     }()
     
     lazy var avatarView: YXSAvatarView = {
         let view = YXSAvatarView.init(style: .TitleSubTitle)
+        view.isHidden = true
         return view
     }()
 
@@ -706,6 +724,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
         view.locailImage = "yxs_solitaire_calendar"
         view.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))
         view.font = UIFont.systemFont(ofSize: 14)
+        view.isHidden = true
         return view
     }()
     
@@ -720,6 +739,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
     
     lazy var messageView: YXSFriendsCircleMessageView = {
         let messageView = YXSFriendsCircleMessageView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 42.5))
+        messageView.isHidden = true
         return messageView
     }()
     

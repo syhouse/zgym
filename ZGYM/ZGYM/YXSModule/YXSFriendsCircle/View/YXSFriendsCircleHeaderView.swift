@@ -297,7 +297,7 @@ class YXSFriendsCircleContentView: UIView{
                 
             }
             
-            
+            timeLabel.text = Date.yxs_Time(dateStr: model.createTime ?? "")
         }else{
             nameLabel.text = "优学业官方助手"
             headerImageView.sd_setImage(with: URL.init(string:  "https://zx-ustudent.oss-cn-hangzhou.aliyuncs.com/ustudent-helper/class-circle/20200103/icon/icon-216.png"), placeholderImage: UIImage.init(named: "yxs_logo"), completed: nil)
@@ -306,6 +306,9 @@ class YXSFriendsCircleContentView: UIView{
                 make.left.equalTo(YXSFriendsConfigHelper.helper.contentLeftMargin)
                 make.top.equalTo(YXSFriendsConfigHelper.helper.nameLabelTopPadding)
             }
+            
+            //优成长的系统发布的的不显示时间
+            timeLabel.text = ""
         }
         
         
@@ -387,9 +390,6 @@ class YXSFriendsCircleContentView: UIView{
                 make.right.equalTo(-28)
             }
         }
-        
-        
-        timeLabel.text = Date.yxs_Time(dateStr: model.createTime ?? "")
         
         var hasPrises: Bool = false
         var favs = [String]()

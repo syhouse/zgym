@@ -488,10 +488,8 @@ extension UIUtil{
     static func yxs_loadClassCircleMessageListData(completion:(() -> ())? = nil){
         YXSEducationClassCircleMessageTipsRequest().request({ (result: YXSFriendsTipsModel) in
             YXSPersonDataModel.sharePerson.friendsTips = result
-            if result.count ?? 0 > 0 {
-                RootController().yxs_showBadgeOnItem(index: 1, count: result.count!)
-                completion?()
-            }
+            RootController().yxs_showBadgeOnItem(index: 1, count: result.count ?? 0)
+            completion?()
         }, failureHandler: nil)
     }
     

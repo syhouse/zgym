@@ -34,9 +34,31 @@ enum StageType: String {
         instance.net.setReachabilityStatusChange { (status) in
             switch status {
             case .notReachable,.unknown:
+                MBProgressHUD.yxs_showMessage(message: "网络连接不可用，请稍后重试", afterDelay: 5.0)
+                if isFirstConnect{
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5.0) {
+                        MBProgressHUD.yxs_hideHUD()
+                        isFirstConnect = false
+                        MBProgressHUD.yxs_showMessage(message: "网络连接不可用，请稍后重试", afterDelay: 3.0)
+                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+                            MBProgressHUD.yxs_hideHUD()
+                            isFirstConnect = true
+                            
+                        }
+                    }
+                }else{
+                    MBProgressHUD.yxs_showMessage(message: "网络连接不可用，请稍后重试", afterDelay: 3.0)
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+                        MBProgressHUD.yxs_hideHUD()
+                        isFirstConnect = true
+                    }
+                }
+                
                 instance.isNetWorkingConnect = false
                 break
             case .reachableViaWiFi,.reachableViaWWAN:
+                MBProgressHUD.yxs_hideHUD()
+                isFirstConnect = true
                 instance.isNetWorkingConnect = true
                 if let vc = UIUtil.TopViewController() as? YXSContentHomeController{
                     vc.loadCategoryData()
@@ -47,6 +69,12 @@ enum StageType: String {
         }
         return instance
     }()
+    /*
+     1.WIFI切换4G时，提示“网络连接不可用，请稍后重试”，直到新连接重新建立后取消提示。
+
+     2.网络断开后，提示“网络连接不可用，请稍后重试”，首次断开后提示时间为５秒；后续操作：切换列表或者刷新当前网页，提示“网络连接不可用，请稍后重试”，提示持续时间为３秒*/
+    private static var isFirstConnect = true
+    
     
     private override init() {
         userModel = NSKeyedUnarchiver.unarchiveObject(withFile: YXSPersonDataModel.personDataPath) as? YXSEducationUserModel ?? YXSEducationUserModel.init(JSON: ["": ""])

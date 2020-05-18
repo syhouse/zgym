@@ -68,15 +68,7 @@ class YXSPeriodicalListDetialController: YXSBaseTableViewController{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = dataSource[indexPath.row]
-        let vc = YXSBaseWebViewController()
-        vc.isCache = true
-        //            vc.loadUrl = "http://192.168.10.157/yehw/index.html"
-        //            vc.loadUrl = "http://www.ym698.com/yehw/"
-        vc.loadUrl = "http://www.ym698.com/yqk"
-        let dic = ["id":model.id ?? 0, "token":YXSPersonDataModel.sharePerson.token ?? "", "avatar":YXSPersonDataModel.sharePerson.userModel.avatar ?? "","name":YXSPersonDataModel.sharePerson.userModel.name ?? ""] as [String : Any]
-        vc.scriptKey = dic.jsonString() ?? ""
-        vc.title = "详情"
-        self.navigationController?.pushViewController(vc)
+        yxs_pushPeriodicalHtml(id: model.id ?? 0)
     }
     
     override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
@@ -123,7 +115,7 @@ class YXSPeriodicalDetialCell : UITableViewCell {
     func yxs_setCellModel(_ model: YXSChildContentHomeListModel){
         yxs_nameLabel.text = model.title
         timeLabel.text = model.uploadTime?.yxs_Date().toString(format: DateFormatType.custom("MM.dd HH:mm"))
-        rightImageView.sd_setImage(with: URL.init(string: model.cover ?? ""), placeholderImage: kImageDefualtImage)
+        rightImageView.sd_setImage(with: URL.init(string: model.cover?.yxs_getImageThumbnail() ?? ""), placeholderImage: kImageDefualtImage)
     }
     
     // MARK: -getter&setter

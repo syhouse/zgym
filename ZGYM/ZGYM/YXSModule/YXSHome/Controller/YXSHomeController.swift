@@ -238,6 +238,7 @@ class YXSHomeController: YXSHomeBaseController {
                 //更早
                 self.yxs_dataSource[2].items.append(model)
             }
+
             YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource, childrenId: self.yxs_user.currentChild?.id)
             self.group.leave()
         }) { (msg, code) in

@@ -57,6 +57,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         tableView.register(YXSHomeBaseCell.self, forCellReuseIdentifier: "YXSHomeBaseCell")
         tableView.register(YXSPunchCardListHomeCell.self, forCellReuseIdentifier: "SLPunchCardListHomeCell")
         tableView.register(SLSolitaireListHomeCell.self, forCellReuseIdentifier: "SLSolitaireListHomeCell")
+        tableView.register(YXSHomePeriodicalCell.self, forCellReuseIdentifier: "YXSHomePeriodicalCell")
         
         tableView.tableFooterView = UIView(frame: CGRect.init(x: 0, y: 0, width: self.view.width, height: 0.01))
         //老师展示发布
@@ -277,6 +278,9 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             }
         case .friendCicle:
             yxs_showComment(indexPath)
+        case .periodical:
+            SLLog("dealSelectRow")
+            //        yxs_pushPeriodicalHtml(id: model.id ?? 0)
         default:
             break
         }
@@ -417,6 +421,8 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                     cell = tableView.dequeueReusableCell(withIdentifier: "SLPunchCardListHomeCell") as? YXSHomeBaseCell
                 }else if model.type == .solitaire{
                     cell = tableView.dequeueReusableCell(withIdentifier: "SLSolitaireListHomeCell") as? YXSHomeBaseCell
+                }else if model.type == .periodical{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomePeriodicalCell") as? YXSHomeBaseCell
                 }else{
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell
                 }

@@ -93,7 +93,7 @@ extension String {
         return str;
     }
     
-    
+    ///阿里云链接的缩略图
     func yxs_getImageThumbnail(width: Int = 300, height: Int = 300) -> String {
         return self + NSUtil.yxs_imageThumbnail(width: width, height: height);
     }

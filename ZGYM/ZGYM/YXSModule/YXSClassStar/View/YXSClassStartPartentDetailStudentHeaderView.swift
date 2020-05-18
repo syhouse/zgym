@@ -234,6 +234,7 @@ class ClassStartPartentRankView: UIView {
         }else{
             iconImageView.image = UIImage.init(named: "yxs_classstar_student_gray")
             nameLabel.text = "暂无"
+            scorelabel.text = "\(0)\(stage == .KINDERGARTEN ? "朵" : "分")"
             bottomButton.isHidden = true
         }
     }
