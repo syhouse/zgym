@@ -30,9 +30,9 @@ public enum YXSHomeHeaderActionEvent: Int{
     case photo
 }
 
-private var kHeaderTexts = ["通知", "作业", "班级之星", "打卡", "接龙", "课表","班级相册", "通讯录"]
-private var kHeaderImages = [kNoticeKey, kHomeworkKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kCourseKey,"yxs_photo", kAddressbookKey]
-private var kHeaderActions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .course, .photo,.addressbook]
+private var kHeaderTexts = [String]()
+private var kHeaderImages = [String]()
+private var kHeaderActions = [YXSHomeHeaderActionEvent]()
 
 private let kMaxCount = 8
 
