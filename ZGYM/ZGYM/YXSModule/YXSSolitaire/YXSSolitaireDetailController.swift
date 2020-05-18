@@ -604,7 +604,7 @@ class SolitaireDetailHeaderView: UITableViewHeaderFooterView {
                 make.left.equalTo(15)
                 make.right.equalTo(-15)
                 make.height.equalTo(44)
-                make.bottom.equalTo(-23)
+                make.bottom.equalTo(-27)
             })
             
         } else {

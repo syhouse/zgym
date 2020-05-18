@@ -475,6 +475,12 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             })
         } else {
             linkView.isHidden = false
+            linkView.snp.remakeConstraints({ (make) in
+                make.top.equalTo(self.nineMediaView.snp_bottom).offset(20)
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.height.equalTo(44)
+            })
         }
         
         if self.model?.fileList.count ?? 0 > 0 {
@@ -653,7 +659,6 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
 
     lazy var linkView: YXSLinkView = {
         let link = YXSLinkView()
-        link.isHidden = true
         return link
     }()
     
