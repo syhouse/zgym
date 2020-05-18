@@ -140,6 +140,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
             self.tableView.reloadData()
             YXSCacheHelper.yxs_cacheSolitaireList(dataSource: self.solitaireLists, childrenId: self.yxs_user.currentChild?.id, isAgent: self.isAgenda)
         }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
             self.yxs_endingRefresh()
         }
         

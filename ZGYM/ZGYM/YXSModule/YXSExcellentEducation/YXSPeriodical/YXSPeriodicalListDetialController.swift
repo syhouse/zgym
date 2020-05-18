@@ -43,7 +43,7 @@ class YXSPeriodicalListDetialController: YXSBaseTableViewController{
         YXSEducationPeriodicalArticlePageRequest.init(periodicalId: listModel.id ?? 0, currentPage: currentPage).request({ (json) in
             self.yxs_endingRefresh()
             let list = Mapper<YXSChildContentHomeListModel>().mapArray(JSONObject: json["records"].object) ?? [YXSChildContentHomeListModel]()
-
+            
             if self.currentPage == 1{
                 self.dataSource.removeAll()
             }
@@ -66,6 +66,19 @@ class YXSPeriodicalListDetialController: YXSBaseTableViewController{
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let model = dataSource[indexPath.row]
+        let vc = YXSBaseWebViewController()
+        vc.isCache = true
+        //            vc.loadUrl = "http://192.168.10.157/yehw/index.html"
+        //            vc.loadUrl = "http://www.ym698.com/yehw/"
+        vc.loadUrl = "http://www.ym698.com/yqk"
+        let dic = ["id":model.id ?? 0, "token":YXSPersonDataModel.sharePerson.token ?? "", "avatar":YXSPersonDataModel.sharePerson.userModel.avatar ?? "","name":YXSPersonDataModel.sharePerson.userModel.name ?? ""] as [String : Any]
+        vc.scriptKey = dic.jsonString() ?? ""
+        vc.title = "详情"
+        self.navigationController?.pushViewController(vc)
+    }
+    
     override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
         return showEmptyDataSource
     }
@@ -82,7 +95,7 @@ class YXSPeriodicalDetialCell : UITableViewCell {
         
         contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.white)
         contentView.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: kLineColor, night: kLineColor), leftMargin: 15)
-
+        
         yxs_nameLabel.snp.makeConstraints { (make) in
             make.left.equalTo(15)
             make.top.equalTo(24)

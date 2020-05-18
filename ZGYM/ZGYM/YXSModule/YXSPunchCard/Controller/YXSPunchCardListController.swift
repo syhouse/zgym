@@ -118,6 +118,7 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
             YXSCacheHelper.yxs_cachePunchCardList(dataSource: self.yxs_punchCardDataSource,childrenId: self.yxs_user.currentChild?.id, isAgent: self.isAgenda)
             self.tableView.reloadData()
         }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
             self.yxs_endingRefresh()
         }
         
