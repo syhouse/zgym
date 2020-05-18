@@ -59,7 +59,7 @@ class YXSClassScheduleCardCell: UITableViewCell {
     func yxs_setCellModel(_ model: YXSClassScheduleCardModel){
         yxs_nameLabel.text = model.className
         yxs_numberLabel.text = "班级号：\(model.classCode ?? "")      成员：\(model.numberCount ?? "")"
-        yxs_scheduleCardView.sd_setImage(with: URL.init(string: model.imageUrl ?? ""),placeholderImage: kImageDefualtImage, completed: nil)
+        yxs_scheduleCardView.sd_setImage(with: URL.init(string: model.imageUrl?.yxs_getImageThumbnail() ?? ""),placeholderImage: kImageDefualtImage, completed: nil)
     }
     
     // MARK: -getter&setter
