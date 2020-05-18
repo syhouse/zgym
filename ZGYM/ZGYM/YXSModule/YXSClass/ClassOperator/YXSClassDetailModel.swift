@@ -21,6 +21,7 @@ class YXSClassDetailModel : NSObject, Mappable{
     var children : [YXSChildrenModel]?
     var teachers : Int?
     var stage : String?
+    var subject : String?
     
     func getcurrentChild(classModel: YXSClassModel) -> YXSChildrenModel?{
         var children: YXSChildrenModel?
@@ -57,6 +58,8 @@ class YXSClassDetailModel : NSObject, Mappable{
         headmaster <- map["headmaster"]
         position <- map["position"]
         stage <- map["stage"]
+        subject <- map["subject"]
+        
 	}
 }
 
