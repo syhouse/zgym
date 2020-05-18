@@ -71,7 +71,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var memberCount : Int?
     /// 业务ID
     var serviceId : Int?
-    /// 业务类型(0:通知,1:作业,2:打卡,3:接龙,4:成绩,5:班级圈6:班级之星 105 班级圈消息),首页聚合所有数据时无需传该参数,查询对应业务数据时需要传
+    //7优期刊
+    /// 业务类型(0:通知,1:作业,2:打卡,3:接龙,4:成绩,5:班级圈6:班级之星  105 班级圈消息),首页聚合所有数据时无需传该参数,查询对应业务数据时需要传
     var serviceType : Int?
     /// 学段
     var stage : String?
@@ -195,7 +196,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                 }
                 remarkList = list
             }
-
+            
         }
     }
     
@@ -270,7 +271,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     ///(是否需要展示展开按钮)首页列表使用
     var needShowAllButton: Bool = false{
         didSet{
-//            SLLog("needShowAllButton=\(needShowAllButton) content=\(content ?? "")")
+            //            SLLog("needShowAllButton=\(needShowAllButton) content=\(content ?? "")")
         }
     }
     
@@ -292,6 +293,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                 return .friendCicle
             case 6:
                 return .classstart
+            case 7:
+                return .periodical
             default:
                 return .notice
             }
@@ -415,6 +418,14 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     ///缓存高度
     var height: CGFloat{
         get{
+            //优期刊
+            if serviceType == 7{
+                if let classstartModel = classStarModel,classstartModel.showRemindTeacher{
+                    return 14.0 + 512.0
+                }
+                let titleHeight: CGFloat = 40.0
+                return 14.0 + 52 + 41 + titleHeight + CGFloat(43.0*Double(maxHomePeriodicalLine)) + 5.5
+            }
             //班级圈
             if serviceType == 6{
                 if let classstartModel = classStarModel,classstartModel.showRemindTeacher{
@@ -443,7 +454,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             }else{
                 height += 48.5
             }
-
+            
             if needShowAllButton{
                 height += 25 + 9
             }else{
@@ -485,11 +496,11 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             case 2:
                 height += (isTeacher || hasPunch || !hasNeedPunch) ? 117.5 : 95.0
             case 3:
-            if isShowTag{
-                height += 120.0
-            }else{
-                height += 90.5
-            }
+                if isShowTag{
+                    height += 120.0
+                }else{
+                    height += 90.5
+                }
             default:
                 height += 67.5
                 break
@@ -500,7 +511,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     
     /// frameModel
     var frameModel:YXSFriendsCircleFrameModel!
-
+    
     var contentLabelWidth : CGFloat{
         return SCREEN_WIDTH - 30 - (hasSource ? (15 + 107) : (15 + 18))
     }
@@ -590,10 +601,10 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         
         frameModel = aDecoder.decodeObject(forKey: "frameModel") as? YXSFriendsCircleFrameModel
         needShowAllButton = aDecoder.decodeBool(forKey: "needShowAllButton")
-    
+        
         currentTime = aDecoder.decodeObject(forKey: "currentTime") as? String
     }
-
+    
     /**
      * NSCoding required method.
      * Encodes mode properties into the decoder
@@ -710,15 +721,15 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         aCoder.encode(needShowAllButton, forKey: "needShowAllButton")
         
         if currentTime != nil{
-             aCoder.encode(currentTime, forKey: "currentTime")
-         }
+            aCoder.encode(currentTime, forKey: "currentTime")
+        }
     }
 }
 
 
 extension YXSHomeListModel{
     func confingHeight(){
-
+        
         frameModel = YXSFriendsCircleFrameModel()
         let paragraphStye = NSMutableParagraphStyle()
         //调整行间距
