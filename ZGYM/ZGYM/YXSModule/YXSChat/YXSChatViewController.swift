@@ -15,6 +15,8 @@ class YXSChatViewController: TUIChatController,TUIChatControllerDelegate {
     
     var conversation: TIMConversation?  = nil
     
+    var customNav: YXSCustomNav?
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         /// 登录
@@ -22,13 +24,12 @@ class YXSChatViewController: TUIChatController,TUIChatControllerDelegate {
             YXSChatHelper.sharedInstance.login()
         }
         
-        self.navigationController?.navigationBar.shadowImage = UIImage();
-        
-        navigationController?.navigationBar.setBackgroundImage(NightNight.theme == .night ? UIImage.yxs_image(with: kNightForegroundColor) : UIImage.yxs_image(with: UIColor.white), for: .default)
-        
-        navigationController?.navigationBar.mixedTitleTextAttributes = [
-            NNForegroundColorAttributeName: MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
-        ]
+//        self.navigationController?.navigationBar.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+//        self.navigationController?.navigationBar.shadowImage = UIImage();
+//        navigationController?.navigationBar.setBackgroundImage(NightNight.theme == .night ? UIImage.yxs_image(with: kNightForegroundColor) : UIImage.yxs_image(with: UIColor.white), for: .default)
+//        navigationController?.navigationBar.mixedTitleTextAttributes = [
+//            NNForegroundColorAttributeName: MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+//        ]
         IQKeyboardManager.shared().isEnabled = true
     }
     
@@ -36,9 +37,9 @@ class YXSChatViewController: TUIChatController,TUIChatControllerDelegate {
         super.viewWillDisappear(animated)
         YXSChatHelper.sharedInstance.refreshData()
         
-        navigationController?.navigationBar.shadowImage = nil
-        navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
-        navigationController?.navigationBar.titleTextAttributes = nil
+//        navigationController?.navigationBar.shadowImage = nil
+//        navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
+//        navigationController?.navigationBar.titleTextAttributes = nil
         
         IQKeyboardManager.shared().isEnabled = false
     }
@@ -54,12 +55,30 @@ class YXSChatViewController: TUIChatController,TUIChatControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.fd_prefersNavigationBarHidden = true
         view.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
+        customNav = YXSCustomNav(YXSCustomStyle.onlyback)
+        customNav?.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+        customNav?.backImageButton.setMixedImage(MixedImage(normal: "back", night: "yxs_back_white"), forState: .normal)
+        customNav?.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        if let navView = customNav {
+            view.addSubview(navView)
+            navView.snp.makeConstraints { (make) in
+                make.left.right.top.equalTo(0)
+            }
+        }
+
         /// 设置标题
         let titleView = HMChatNav()
-        self.navigationItem.titleView = titleView
+        customNav?.addSubview(titleView)
+        let distance = kSafeTopHeight/2.0 + 10.0
+        titleView.snp.makeConstraints({ (make) in
+            make.centerX.equalTo(customNav!.snp_centerX)
+            make.centerY.equalTo(customNav!.snp_centerY).offset(distance)
+        })
         TIMFriendshipManager.sharedInstance()?.getUsersProfile([(conversation?.getReceiver() ?? "")], forceUpdate: true, succ: { [weak self](list) in
             guard let weakSelf = self else {return}
             if list?.count ?? 0 > 0 {
@@ -128,17 +147,17 @@ class YXSChatViewController: TUIChatController,TUIChatControllerDelegate {
     
     
     // MARK: - LazyLoad
-    
-    /*
-    // MARK: - Navigation
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+// MARK: -HMRouterEventProtocol
+extension YXSChatViewController: YXSRouterEventProtocol{
+    func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
+        switch eventName {
+        case kYXSCustomNavBackEvent:
+            yxs_onBackClick()
+        default:break
+        }
     }
-    */
-
 }
 
 
@@ -155,6 +174,7 @@ class HMChatNav: UIView {
         lbSubTitle.snp.makeConstraints({ (make) in
             make.top.equalTo(lbTitle.snp_bottom).offset(5)
             make.centerX.equalTo(snp_centerX).offset(0)
+            make.bottom.equalTo(0)
         })
     }
     
@@ -173,6 +193,7 @@ class HMChatNav: UIView {
                 lbTitle.snp.remakeConstraints({ (make) in
                     make.centerY.equalTo(snp_centerY).offset(0)
                     make.centerX.equalTo(snp_centerX).offset(0)
+                    make.bottom.equalTo(0)
                 })
                 
             } else {
@@ -185,6 +206,7 @@ class HMChatNav: UIView {
                 lbSubTitle.snp.remakeConstraints({ (make) in
                     make.top.equalTo(lbTitle.snp_bottom).offset(5)
                     make.centerX.equalTo(snp_centerX).offset(0)
+                    make.bottom.equalTo(0)
                 })
             }
         }

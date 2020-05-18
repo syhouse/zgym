@@ -72,7 +72,7 @@ class YXSClassMembersViewController: YXSBaseTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let dic:[String:String] = self.dataSource[indexPath.section][indexPath.row]
+
         let model: YXSClassMemberModel!
         if indexPath.section == 0 {
             model =  self.teacherList[indexPath.row]
@@ -109,8 +109,7 @@ class YXSClassMembersViewController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let header:UIView = UIView()
-//        header.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9")
+
         let header: ClassMembersSectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "ClassMembersSectionHeader") as! ClassMembersSectionHeader
         if section == 0 {
             header.lbTitle.text = "教师  (\(self.teacherList.count))"

@@ -7,12 +7,22 @@
 //
 
 import UIKit
+import NightNight
 ///  官方小助手
 class YXSAssistantChatViewController: YXSChatViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        customNav = YXSCustomNav(YXSCustomStyle.backAndTitle)
+        customNav?.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+        customNav?.backImageButton.setMixedImage(MixedImage(normal: "back", night: "yxs_back_white"), forState: .normal)
+        customNav?.title = "官方小助手"
+        customNav?.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        view.addSubview(customNav!)
+        customNav?.snp.makeConstraints { (make) in
+            make.left.right.top.equalTo(0)
+        }
 //        self.messageController.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
 //        self.inputController?.removeFromParent()
 //        self.inputController?.view.removeFromSuperview()
