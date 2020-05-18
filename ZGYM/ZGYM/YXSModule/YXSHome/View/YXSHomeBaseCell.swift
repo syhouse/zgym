@@ -25,6 +25,8 @@ enum YXSHomeType: Int{
     case friendCicle
     ///成绩
     case score
+    ///优期刊
+    case periodical
 }
 
 public enum YXSHomeCellEvent: Int{

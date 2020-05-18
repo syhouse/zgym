@@ -43,15 +43,15 @@ extension UIView{
         switch position {
         case .top:
             vConstraints = String(format: "V:|-0-[view(==%f)]", lineHeight)
-            hConstraints = String(format: "H:|-%f-[view]-%f-|", arguments: [leftMargin,rightMargin])
+            hConstraints = String(format: "H:|-%f-[view]-%f-|", arguments: [abs(leftMargin),abs(rightMargin)])
         case .bottom:
             vConstraints = String(format: "V:[view(==%f)]-0-|", lineHeight)
-            hConstraints = String(format: "H:|-%f-[view]-%f-|", arguments: [leftMargin,rightMargin])
+            hConstraints = String(format: "H:|-%f-[view]-%f-|", arguments: [abs(leftMargin),abs(rightMargin)])
         case .left:
-            vConstraints = String(format: "V:|-%f-[view]-%f-|", arguments: [leftMargin,rightMargin])
+            vConstraints = String(format: "V:|-%f-[view]-%f-|", arguments: [abs(leftMargin),abs(rightMargin)])
             hConstraints = String(format: "H:|-0-[view(==%f)]", lineHeight)
         case .right:
-            vConstraints = String(format: "V:|-%f-[view]-%f-|", arguments: [leftMargin,rightMargin])
+            vConstraints = String(format: "V:|-%f-[view]-%f-|", arguments: [abs(leftMargin),abs(rightMargin)])
             hConstraints = String(format: "H:[view(==%f)]-0-|", lineHeight)
         }
         
