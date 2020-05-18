@@ -98,7 +98,7 @@ public let KWXAPPID = "wx1b970ce0b77fae0a"
 public let KWXUNIVERSAL_LINK = "https://call.c989.cn/open/"
 public let KQQ_LINK = "https://call.c989.cn/qq_conn/1110343963"
 public let KQQAPPID = "1110343963"
-//call.c989.cn/.
+
 // MARK: -key
 public let kEventKey = "EventKey"
 public let kValueKey = "ValueKey"

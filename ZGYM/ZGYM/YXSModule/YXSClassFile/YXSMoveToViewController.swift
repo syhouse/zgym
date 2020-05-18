@@ -45,6 +45,7 @@ class YXSMoveToViewController: YXSBaseTableViewController {
     }
     
     override func viewDidLoad() {
+        hasRefreshHeader = false
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
@@ -71,38 +72,49 @@ class YXSMoveToViewController: YXSBaseTableViewController {
             make.height.equalTo(60)
         })
         
+        loadMore = true
         loadData()
         
     }
     
     // MARK: - Request
+    override func yxs_loadNextPage() {
+        loadData()
+    }
+    
     @objc func loadData() {
         if classId == nil {
             YXSSatchelFolderPageQueryRequest(currentPage: currentPage, parentFolderId: parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"]
+                let hasNext = json["hasNext"].boolValue
+                weakSelf.loadMore = hasNext
                 
-                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
+                weakSelf.folderList += Mapper<YXSFolderModel>().mapArray(JSONString: json["satchelFolderList"].rawString()!) ?? [YXSFolderModel]()
                 weakSelf.tableView.reloadData()
+                weakSelf.yxs_endingRefresh()
                 
-            }) { (msg, code) in
+            }) { [weak self](msg, code) in
+                guard let weakSelf = self else {return}
                 MBProgressHUD.yxs_showMessage(message: msg)
+                weakSelf.yxs_endingRefresh()
             }
             
         } else {
             YXSFileFolderPageQueryRequest(classId: classId ?? 0, currentPage: currentPage, folderId: parentFolderId).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
-                let hasNext = json["hasNext"]
+                let hasNext = json["hasNext"].boolValue
+                weakSelf.loadMore = hasNext
                 
-                weakSelf.folderList = Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
+                weakSelf.folderList += Mapper<YXSFolderModel>().mapArray(JSONString: json["classFolderList"].rawString()!) ?? [YXSFolderModel]()
                 weakSelf.tableView.reloadData()
+                weakSelf.yxs_endingRefresh()
                 
-            }) { (msg, code) in
+            }) { [weak self](msg, code) in
+                guard let weakSelf = self else {return}
                 MBProgressHUD.yxs_showMessage(message: msg)
+                weakSelf.yxs_endingRefresh()
             }
         }
-        
-
     }
     
     // MARK: - Delegate

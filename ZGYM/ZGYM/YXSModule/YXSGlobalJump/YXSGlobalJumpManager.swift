@@ -47,7 +47,7 @@ class YXSGlobalJumpManager: NSObject {
         
         if serviceType == 666 {
             /// 跳私聊
-            getVisibleVC(inTabBarController: tabBar, index: 2)
+            getVisibleVC(inTabBarController: tabBar, index: 3)
             hasJumpEnd = true
             return
         }

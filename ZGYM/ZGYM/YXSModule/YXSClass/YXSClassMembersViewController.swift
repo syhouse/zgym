@@ -35,6 +35,15 @@ class YXSClassMembersViewController: YXSBaseTableViewController {
             weakSelf.yxs_endingRefresh()
 
             weakSelf.teacherList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["detailForTeacher"].rawString()!) ?? [YXSClassMemberModel]()
+            for sub in weakSelf.teacherList {
+                /// 班主任置顶
+                if sub.position == "HEADMASTER" {
+                    let idx = weakSelf.teacherList.firstIndex(of: sub)
+                    weakSelf.teacherList.remove(at: idx ?? 0)
+                    weakSelf.teacherList.insert(sub, at: 0)
+                    break
+                }
+            }
             weakSelf.studentList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["detailForParent"].rawString()!) ?? [YXSClassMemberModel]()
             weakSelf.tableView.reloadData()
             
@@ -63,7 +72,7 @@ class YXSClassMembersViewController: YXSBaseTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let dic:[String:String] = self.dataSource[indexPath.section][indexPath.row]
+
         let model: YXSClassMemberModel!
         if indexPath.section == 0 {
             model =  self.teacherList[indexPath.row]
@@ -100,8 +109,7 @@ class YXSClassMembersViewController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let header:UIView = UIView()
-//        header.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9")
+
         let header: ClassMembersSectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "ClassMembersSectionHeader") as! ClassMembersSectionHeader
         if section == 0 {
             header.lbTitle.text = "教师  (\(self.teacherList.count))"

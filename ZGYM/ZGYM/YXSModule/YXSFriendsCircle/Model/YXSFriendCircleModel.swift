@@ -10,7 +10,9 @@ import Foundation
 import ObjectMapper
 
 enum HMClassCircleType: String{
+    ///用户发布
     case CIRCLE
+    ///系统助手  默认发布
     case HELPER
 }
 

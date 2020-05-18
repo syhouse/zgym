@@ -66,6 +66,7 @@
     }
 }
 
+#define TopInner (StatusBar_Height + NavBar_Height)
 - (void)setupViews
 {
     self.view.backgroundColor = [UIColor whiteColor];
@@ -73,7 +74,7 @@
     @weakify(self)
     //message
     _messageController = [[TUIMessageController alloc] init];
-    _messageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight);
+    _messageController.view.frame = CGRectMake(0, TopInner, self.view.frame.size.width, self.view.frame.size.height - TopInner - TTextView_Height - Bottom_SafeHeight);
     _messageController.delegate = self;
     [self addChildViewController:_messageController];
     [self.view addSubview:_messageController.view];
@@ -162,7 +163,7 @@
     __weak typeof(self) ws = self;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         CGRect msgFrame = ws.messageController.view.frame;
-        msgFrame.size.height = ws.view.frame.size.height - height;
+        msgFrame.size.height = ws.view.frame.size.height - TopInner - height;
         ws.messageController.view.frame = msgFrame;
 
         CGRect inputFrame = ws.inputController.view.frame;

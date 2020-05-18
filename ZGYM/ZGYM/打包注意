@@ -1,3 +1,2 @@
 1.查看YXSBaseRequset接口环境ServiceType  是否为.ServiceProduct
-2.注释掉AppDelegate里面的FLEXManager  和Bridging-Header 里面的<FLEX/FLEXManager.h> (带UIwebview)
-3.打包appstore的时候注意 Share Extension版本 buildid和当前app的一致
+2.Appstore打包appstore的时候注意 Share Extension版本 buildid和当前app的一致
