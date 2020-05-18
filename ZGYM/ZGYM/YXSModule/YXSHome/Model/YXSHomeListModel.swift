@@ -468,7 +468,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             }
             
             
-            if self.isShowAll{
+            if self.isShowAll || !self.needShowAllButton{
                 height += frameModel.contentIsShowAllHeight
                 
             }else{
