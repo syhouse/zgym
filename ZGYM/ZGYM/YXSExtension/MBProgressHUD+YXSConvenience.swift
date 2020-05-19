@@ -84,3 +84,117 @@ extension MBProgressHUD {
         self.detailsLabel.font = UIFont.boldSystemFont(ofSize: 16)
     }
 }
+
+extension MBProgressHUD {
+    static func yxs_showUpload(title: String = "正在上传", inView: UIView? = UIApplication.shared.keyWindow) {
+        yxs_hideHUD()
+        DispatchQueue.main.async {
+            let hud = MBProgressHUD.showAdded(to: inView!, animated: true)
+            hud.mode = .customView
+            hud.removeFromSuperViewOnHide = true
+            hud.show(animated: true)
+            hud.bezelView.style = .solidColor
+            hud.bezelView.backgroundColor = UIColor.clear
+            let customView = YXSUploadCustomView(frame: CGRect.init(x: 0, y: 0, width: 125, height: 158))
+            customView.titleLabel.text = title
+            hud.customView = customView
+        }
+    }
+    
+    static func yxs_updateUploadProgess(progess: CGFloat, inView: UIView? = UIApplication.shared.keyWindow) {
+        if let inView = inView{
+            for view in inView.subviews{
+                if view is MBProgressHUD{
+                    if let customView = (view as! MBProgressHUD).customView as? YXSUploadCustomView{
+                        DispatchQueue.main.async {
+                            customView.progress = progess
+                        }
+                        break
+                    }
+                }
+            }
+        }
+    }
+}
+
+class YXSUploadCustomView: UIView{
+    var progress: CGFloat = 0.0 {
+        didSet{
+            self.setNeedsDisplay()
+        }
+    }
+    
+    override var intrinsicContentSize: CGSize{
+        return self.frame.size
+    }
+    
+    override init(frame: CGRect) {
+        if frame == CGRect.zero{
+            super.init(frame: CGRect.init(x: 0, y: 0, width: 125, height: 158))
+        }else{
+            super.init(frame: frame)
+        }
+        self.backgroundColor = UIColor.white
+        self.cornerRadius = 15
+        addSubview(titleLabel)
+        addSubview(progressLabel)
+        titleLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(self)
+            make.bottom.equalTo(-25.5)
+        }
+        progressLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(self)
+            make.top.equalTo(58)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func draw(_ rect: CGRect) {
+        let size = CGSize.init(width: 69, height: 69)
+        
+        let arcCenter = CGPoint(x: 28 + size.width*0.5, y: 28 + size.height*0.5)
+        var radius = min(size.width, size.height)*0.5
+        let startAngle: CGFloat = CGFloat((Double.pi))*1.5
+        let endAngle: CGFloat = progress*CGFloat((Double.pi))*2 + startAngle
+
+        // 外圆设置
+        radius -= 3
+        let restPath = UIBezierPath(arcCenter: arcCenter, radius: radius, startAngle: 0, endAngle: 2*CGFloat((Double.pi)) + startAngle, clockwise: true)
+        
+        restPath.lineWidth = 3//设置线宽
+        restPath.lineCapStyle = CGLineCap.round//设置线样式
+        
+        UIColor.yxs_hexToAdecimalColor(hex: "#E6EAF3").set()
+        restPath.stroke()
+        
+        let path = UIBezierPath(arcCenter: arcCenter, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
+        
+        path.lineWidth = 3//设置线宽
+        path.lineCapStyle = CGLineCap.round//设置线样式
+        
+        kBlueColor.set()
+
+        path.stroke()
+        
+        progressLabel.text = "\(String.init(format: "%d", Int(progress * 100)))%"
+    }
+    
+    lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = kTextMainBodyColor
+        label.text = "正在上传"
+        return label
+    }()
+    
+    lazy var progressLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#83878F")
+        label.text = "0%"
+        return label
+    }()
+}

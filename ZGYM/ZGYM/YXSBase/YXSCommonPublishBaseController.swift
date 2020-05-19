@@ -214,16 +214,14 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         }
         //有本地资源上传
         if localMedias.count != 0{
-            self.uploadHud = getUploadHud()
-            self.uploadHud.label.text = "上传中(0%)"
-            uploadHud.show(animated: true)
+            MBProgressHUD.yxs_showUpload(inView: self.navigationController!.view)
         }
         
 
         YXSUploadSourceHelper().uploadMedia(mediaInfos: localMedias, progress: {
             (progress)in
             DispatchQueue.main.async {
-                self.uploadHud.label.text = "上传中(\(String.init(format: "%d", Int(progress * 100)))%)"
+                 MBProgressHUD.yxs_updateUploadProgess(progess: progress, inView: self.navigationController!.view)
             }
         }, sucess: { (listModels) in
             SLLog(listModels)
@@ -291,12 +289,4 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
         }
         return publishView
     }()
-    ///上传进度
-    var uploadHud: MBProgressHUD!
-    
-    func getUploadHud() -> MBProgressHUD{
-        let hud = MBProgressHUD.showAdded(to: self.navigationController!.view, animated: true)
-        hud.mode = .indeterminate
-        return hud
-    }
 }
