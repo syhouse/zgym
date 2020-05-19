@@ -17,6 +17,7 @@ class YXSClassManageViewController: YXSBaseTableViewController {
     var className: String! = ""
     var position: String = ""
     var gradeId: Int?
+    var subject: String = ""
     var completionHandler:((_ className:String, _ forbidJonin:Bool)->())?
     
     private var originClassName: String?
@@ -187,7 +188,19 @@ class YXSClassManageViewController: YXSBaseTableViewController {
             case "SubTitleType":
                 let cell: ClassManageSubTitleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ClassManageSubTitleTableViewCell") as! ClassManageSubTitleTableViewCell
                 cell.lbTitle.text = dic["title"]
-                cell.lbSubTitle.text = self.className ?? ""
+                if cell.lbTitle.text == "班级名称" {
+                    cell.lbSubTitle.text = self.className ?? ""
+                } else {
+                    /// 我当前任教学科
+                    let text = subject
+                    for model in YXSCommonSubjcts{
+                        if model.paramsKey == text{
+                            cell.lbSubTitle.text = model.text
+                            break
+                        }
+                    }
+                    cell.contentView.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#E5EAF4"), leftMargin: 15, rightMargin: 0, lineHeight: 0.5)
+                }
                 return cell
             
             case "SwitchType":
@@ -226,7 +239,7 @@ class YXSClassManageViewController: YXSBaseTableViewController {
     
     // MARK: - LazyLoad
     lazy var dataSource:[[[String:String]]] = {
-        let arr:[[[String:String]]] = [[["title":"班级名称","type":"SubTitleType","action":"editClassNameClick"]],[["title":"禁止新成员入班","type":"SwitchType"]],[["title":"转让班级","type":"NormalType","action":"transferClassClick"],["title":"退出班级","type":"NormalType","action":"signOutClassClick"],["title":"解散班级","type":"NormalType","action":"dissolutionClassClick"]]]
+        let arr:[[[String:String]]] = [[["title":"班级名称","type":"SubTitleType","action":"editClassNameClick"]],[["title":"禁止新成员入班","type":"SwitchType"]],[["title":"我当前任教学科","type":"SubTitleType"],["title":"转让班级","type":"NormalType","action":"transferClassClick"],["title":"退出班级","type":"NormalType","action":"signOutClassClick"],["title":"解散班级","type":"NormalType","action":"dissolutionClassClick"]]]
         return arr
     }()
     

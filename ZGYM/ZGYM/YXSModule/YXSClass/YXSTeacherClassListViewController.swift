@@ -221,6 +221,7 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
             vc.forbidJoin = model.forbidJoin == "NO" ? false:true
             vc.gradeId = model.id
             vc.position = model.position ?? ""
+            vc.subject = model.subject ?? ""
             vc.completionHandler = {[weak self](className, forbidJonin) in
                 guard let weakSelf = self else {return}
                 weakSelf.title = className
