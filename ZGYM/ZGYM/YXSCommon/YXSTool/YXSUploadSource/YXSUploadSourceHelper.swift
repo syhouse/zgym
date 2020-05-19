@@ -58,29 +58,29 @@ class SLUploadSourceModel: NSObject{
             case .temporary:
                 switch type {
                 case .image, .firstVideo:
-                    return YXSFileUploadHelper.sharedInstance.getTmpImgUrl(fullName: fileName + suffix)
+                    return YXSFileUploadHelper.sharedInstance.getTmpImgUrl(fullName: fileName.MD5() + suffix)
                 case .voice:
-                    return YXSFileUploadHelper.sharedInstance.getTmpVoiceUrl(fullName: fileName + suffix)
+                    return YXSFileUploadHelper.sharedInstance.getTmpVoiceUrl(fullName: fileName.MD5() + suffix)
                 case .video:
-                    return YXSFileUploadHelper.sharedInstance.getTmpVideoUrl(fullName: fileName + suffix)
+                    return YXSFileUploadHelper.sharedInstance.getTmpVideoUrl(fullName: fileName.MD5() + suffix)
                 }
             case .album:
-                return YXSFileUploadHelper.sharedInstance.getAlbumUrl(fullName: fileName + suffix, classId: classId ?? 0, albumId: albumId ?? 0)
+                return YXSFileUploadHelper.sharedInstance.getAlbumUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0, albumId: albumId ?? 0)
                 
             case .classFile:
-                return YXSFileUploadHelper.sharedInstance.getClassFileUrl(fullName: fileName + suffix, classId: classId ?? 0)
+                return YXSFileUploadHelper.sharedInstance.getClassFileUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0)
                 
             case .satchel:
-                return YXSFileUploadHelper.sharedInstance.getSatchelUrl(fullName: fileName + suffix)
+                return YXSFileUploadHelper.sharedInstance.getSatchelUrl(fullName: fileName.MD5() + suffix)
                 
             case .circle:
-                return YXSFileUploadHelper.sharedInstance.getCircleUrl(fullName: fileName + suffix)
+                return YXSFileUploadHelper.sharedInstance.getCircleUrl(fullName: fileName.MD5() + suffix)
             case .avatar:
-                return YXSFileUploadHelper.sharedInstance.getAvatarUrl(fullName: fileName + suffix)
+                return YXSFileUploadHelper.sharedInstance.getAvatarUrl(fullName: fileName.MD5() + suffix)
             case .curriculum:
-                return YXSFileUploadHelper.sharedInstance.getCurriculumUrl(fullName: fileName + suffix, classId: classId ?? 0)
+                return YXSFileUploadHelper.sharedInstance.getCurriculumUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0)
             case .star:
-                return YXSFileUploadHelper.sharedInstance.getStarUrl(fullName: fileName + suffix, classId: classId ?? 0)
+                return YXSFileUploadHelper.sharedInstance.getStarUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0)
             }
         }
     }

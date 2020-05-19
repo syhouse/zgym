@@ -210,6 +210,14 @@ class YXSClassDetialListController: YXSHomeBaseController {
     }()
 }
 
+// MARK: - 通知
+extension YXSClassDetialListController{
+     override func yxs_addNotification(){
+        super.yxs_addNotification()
+        ///退出班级直接退出vc
+        NotificationCenter.default.addObserver(self, selector: #selector(yxs_onBackClick), name: NSNotification.Name.init(rawValue: kQuitClassSucessNotification), object: nil)
+    }
+}
 
 // MARK: -HMRouterEventProtocol
 extension YXSClassDetialListController: YXSRouterEventProtocol{

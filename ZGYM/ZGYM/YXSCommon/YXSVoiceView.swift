@@ -108,23 +108,14 @@ class YXSVoiceBaseView: UIView {
         
         self.lbSecond.text = "12\""
         
-        //初始化最大宽度
-        maxWidth =  self.frame.width*2/3
     }
     
     // MARK: - Setter
-    var minWidth: CGFloat = 80 {
-        didSet {
-            updateLayout()
-        }
-    }
+    // 统一宽度语音最小宽度为：111    最大宽度为：175.5
     
+    private let minWidth: CGFloat = 111
     ///最大宽度
-    var maxWidth: CGFloat? {
-        didSet {
-            updateLayout()
-        }
-    }
+    private let maxWidth: CGFloat  = 175.5
     
     ///最大录音时间长度 单位秒
     var maxTime: CGFloat = 300.0 {
@@ -137,28 +128,16 @@ class YXSVoiceBaseView: UIView {
         let percentage: CGFloat = CGFloat(voiceDuration ?? 0) / maxTime
         //伸缩宽度
         var flexibleWidth = self.frame.width - minWidth
-        if let maxWidth = maxWidth{
-            flexibleWidth = maxWidth - minWidth
-        }
+        flexibleWidth = maxWidth - minWidth
          
         let width:CGFloat = minWidth + flexibleWidth * percentage
-        if width > maxWidth ?? 230.0 {
-            let maxw:CGFloat = maxWidth ?? 230
-            indicatorView.snp_remakeConstraints { (make) in
-                make.top.equalTo(0)
-                make.left.equalTo(0)
-                make.bottom.equalTo(0)
-                make.width.equalTo(maxw)
-            }
-        } else {
-            indicatorView.snp_remakeConstraints { (make) in
-                make.top.equalTo(0)
-                make.left.equalTo(0)
-                make.bottom.equalTo(0)
-                make.width.equalTo(width)
-            }
-        }
         
+        indicatorView.snp_remakeConstraints { (make) in
+            make.top.equalTo(0)
+            make.left.equalTo(0)
+            make.bottom.equalTo(0)
+            make.width.equalTo(width)
+        }
     }
 
     
@@ -203,7 +182,9 @@ class YXSVoiceBaseView: UIView {
     // MARK: - LazyLoad
     lazy var indicatorView: UIControl = {
         let view = UIControl()
-        view.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#7CDCDF"), night: UIColor.yxs_hexToAdecimalColor(hex: "#96DADE"))
+        view.borderColor = UIColor.yxs_hexToAdecimalColor(hex: "#D1D6E0")
+        view.borderWidth = 0.5
+        view.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9"), night: UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9"))
         view.addTarget(self, action: #selector(indicatorClick(sender:)), for: .touchUpInside)
         return view
     }()
@@ -216,7 +197,7 @@ class YXSVoiceBaseView: UIView {
     
     lazy var lbSecond: YXSLabel = {
         let lb = YXSLabel()
-        lb.mixedTextColor = MixedColor(normal: 0xFFFFFF, night: 0xFFFFFF)
+        lb.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kTextMainBodyColor)
         lb.text = ""
         lb.font = UIFont.systemFont(ofSize: 16)
         return lb
@@ -224,7 +205,7 @@ class YXSVoiceBaseView: UIView {
     
     lazy var closeButton: YXSButton = {
         let closeButton = YXSButton()
-        closeButton.setImage(UIImage.init(named: "yxs_publish_close"), for: .normal)
+        closeButton.setImage(UIImage.init(named: "yxs_publish_voice_close"), for: .normal)
         closeButton.addTarget(self, action: #selector(closeClick), for: .touchUpInside)
         return closeButton
     }()

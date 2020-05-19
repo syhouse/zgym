@@ -55,6 +55,13 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
         self.userType = userType
         super.init()
         tableViewIsGroup = true
+        
+        if userIdPublisher == self.yxs_user.id && userType == self.yxs_user.type{
+            self.title = "我的优成长"
+        }else{
+            self.title = "TA的优成长"
+        }
+        
     }
     
     

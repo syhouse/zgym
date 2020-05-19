@@ -475,7 +475,6 @@ extension YXSHomeBaseController{
     @objc func yxs_addNotification(){
         
         NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kAddClassSucessNotification), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kQuitClassSucessNotification), object: nil)
         
         //置顶通知
         NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kOperationUpdateToTopInItemListNotification), object: nil)

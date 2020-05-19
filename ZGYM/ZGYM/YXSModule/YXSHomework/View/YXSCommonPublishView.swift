@@ -68,7 +68,6 @@ class YXSCommonPublishView: UIView{
                        guard let strongSelf = self else { return }
                        strongSelf.removeAudio(at: index)
                    }, showDelect: true)
-               voiceView.minWidth = 120
                voiceView.tapPlayer = false
                voiceView.tag = kAudioViewOrginTag + index
                voiceView.isHidden = true

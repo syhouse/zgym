@@ -120,11 +120,17 @@ class YXSFriendCircleModel : NSObject, NSCoding, Mappable{
             let helper = YXSFriendsConfigHelper.helper
             //content顶部距离
             var height: CGFloat = helper.nameLabelTopPadding + 16 + helper.contentTopToNameLPadding
-            if needShowAllButton{
+            
+        
+            ///系统的不展示 展开按钮  直接展示全部数据
+            if circleType == .HELPER{
+                self.isShowAll = true
+            }
+            
+            if needShowAllButton && circleType == .CIRCLE{
                 height += 25 + 9
             }
             if self.isShowAll{
-                
                 height += frameModel.contentIsShowAllHeight
                 
             }else{
