@@ -11,17 +11,31 @@ import NightNight
 /// 老师端
 class YXSClassManageViewController: YXSBaseTableViewController {
     
-    
+    var model: YXSClassDetailModel?
     /// 禁止新成员加入
-    var forbidJoin: Bool?
-    var className: String! = ""
-    var position: String = ""
-    var gradeId: Int?
-    var subject: String = ""
+//    private var forbidJoin: Bool?
+//    private var className: String! = ""
+    private var position: String = ""
+    private var gradeId: Int?
+//    private var subject: String = ""
     var completionHandler:((_ className:String, _ forbidJonin:Bool)->())?
     
     private var originClassName: String?
     private var originForbidJoin: Bool?
+    
+    init(model: YXSClassDetailModel) {
+        super.init()
+        self.model = model
+//        self.className = model.name ?? ""
+//        self.forbidJoin = model.forbidJoin == "NO" ? false:true
+        self.gradeId = model.id
+        self.position = model.position ?? ""
+//        self.subject = model.subject ?? ""
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         // 是否有下拉刷新
@@ -33,8 +47,8 @@ class YXSClassManageViewController: YXSBaseTableViewController {
         super.viewDidLoad()
         self.title = "班级管理"
         
-        self.originClassName = self.className
-        self.originForbidJoin = self.forbidJoin
+//        self.originClassName = self.className
+//        self.originForbidJoin = self.forbidJoin
         
         // Do any additional setup after loading the view.
         self.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNightBackgroundColor)
@@ -45,67 +59,94 @@ class YXSClassManageViewController: YXSBaseTableViewController {
         
     }
     
-    // MARK: - Request
-    func saveRequest(completion:@escaping ((_ className:String, _ forbidJonin:Bool)->())) {
-        
-        if self.forbidJoin == self.originForbidJoin && self.className == self.originClassName {
-            self.navigationController?.popViewController()
-            return
-        }
-        
-        let cell: ClassManageSubTitleTableViewCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! ClassManageSubTitleTableViewCell
-        let swCell: YXSClassManageSwitchTableViewCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! YXSClassManageSwitchTableViewCell
-        let strForbidJoin = swCell.swtJoinClass.isOn == true ? "YES":"NO"
-        let className = cell.lbSubTitle.text ?? ""
-        
-        MBProgressHUD.yxs_showLoading()
-        YXSEducationGradeUpdateRequest(dic: ["gradeId":self.gradeId ?? 0, "name":className, "forbidJoin": strForbidJoin]).request({ (json) in
-            MBProgressHUD.yxs_hideHUD()
-            completion(className, swCell.swtJoinClass.isOn)
-            
-        }) { (msg, code) in
-            if code == "206" {
-                //无权操作
-                self.className = self.originClassName
-                self.forbidJoin = self.originForbidJoin
-                self.tableView.reloadData()
-            }
-            MBProgressHUD.yxs_hideHUD()
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
-    }
+//     MARK: - Request
+//    func saveRequest(completion:@escaping ((_ className:String, _ forbidJonin:Bool)->())) {
+//
+//        if self.forbidJoin == self.originForbidJoin && self.className == self.originClassName {
+//            self.navigationController?.popViewController()
+//            return
+//        }
+//
+//        let cell: ClassManageSubTitleTableViewCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! ClassManageSubTitleTableViewCell
+//        let swCell: YXSClassManageSwitchTableViewCell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! YXSClassManageSwitchTableViewCell
+//        let strForbidJoin = swCell.swtJoinClass.isOn == true ? "YES":"NO"
+//        let className = cell.lbSubTitle.text ?? ""
+//
+//        MBProgressHUD.yxs_showLoading()
+//        YXSEducationGradeUpdateRequest(dic: ["gradeId":self.gradeId ?? 0, "name":className, "forbidJoin": strForbidJoin]).request({ (json) in
+//            MBProgressHUD.yxs_hideHUD()
+//            completion(className, swCell.swtJoinClass.isOn)
+//
+//        }) { (msg, code) in
+//            if code == "206" {
+//                //无权操作
+//                self.className = self.originClassName
+//                self.forbidJoin = self.originForbidJoin
+//                self.tableView.reloadData()
+//            }
+//            MBProgressHUD.yxs_hideHUD()
+//            MBProgressHUD.yxs_showMessage(message: msg)
+//        }
+//    }
     
     // MARK: - Action
     override func yxs_onBackClick() {
-        saveRequest { [weak self](className, forbidJoin) in
-            guard let weakSelf = self else {return}
+        let queue = DispatchQueue.global()
+        let group = DispatchGroup()
+        
+        group.enter()
+        queue.async {
+            self.navigationController?.yxs_existViewController(existClass: YXSClassDetialListController(classModel: YXSClassModel.init(JSON: ["":""])!), complete: { [weak self](isExist, resultVC) in
+                guard let weakSelf = self else {return}
+                if isExist {
+                    resultVC?.title = weakSelf.model?.name
+                    weakSelf.completionHandler?(weakSelf.model?.name ?? "", weakSelf.model?.forbidJoin == "YES" ? true : false)
+//                    return
+                }
+                group.leave()
+            })
+        }
 
-            weakSelf.navigationController?.yxs_existViewController(existClass: YXSClassDetialListController(classModel: YXSClassModel.init(JSON: ["":""])!), complete: { (isExist, resultVC) in
+        group.enter()
+        queue.async {
+            self.navigationController?.yxs_existViewController(existClass: YXSTeacherClassListViewController(), complete: { [weak self](isExist, resultVC) in
+                guard let weakSelf = self else {return}
                 if isExist {
-                    resultVC.title = className
-                    weakSelf.completionHandler?(className, forbidJoin)
-                    weakSelf.navigationController?.popViewController(animated: true)
-                    return
+                    resultVC?.yxs_refreshData()
+//                    return
                 }
+                group.leave()
             })
-            
-            weakSelf.navigationController?.yxs_existViewController(existClass: YXSTeacherClassListViewController(), complete: { (isExist, resultVC) in
-                if isExist {
-                    resultVC.yxs_refreshData()
-                    weakSelf.navigationController?.popViewController(animated: true)
-                    return
-                }
-            })
+        }
+        
+        group.notify(queue: queue) {
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
     
     /// 修改
     @objc func editClassNameClick() {
-        let tmp: YXSInputAlertView = YXSInputAlertView.showIn(target: self.view, maxLength:20) { (text, sender) in
+        
+        let tmp: YXSInputAlertView = YXSInputAlertView.showIn(target: self.view, maxLength:20) { [weak self](text, sender) in
+            guard let weakSelf = self else {return}
             
             if sender.titleLabel?.text == "确认" && text.count > 0 {
-                self.className = text
-                self.tableView.reloadData()
+                MBProgressHUD.yxs_showLoading()
+                YXSEducationGradeUpdateRequest(dic: ["gradeId":weakSelf.model?.id ?? 0, "name":text]).request({ (json) in
+                    MBProgressHUD.yxs_hideHUD()
+                    MBProgressHUD.yxs_showMessage(message: "修改成功")
+                    weakSelf.model?.name = text
+                    weakSelf.tableView.reloadData()
+                    
+                }) { (msg, code) in
+                    if code == "206" {
+                        //无权操作
+                    }
+                    MBProgressHUD.yxs_hideHUD()
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
             }
         }
         
@@ -115,7 +156,58 @@ class YXSClassManageViewController: YXSBaseTableViewController {
     
     /// 开关
     @objc func switchChanged(sender: UISwitch) {
-        self.forbidJoin = sender.isOn
+
+        let strForbidJoin = sender.isOn == true ? "YES":"NO"
+        MBProgressHUD.yxs_showLoading()
+        YXSEducationGradeUpdateRequest(dic: ["gradeId":model?.id ?? 0, "forbidJoin":strForbidJoin]).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            MBProgressHUD.yxs_hideHUD()
+            MBProgressHUD.yxs_showMessage(message: "修改成功")
+            weakSelf.model?.forbidJoin = strForbidJoin
+            weakSelf.tableView.reloadData()
+            
+        }) { (msg, code) in
+            if code == "206" {
+                //无权操作
+            }
+            MBProgressHUD.yxs_hideHUD()
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
+    
+    /// 修改任教学科
+    @objc func editSubject() {
+        let subjcts = YXSCommonSubjcts
+        var selectSubject: YXSSelectSectionModel?
+        for sub in subjcts{
+            if sub.paramsKey == model?.subject {
+                selectSubject = sub
+                break
+            }
+        }
+        if selectSubject == nil {
+            return
+        }
+        
+        YXSSelectAlertView.showAlert(subjcts, selectSubject,title: "选择学科") { [weak self](model) in
+            guard let weakSelf = self else {return}
+            if model.paramsKey == selectSubject?.paramsKey {
+                /// 选择的和默认的一样
+                return
+            }
+            
+            MBProgressHUD.yxs_showLoading()
+            YXSEducationGradeUpdateRequest(dic: ["gradeId":weakSelf.gradeId ?? 0, "subject": model.paramsKey]).request({ (json) in
+                MBProgressHUD.yxs_hideHUD()
+                MBProgressHUD.yxs_showMessage(message: "修改成功")
+                weakSelf.model?.subject = model.paramsKey
+                weakSelf.tableView.reloadData()
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUD()
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
     }
     
     /// 转让班级
@@ -152,7 +244,7 @@ class YXSClassManageViewController: YXSBaseTableViewController {
             guard let weakSelf = self else {return}
             
             MBProgressHUD.yxs_showLoading()
-            YXSEducationGradeUpdateRequest(dic: ["gradeId":weakSelf.gradeId ?? 0, "disbanded":"YES", "smsCode":String(authcode)]).request({ (json) in
+            YXSEducationGradeUpdateRequest(dic: ["gradeId":weakSelf.model?.id ?? 0, "disbanded":"YES", "smsCode":String(authcode)]).request({ (json) in
                 MBProgressHUD.yxs_hideHUD()
                 MBProgressHUD.yxs_showMessage(message: "解散班级成功", afterDelay: 1.2)
                 NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kQuitClassSucessNotification), object: nil)
@@ -189,10 +281,10 @@ class YXSClassManageViewController: YXSBaseTableViewController {
                 let cell: ClassManageSubTitleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ClassManageSubTitleTableViewCell") as! ClassManageSubTitleTableViewCell
                 cell.lbTitle.text = dic["title"]
                 if cell.lbTitle.text == "班级名称" {
-                    cell.lbSubTitle.text = self.className ?? ""
+                    cell.lbSubTitle.text = self.model?.name ?? ""
                 } else {
                     /// 我当前任教学科
-                    let text = subject
+                    let text = model?.subject
                     for model in YXSCommonSubjcts{
                         if model.paramsKey == text{
                             cell.lbSubTitle.text = model.text
@@ -205,7 +297,7 @@ class YXSClassManageViewController: YXSBaseTableViewController {
             
             case "SwitchType":
                 let cell: YXSClassManageSwitchTableViewCell = tableView.dequeueReusableCell(withIdentifier: "YXSClassManageSwitchTableViewCell") as! YXSClassManageSwitchTableViewCell
-                cell.swtJoinClass.isOn = self.forbidJoin ?? false
+                cell.swtJoinClass.isOn = self.model?.forbidJoin == "YES" ? true : false
                 cell.lbTitle.text = dic["title"]
                 cell.swtJoinClass.addTarget(self, action: #selector(switchChanged(sender:)), for: .valueChanged)
                 return cell
@@ -239,7 +331,7 @@ class YXSClassManageViewController: YXSBaseTableViewController {
     
     // MARK: - LazyLoad
     lazy var dataSource:[[[String:String]]] = {
-        let arr:[[[String:String]]] = [[["title":"班级名称","type":"SubTitleType","action":"editClassNameClick"]],[["title":"禁止新成员入班","type":"SwitchType"]],[["title":"我当前任教学科","type":"SubTitleType"],["title":"转让班级","type":"NormalType","action":"transferClassClick"],["title":"退出班级","type":"NormalType","action":"signOutClassClick"],["title":"解散班级","type":"NormalType","action":"dissolutionClassClick"]]]
+        let arr:[[[String:String]]] = [[["title":"班级名称","type":"SubTitleType","action":"editClassNameClick"]],[["title":"禁止新成员入班","type":"SwitchType"]],[["title":"我当前任教学科","type":"SubTitleType","action":"editSubject"],["title":"转让班级","type":"NormalType","action":"transferClassClick"],["title":"退出班级","type":"NormalType","action":"signOutClassClick"],["title":"解散班级","type":"NormalType","action":"dissolutionClassClick"]]]
         return arr
     }()
     

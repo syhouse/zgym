@@ -10,13 +10,14 @@ import Foundation
 
 extension UINavigationController {
     /// 是否包含ViewController
-    func yxs_existViewController<T:Any>(existClass: T, complete:((_ isContain:Bool, _ resultVC: T)->())?) {
+    func yxs_existViewController<T:Any>(existClass: T, complete:((_ isContain:Bool, _ resultVC: T?)->())?) {
         for sub in self.viewControllers {
             if sub is T {
-                complete?(true, sub as! T)
-                break
+                complete?(true, sub as? T)
+                return
             }
         }
+        complete?(false, nil)
     }
     
     
