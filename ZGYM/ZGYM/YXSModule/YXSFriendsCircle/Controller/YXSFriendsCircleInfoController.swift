@@ -248,7 +248,6 @@ extension YXSFriendsCircleInfoController: YXSRouterEventProtocol{
         switch eventName {
         case kFriendCircleInfoHeaderDetialEvent:
             let vc = YXSFriendsCircleController.init(userIdPublisher: userId,userType: type)
-            vc.title = "TA的优成长"
             self.navigationController?.pushViewController(vc)
         default:
             break

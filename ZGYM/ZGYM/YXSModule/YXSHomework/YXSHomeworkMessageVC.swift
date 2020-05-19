@@ -325,8 +325,8 @@ class YXSHomeworkMessageVC: YXSBaseViewController, UITableViewDelegate, UITableV
                                     MBProgressHUD.yxs_showMessage(message: "删除作业成功")
                                     strongSelf.navigationController?.yxs_existViewController(existClass: YXSHomeworkDetailViewController.init(model: strongSelf.homeModel), complete: { (isExist, resultVC) in
                                         if isExist {
-                                            resultVC.refreshData()
-                                            strongSelf.navigationController?.popToViewController(resultVC, animated: true)
+                                            resultVC!.refreshData()
+                                            strongSelf.navigationController?.popToViewController(resultVC!, animated: true)
                                         } else {
                                             strongSelf.navigationController?.popViewController()
                                         }

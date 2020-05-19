@@ -48,11 +48,15 @@ class YXSProfileChildrenViewController: YXSProfileViewController {
             completionHandler()
             weakSelf.tableView.reloadData()
             weakSelf.navigationController?.yxs_existViewController(existClass: YXSProfileChildrenViewController(), complete: { (isExsit, vc) in
-                vc.tableView.reloadData()
+                if vc != nil {
+                    vc!.tableView.reloadData()
+                }
             })
             
             weakSelf.navigationController?.yxs_existViewController(existClass: YXSMineChildrenListViewController(), complete: { (isExsit, vc) in
-                vc.tableView.reloadData()
+                if vc != nil {
+                    vc!.tableView.reloadData()
+                }
             })
             
             MBProgressHUD.yxs_showMessage(message: "修改成功")
@@ -150,11 +154,15 @@ class YXSProfileChildrenViewController: YXSProfileViewController {
                 YXSEducationChildrenDeleteRequest(id: weakSelf.model?.id ?? 0).request({ (json) in
                     MBProgressHUD.yxs_hideHUD()
                     weakSelf.navigationController?.yxs_existViewController(existClass: YXSMineChildrenListViewController(), complete: { (isExist, vc) in
-                        vc.yxs_refreshData()
+                        if vc != nil {
+                            vc!.yxs_refreshData()
+                        }
                     })
                     
                     weakSelf.navigationController?.yxs_existViewController(existClass: YXSMineViewController(), complete: { (isExist, vc) in
-                        vc.yxs_refreshData()
+                        if vc != nil {
+                            vc!.yxs_refreshData()
+                        }
                     })
                     view.close()
                     weakSelf.navigationController?.popViewController()

@@ -237,7 +237,9 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
                 UIUtil.yxs_reduceAgenda(serviceId: weakSelf.censusId ?? 0, info: [kEventKey:YXSHomeType.solitaire])
                 weakSelf.yxs_refreshData()
                 weakSelf.navigationController?.yxs_existViewController(existClass: YXSSolitaireListController(classId: 0, childId: 0), complete: { (isExist, vc) in
-                    vc.yxs_refreshData()
+                    if vc != nil {
+                        vc!.yxs_refreshData()
+                    }
                 })
 
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.01) {

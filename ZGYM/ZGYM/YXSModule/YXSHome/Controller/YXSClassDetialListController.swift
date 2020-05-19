@@ -175,12 +175,7 @@ class YXSClassDetialListController: YXSHomeBaseController {
             if self.classDetialModel == nil{
                 return
             }
-            let vc = YXSClassManageViewController()
-            vc.className = self.classDetialModel.name ?? ""
-            vc.forbidJoin = self.classDetialModel.forbidJoin == "NO" ? false:true
-            vc.gradeId = self.classDetialModel.id
-            vc.position = self.classDetialModel.position ?? ""
-            vc.subject = self.classDetialModel.subject ?? ""
+            let vc = YXSClassManageViewController(model: self.classDetialModel)
             vc.completionHandler = {[weak self](className, forbidJonin) in
                 guard let weakSelf = self else {return}
                 weakSelf.title = className
@@ -215,6 +210,14 @@ class YXSClassDetialListController: YXSHomeBaseController {
     }()
 }
 
+// MARK: - 通知
+extension YXSClassDetialListController{
+     override func yxs_addNotification(){
+        super.yxs_addNotification()
+        ///退出班级直接退出vc
+        NotificationCenter.default.addObserver(self, selector: #selector(yxs_onBackClick), name: NSNotification.Name.init(rawValue: kQuitClassSucessNotification), object: nil)
+    }
+}
 
 // MARK: -HMRouterEventProtocol
 extension YXSClassDetialListController: YXSRouterEventProtocol{

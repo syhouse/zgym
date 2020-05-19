@@ -216,12 +216,7 @@ class YXSTeacherClassListViewController: YXSBaseTableViewController {
         YXSEducationGradeDetailRequest.init(gradeId: classId).request({ (model: YXSClassDetailModel) in
             MBProgressHUD.yxs_hideHUD()
             
-            let vc = YXSClassManageViewController()
-            vc.className = model.name ?? ""
-            vc.forbidJoin = model.forbidJoin == "NO" ? false:true
-            vc.gradeId = model.id
-            vc.position = model.position ?? ""
-            vc.subject = model.subject ?? ""
+            let vc = YXSClassManageViewController(model: model)
             vc.completionHandler = {[weak self](className, forbidJonin) in
                 guard let weakSelf = self else {return}
                 weakSelf.title = className

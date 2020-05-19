@@ -517,7 +517,6 @@ class YXSPunchCardDetialTableHeaderView: UITableViewHeaderFooterView {
             [weak self] (url, duration)in
             guard let strongSelf = self else { return }
         })
-        voiceView.minWidth = 120
         return voiceView
     }()
 }

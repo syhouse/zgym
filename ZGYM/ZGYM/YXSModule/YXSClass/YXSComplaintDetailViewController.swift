@@ -130,7 +130,8 @@ class YXSComplaintDetailViewController: YXSBaseViewController {
                 MBProgressHUD.yxs_showMessage(message: "提交成功")
                 DispatchQueue.main.asyncAfter(deadline: .now()+1.0) {
                     weakSelf.navigationController?.yxs_existViewController(existClass: YXSFriendsCircleInfoController(userId: 0, childId: 0, type: ""), complete: { (isContain, resultVC) in
-                        weakSelf.navigationController?.popToViewController(resultVC, animated: true)
+                        if resultVC != nil { weakSelf.navigationController?.popToViewController(resultVC!, animated: true)
+                        }
                     })
                 }
                 

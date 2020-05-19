@@ -530,7 +530,6 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             [weak self] (url, duration)in
             guard let strongSelf = self else { return }
         })
-        voiceView.minWidth = 120
         return voiceView
     }()
     
@@ -777,7 +776,6 @@ class SLHomeworkCommentDetailRemarkView: UIView {
             [weak self] (url, duration)in
             guard let strongSelf = self else { return }
         })
-        voiceView.minWidth = 120
         return voiceView
     }()
 

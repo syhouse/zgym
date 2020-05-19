@@ -78,20 +78,20 @@ class YXSTransferClassViewController: YXSBaseTableViewController {
 
     /// 推回班级列表并刷新
     func popBackToClassDetail() {
-//        self.navigationController?.yxs_existViewController(existClass: YXSClassDetialListController(classModel: YXSClassModel.init(JSON: ["":""])!), complete: { [weak self](isExist, resultVC) in
-//            guard let weakSelf = self else {return}
-//            if isExist {
-//                resultVC.navRightBarButtonTitle = "班级信息"
-//                weakSelf.navigationController?.popToViewController(resultVC, animated: true)
-//                return
-//            }
-//        })
+        self.navigationController?.yxs_existViewController(existClass: YXSClassDetialListController(classModel: YXSClassModel.init(JSON: ["":""])!), complete: { [weak self](isExist, resultVC) in
+            guard let weakSelf = self else {return}
+            if isExist {
+                resultVC!.navRightBarButtonTitle = "班级信息"
+                weakSelf.navigationController?.popToViewController(resultVC!, animated: true)
+                return
+            }
+        })
         
         self.navigationController?.yxs_existViewController(existClass: YXSTeacherClassListViewController(), complete: { [weak self](isExist, resultVC) in
             guard let weakSelf = self else {return}
             if isExist {
-                resultVC.yxs_refreshData()
-                weakSelf.navigationController?.popToViewController(resultVC, animated: true)
+                resultVC!.yxs_refreshData()
+                weakSelf.navigationController?.popToViewController(resultVC!, animated: true)
                 return
             }
         })
