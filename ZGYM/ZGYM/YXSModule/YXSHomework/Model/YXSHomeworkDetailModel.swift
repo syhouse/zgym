@@ -394,7 +394,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
         frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: attributes, width: SCREEN_WIDTH - 30) + 1
         let text: String = content ?? ""
-        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: text.removeSpace() , attributes: attributes,width: SCREEN_WIDTH - 30, numberOfLines: 3) + 1
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "" , attributes: attributes,width: SCREEN_WIDTH - 30, numberOfLines: 3) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 4)  ? true : false
     }
     
@@ -486,7 +486,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
         remarkFrameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: remark ?? "", attributes: attributes, width: SCREEN_WIDTH - 30) + 1
         let text: String = remark ?? ""
-        remarkFrameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: text.removeSpace() , attributes: attributes,width: SCREEN_WIDTH - 30, numberOfLines: 3) + 1
+        remarkFrameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: remark ?? "" , attributes: attributes,width: SCREEN_WIDTH - 30, numberOfLines: 3) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 4)  ? true : false
     }
     
