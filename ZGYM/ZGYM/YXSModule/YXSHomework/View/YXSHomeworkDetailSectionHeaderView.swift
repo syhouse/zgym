@@ -59,7 +59,6 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         addSubview(finishView)
         addSubview(remarkView)
         addSubview(favView)
-//        addSubview(bottomLine)
         self.layout()
     }
 
@@ -88,16 +87,13 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         }
 
         lbName.snp.makeConstraints { (make) in
-//            make.centerY.equalTo(imgAvatar)
             make.left.equalTo(imgAvatar.snp_right).offset(15)
             make.right.equalTo(goodControl.snp_left).offset(-10)
-//            make.width.equalTo(SCREEN_WIDTH - 150)
             make.top.equalTo(imgAvatar.snp_top)
             make.height.equalTo(20)
         }
         lbTime.snp.makeConstraints({ (make) in
             make.bottom.equalTo(imgAvatar.snp_bottom)
-//            make.centerY.equalTo(reviewControl)
             make.height.equalTo(20)
             make.left.equalTo(lbName)
             make.right.equalTo(reviewControl.snp_left).offset(-10)
@@ -147,10 +143,6 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             make.left.equalTo(imgAvatar)
             make.width.equalTo(SCREEN_WIDTH - 30)
         }
-//        bottomLine.snp.makeConstraints { (make) in
-//            make.left.right.bottom.equalTo(0)
-//            make.height.equalTo(1)
-//        }
     }
 
     override func layoutSubviews() {
@@ -174,14 +166,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             favView.y = reviewControl.tz_bottom + 12.5
         }
     }
-//    override func didMoveToSuperview() {
-//        super.didMoveToSuperview()
-//        if superview != nil {
-//            favView.y = last.tz_bottom + 12.5
-////            favView.frame = CGRect.init(x: 15, y: last.tz_bottom + 12.5, width: SCREEN_WIDTH - 30, height: size.height + 8 + 7.5 + 8)
-//        }
-//    }
-    
+
     // MARK: - Setter
     
     func setModel(model:YXSHomeworkDetailModel) {
@@ -220,7 +205,9 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             goodControl.isSelected = false
         }
         
+        //上周班级之星显示的处理逻辑
         if let myClassStartRank = self.hmModel?.getMyClassStartRank(id: self.model?.childrenId ?? 0), myClassStartRank > 0 {
+            //当前孩子在上周班级之星列表
             classStartLabelBtn.isHidden = false
             switch myClassStartRank {
             case 1:
@@ -239,6 +226,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
                 make.left.equalTo(classStartLabelBtn.snp_right).offset(10)
             }
         } else {
+            //当前孩子不在上周班级之星列表
             classStartLabelBtn.isHidden = true
             classStartLabelBtn.snp.updateConstraints { (make) in
                 make.width.equalTo(0)
@@ -247,6 +235,8 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
                 make.left.equalTo(classStartLabelBtn.snp_right).offset(0)
             }
         }
+        
+        // 历史优秀作业显示
         let goodCount: Int = self.hmModel?.getChildGoodCount(id: self.model?.childrenId ?? 0) ?? 0
         if  goodCount > 0 && self.model?.isShowLookGoodButton ?? true {
             goodHomeworkLabelBtn.isHidden = false
@@ -385,8 +375,6 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
                 favs.append(prise.userName ?? "")
             }
             favView.isHidden = false
-            
-//                favView.favLabel
             UIUtil.yxs_setLabelParagraphText(favView.favLabel, text: favs.joined(separator: ","), font: UIFont.systemFont(ofSize: 14), lineSpacing: 6)
             let newText = favs.joined(separator: ",")
             let paragraphStye = NSMutableParagraphStyle()
@@ -397,13 +385,6 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
             let size = UIUtil.yxs_getTextSize(textStr: newText, attributes: dic, width: SCREEN_WIDTH - 30 - 46)
 
             favView.frame = CGRect.init(x: 15, y: last.tz_bottom + 12.5, width: SCREEN_WIDTH - 30, height: size.height + 8 + 7.5 + 8)
-//                favView.snp.remakeConstraints { (make) in
-//                    make.top.equalTo(last.snp_bottom).offset(12.5)
-//                    make.left.equalTo(imgAvatar)
-//                    make.width.equalTo(SCREEN_WIDTH - 30)
-//                }
-
-            
             if (model.commentJsonList?.count ?? 0) != 0{
                 favView.favBgView.yxs_addRoundedCorners(corners: [.topLeft,.topRight], radii: CGSize.init(width: 2.5, height: 2.5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height: 800))
             }else{
@@ -441,6 +422,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         
     }
     
+    /// 设置优秀作业
     @objc func goodControlClick() {
         if self.hmModel?.isExpired ?? false {
             MBProgressHUD.yxs_showMessage(message: "当前作业已过期")
@@ -463,6 +445,7 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         cellBlock?(.praise,self.model!)
     }
     
+    /// 显示全部
     @objc func showAllClick(){
         model?.isShowContentAll = !(model?.isShowContentAll ?? false)
         showAllButton.isSelected = model?.isShowContentAll ?? false
@@ -474,10 +457,12 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         homeWorkChangeBlock?(sender,self.model!)
     }
     
+    /// 查看历史优秀昼夜
     @objc func lookGoodHomeWorkDetial(){
         cellBlock?(.lookHomeWorkGood,self.model!)
     }
     
+    /// 查看上周班级之星
     @objc func lookClassStartDetial(){
         cellBlock?(.lookLastWeakClassStart,self.model!)
     }
@@ -576,12 +561,6 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         let imageView = UIImageView.init(image: UIImage.init(named: "yxs_homework_good"))
         return imageView
     }()
-    
-//    lazy var mediaView: YXSMediaView = {
-//        let view = YXSMediaView()
-////        view.width = SCREEN_WIDTH - 30
-//        return view
-//    }()
 
     lazy var reviewControl: YXSCustomImageControl = {
         let reviewControl = YXSCustomImageControl.init(imageSize: CGSize.init(width: 14, height: 14), position: YXSImagePositionType.left, padding: 4, insets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0))
@@ -641,12 +620,6 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         return button
     }()
 
-    lazy var bottomLine: UIView = {
-        let bottomline = UIView()
-        let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
-        bottomline.backgroundColor = cl
-        return bottomline
-    }()
     lazy var showAllButton: UIButton = {
         let button = UIButton.init()
         button.setTitleColor(kBlueColor, for: .normal)
@@ -664,9 +637,9 @@ extension YXSHomeworkDetailSectionHeaderView: YXSRouterEventProtocol{
         case kHomeworkPictureGraffitiEvent:
             if info != nil {
                 let model = info!["imgModel"]
-                let index = info!["imgIndex"]
+                let index = info!["imgIndex"] as? Int
                 if model is YXSFriendsMediaModel {
-                    next?.yxs_routerEventWithName(eventName: kHomeworkPictureGraffitiNextEvent, info: ["imgModel":model,"imgIndex":index,"hmModel":self.model,"currentSection":self.currentSection])
+                    next?.yxs_routerEventWithName(eventName: kHomeworkPictureGraffitiNextEvent, info: ["imgModel":model!,"imgIndex":index ?? 0,"hmModel":self.model!,"currentSection":self.currentSection ?? 0])
                 }
             }
         default:
@@ -697,50 +670,11 @@ class SLHomeworkCommentDetailRemarkView: UIView {
 
     func layout() {
         remarkNameLbl.frame = CGRect.init(x: 0, y: 15, width: 100, height: 20)
-//        remarkNameLbl.sizeToFit()
         remarkStatusLbl.frame = CGRect.init(x: remarkNameLbl.tz_right + 5, y: 15, width: 65, height: 20)
         remarkTimeLbl.frame = CGRect.init(x: 0, y: 43, width: SCREEN_WIDTH - 30 - 30, height: 15)
         remarkChangeButton.frame = CGRect.init(x: SCREEN_WIDTH - 30 - 30, y: 15, width: 30, height: 16)
         remarkContentLabel.frame = CGRect.init(x: 0, y: remarkTimeLbl.tz_bottom + 10, width: SCREEN_WIDTH - 30, height: 20)
         remarkVoiceView.frame = CGRect.init(x: 0, y: remarkContentLabel.tz_bottom + 10, width: SCREEN_WIDTH - 30, height: 36)
-//        remarkNameLbl.snp.makeConstraints { (make) in
-//            make.left.equalTo(0)
-//            make.top.equalTo(15)
-//            make.height.equalTo(20)
-//        }
-        
-        
-//        remarkStatusLbl.snp.makeConstraints { (make) in
-//            make.top.equalTo(15)
-//            make.left.equalTo(remarkNameLbl.snp_right).offset(5)
-//            make.height.equalTo(20)
-//            make.width.equalTo(65)
-//        }
-//
-//        remarkTimeLbl.snp.makeConstraints { (make) in
-//            make.top.equalTo(remarkNameLbl.snp_bottom).offset(8)
-//            make.left.equalTo(0)
-//            make.right.equalTo(-30)
-//            make.height.equalTo(15)
-//        }
-//
-//        remarkChangeButton.snp.makeConstraints { (make) in
-//            make.top.equalTo(15)
-//            make.right.equalTo(0)
-//            make.width.equalTo(30)
-//            make.height.equalTo(16)
-//        }
-//        remarkContentLabel.snp.makeConstraints { (make) in
-//            make.left.equalTo(0)
-//            make.width.equalTo(SCREEN_WIDTH - 30)
-//            make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-//        }
-//        remarkVoiceView.snp.makeConstraints { (make) in
-//            make.left.equalTo(15)
-//            make.right.equalTo(-15.5)
-//            make.height.equalTo(36)
-//            make.top.equalTo(remarkContentLabel.snp_bottom).offset(10)
-//        }
     }
 
     func updateUI() {
@@ -771,17 +705,11 @@ class SLHomeworkCommentDetailRemarkView: UIView {
             remarkContentLabel.isHidden = true
             remarkNameLbl.text = self.hmModel?.teacherName
             remarkTimeLbl.text = self.model?.remarkTime?.yxs_Time()
-//            var last = remarkTimeLbl
             if (self.model?.remark ?? "").count > 0 {
-//                last = remarkContentLabel
                 remarkContentLabel.isHidden = false
-                
-//                remarkContentLabel.text = self.model?.remark
                 UIUtil.yxs_setLabelParagraphText(remarkContentLabel, text: self.model?.remark)
             }
             remarkChangeButton.isHidden = !(self.hmModel?.isMyPublish ?? false)
-            
-            
             
             if (self.model?.remarkAudioUrl ?? "").count > 0 {
                 remarkVoiceView.id = "remark\(self.model?.id ?? 0)"
@@ -791,53 +719,6 @@ class SLHomeworkCommentDetailRemarkView: UIView {
                 voiceModel.voiceDuration = self.model?.remarkAudioDuration
                 voiceModel.voiceUlr = self.model?.remarkAudioUrl
                 remarkVoiceView.model = voiceModel
-//                if !remarkContentLabel.isHidden {
-//                    if height < 20 {
-//                        remarkContentLabel.snp.remakeConstraints { (make) in
-//                            make.left.equalTo(0)
-//                            make.height.equalTo(height)
-//                            make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-//                        }
-//                        remarkContentLabel.sizeToFit()
-//                    }
-//                    else {
-//                        remarkContentLabel.snp.remakeConstraints({ (make) in
-//                            make.left.equalTo(0)
-//                            make.width.equalTo(SCREEN_WIDTH - 30)
-//                            make.height.equalTo(height)
-//                            make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-//                        })
-//                    }
-//
-//                }
-//                remarkVoiceView.snp.remakeConstraints { (make) in
-//                    make.top.equalTo(last.snp_bottom).offset(10)
-//                    make.left.equalTo(remarkContentLabel)
-//                    make.right.equalTo(0)
-//                    make.bottom.equalTo(0)
-//                    make.height.equalTo(36)
-//                }
-                
-                
-            } else {
-//                if height < 20 {
-//                    remarkContentLabel.snp.remakeConstraints { (make) in
-//                        make.left.equalTo(0)
-//                        make.bottom.equalTo(0)
-//                        make.height.equalTo(height)
-//                        make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-//                    }
-//                    remarkContentLabel.sizeToFit()
-//                }
-//                else {
-//                    remarkContentLabel.snp.remakeConstraints({ (make) in
-//                        make.left.equalTo(0)
-//                        make.width.equalTo(SCREEN_WIDTH - 30)
-//                        make.bottom.equalTo(0)
-//                        make.height.equalTo(height)
-//                        make.top.equalTo(remarkTimeLbl.snp_bottom).offset(10)
-//                    })
-//                }
             }
             self.updateUI()
         }
@@ -851,8 +732,6 @@ class SLHomeworkCommentDetailRemarkView: UIView {
         let lb = YXSLabel()
         lb.mixedTextColor = MixedColor(normal: k575A60Color, night: kNight898F9A)
         lb.font = UIFont.systemFont(ofSize: 16)
-//        lb.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
-//        lb.setContentHuggingPriority(.required, for: .horizontal)
         return lb
     }()
 
@@ -900,12 +779,6 @@ class SLHomeworkCommentDetailRemarkView: UIView {
         })
         voiceView.minWidth = 120
         return voiceView
-    }()
-    
-    lazy var remarkMediaView: YXSMediaView = {
-        let view = YXSMediaView()
-        view.width = SCREEN_WIDTH - 30
-        return view
     }()
 
 }
