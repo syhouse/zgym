@@ -17,7 +17,7 @@ class YXSAssistantChatViewController: YXSChatViewController {
         customNav = YXSCustomNav(YXSCustomStyle.backAndTitle)
         customNav?.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         customNav?.backImageButton.setMixedImage(MixedImage(normal: "back", night: "yxs_back_white"), forState: .normal)
-        customNav?.title = "官方小助手"
+        customNav?.title = "优学业小助手"
         customNav?.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         view.addSubview(customNav!)
         customNav?.snp.makeConstraints { (make) in

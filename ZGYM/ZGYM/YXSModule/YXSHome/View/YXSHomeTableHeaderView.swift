@@ -52,7 +52,8 @@ class YXSHomeTableHeaderView: UIView {
             make.top.equalTo(46)
             make.left.equalTo(15.5)
             make.height.equalTo(23)
-            make.right.equalTo(yxs_classButton.snp_left).offset(10)
+            make.width.equalTo(SCREEN_WIDTH - 70)
+//            make.right.equalTo(yxs_classButton.snp_left).offset(10)
         }
         
         yxs_dayLabel.snp.makeConstraints { (make) in
