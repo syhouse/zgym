@@ -85,6 +85,7 @@ extension MBProgressHUD {
     }
 }
 
+// MARK: - 上传进度
 extension MBProgressHUD {
     static func yxs_showUpload(title: String = "正在上传", inView: UIView? = UIApplication.shared.keyWindow) {
         yxs_hideHUD()
