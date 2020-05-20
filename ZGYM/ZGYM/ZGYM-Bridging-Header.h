@@ -31,6 +31,7 @@
 #import "TUITextMessageCell.h"
 #import "TUITextMessageCellData.h"
 #import "YXSCustomTextMessageCell.h"
+#import "TUIImageMessageCellData.h"
 
 #import "UITableView+FDTemplateLayoutCell.h"
 /// Map

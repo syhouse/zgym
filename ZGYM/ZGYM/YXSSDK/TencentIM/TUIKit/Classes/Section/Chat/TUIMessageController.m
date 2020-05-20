@@ -832,9 +832,52 @@
 
 - (void)showImageMessage:(TUIImageMessageCell *)cell
 {
-    TUIImageViewController *image = [[TUIImageViewController alloc] init];
-    image.data = [cell imageData];
-    [self.navigationController pushViewController:image animated:YES];
+    NSMutableArray<TUIImageMessageCellData *> *imgMsgData = [NSMutableArray array];
+    for (TUIMessageCellData *sub in _uiMsgs) {
+        if([sub isKindOfClass:[TUIImageMessageCellData class]]) {
+            [imgMsgData addObject:sub];
+        }
+    }
+    
+    __block NSInteger currIdx = 0;
+    NSMutableArray *datas = [NSMutableArray array];
+    [imgMsgData enumerateObjectsUsingBlock:^(TUIImageMessageCellData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (cell.imageData == obj) {
+            currIdx = idx;
+        }
+        
+        BOOL isExist;
+        NSString *strPath = [obj getImagePath:TImage_Type_Origin isExist:&isExist];
+        YBIBImageData *data = [YBIBImageData new];
+        if (isExist) {
+            /// 本地已有原图
+            UIImage *originImg = [[UIImage alloc] initWithContentsOfFile:strPath];
+            data.image = ^UIImage * _Nullable{
+                return originImg;
+            };
+            
+        } else {
+            /// 无原图
+            data.image = ^UIImage * _Nullable{
+                return obj.thumbImage;
+            };
+            // 这里放的是原图地址（实际业务中请按需关联）
+            data.extraData = obj;
+        }
+        
+        [datas addObject:data];
+    }];
+    
+    YBImageBrowser *browser = [YBImageBrowser new];
+    // 自定义工具栏
+    browser.toolViewHandlers = @[ToolViewHandler.new];
+    browser.dataSourceArray = datas;
+    browser.currentPage = currIdx;
+    [browser show];
+    
+//    TUIImageViewController *image = [[TUIImageViewController alloc] init];
+//    image.data = [cell imageData];
+//    [self.navigationController pushViewController:image animated:YES];
 }
 
 - (void)showVideoMessage:(TUIVideoMessageCell *)cell
