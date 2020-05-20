@@ -25,22 +25,47 @@ let Stages:[YXSSelectSectionModel] = [YXSSelectSectionModel("幼儿园", "KINDER
                                      YXSSelectSectionModel("小学", "PRIMARY_SCHOOL"),
                                      YXSSelectSectionModel("中学", "MIDDLE_SCHOOL"),]
 
-var YXSCommonSubjcts:[YXSSelectSectionModel] = [YXSSelectSectionModel.init("语文", "CHINESE"),
-                                      YXSSelectSectionModel.init("数学", "MATHEMATICS"),
-                                      YXSSelectSectionModel.init("外语", "FOREIGN_LANGUAGES"),
-                                      YXSSelectSectionModel.init("物理", "PHYSICS"),
-                                      YXSSelectSectionModel.init("化学", "CHEMISTRY"),
-                                      YXSSelectSectionModel.init("自然", "NATURAL"),
-                                      YXSSelectSectionModel.init("地理", "GEOGRAPHY"),
-                                      YXSSelectSectionModel.init("历史", "HISTORY"),
-                                      YXSSelectSectionModel.init("社会", "SOCIOLOGY"),
-                                      YXSSelectSectionModel.init("道德与法治", "MORALITY_LAW"),
-                                      YXSSelectSectionModel.init("思想政治", "POLITICS"),
-                                      YXSSelectSectionModel.init("音乐", "MUSIC"),
-                                      YXSSelectSectionModel.init("美术", "PAINTING"),
-                                      YXSSelectSectionModel.init("艺术", "ART"),
-                                      YXSSelectSectionModel.init("体育与健身", "SPORTS"),
-                                      YXSSelectSectionModel.init("其它", "OTHER")]
+func YXSCommonSubjcts() -> [YXSSelectSectionModel] {
+    
+    var arr = [YXSSelectSectionModel.init("语文", "CHINESE"),
+    YXSSelectSectionModel.init("数学", "MATHEMATICS"),
+    YXSSelectSectionModel.init("外语", "FOREIGN_LANGUAGES"),
+    YXSSelectSectionModel.init("物理", "PHYSICS"),
+    YXSSelectSectionModel.init("化学", "CHEMISTRY"),
+    YXSSelectSectionModel.init("自然", "NATURAL"),
+    YXSSelectSectionModel.init("地理", "GEOGRAPHY"),
+    YXSSelectSectionModel.init("历史", "HISTORY"),
+    YXSSelectSectionModel.init("社会", "SOCIOLOGY"),
+    YXSSelectSectionModel.init("道德与法治", "MORALITY_LAW"),
+    YXSSelectSectionModel.init("思想政治", "POLITICS"),
+    YXSSelectSectionModel.init("音乐", "MUSIC"),
+    YXSSelectSectionModel.init("美术", "PAINTING"),
+    YXSSelectSectionModel.init("艺术", "ART"),
+    YXSSelectSectionModel.init("体育与健身", "SPORTS"),
+    YXSSelectSectionModel.init("其它", "OTHER")]
+    
+    if YXSPersonDataModel.sharePerson.personStage == .KINDERGARTEN {
+        arr.insert(YXSSelectSectionModel.init("幼教", "PRESCHOOL_EDUCATION"), at: 0)
+    }
+    return arr
+}
+
+//var YXSCommonSubjcts:[YXSSelectSectionModel] = [YXSSelectSectionModel.init("语文", "CHINESE"),
+//                                      YXSSelectSectionModel.init("数学", "MATHEMATICS"),
+//                                      YXSSelectSectionModel.init("外语", "FOREIGN_LANGUAGES"),
+//                                      YXSSelectSectionModel.init("物理", "PHYSICS"),
+//                                      YXSSelectSectionModel.init("化学", "CHEMISTRY"),
+//                                      YXSSelectSectionModel.init("自然", "NATURAL"),
+//                                      YXSSelectSectionModel.init("地理", "GEOGRAPHY"),
+//                                      YXSSelectSectionModel.init("历史", "HISTORY"),
+//                                      YXSSelectSectionModel.init("社会", "SOCIOLOGY"),
+//                                      YXSSelectSectionModel.init("道德与法治", "MORALITY_LAW"),
+//                                      YXSSelectSectionModel.init("思想政治", "POLITICS"),
+//                                      YXSSelectSectionModel.init("音乐", "MUSIC"),
+//                                      YXSSelectSectionModel.init("美术", "PAINTING"),
+//                                      YXSSelectSectionModel.init("艺术", "ART"),
+//                                      YXSSelectSectionModel.init("体育与健身", "SPORTS"),
+//                                      YXSSelectSectionModel.init("其它", "OTHER")]
 
 let Relationships:[YXSSelectSectionModel] = [YXSSelectSectionModel.init("妈妈", "MOM"),
                                             YXSSelectSectionModel.init("爸爸", "DAD"),

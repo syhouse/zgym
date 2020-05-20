@@ -171,7 +171,7 @@ class YXSClassDetialListController: YXSHomeBaseController {
     
     // MARK: - action
     @objc func yxs_rightClick(){
-        if classDetialModel.position == "HEADMASTER" {
+        if classDetialModel.position == "HEADMASTER" || classDetialModel.position == "TEACHER" {
             if self.classDetialModel == nil{
                 return
             }

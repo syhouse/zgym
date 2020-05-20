@@ -231,10 +231,7 @@ class YXSClassAddInfoController: YXSBaseViewController {
     
     var selectSubject: YXSSelectSectionModel!
     @objc func selectSubjectClick(){
-        var subjcts = YXSCommonSubjcts
-        if stage == .KINDERGARTEN{
-            subjcts.insert(YXSSelectSectionModel.init("幼教", "PRESCHOOL_EDUCATION"), at: 0)
-        }
+        let subjcts = YXSCommonSubjcts()
         YXSSelectAlertView.showAlert(subjcts, selectSubject,title: "选择学科") { [weak self](model) in
             guard let strongSelf = self else { return }
             strongSelf.selectSubject = model
