@@ -85,6 +85,17 @@ class YXSCollectArticleListVC: YXSBaseTableViewController {
         }
     }
     
+    func deleteItem(model:YXSChildContentHomeListModel) {
+        let alert = UIAlertController.init(title: "是否取消该收藏", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction.init(title: "取消", style: .default, handler: { (action) in
+            
+        }))
+        alert.addAction(UIAlertAction.init(title: "确定", style: .default, handler: { (action) in
+            self.cancelCollect(articleId: model.id ?? 0)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: - tableViewDelegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return  self.dataSource.count
@@ -99,7 +110,13 @@ class YXSCollectArticleListVC: YXSBaseTableViewController {
         cell.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#E6EAF3"), leftMargin: 15, rightMargin: 0, lineHeight: 0.5)
         if dataSource.count > indexPath.row {
             let model = dataSource[indexPath.row]
+            cell.currentIndex = indexPath.row
             cell.setModel(model: model)
+        }
+        cell.deleteBlock = { [weak self](model,index)in
+            guard let weakSelf = self else {return}
+            weakSelf.currentIndex = index
+            weakSelf.deleteItem(model: model)
         }
         return cell
     }
@@ -130,15 +147,7 @@ class YXSCollectArticleListVC: YXSBaseTableViewController {
         if editingStyle == .delete {
             let model = dataSource[indexPath.row]
             currentIndex = indexPath.row
-            let alert = UIAlertController.init(title: "是否取消该收藏", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction.init(title: "取消", style: .default, handler: { (action) in
-                
-            }))
-            alert.addAction(UIAlertAction.init(title: "确定", style: .default, handler: { (action) in
-                self.cancelCollect(articleId: model.id ?? 0)
-            }))
-            self.present(alert, animated: true, completion: nil)
-            
+            self.deleteItem(model: model)
         }
     }
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {

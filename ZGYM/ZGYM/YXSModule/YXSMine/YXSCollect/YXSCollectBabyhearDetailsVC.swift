@@ -146,6 +146,22 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
         }
     }
     
+    // MARK: - Action
+    func deleteItem(model:YXSMyCollectModel) {
+        let alert = UIAlertController.init(title: "是否取消该收藏", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction.init(title: "取消", style: .default, handler: { (action) in
+            
+        }))
+        alert.addAction(UIAlertAction.init(title: "确定", style: .default, handler: { (action) in
+            if self.type == .voice {
+                self.cancelCollect(id: model.voiceId ?? 0, Type: .voice)
+            } else {
+                self.cancelCollect(id: model.albumId ?? 0, Type: .album)
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: - UITableViewDataSource，UITableViewDelegate
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -158,7 +174,13 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
         if type == .voice {
             let cell: YXSCollectBabyhearVoiceCell = tableView.dequeueReusableCell(withIdentifier: "YXSCollectBabyhearVoiceCell") as! YXSCollectBabyhearVoiceCell
             let model = dataSource[indexPath.row]
+            cell.currentIndex = indexPath.row
             cell.setModel(model: model)
+            cell.deleteBlock = { [weak self](model,index)in
+                guard let weakSelf = self else {return}
+                weakSelf.currentIndex = index
+                weakSelf.deleteItem(model: model)
+            }
             if indexPath.row == 0 {
                 cell.yxs_addLine(position: LinePosition.top, color: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), leftMargin: 15, rightMargin: 0, lineHeight: 0.5)
             }
@@ -166,8 +188,14 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
             return cell
         } else {
             let cell: YXSCollectBabyhearAlbumCell = tableView.dequeueReusableCell(withIdentifier: "YXSCollectBabyhearAlbumCell") as! YXSCollectBabyhearAlbumCell
+            cell.currentIndex = indexPath.row
             let model = dataSource[indexPath.row]
             cell.setModel(model: model)
+            cell.deleteBlock = { [weak self](model,index)in
+                guard let weakSelf = self else {return}
+                weakSelf.currentIndex = index
+                weakSelf.deleteItem(model: model)
+            }
             if indexPath.row == 0 {
                 cell.yxs_addLine(position: LinePosition.top, color: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), leftMargin: 15, rightMargin: 0, lineHeight: 0.5)
             }
@@ -216,18 +244,8 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
         if editingStyle == .delete {
             let model = dataSource[indexPath.row]
             currentIndex = indexPath.row
-            let alert = UIAlertController.init(title: "是否取消该收藏", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction.init(title: "取消", style: .default, handler: { (action) in
-                
-            }))
-            alert.addAction(UIAlertAction.init(title: "确定", style: .default, handler: { (action) in
-                if self.type == .voice {
-                    self.cancelCollect(id: model.voiceId ?? 0, Type: .voice)
-                } else {
-                    self.cancelCollect(id: model.albumId ?? 0, Type: .album)
-                }
-            }))
-            self.present(alert, animated: true, completion: nil)
+            self.deleteItem(model: model)
+            
         }
     }
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
