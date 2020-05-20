@@ -568,6 +568,7 @@ extension YXSFriendsCircleController: YXSRouterEventProtocol{
             vc.loadSucess = {
                 [weak self] in
                 guard let strongSelf = self else { return }
+                strongSelf.yxs_showBadgeOnItem(index: 1, count: 0)
                 strongSelf.reloadHeaderMessageUI()
             }
             self.navigationController?.pushViewController(vc)
