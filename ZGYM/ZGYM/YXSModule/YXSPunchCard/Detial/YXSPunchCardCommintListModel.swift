@@ -96,7 +96,9 @@ class YXSPunchCardCommintListModel : NSObject, NSCoding, Mappable{
                 
             }
             if let videoUrl = videoUrl, videoUrl.count > 0{
-                showImages.append(YXSFriendsMediaModel.init(url: videoUrl, type: .serviceVedio))
+                let videoModel = YXSFriendsMediaModel.init(url: videoUrl, type: .serviceVedio)
+                videoModel.bgUrl = bgUrl
+                showImages.append(videoModel)
                 return showImages
             }
             return showImages

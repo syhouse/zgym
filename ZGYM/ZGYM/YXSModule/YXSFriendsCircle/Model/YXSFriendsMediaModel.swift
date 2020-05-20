@@ -16,9 +16,13 @@ enum FriendsMediaType: Int{
 }
 
 class YXSFriendsMediaModel : NSObject, NSCoding{
+    ///媒体资源地址
     var url : String?
     /// 0 img  1 vedio
     var type : FriendsMediaType
+    
+    ///视频的封面地址 现在除优成长模块的都需要设置(以前是根据视频的上传地址去取  但是地址规范后 取不到了)
+    var bgUrl: String?
     
     init(url : String?, type : FriendsMediaType) {
         self.url = url
