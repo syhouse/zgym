@@ -22,7 +22,7 @@ class YXSListVoiceView: YXSVoiceBaseView {
     }
     
     override func indicatorClick(sender: UIControl) {
-        if let url = URL(string: model?.voiceUlr ?? "") {
+        if let url = URL(string: (model?.voiceUlr ?? "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!) {
             YXSSSAudioListPlayer.sharedInstance.playerUrl(url: url, id: id, startAnimation: {
                 self.startVoiceAnimation()
             }) {

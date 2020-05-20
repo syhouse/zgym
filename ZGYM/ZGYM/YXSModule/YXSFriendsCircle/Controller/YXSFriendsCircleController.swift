@@ -55,6 +55,13 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
         self.userType = userType
         super.init()
         tableViewIsGroup = true
+        
+        if userIdPublisher == self.yxs_user.id && userType == self.yxs_user.type{
+            self.title = "我的优成长"
+        }else{
+            self.title = "TA的优成长"
+        }
+        
     }
     
     
@@ -561,6 +568,7 @@ extension YXSFriendsCircleController: YXSRouterEventProtocol{
             vc.loadSucess = {
                 [weak self] in
                 guard let strongSelf = self else { return }
+                strongSelf.yxs_showBadgeOnItem(index: 1, count: 0)
                 strongSelf.reloadHeaderMessageUI()
             }
             self.navigationController?.pushViewController(vc)

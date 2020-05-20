@@ -223,7 +223,13 @@ class ClassStartPartentRankView: UIView {
                 }
             }
             iconImageView.sd_setImage(with: URL.init(string: model.avatar ?? ""),placeholderImage: kImageUserIconStudentDefualtImage, completed: nil)
-            nameLabel.text = model.childrenName
+            
+            var name = model.childrenName ?? ""
+            if model.childrenName?.count ?? 0 > 4 {
+                name = name.mySubString(to: 4)
+                name.append("...")
+            }
+            nameLabel.text = name
             scorelabel.text = "\(model.score ?? 0)\(stage == .KINDERGARTEN ? "朵" : "分")"
             if models.count > 1{
                 bottomButton.isHidden = false
@@ -252,6 +258,7 @@ class ClassStartPartentRankView: UIView {
         let label = YXSLabel()
         label.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
         label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textAlignment = .center
         return label
     }()
     

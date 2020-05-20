@@ -109,11 +109,10 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
             tableView.backgroundColor = UIColor.white
             tableView.sectionHeaderHeight = 0
             
-            rightControl.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"))
-            rightControl.mixedImage = MixedImage(normal: "yxs_punchCard_down", night: "yxs_punchCard_down")
-            customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "back"), forState: .normal)
+
+            
             customNav.titleLabel.isHidden = true
-            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: UIColor.clear)
+            
             tableView.tableHeaderView = tableHeaderEmptyView
 
         }else{
@@ -121,11 +120,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
             view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#D1E4FF")
             tableView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#D1E4FF")
             tableView.sectionHeaderHeight = 56
-            rightControl.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
-            rightControl.mixedImage = MixedImage(normal: "yxs_classstar_down", night: "yxs_classstar_down")
-            customNav.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
             customNav.titleLabel.isHidden = false
-            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: UIColor.clear)
             tableHeaderView.setHeaderModel(partentModel, dateType: dateType, startTime: startTime, endTime: endTime)
             
             let height = tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
@@ -133,6 +128,8 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
             tableView.tableHeaderView = tableHeaderView
             
         }
+        ///重置导航栏颜色
+        scrollViewDidScroll(self.tableView)
     }
     
     func showSelectView(){
@@ -176,6 +173,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
             if self.partentModel.mapTop3?.first == nil{
                 //空白UI
                 self.isEmptyUI = true
+                self.loadMore = false
                 self.loadTeacherListData()
             }else{
                 MBProgressHUD.showAdded(to: self.view, animated: true)
@@ -212,6 +210,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
              MBProgressHUD.hide(for: self.view, animated: true)
             self.teacherLists = items
             self.updateUI()
+            self.tableView.setContentOffset(CGPoint.zero, animated: false)
             self.tableView.reloadData()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -239,11 +238,13 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if isEmptyUI{
             let cell = tableView.dequeueReusableCell(withIdentifier: "ClassStarTeacherRemindCell") as! ClassStarTeacherRemindCell
-            cell.yxs_setCellModel(teacherLists[indexPath.row])
-            cell.cellBlock = {
-                [weak self] in
-                guard let strongSelf = self else { return }
-                strongSelf.loadReminderRequest(teacherLists: [strongSelf.teacherLists[indexPath.row]])
+            if indexPath.row <= teacherLists.count - 1{
+                cell.yxs_setCellModel(teacherLists[indexPath.row])
+                cell.cellBlock = {
+                    [weak self] in
+                    guard let strongSelf = self else { return }
+                    strongSelf.loadReminderRequest(teacherLists: [strongSelf.teacherLists[indexPath.row]])
+                }
             }
             return cell
         }else{
@@ -282,19 +283,27 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > kSafeTopHeight + 64{
-            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.clear)
-            customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: isEmptyUI ? "back" : "yxs_back_white"), forState: .normal)
-            customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+            customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "back"), forState: .normal)
+            customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kTextMainBodyColor)
+            rightControl.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"))
+            rightControl.mixedImage = MixedImage(normal: "yxs_classstar_down_gray", night: "yxs_classstar_down_gray")
             
-            rightControl.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: isEmptyUI ? UIColor.yxs_hexToAdecimalColor(hex: "#575A60") : UIColor.white)
-            rightControl.mixedImage = MixedImage(normal: "yxs_classstar_down_gray", night: isEmptyUI ? "yxs_classstar_down_gray" : "yxs_classstar_down")
         }else{
+            if isEmptyUI{
+                customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+                customNav.backImageButton.setMixedImage(MixedImage(normal: "back" , night: "back"), forState: .normal)
+                customNav.titleLabel.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"))
+                rightControl.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"))
+                rightControl.mixedImage = MixedImage(normal:"yxs_classstar_down_gray", night: "yxs_classstar_down_gray")
+            }else{
+                customNav.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: UIColor.clear)
+                customNav.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
+                customNav.titleLabel.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+                rightControl.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+                rightControl.mixedImage = MixedImage(normal: "yxs_classstar_down", night: "yxs_classstar_down")
+            }
             
-            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: kNightForegroundColor)
-            customNav.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
-            customNav.titleLabel.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
-            rightControl.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
-            rightControl.mixedImage = MixedImage(normal: "yxs_classstar_down", night: "yxs_classstar_down")
         }
     }
     

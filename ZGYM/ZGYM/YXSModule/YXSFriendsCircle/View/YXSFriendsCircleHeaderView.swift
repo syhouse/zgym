@@ -286,6 +286,8 @@ class YXSFriendsCircleContentView: UIView{
                     make.width.equalTo(contentWidth - YXSFriendsConfigHelper.helper.contentLeftMargin - nameLabel.width - 4.5 - 36.5 - 13 - (model.isMyPublish ? 30 : 15))
                 }
             }else{
+
+                
                 headerImageView.yxs_setImageWithURL(url: URL.init(string: model.childrenAvatar ?? ""), placeholder: kImageUserIconStudentDefualtMixedImage)
                 UIUtil.yxs_setLabelAttributed(nameLabel, text: ["\(model.childrenRealName ?? "")\((model.relationship ?? "").yxs_RelationshipValue())","   \(model.gradeName ?? "")"], colors: [ MixedColor(normal: kTextMainBodyColor, night: UIColor.white),  MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54"), night: kNightBCC6D4)], fonts: [UIFont.boldSystemFont(ofSize: 16),UIFont.systemFont(ofSize: 14)])
                 
@@ -309,6 +311,9 @@ class YXSFriendsCircleContentView: UIView{
             
             //优成长的系统发布的的不显示时间
             timeLabel.text = ""
+            
+            ///小助手默认展开全部
+            model.isShowAll = true
         }
         
         
@@ -362,7 +367,11 @@ class YXSFriendsCircleContentView: UIView{
         UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowAll && needShowAllButton)
         contentLabel.preferredMaxLayoutWidth = self.width - YXSFriendsConfigHelper.helper.contentLeftMargin - 28
 
-        if needShowAllButton{
+        
+        var lastView: UIView = contentLabel
+        
+        ///普通用户发布才有展开收起按钮
+        if needShowAllButton && model.circleType == .CIRCLE{
             showAllButton.isSelected = model.isShowAll
             showAllButton.isHidden = false
             showAllButton.snp.remakeConstraints { (make) in
@@ -370,6 +379,7 @@ class YXSFriendsCircleContentView: UIView{
                 make.left.equalTo(nameLabel)
                 make.height.equalTo(25)
             }
+            lastView = showAllButton
         }
         
         contentLabel.numberOfLines = model.isShowAll ? 0 : 3
@@ -419,14 +429,14 @@ class YXSFriendsCircleContentView: UIView{
         nineMediaView.medias = model.imgs
         nineMediaView.snp.remakeConstraints { (make) in
             make.left.right.equalTo(0)
-            make.top.equalTo(needShowAllButton ? showAllButton.snp_bottom : contentLabel.snp_bottom).offset(10)
+            make.top.equalTo(lastView.snp_bottom).offset(10)
         }
         
         timeLabel.snp.remakeConstraints { (make) in
             if  model.imgs?.count ?? 0 > 0 {
                 make.top.equalTo(nineMediaView.snp_bottom).offset(15)
             }else{
-                make.top.equalTo(needShowAllButton ? showAllButton.snp_bottom : contentLabel.snp_bottom).offset(15)
+                make.top.equalTo(lastView.snp_bottom).offset(15)
             }
             make.left.equalTo(nameLabel)
             if !hasPrises && isAutoCalculateHeight{

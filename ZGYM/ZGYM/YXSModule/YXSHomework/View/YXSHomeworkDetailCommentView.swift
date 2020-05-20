@@ -149,7 +149,6 @@ class YXSHomeworkDetailCommentView: UIView {
 
             weakSelf.voiceTouchedHandler?(url, duration)
         })
-        voiceView.minWidth = 120
         voiceView.tapPlayer = true
         return voiceView
     }()

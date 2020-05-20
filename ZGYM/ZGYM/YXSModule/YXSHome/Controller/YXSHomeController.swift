@@ -475,6 +475,9 @@ extension YXSHomeController{
 extension YXSHomeController{
     override func yxs_addNotification() {
         super.yxs_addNotification()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kQuitClassSucessNotification), object: nil)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(updateAgenda), name: NSNotification.Name.init(rawValue: kHomeAgendaReducNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshListWithOutUserData), name: NSNotification.Name.init(rawValue: kOperationUpdateToTopInSingleClassHomeNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kDelectChildSucessNotification), object: nil)

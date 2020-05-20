@@ -421,7 +421,6 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
                 strongSelf.removeAudio()
                 strongSelf.isModify = true
             }, showDelect: true)
-        voiceView.minWidth = 120
         voiceView.tapPlayer = false
         return voiceView
     }()
