@@ -30,6 +30,7 @@ public enum ServiceType: String {
     }
 //    http://www.ym698.com/lscj
     
+    ///隐私政策  用户协议  常见问题
     func getH5Url() -> String{
         switch self {
         case .ServiceProduct:
@@ -40,15 +41,15 @@ public enum ServiceType: String {
             return "http://www.ym698.com/"
         }
     }
-    /// 获取育儿好文地址
-    func getChildContentUrl() -> String{
+    /// 获取育儿好文地址  优期刊
+    func getOtherH5Url() -> String{
         switch self {
         case .ServiceProduct:
-            return "https://edu-pro.ym698.com:50009/yehw"
+            return "https://edu-pro.ym698.com:50009/"
         case .ServiceTest:
-            return "http://www.ym698.com/yehw"
+            return "http://www.ym698.com/"
         case .ServiceLocal:
-            return "http://www.ym698.com/yehw"
+            return "http://www.ym698.com/"
         }
     }
 }
@@ -65,7 +66,7 @@ let fileHost = sericeType.getServiceUrl() + "file-api"
 //host oss上传相关业务
 let ossHost =  sericeType.getServiceUrl() + "oss-api"
 
-let childContentUrl = sericeType.getChildContentUrl()
+let childContentUrl = sericeType.getOtherH5Url() + "yehw"
 
 //单例类 用于保存请求参数
 class RequsetParamManager {

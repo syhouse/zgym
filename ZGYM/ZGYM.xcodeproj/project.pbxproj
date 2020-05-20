@@ -625,6 +625,7 @@
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
+		6FA849682473E0110021A57F /* YXSYBRotationToolViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA849672473E0110021A57F /* YXSYBRotationToolViewHandler.swift */; };
 		6FB0DA13246D18D1009E46F1 /* UIControl+YXSTapRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA12246D18D1009E46F1 /* UIControl+YXSTapRange.swift */; };
 		6FB0DA15246E31AF009E46F1 /* YXSPeriodicalListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA14246E31AE009E46F1 /* YXSPeriodicalListModel.swift */; };
 		6FB0DA17247230AC009E46F1 /* YXSHomePeriodicalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA16247230AC009E46F1 /* YXSHomePeriodicalCell.swift */; };
@@ -1771,6 +1772,7 @@
 		6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZGYMUITests.swift; sourceTree = "<group>"; };
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
+		6FA849672473E0110021A57F /* YXSYBRotationToolViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSYBRotationToolViewHandler.swift; sourceTree = "<group>"; };
 		6FB0DA12246D18D1009E46F1 /* UIControl+YXSTapRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+YXSTapRange.swift"; sourceTree = "<group>"; };
 		6FB0DA14246E31AE009E46F1 /* YXSPeriodicalListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPeriodicalListModel.swift; sourceTree = "<group>"; };
 		6FB0DA16247230AC009E46F1 /* YXSHomePeriodicalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSHomePeriodicalCell.swift; sourceTree = "<group>"; };
@@ -3314,6 +3316,7 @@
 		6F07FDF12445D7C70090975B /* YXSBase */ = {
 			isa = PBXGroup;
 			children = (
+				6F07FE0D2445D7E80090975B /* YXSBaseTabBarController.swift */,
 				6F07FDF22445D7C70090975B /* YXSEventCopyLabel.swift */,
 				6F07FDF32445D7C70090975B /* YXSBaseWebViewController.swift */,
 				6F07FDF42445D7C70090975B /* YXSLabel.swift */,
@@ -4251,7 +4254,6 @@
 			isa = PBXGroup;
 			children = (
 				6F6511D62446937D0024A5DA /* 优学业.entitlements */,
-				6F07FE0D2445D7E80090975B /* YXSBaseTabBarController.swift */,
 				E58F1693245149D400A6AC18 /* YXSCommon */,
 				6F07FE0F2445D7F20090975B /* YXSExtension */,
 				6F07002D2445D7FE0090975B /* YXSModule */,
@@ -4288,6 +4290,15 @@
 				6FA0F34D242B451E00E2E035 /* Info.plist */,
 			);
 			path = ZGYMUITests;
+			sourceTree = "<group>";
+		};
+		6FA84969247509DA0021A57F /* YXSYBCustomTool */ = {
+			isa = PBXGroup;
+			children = (
+				6FA849672473E0110021A57F /* YXSYBRotationToolViewHandler.swift */,
+				E58F16CB245149D400A6AC18 /* YXSShowBrowserHelper.swift */,
+			);
+			path = YXSYBCustomTool;
 			sourceTree = "<group>";
 		};
 		6FEA7AB82452990A0017C9CA /* yxs_photo_edit */ = {
@@ -5164,10 +5175,10 @@
 				E58F16C5245149D400A6AC18 /* YXSPaddingLabel.swift */,
 				E58F16C6245149D400A6AC18 /* YXSMediaView.swift */,
 				E58F16C7245149D400A6AC18 /* YXSCommonHeader.swift */,
+				6FA84969247509DA0021A57F /* YXSYBCustomTool */,
 				E58F16C8245149D400A6AC18 /* YXSDatePickerView.swift */,
 				E58F16C9245149D400A6AC18 /* YXSClassEmptyView.swift */,
 				E58F16CA245149D400A6AC18 /* UIUtil.swift */,
-				E58F16CB245149D400A6AC18 /* YXSShowBrowserHelper.swift */,
 				E58F16CC245149D400A6AC18 /* YXSLabelView.swift */,
 				E58F16CD245149D400A6AC18 /* YXSCountDownTool.swift */,
 				E58F16CE245149D400A6AC18 /* YXSLocalMessageHelper.swift */,
@@ -6336,6 +6347,7 @@
 				6F0705522445D8050090975B /* YXSFriendsCircleMessageView.swift in Sources */,
 				6F0704422445D8040090975B /* YXSSettingTableViewCell.swift in Sources */,
 				6FEA7C5C2452990F0017C9CA /* LFDataFilterVideoView.m in Sources */,
+				6FA849682473E0110021A57F /* YXSYBRotationToolViewHandler.swift in Sources */,
 				6F07045D2445D8040090975B /* YXSBaseFileCell.swift in Sources */,
 				6F07050C2445D8050090975B /* YXSClassStartTeacherDetailStudentEmptyHeaderView.swift in Sources */,
 				6F07054E2445D8050090975B /* YXSFriendsMessageModel.swift in Sources */,
@@ -6555,7 +6567,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				INFOPLIST_FILE = Share/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6579,7 +6591,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				INFOPLIST_FILE = Share/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6718,7 +6730,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6759,7 +6771,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
