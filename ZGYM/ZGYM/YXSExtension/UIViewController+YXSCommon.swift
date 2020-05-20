@@ -114,13 +114,14 @@ extension UIViewController{
 
 // MARK: -push
 extension UIViewController{
-    func yxs_pushHomeDetailVC(homeModel: YXSHomeListModel){
+    ///selectChildrenId 班级列表所选孩子id
+    func yxs_pushHomeDetailVC(homeModel: YXSHomeListModel, selectChildrenId: Int){
 //        if homeModel.commitState == 2 && YXSPersonDataModel.sharePerson.personRole == .PARENT{
 //            let vc = YXSHomeworkCommitDetailViewController()
 //            vc.homeModel = homeModel
 //            navigationController?.pushViewController(vc)
 //        }else{
-            let vc = YXSHomeworkDetailViewController.init(model: homeModel)
+        let vc = YXSHomeworkDetailViewController.init(model: homeModel, selectChildrenId: selectChildrenId)
             navigationController?.pushViewController(vc)
 //        }
     }

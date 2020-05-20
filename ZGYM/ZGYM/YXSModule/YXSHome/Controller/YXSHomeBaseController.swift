@@ -261,7 +261,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         }
         switch model.type {
         case .homework:
-            yxs_pushHomeDetailVC(homeModel: model)
+            yxs_pushHomeDetailVC(homeModel: model,selectChildrenId: childModel?.id ?? 0)
         case .punchCard:
             let vc = YXSPunchCardDetialController.init(clockInId: model.serviceId ?? 0, childId: childModel?.id,classId: model.classId ?? 0)
             navigationController?.pushViewController(vc)
