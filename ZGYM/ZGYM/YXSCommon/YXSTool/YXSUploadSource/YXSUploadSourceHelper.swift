@@ -47,8 +47,10 @@ class SLUploadSourceModel: NSObject{
         get{
             var suffix = ".mp4"
             switch type {
-            case .image, .firstVideo:
+            case .image:
                 suffix = ".jpg"
+            case .firstVideo:
+                suffix = "_1.jpg"
             case .voice:
                 suffix = ".mp3"
             case .video:
@@ -177,9 +179,9 @@ class YXSUploadSourceHelper: NSObject {
                 }
             }
             
-                        ///视频model上传第一帧
+            ///视频model上传第一帧
             if  sourceType == .video{
-                let newModel = SLUploadSourceModel.init(model: uploadModel.model, type: SourceNameType.firstVideo, storageType: uploadModel.storageType, fileName: uploadModel.fileName.MD5() + "_1.jpg", classId: uploadModel.classId, albumId: uploadModel.albumId)
+                let newModel = SLUploadSourceModel.init(model: uploadModel.model, type: SourceNameType.firstVideo, storageType: uploadModel.storageType, fileName: uploadModel.fileName, classId: uploadModel.classId, albumId: uploadModel.albumId)
                 uploadModels.append(newModel)
             }
             

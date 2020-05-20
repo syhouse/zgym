@@ -12,9 +12,7 @@ import YBImageBrowser
 /// 展示图片 视频  处理状态栏显示隐藏
 class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
     static let helper: YXSShowBrowserHelper = YXSShowBrowserHelper()
-    private override init(){
-        
-    }
+    private override init(){}
     
     /// 展示图片资源
     /// - Parameters:
@@ -93,7 +91,7 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
         browser.show()
     }
     
-    
+    // MARK: - YBImageBrowserDelegate
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, beginTransitioningWithIsShow isShow: Bool) {
         UIApplication.shared.setStatusBarHidden(isShow, with: UIStatusBarAnimation.none)
         if isShow{

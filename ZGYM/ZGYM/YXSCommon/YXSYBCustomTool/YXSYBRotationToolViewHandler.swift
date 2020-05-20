@@ -19,11 +19,6 @@ class YXSYBRotationToolViewHandler: YBIBToolViewHandler {
         updateViewOriginButtonSize()
     }
     
-    override func yb_hide(_ hide: Bool) {
-        //        let data = yb_currentData()
-        //        SLLog(data)
-    }
-    
     override func yb_pageChanged() {
         viewOriginButton.isHidden = true
         let data = yb_currentData()
@@ -54,8 +49,8 @@ class YXSYBRotationToolViewHandler: YBIBToolViewHandler {
         }
     }
     
+    ///获取旋转后的图片
     func image(_ image: UIImage?) -> UIImage? {
-        //  Converted to Swift 5.2 by Swiftify v5.2.31636 - https://swiftify.com/
         var rotate: CGFloat = 0.0
         var rect: CGRect
         var translateX: CGFloat = 0
@@ -70,9 +65,6 @@ class YXSYBRotationToolViewHandler: YBIBToolViewHandler {
             translateY = -rect.size.width;
             scaleY = rect.size.width/rect.size.height;
             scaleX = rect.size.height/rect.size.width;
-            
-            
-            
             UIGraphicsBeginImageContext(rect.size)
             let context = UIGraphicsGetCurrentContext()
             //做CTM变换
@@ -91,7 +83,7 @@ class YXSYBRotationToolViewHandler: YBIBToolViewHandler {
         return image
     }
     
-    
+    // MARK: - getter&setter
     lazy var viewOriginButton: UIButton = {
         let viewOriginButton = UIButton(type: .custom)
         viewOriginButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
@@ -103,7 +95,6 @@ class YXSYBRotationToolViewHandler: YBIBToolViewHandler {
         viewOriginButton.isHidden = true
         return viewOriginButton
     }()
-    
 }
 
 ///旋转data
@@ -126,7 +117,6 @@ class YXSYBRotationCell: YBIBImageCell, YBIBImageDataDelegate{
     func contentSizeWithContainerSize(containerSize: CGSize, imageViewFrame: CGRect) -> CGSize{
         return CGSize(width: max(containerSize.width, imageViewFrame.size.width), height: max(containerSize.height, imageViewFrame.size.height))
     }
-
     
     func updateImageLayout(orientation: UIDeviceOrientation,previousImageSize: CGSize){
         if let data = self.yb_cellData as? YBIBImageData{
