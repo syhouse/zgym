@@ -152,7 +152,7 @@ class YXSHomeBaseCell: UITableViewCell {
             sourceView.yxs_bgView.isHidden = false
             sourceView.yxs_iconImage.image = UIImage.init(named: "vedio")
             sourceView.yxs_label.text = "视频"
-            sourceView.yxs_setImageWithURL(url: URL.init(string: (model.bgUrl ?? "").yxs_getVediUrlImage()), placeholder: kImageDefualtMixedImage)
+            sourceView.yxs_setImageWithURL(url: URL.init(string: (model.bgUrl ?? "").yxs_getImageThumbnail()), placeholder: kImageDefualtMixedImage)
         }else if model.sourceType == 1{
             sourceView.image = UIImage.init(named: "audio_defult")
         }else{
@@ -161,7 +161,7 @@ class YXSHomeBaseCell: UITableViewCell {
                 sourceView.yxs_label.text = "音频"
                 sourceView.yxs_bgView.isHidden = false
             }
-            sourceView.yxs_setImageWithURL(url: URL.init(string: (model.bgUrl ?? "").yxs_getVediUrlImage()), placeholder: kImageDefualtMixedImage)
+            sourceView.yxs_setImageWithURL(url: URL.init(string: (model.bgUrl ?? "").yxs_getImageThumbnail()), placeholder: kImageDefualtMixedImage)
         }
     }
     

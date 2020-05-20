@@ -113,7 +113,7 @@ class YXSChildContentListVC: YXSBaseTableViewController,JXCategoryListContentVie
             let model = dataSource[indexPath.row]
             let vc = YXSBaseWebViewController()
             vc.isCache = true
-//            vc.loadUrl = "http://192.168.10.35/yehw/index.html"
+            vc.loadUrl = "http://192.168.10.35/yehw/index.html"
 //            vc.loadUrl = "http://www.ym698.com/yehw/"
             vc.loadUrl = childContentUrl
             let dic = ["id":model.id ?? 0, "token":YXSPersonDataModel.sharePerson.token ?? "", "avatar":YXSPersonDataModel.sharePerson.userModel.avatar ?? "","name":YXSPersonDataModel.sharePerson.userModel.name ?? ""] as [String : Any]

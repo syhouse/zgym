@@ -129,7 +129,7 @@ extension UIViewController{
     func yxs_pushPeriodicalHtml(id: Int){
         let vc = YXSBaseWebViewController()
         vc.isCache = true
-        vc.loadUrl = "\(sericeType.getH5Url())yqk"
+        vc.loadUrl = "\(sericeType.getOtherH5Url())yqk"
         let dic = ["id":id, "token":YXSPersonDataModel.sharePerson.token ?? "", "avatar":YXSPersonDataModel.sharePerson.userModel.avatar ?? "","name":YXSPersonDataModel.sharePerson.userModel.name ?? ""] as [String : Any]
         vc.scriptKey = dic.jsonString() ?? ""
         vc.title = "详情"

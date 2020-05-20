@@ -12,21 +12,22 @@ import YBImageBrowser
 /// 展示图片 视频  处理状态栏显示隐藏
 class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
     static let helper: YXSShowBrowserHelper = YXSShowBrowserHelper()
-    private override init(){
-        
-    }
+    private override init(){}
     
     /// 展示图片资源
     /// - Parameters:
     ///   - urls: 服务器地址
     ///   - images: UIImage
     ///   - assets: 相册assets
+    ///   - canRotation: 是否可以旋转视图  默认不支持旋转
     ///   - currentIndex: 当前index
-    static func showImage(urls: [URL]? = nil, images: [UIImage?]? = nil, assets: [PHAsset]? = nil, currentIndex: Int?){
+    static func showImage(urls: [URL]? = nil, images: [UIImage?]? = nil, assets: [PHAsset]? = nil, canRotation: Bool = false, currentIndex: Int?){
         let browser = YBImageBrowser()
+        
+        let dataClass = canRotation ? YXSYBRotationData.self : YBIBImageData.self
         if let urls = urls{
             for url in urls{
-                let imgData = YBIBImageData()
+                let imgData = dataClass.init()
                 imgData.imageURL = url
                 browser.dataSourceArray.append(imgData)
             }
@@ -35,7 +36,7 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
         
         if let images = images{
             for image in images{
-                let imgData = YBIBImageData()
+                let imgData = dataClass.init()
                 imgData.image = {return image}
                 browser.dataSourceArray.append(imgData)
             }
@@ -44,7 +45,7 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
         
         if let assets = assets{
             for asset in assets{
-                let imgData = YBIBImageData()
+                let imgData = dataClass.init()
                 imgData.imagePHAsset = asset
                 browser.dataSourceArray.append(imgData)
             }
@@ -56,6 +57,7 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
             browser.currentPage = currentIndex
         }
         browser.delegate = YXSShowBrowserHelper.helper
+        browser.toolViewHandlers.append(YXSYBRotationToolViewHandler())
         browser.show()
     }
     
@@ -89,7 +91,7 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
         browser.show()
     }
     
-    
+    // MARK: - YBImageBrowserDelegate
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, beginTransitioningWithIsShow isShow: Bool) {
         UIApplication.shared.setStatusBarHidden(isShow, with: UIStatusBarAnimation.none)
         if isShow{
