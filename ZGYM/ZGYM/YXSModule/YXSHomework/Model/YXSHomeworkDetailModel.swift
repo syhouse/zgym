@@ -236,7 +236,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
     /// 当前作业是否是我提交的
     var isMySubmit : Bool {
         get {
-            if childrenId == YXSPersonDataModel.sharePerson.userModel.currentChild?.id && YXSPersonDataModel.sharePerson.personRole == .PARENT {
+            if childrenId == selectChildrenId && YXSPersonDataModel.sharePerson.personRole == .PARENT {
                 return true
             } else {
                 return false
@@ -244,6 +244,8 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
     }
 
+    var selectChildrenId: Int? = YXSPersonDataModel.sharePerson.userModel.currentChild?.id ?? 0
+    
     /// 家长提交作业的原始图片地址
     var backImageUrl: String? {
         didSet {
@@ -366,7 +368,11 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
                 if let comment = commentJsonList,comment.count > 0 {
                     if remarkHeight <= 0 {
                         height += 12.5
+                    } else {
+                        height += 10
                     }
+                } else {
+                    height += 10
                 }
             }
 //            height += 30
@@ -628,7 +634,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         homeworkId = aDecoder.decodeObject(forKey: "homeworkId") as? Int
         homeworkCreateTime = aDecoder.decodeObject(forKey: "homeworkCreateTime") as? String
         homeworkEndTime = aDecoder.decodeObject(forKey: "homeworkEndTime") as? String
-        
+        selectChildrenId = aDecoder.decodeObject(forKey: "selectChildrenId") as? Int
     }
 
     /**
@@ -789,6 +795,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         if homeworkEndTime != nil {
             aCoder.encode(homeworkEndTime, forKey: "homeworkEndTime")
+        }
+        if selectChildrenId != nil {
+            aCoder.encode(selectChildrenId, forKey: "selectChildrenId")
         }
     }
 }

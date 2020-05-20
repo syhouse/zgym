@@ -51,9 +51,11 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     var isGood: Int = -1
     var isRemark: Int = -1
     var homeModel:YXSHomeListModel
+    var selectChildrenId: Int = NSObject.init().yxs_user.currentChild?.id ?? 0
     //    var btnCommit: YXSButton?
-    init(model: YXSHomeListModel) {
+    init(model: YXSHomeListModel, selectChildrenId: Int = NSObject.init().yxs_user.currentChild?.id ?? 0) {
         self.homeModel = model
+        self.selectChildrenId = selectChildrenId
         UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0,childId: model.childrenId ?? 0)
         super.init()
     }
@@ -117,7 +119,6 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             case 10001:
                 //全部作业
                 weakSelf.isGood = -1
-                
                 if weakSelf.isRemark == -1 {
                     weakSelf.footerContentLbl.text = "暂无作业提交"
                     weakSelf.footerRemindBtn.isHidden = false
@@ -141,6 +142,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             default:
                 break
             }
+            weakSelf.currentPage = 1
             if YXSPersonDataModel.sharePerson.personRole == .PARENT {
                 weakSelf.footerRemindBtn.isHidden = true
             }
@@ -325,7 +327,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         case 0: //我的作业
             //查询我的作业
             self.refreshSelectModel()
-            YXSEducationHomeworkQueryHomeworkCommitByIdRequest(childrenId: self.yxs_user.currentChild?.id ?? 0, homeworkCreateTime: self.homeModel.createTime ?? "", homeworkId: self.homeModel.serviceId ?? 0).request({ [weak self](json) in
+            YXSEducationHomeworkQueryHomeworkCommitByIdRequest(childrenId: self.selectChildrenId, homeworkCreateTime: self.homeModel.createTime ?? "", homeworkId: self.homeModel.serviceId ?? 0).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 if json.rawString() == "null" {
                     weakSelf.dataSource.removeAll()
@@ -908,6 +910,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         if let headerView = headerView{
             headerView.currentSection = section
             headerView.hmModel = self.model
+            model.selectChildrenId = self.selectChildrenId
             headerView.setModel(model: model)
             let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
             headerView.yxs_addLine(position: .top, color: cl, lineHeight: 0.5)

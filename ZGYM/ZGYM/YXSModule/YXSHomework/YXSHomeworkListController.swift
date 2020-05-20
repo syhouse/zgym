@@ -180,7 +180,7 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
                 self.tableView.reloadData()
             }
             
-            yxs_pushHomeDetailVC(homeModel: model)
+            yxs_pushHomeDetailVC(homeModel: model, selectChildrenId: self.childId ?? 0)
         }
     }
     
