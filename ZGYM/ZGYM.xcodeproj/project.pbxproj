@@ -25,6 +25,7 @@
 		561011732457D862007EF91D /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
 		56101176245AA399007EF91D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F07FDE82445D7290090975B /* Assets.xcassets */; };
 		565122652462ADF300FBE0D3 /* YXSSearchFileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565122642462ADF300FBE0D3 /* YXSSearchFileViewController.swift */; };
+		565122682473CE3A00FBE0D3 /* ToolViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565122672473CE3A00FBE0D3 /* ToolViewHandler.swift */; };
 		6F0703262445D8020090975B /* Date+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE102445D7F20090975B /* Date+YXSCategory.swift */; };
 		6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE112445D7F20090975B /* String+YXSCategory.swift */; };
 		6F0703282445D8020090975B /* UITextField+YXSPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE122445D7F20090975B /* UITextField+YXSPlaceholder.swift */; };
@@ -897,6 +898,7 @@
 		560B20D424519839003D8A19 /* Share.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Share.entitlements; sourceTree = "<group>"; };
 		560B20D62456803E003D8A19 /* YXSShareExtensionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSShareExtensionHelper.swift; sourceTree = "<group>"; };
 		565122642462ADF300FBE0D3 /* YXSSearchFileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSearchFileViewController.swift; sourceTree = "<group>"; };
+		565122672473CE3A00FBE0D3 /* ToolViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolViewHandler.swift; sourceTree = "<group>"; };
 		6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0700302445D7FE0090975B /* YXSVersionUpdateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateView.swift; sourceTree = "<group>"; };
 		6F0700322445D7FE0090975B /* YXSVersionUpdateModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateModel.swift; sourceTree = "<group>"; };
@@ -2177,6 +2179,14 @@
 			path = YXSNativeShareExtension;
 			sourceTree = "<group>";
 		};
+		565122662473CE0200FBE0D3 /* CheckOriginImg */ = {
+			isa = PBXGroup;
+			children = (
+				565122672473CE3A00FBE0D3 /* ToolViewHandler.swift */,
+			);
+			path = CheckOriginImg;
+			sourceTree = "<group>";
+		};
 		6F07002D2445D7FE0090975B /* YXSModule */ = {
 			isa = PBXGroup;
 			children = (
@@ -2677,6 +2687,7 @@
 		6F0701052445D7FF0090975B /* YXSChat */ = {
 			isa = PBXGroup;
 			children = (
+				565122662473CE0200FBE0D3 /* CheckOriginImg */,
 				6F0701062445D7FF0090975B /* Util */,
 				6F07010C2445D7FF0090975B /* YXSChatViewController.swift */,
 				6F07010D2445D7FF0090975B /* YXSSearchViewController.swift */,
@@ -5880,6 +5891,7 @@
 				6FEA7C3F2452990E0017C9CA /* JRImageCollectionViewCell.m in Sources */,
 				6F07FE002445D7C70090975B /* YXSEventCopyLabel.swift in Sources */,
 				6F07046B2445D8040090975B /* YXSPhoneAuthenticationViewController.swift in Sources */,
+				565122682473CE3A00FBE0D3 /* ToolViewHandler.swift in Sources */,
 				6FEA7C1B2452990D0017C9CA /* LFContext.m in Sources */,
 				6F0705632445D8050090975B /* YXSConvertAudioFile.m in Sources */,
 				6F0704842445D8040090975B /* YXSClassScheduleCardModel.swift in Sources */,

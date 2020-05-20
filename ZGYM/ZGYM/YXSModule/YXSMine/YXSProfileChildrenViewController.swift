@@ -144,6 +144,39 @@ class YXSProfileChildrenViewController: YXSProfileViewController {
 //    func editClassClick() {
 //
 //    }
+    @objc func editRelationships() {
+        let subjcts = Relationships
+        var selectSubject: YXSSelectSectionModel?
+        for sub in subjcts{
+            if sub.paramsKey == model?.grade?.relationship {
+                selectSubject = sub
+                break
+            }
+        }
+        if selectSubject == nil {
+            return
+        }
+        
+        YXSSelectAlertView.showAlert(subjcts, selectSubject,title: "选择关系") { [weak self](model) in
+            guard let weakSelf = self else {return}
+            if model.paramsKey == selectSubject?.paramsKey {
+                /// 选择的和默认的一样
+                return
+            }
+            
+//            MBProgressHUD.yxs_showLoading()
+//            YXSEducationGradeUpdateRequest(dic: ["gradeId":weakSelf.gradeId ?? 0, "subject": model.paramsKey]).request({ (json) in
+//                MBProgressHUD.yxs_hideHUD()
+//                MBProgressHUD.yxs_showMessage(message: "修改成功")
+//                weakSelf.model?.subject = model.paramsKey
+//                weakSelf.tableView.reloadData()
+//
+//            }) { (msg, code) in
+//                MBProgressHUD.yxs_hideHUD()
+//                MBProgressHUD.yxs_showMessage(message: msg)
+//            }
+        }
+    }
     
     @objc func deleteClick(sender: YXSButton) {
         let view = YXSConfirmationAlertView.showIn(target: self.view) { [weak self](sender, view) in
@@ -224,9 +257,17 @@ class YXSProfileChildrenViewController: YXSProfileViewController {
     
     
     override func dataSource() -> Array<Any> {
+        
+        var tmp = ""
+        for sub in Relationships {
+            if sub.paramsKey == model?.grade?.relationship {
+                tmp = sub.text
+            }
+        }
+        
         var arr = Array<Any>()
         var section1: [[String:String]]
-        section1 = [["title":"头像", "subTitle":"", "action":"editAvatarClick", "avatar":self.model?.avatar ?? ""],["title":"名字", "subTitle": self.model?.realName ?? "", "action":"editNameClick"], ["title":"学号", "subTitle":self.model?.studentId ?? "", "action":"editStudentIdClick"]]
+        section1 = [["title":"头像", "subTitle":"", "action":"editAvatarClick", "avatar":self.model?.avatar ?? ""],["title":"名字", "subTitle": self.model?.realName ?? "", "action":"editNameClick"], ["title":"学号", "subTitle":self.model?.studentId ?? "", "action":"editStudentIdClick"],["title":"您是孩子的", "subTitle":tmp, "action":"editRelationships"]]
 
         
 //        let section2 = [["title":"学号", "subTitle":self.model?.studentId ?? "", "action":""]]
