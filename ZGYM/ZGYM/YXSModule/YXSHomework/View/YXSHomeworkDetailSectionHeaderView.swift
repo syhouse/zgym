@@ -679,17 +679,22 @@ class SLHomeworkCommentDetailRemarkView: UIView {
     func updateUI() {
         remarkNameLbl.sizeToFit()
         remarkStatusLbl.x = remarkNameLbl.tz_right + 5
-        let paragraphStye = NSMutableParagraphStyle()
-        paragraphStye.lineSpacing = kMainContentLineHeight
-        paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
-        let dic = [NSAttributedString.Key.font: kTextMainBodyFont, NSAttributedString.Key.paragraphStyle:paragraphStye]
-        let size = UIUtil.yxs_getTextSize(textStr: self.model?.remark, attributes: dic, width: SCREEN_WIDTH - 30)
-        if size.height < 20 {
-            remarkContentLabel.frame = CGRect.init(x: 0, y: remarkTimeLbl.tz_bottom + 10, width: size.width, height: size.height)
+        if self.model?.remark?.count ?? 0 > 0 {
+            let paragraphStye = NSMutableParagraphStyle()
+            paragraphStye.lineSpacing = kMainContentLineHeight
+            paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
+            let dic = [NSAttributedString.Key.font: kTextMainBodyFont, NSAttributedString.Key.paragraphStyle:paragraphStye]
+            let size = UIUtil.yxs_getTextSize(textStr: self.model?.remark, attributes: dic, width: SCREEN_WIDTH - 30)
+            if size.height < 20 {
+                remarkContentLabel.frame = CGRect.init(x: 0, y: remarkTimeLbl.tz_bottom + 10, width: size.width, height: size.height)
+            }
+            else {
+                remarkContentLabel.frame = CGRect.init(x: 0, y: remarkTimeLbl.tz_bottom + 10, width: SCREEN_WIDTH - 30, height: size.height)
+            }
+        } else {
+            remarkContentLabel.frame = CGRect.init(x: 0, y: remarkTimeLbl.tz_bottom, width: SCREEN_WIDTH - 30, height: 0)
         }
-        else {
-            remarkContentLabel.frame = CGRect.init(x: 0, y: remarkTimeLbl.tz_bottom + 10, width: SCREEN_WIDTH - 30, height: size.height)
-        }
+        
         if remarkVoiceView.isHidden {
             remarkVoiceView.frame = CGRect.init(x: 0, y: 0, width: 0, height: 0)
         } else {

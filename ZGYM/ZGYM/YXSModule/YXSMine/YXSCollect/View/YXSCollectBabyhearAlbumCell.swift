@@ -10,6 +10,9 @@ import Foundation
 import NightNight
 
 class YXSCollectBabyhearAlbumCell: YXSBaseTableViewCell {
+    var model: YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["":""])!
+    var currentIndex: Int = 0
+    var deleteBlock:((_ model: YXSMyCollectModel,_ index: Int)->())?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
@@ -17,7 +20,7 @@ class YXSCollectBabyhearAlbumCell: YXSBaseTableViewCell {
         contentView.addSubview(headIcon)
         contentView.addSubview(nameLabel)
         contentView.addSubview(countLabel)
-        
+        contentView.addGestureRecognizer(UILongPressGestureRecognizer.init(target: self, action: #selector(longGestureClick)))
         headIcon.snp.makeConstraints { (make) in
             make.top.left.equalTo(15)
             make.width.height.equalTo(63)
@@ -42,7 +45,41 @@ class YXSCollectBabyhearAlbumCell: YXSBaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @objc func longGestureClick(recognizer:UIGestureRecognizer) {
+        if recognizer.state == .ended{
+            return
+        }else if recognizer.state == .began{
+            self.becomeFirstResponder()
+            let menuItem = UIMenuItem.init(title: "取消收藏", action: #selector(deleteItem(item:)))
+            UIMenuController.shared.arrowDirection = .default
+            UIMenuController.shared.menuItems = [menuItem]
+            let point = self.contentView.bounds.origin
+            let size = self.contentView.bounds.size
+            
+            UIMenuController.shared.setTargetRect(CGRect(x: point.x, y: 30, width: size.width, height: 30), in: self.contentView)
+            UIMenuController.shared.setMenuVisible(true, animated: true)
+        }
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    // MARK: - Action
+    @objc func deleteItem(item:UIMenuItem) {
+        deleteBlock?(self.model,self.currentIndex)
+        print("删除")
+    }
+
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == #selector(deleteItem(item:)) {
+            return true
+        }
+        return false
+    }
+    
     func setModel(model:YXSMyCollectModel) {
+        self.model = model
         headIcon.isHidden = false
         nameLabel.isHidden = false
         countLabel.isHidden = false

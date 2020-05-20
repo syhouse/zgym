@@ -86,7 +86,7 @@ class YXSGlobalJumpManager: NSObject {
             let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
             requestHomeworkDetail(childrenId: childrenId, homeworkCreateTime: createTime, homeworkId: serviceId) { [weak self](model) in
                 guard let weakSelf = self else {return}
-                visibleVC?.yxs_pushHomeDetailVC(homeModel: model)
+                visibleVC?.yxs_pushHomeDetailVC(homeModel: model,selectChildrenId: childrenId)
                 weakSelf.hasJumpEnd = true
             }
             break
