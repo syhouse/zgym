@@ -59,7 +59,20 @@ class YXSClassManageViewController: YXSBaseTableViewController {
         
     }
     
-//     MARK: - Request
+
+    // MARK: - Request
+    @objc func quitClassRequest(gradeId:Int, childrenIds:[Int]?, smsCode:Int, completionHandler:(()->())?) {
+        MBProgressHUD.yxs_showLoading()
+        YXSEducationGradeQuitRequest(gradeId: gradeId, childrenIds: childrenIds, smsCode: smsCode).request({ (json) in
+            MBProgressHUD.yxs_hideHUD()
+            completionHandler?()
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kQuitClassSucessNotification), object: nil)
+            
+        }) { (msg, code) in
+            MBProgressHUD.yxs_hideHUD()
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
 //    func saveRequest(completion:@escaping ((_ className:String, _ forbidJonin:Bool)->())) {
 //
 //        if self.forbidJoin == self.originForbidJoin && self.className == self.originClassName {
@@ -177,7 +190,7 @@ class YXSClassManageViewController: YXSBaseTableViewController {
     
     /// 修改任教学科
     @objc func editSubject() {
-        let subjcts = YXSCommonSubjcts
+        let subjcts = YXSCommonSubjcts()
         var selectSubject: YXSSelectSectionModel?
         for sub in subjcts{
             if sub.paramsKey == model?.subject {
@@ -185,9 +198,9 @@ class YXSClassManageViewController: YXSBaseTableViewController {
                 break
             }
         }
-        if selectSubject == nil {
-            return
-        }
+//        if selectSubject == nil {
+//            return
+//        }
         
         YXSSelectAlertView.showAlert(subjcts, selectSubject,title: "选择学科") { [weak self](model) in
             guard let weakSelf = self else {return}
@@ -219,7 +232,24 @@ class YXSClassManageViewController: YXSBaseTableViewController {
     
     /// 退出班级
     @objc func signOutClassClick() {
-        MBProgressHUD.yxs_showMessage(message: "请先转让再退出班级")
+        if model?.position == "TEACHER" {
+            let vc = YXSPhoneAuthenticationViewController(smsType: .OPERATION_GRADE) { [weak self](account, authcode, sender, vc) in
+                guard let weakSelf = self else {return}
+                
+                weakSelf.quitClassRequest(gradeId:weakSelf.model?.id ?? 0, childrenIds: nil, smsCode: authcode) {
+                    MBProgressHUD.yxs_showMessage(message: "退出班级成功", afterDelay: 1.2)
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1.2) {
+                        weakSelf.popBackToClassList()
+                    }
+                }
+            }
+            vc.tfAccount.text = self.yxs_user.account
+            vc.tfAccount.isEnabled = false
+            self.navigationController?.pushViewController(vc)
+            
+        } else {
+            MBProgressHUD.yxs_showMessage(message: "请先转让再退出班级")
+        }
     }
     
     /// 推回班级列表
@@ -285,7 +315,7 @@ class YXSClassManageViewController: YXSBaseTableViewController {
                 } else {
                     /// 我当前任教学科
                     let text = model?.subject
-                    for model in YXSCommonSubjcts{
+                    for model in YXSCommonSubjcts(){
                         if model.paramsKey == text{
                             cell.lbSubTitle.text = model.text
                             break
@@ -331,8 +361,17 @@ class YXSClassManageViewController: YXSBaseTableViewController {
     
     // MARK: - LazyLoad
     lazy var dataSource:[[[String:String]]] = {
-        let arr:[[[String:String]]] = [[["title":"班级名称","type":"SubTitleType","action":"editClassNameClick"]],[["title":"禁止新成员入班","type":"SwitchType"]],[["title":"我当前任教学科","type":"SubTitleType","action":"editSubject"],["title":"转让班级","type":"NormalType","action":"transferClassClick"],["title":"退出班级","type":"NormalType","action":"signOutClassClick"],["title":"解散班级","type":"NormalType","action":"dissolutionClassClick"]]]
-        return arr
+        if model?.position == "TEACHER" {
+            /// 任课老师
+            let arr:[[[String:String]]] = [[["title":"班级名称","type":"SubTitleType","action":"editClassNameClick"]],[["title":"我当前任教学科","type":"SubTitleType","action":"editSubject"],["title":"退出班级","type":"NormalType","action":"signOutClassClick"]]]
+            return arr
+            
+        } else {
+            /// 班主任
+            let arr:[[[String:String]]] = [[["title":"班级名称","type":"SubTitleType","action":"editClassNameClick"]],[["title":"禁止新成员入班","type":"SwitchType"]],[["title":"我当前任教学科","type":"SubTitleType","action":"editSubject"],["title":"转让班级","type":"NormalType","action":"transferClassClick"],["title":"退出班级","type":"NormalType","action":"signOutClassClick"],["title":"解散班级","type":"NormalType","action":"dissolutionClassClick"]]]
+            return arr
+        }
+
     }()
     
     /*

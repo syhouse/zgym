@@ -153,9 +153,9 @@ class YXSProfileChildrenViewController: YXSProfileViewController {
                 break
             }
         }
-        if selectSubject == nil {
-            return
-        }
+//        if selectSubject == nil {
+//            return
+//        }
         
         YXSSelectAlertView.showAlert(subjcts, selectSubject,title: "选择关系") { [weak self](model) in
             guard let weakSelf = self else {return}

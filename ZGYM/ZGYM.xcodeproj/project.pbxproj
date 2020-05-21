@@ -2492,17 +2492,17 @@
 		6F0700A52445D7FE0090975B /* YXSClass */ = {
 			isa = PBXGroup;
 			children = (
-				6F0700A62445D7FE0090975B /* YXSComplaintDetailViewController.swift */,
-				6F0700A72445D7FE0090975B /* YXSComplaintOptionsViewController.swift */,
 				6F0700A82445D7FE0090975B /* ClassOperator */,
-				6F0700B62445D7FE0090975B /* YXSClassInfoViewController.swift */,
-				6F0700B72445D7FE0090975B /* YXSParentClassListViewController.swift */,
 				6F0700B82445D7FE0090975B /* Model */,
 				6F0700BB2445D7FE0090975B /* View */,
-				6F0700C32445D7FE0090975B /* YXSTransferClassViewController.swift */,
-				6F0700C42445D7FE0090975B /* YXSTeacherClassListViewController.swift */,
+				6F0700B62445D7FE0090975B /* YXSClassInfoViewController.swift */,
 				6F0700C52445D7FE0090975B /* YXSClassManageViewController.swift */,
 				6F0700C62445D7FE0090975B /* YXSClassMembersViewController.swift */,
+				6F0700A62445D7FE0090975B /* YXSComplaintDetailViewController.swift */,
+				6F0700A72445D7FE0090975B /* YXSComplaintOptionsViewController.swift */,
+				6F0700B72445D7FE0090975B /* YXSParentClassListViewController.swift */,
+				6F0700C42445D7FE0090975B /* YXSTeacherClassListViewController.swift */,
+				6F0700C32445D7FE0090975B /* YXSTransferClassViewController.swift */,
 			);
 			path = YXSClass;
 			sourceTree = "<group>";
@@ -2510,19 +2510,19 @@
 		6F0700A82445D7FE0090975B /* ClassOperator */ = {
 			isa = PBXGroup;
 			children = (
-				6F0700A92445D7FE0090975B /* YXSClassAddErrorModel.swift */,
-				6F0700AA2445D7FE0090975B /* YXSClassRepeatCheckController.swift */,
-				6F0700AB2445D7FE0090975B /* YXSClassDetailModel.swift */,
 				6F0700AC2445D7FE0090975B /* YXSChildrenModel.swift */,
-				6F0700AD2445D7FE0090975B /* YXSClassQueryResultModel.swift */,
-				6F0700AE2445D7FE0090975B /* YXSPasswordView.swift */,
-				6F0700AF2445D7FE0090975B /* YXSClassSelectChildView.swift */,
-				6F0700B02445D7FE0090975B /* YXSClassQueryListController.swift */,
-				6F0700B12445D7FE0090975B /* YXSClassSelectRoleView.swift */,
-				6F0700B22445D7FE0090975B /* YXSClassCreateController.swift */,
 				6F0700B32445D7FE0090975B /* YXSClassAddController.swift */,
-				6F0700B42445D7FE0090975B /* YXSClassRepeatController.swift */,
+				6F0700A92445D7FE0090975B /* YXSClassAddErrorModel.swift */,
 				6F0700B52445D7FE0090975B /* YXSClassAddInfoController.swift */,
+				6F0700B22445D7FE0090975B /* YXSClassCreateController.swift */,
+				6F0700AB2445D7FE0090975B /* YXSClassDetailModel.swift */,
+				6F0700B02445D7FE0090975B /* YXSClassQueryListController.swift */,
+				6F0700AD2445D7FE0090975B /* YXSClassQueryResultModel.swift */,
+				6F0700AA2445D7FE0090975B /* YXSClassRepeatCheckController.swift */,
+				6F0700B42445D7FE0090975B /* YXSClassRepeatController.swift */,
+				6F0700AF2445D7FE0090975B /* YXSClassSelectChildView.swift */,
+				6F0700B12445D7FE0090975B /* YXSClassSelectRoleView.swift */,
+				6F0700AE2445D7FE0090975B /* YXSPasswordView.swift */,
 			);
 			path = ClassOperator;
 			sourceTree = "<group>";
