@@ -16,6 +16,13 @@ enum HMClassCircleType: String{
     case HELPER
 }
 
+enum YXSContentDealType: String{
+    ///首页瀑布流单独处理 (内容如果有只保留一个空格； 同时过滤掉换行也就是不换行)
+    case homeList
+    /// 收缩状态移除空格换行 展开状态展示用户设置
+    case other
+}
+
 
 class YXSFriendCircleModel : NSObject, NSCoding, Mappable{
     
@@ -108,6 +115,7 @@ class YXSFriendCircleModel : NSObject, NSCoding, Mappable{
     ///仅朋友圈列表该值正确
     var needShowAllButton: Bool = false
     
+    var contentDealType: YXSContentDealType = .other
     
     /// 朋友圈
     var frameModel:YXSFriendsCircleFrameModel!
@@ -192,9 +200,19 @@ class YXSFriendCircleModel : NSObject, NSCoding, Mappable{
         paragraphStye.lineSpacing = kMainContentLineHeight
         paragraphStye.lineBreakMode = .byWordWrapping
         let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
-        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: attributes, width: helper.contentWidth - contentAdjustWidth) + 1
-        let text: String = content ?? ""
-        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: text.removeSpace() , attributes: attributes,width: helper.contentWidth, numberOfLines: 3) + 1
+        
+        ///展开文本
+        var spreadContent: String = self.content ?? ""
+        ///收缩文本
+        var shrinkContent: String = self.content ?? ""
+        if contentDealType == .homeList{
+            spreadContent = self.content?.listReplaceSpaceAndReturn() ?? ""
+            shrinkContent = spreadContent
+        }else{
+            shrinkContent = spreadContent.removeSpace()
+        }
+        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: spreadContent, attributes: attributes, width: helper.contentWidth - contentAdjustWidth) + 1
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: shrinkContent , attributes: attributes,width: helper.contentWidth, numberOfLines: 3) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 2)  ? true : false
     }
     
@@ -251,6 +269,7 @@ class YXSFriendCircleModel : NSObject, NSCoding, Mappable{
         imgs = aDecoder.decodeObject(forKey: "imgs") as? [YXSFriendsMediaModel]
         isVideoSource = aDecoder.decodeBool(forKey: "isVideoSource")
         frameModel = aDecoder.decodeObject(forKey: "frameModel") as? YXSFriendsCircleFrameModel
+        contentDealType = YXSContentDealType.init(rawValue: aDecoder.decodeObject(forKey: "contentDealType") as? String ?? "") ?? YXSContentDealType.homeList
     }
     
     /**
@@ -327,6 +346,7 @@ class YXSFriendCircleModel : NSObject, NSCoding, Mappable{
         if frameModel != nil{
             aCoder.encode(frameModel, forKey: "frameModel")
         }
+        aCoder.encode(contentDealType.rawValue, forKey: "contentDealType")
     }
     
 }

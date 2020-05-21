@@ -234,7 +234,7 @@ extension YXSHomeworkListCell{
             make.top.equalTo(topTimeLabel.snp_bottom).offset(YXSHomeListModel.midMagin)
             make.width.equalTo(model.contentLabelWidth)
         }
-        UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowAll && model.needShowAllButton)
+        UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content?.listReplaceSpaceAndReturn())
         contentLabel.lineBreakMode = .byTruncatingTail
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{

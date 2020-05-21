@@ -92,7 +92,8 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
         }
         yxs_title.snp.makeConstraints { (make) in
             make.top.equalTo(yxs_headerImageView.snp_bottom).offset(23)
-            make.centerX.equalTo(self)
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
         }
         yxs_midBgView.snp.makeConstraints { (make) in
             make.top.equalTo(yxs_title.snp_bottom).offset(22)

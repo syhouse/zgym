@@ -86,8 +86,8 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
         paragraphStye.lineSpacing = kMainContentLineHeight
         paragraphStye.lineBreakMode = .byWordWrapping
         let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
-        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: attributes , width: contentLabelWidth)
-        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: (content ?? "").removeSpace() , attributes: attributes,width: contentLabelWidth, numberOfLines: 2) + 1
+        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content?.listReplaceSpaceAndReturn() ?? "", attributes: attributes , width: contentLabelWidth)
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: content?.listReplaceSpaceAndReturn() ?? "", attributes: attributes,width: contentLabelWidth, numberOfLines: 2) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > 50  ? true : false
     }
     
