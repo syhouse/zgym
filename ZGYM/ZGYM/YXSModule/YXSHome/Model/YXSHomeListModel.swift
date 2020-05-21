@@ -61,6 +61,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         didSet{
             if type == .periodical{
                 periodicalListModel = YXSPeriodicalListModel.init(JSONString: content ?? "")
+                SLLog(periodicalListModel)
             }
             
         }

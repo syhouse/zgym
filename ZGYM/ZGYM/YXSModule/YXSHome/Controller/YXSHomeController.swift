@@ -206,7 +206,7 @@ class YXSHomeController: YXSHomeBaseController {
             self.loadMore = result["hasNext"].boolValue
             if self.currentPage == 1{
                 self.tsLastSets[self.yxs_user.currentChild?.id ?? 0] = result["tsLast"].intValue
-                 self.yxs_removeAll()
+                self.yxs_removeAll()
                 
                 if list.count == 0{///没有更新 取缓存数据
                     list = self.firstPageCacheSource["\(self.yxs_user.currentChild?.id ?? 0)"] ?? [YXSHomeListModel]()
@@ -238,7 +238,7 @@ class YXSHomeController: YXSHomeBaseController {
                 //更早
                 self.yxs_dataSource[2].items.append(model)
             }
-
+            
             YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource, childrenId: self.yxs_user.currentChild?.id)
             self.group.leave()
         }) { (msg, code) in
@@ -366,11 +366,11 @@ extension YXSHomeController: YXSRouterEventProtocol{
             yxs_lookAgendaDetial()
         case kYXSHomeChildViewUpdateEvent:
             ///先清除缓存记录
-             lastRecordId = 0
-             lastRecordTime = Date().toString(format: DateFormatType.custom(kCommonDateFormatString))
-             self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList(childrenId: yxs_user.currentChild?.id)
-             self.tableView.reloadData()
-             
+            lastRecordId = 0
+            lastRecordTime = Date().toString(format: DateFormatType.custom(kCommonDateFormatString))
+            self.yxs_dataSource = YXSCacheHelper.yxs_getCacheHomeList(childrenId: yxs_user.currentChild?.id)
+            self.tableView.reloadData()
+            
             yxs_refreshData()
         case kYXSHomeTableHeaderViewReloadLocationEvent:
             yxs_cheakLocationAlert()
@@ -512,6 +512,14 @@ extension YXSHomeController{
             
             if model.msgType == 3{
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.init(rawValue: model.serviceType ?? 0) ?? .homework])
+                if let children = self.yxs_user.children{
+                    for child in children{
+                        if child.grade?.id == model.classId{
+                            UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: child.id ?? 0)
+                        }
+                    }
+                }
+                
             }
             
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
@@ -532,7 +540,7 @@ extension YXSHomeController{
                 if let currentModel = currentModel{
                     if model.msgType == 0{
                         if !(currentModel.committedList?.contains(model.childrenId ?? 0) ?? false){
-                                currentModel.committedList?.append(model.childrenId ?? 0)
+                            currentModel.committedList?.append(model.childrenId ?? 0)
                         }
                         
                         if !(currentModel.readList?.contains(model.childrenId ?? 0) ?? false){
@@ -618,7 +626,7 @@ extension YXSHomeController{
         //        isShowTeacherHomeGuide = false
         if !isShowTeacherHomeGuide || !isShowPartentHomeGuide{
             self.view.layoutIfNeeded()
-
+            
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER && !isShowTeacherHomeGuide{
                 yxs_isShowGuide = true
                 let publishFrame = self.view.convert(self.publishButton.frame, to: self.tabBarController!.view)
