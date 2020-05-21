@@ -121,8 +121,10 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
             YXSEducationBabyVoiceCollectionCancelRequest.init(voiceId: id).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 MBProgressHUD.yxs_showMessage(message: "取消收藏成功")
+                weakSelf.tableView.beginUpdates()
                 weakSelf.dataSource.remove(at: weakSelf.currentIndex)
                 weakSelf.tableView.deleteRows(at: [IndexPath.init(row: weakSelf.currentIndex, section: 0)], with: .left)
+                weakSelf.tableView.endUpdates()
                 if weakSelf.dataSource.count == 0 {
                     weakSelf.tableView.reloadData()
                 }
@@ -134,8 +136,10 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
             YXSEducationBabyAlbumCollectionCancelRequest.init(albumId: id).request({ [weak self](json) in
                 guard let weakSelf = self else {return}
                 MBProgressHUD.yxs_showMessage(message: "取消收藏成功")
+                weakSelf.tableView.beginUpdates()
                 weakSelf.dataSource.remove(at: weakSelf.currentIndex)
                 weakSelf.tableView.deleteRows(at: [IndexPath.init(row: weakSelf.currentIndex, section: 0)], with: .left)
+                weakSelf.tableView.endUpdates()
                 if weakSelf.dataSource.count == 0 {
                     weakSelf.tableView.reloadData()
                 }
@@ -176,9 +180,11 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
             let model = dataSource[indexPath.row]
             cell.currentIndex = indexPath.row
             cell.setModel(model: model)
-            cell.deleteBlock = { [weak self](model,index)in
+            cell.deleteBlock = { [weak self](model,lbl)in
                 guard let weakSelf = self else {return}
-                weakSelf.currentIndex = index
+                let point = lbl.convert(lbl.bounds.origin, to: tableView)
+                let indexx = tableView.indexPathForRow(at: point)
+                weakSelf.currentIndex = indexx?.row as! Int
                 weakSelf.deleteItem(model: model)
             }
             if indexPath.row == 0 {
@@ -191,9 +197,11 @@ class YXSCollectBabyhearDetailsVC: YXSBaseTableViewController,JXCategoryListCont
             cell.currentIndex = indexPath.row
             let model = dataSource[indexPath.row]
             cell.setModel(model: model)
-            cell.deleteBlock = { [weak self](model,index)in
+            cell.deleteBlock = { [weak self](model,lbl)in
                 guard let weakSelf = self else {return}
-                weakSelf.currentIndex = index
+                let point = lbl.convert(lbl.bounds.origin, to: tableView)
+                let indexx = tableView.indexPathForRow(at: point)
+                weakSelf.currentIndex = indexx?.row as! Int
                 weakSelf.deleteItem(model: model)
             }
             if indexPath.row == 0 {

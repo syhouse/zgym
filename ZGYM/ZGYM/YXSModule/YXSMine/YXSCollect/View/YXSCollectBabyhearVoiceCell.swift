@@ -12,7 +12,7 @@ import NightNight
 class YXSCollectBabyhearVoiceCell: YXSBaseTableViewCell {
     var model: YXSMyCollectModel = YXSMyCollectModel.init(JSON: ["":""])!
     var currentIndex: Int = 0
-    var deleteBlock:((_ model: YXSMyCollectModel,_ index: Int)->())?
+    var deleteBlock:((_ model: YXSMyCollectModel,_ lbl: YXSLabel)->())?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
@@ -70,7 +70,7 @@ class YXSCollectBabyhearVoiceCell: YXSBaseTableViewCell {
     
     // MARK: - Action
     @objc func deleteItem(item:UIMenuItem) {
-        deleteBlock?(self.model,self.currentIndex)
+        deleteBlock?(self.model,self.nameLabel)
         print("删除")
     }
 

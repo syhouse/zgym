@@ -13,7 +13,7 @@ class YXSCollectArticleCell: YXSBaseTableViewCell {
     
     var model: YXSChildContentHomeListModel = YXSChildContentHomeListModel.init(JSON: ["":""])!
     var currentIndex: Int = 0
-    var deleteBlock:((_ model: YXSChildContentHomeListModel,_ index: Int)->())?
+    var deleteBlock:((_ model: YXSChildContentHomeListModel,_ lbl: YXSLabel)->())?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
@@ -68,7 +68,7 @@ class YXSCollectArticleCell: YXSBaseTableViewCell {
     
     // MARK: - Action
     @objc func deleteItem(item:UIMenuItem) {
-        deleteBlock?(self.model,self.currentIndex)
+        deleteBlock?(self.model,self.titleLabel)
         print("删除")
     }
 
