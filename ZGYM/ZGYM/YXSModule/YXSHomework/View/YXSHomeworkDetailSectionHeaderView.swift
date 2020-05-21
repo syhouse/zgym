@@ -466,12 +466,19 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
     @objc func lookClassStartDetial(){
         cellBlock?(.lookLastWeakClassStart,self.model!)
     }
+    
+    /// 头像点击
+    @objc func tapClick(){
+        let vc = YXSFriendsCircleInfoController.init(userId: model?.custodianId ?? 0, childId: model?.childrenId ?? 0, type: PersonRole.PARENT.rawValue)
+        UIUtil.currentNav().pushViewController(vc)
+    }
 
     // MARK: - LazyLoad
     lazy var imgAvatar: UIImageView = {
         let img = UIImageView()
         img.backgroundColor = UIColor.lightGray
         img.cornerRadius = 21
+        img.addTaget(target: self, selctor: #selector(tapClick))
         img.image = UIImage(named: "normal")
         img.contentMode = .scaleAspectFill
         return img
