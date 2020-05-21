@@ -679,7 +679,7 @@
     TIMMessage *imMsg = data.innerMessage;
     if(imMsg){
         if([imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < 2 * 60){
-//            [items addObject:[[UIMenuItem alloc] initWithTitle:@"撤回" action:@selector(onRevoke:)]];
+            [items addObject:[[UIMenuItem alloc] initWithTitle:@"撤回" action:@selector(onRevoke:)]];
         }
     }
     if(imMsg.status == TIM_MSG_STATUS_SEND_FAIL){

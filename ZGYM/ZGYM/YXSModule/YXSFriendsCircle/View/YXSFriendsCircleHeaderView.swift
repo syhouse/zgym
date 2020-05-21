@@ -193,7 +193,7 @@ class YXSFriendsCircleContentView: UIView{
             make.centerX.equalTo(headerImageView)
             make.top.equalTo(nameLabel)
         }
-//        teacherClassLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        //        teacherClassLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
     
     // MARK: -UIUpdate
@@ -272,7 +272,7 @@ class YXSFriendsCircleContentView: UIView{
                     make.centerY.equalTo(nameLabel)
                     make.width.equalTo(36.5)
                 }
-
+                
                 nameLabel.sizeToFit()
                 nameLabel.snp_remakeConstraints { (make) in
                     make.left.equalTo(YXSFriendsConfigHelper.helper.contentLeftMargin).priorityHigh()
@@ -286,7 +286,7 @@ class YXSFriendsCircleContentView: UIView{
                     make.width.equalTo(contentWidth - YXSFriendsConfigHelper.helper.contentLeftMargin - nameLabel.width - 4.5 - 36.5 - 13 - (model.isMyPublish ? 30 : 15))
                 }
             }else{
-
+                
                 
                 headerImageView.yxs_setImageWithURL(url: URL.init(string: model.childrenAvatar ?? ""), placeholder: kImageUserIconStudentDefualtMixedImage)
                 UIUtil.yxs_setLabelAttributed(nameLabel, text: ["\(model.childrenRealName ?? "")\((model.relationship ?? "").yxs_RelationshipValue())","   \(model.gradeName ?? "")"], colors: [ MixedColor(normal: kTextMainBodyColor, night: UIColor.white),  MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54"), night: kNightBCC6D4)], fonts: [UIFont.boldSystemFont(ofSize: 16),UIFont.systemFont(ofSize: 14)])
@@ -363,10 +363,24 @@ class YXSFriendsCircleContentView: UIView{
             let height = UIUtil.yxs_getTextHeigh(textStr: model.content ?? "", attributes: attributes, width: self.width - YXSFriendsConfigHelper.helper.contentLeftMargin - 28) + 1
             needShowAllButton = height > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 4)  ? true : false
         }
+        ///展开文本
+        var spreadContent: String = model.content ?? ""
+        ///收缩文本
+        var shrinkContent: String = model.content ?? ""
+        if model.contentDealType == .homeList{
+            spreadContent = spreadContent.listReplaceSpaceAndReturn()
+            shrinkContent = spreadContent
+        }else{
+            shrinkContent = spreadContent.removeSpace()
+        }
+        if model.isShowAll{
+            UIUtil.yxs_setLabelParagraphText(contentLabel, text: spreadContent)
+        }else{
+            UIUtil.yxs_setLabelParagraphText(contentLabel, text: shrinkContent)
+        }
         
-        UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowAll && needShowAllButton)
         contentLabel.preferredMaxLayoutWidth = self.width - YXSFriendsConfigHelper.helper.contentLeftMargin - 28
-
+        
         
         var lastView: UIView = contentLabel
         
@@ -390,10 +404,10 @@ class YXSFriendsCircleContentView: UIView{
                 make.right.equalTo(-28)
             }
         }else{
-//            if model.frameModel != nil{
-//                let helper = YXSFriendsConfigHelper.helper
-//                contentLabel.frame = CGRect.init(x: helper.contentLeftMargin, y: helper.nameLabelTopPadding + 16 + helper.contentTopToNameLPadding, width: helper.contentWidth, height:model.isShowAll ? model.frameModel.contentIsShowAllHeight : model.frameModel.contentHeight)
-//            }
+            //            if model.frameModel != nil{
+            //                let helper = YXSFriendsConfigHelper.helper
+            //                contentLabel.frame = CGRect.init(x: helper.contentLeftMargin, y: helper.nameLabelTopPadding + 16 + helper.contentTopToNameLPadding, width: helper.contentWidth, height:model.isShowAll ? model.frameModel.contentIsShowAllHeight : model.frameModel.contentHeight)
+            //            }
             contentLabel.snp.remakeConstraints { (make) in
                 make.left.equalTo(nameLabel)
                 make.top.equalTo(nameLabel.snp_bottom).offset(YXSFriendsConfigHelper.helper.contentTopToNameLPadding)

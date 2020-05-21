@@ -158,7 +158,7 @@ class YXSPunchCardModel : NSObject, NSCopying, NSCoding, Mappable{
         paragraphStye.lineSpacing = kMainContentLineHeight
         paragraphStye.lineBreakMode = .byWordWrapping
         let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
-        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: title ?? "" , attributes: attributes,width: SCREEN_WIDTH - 30 - (15 + 18), numberOfLines: 2) + 1
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: title?.listReplaceSpaceAndReturn() ?? "" , attributes: attributes,width: SCREEN_WIDTH - 30 - (15 + 18), numberOfLines: 2) + 1
     }
     
     required init?(map: Map){}

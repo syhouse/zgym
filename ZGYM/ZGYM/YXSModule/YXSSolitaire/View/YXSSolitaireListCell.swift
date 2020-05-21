@@ -167,7 +167,7 @@ extension YXSSolitaireListCell{
         var isTop: Int?
         var needShowAllButton: Bool = false
         if solitaireModel == nil{
-            content = model.content ?? ""
+            content = model.content?.listReplaceSpaceAndReturn() ?? ""
             isShowAll = model.isShowAll
             teacherId = model.teacherId
             createTime = model.createTime
@@ -178,7 +178,7 @@ extension YXSSolitaireListCell{
             solitaireView.setHomeModel(model)
             needShowAllButton = model.needShowAllButton
         }else{
-            content = solitaireModel.content ?? ""
+            content = solitaireModel.content?.listReplaceSpaceAndReturn() ?? ""
             isShowAll = solitaireModel.isShowAll
             teacherId = solitaireModel.teacherId
             createTime = solitaireModel.createTime
@@ -201,7 +201,7 @@ extension YXSSolitaireListCell{
         topTimeLabel.text = createTime?.date(withFormat: kCommonDateFormatString)?.yxs_homeTimeWeek()
         showAllControl.isSelected = isShowAll
         contentLabel.numberOfLines = isShowAll ? 0 : 2
-        UIUtil.yxs_setLabelParagraphText(contentLabel, text: content,removeSpace:  !isShowAll && needShowAllButton)
+        UIUtil.yxs_setLabelParagraphText(contentLabel, text: content)
         
         if needShowAllButton{
             showAllControl.isHidden = false

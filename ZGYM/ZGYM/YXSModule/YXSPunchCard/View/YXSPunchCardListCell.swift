@@ -220,7 +220,7 @@ extension YXSPunchCardListCell{
         var childrenId: Int?
         var isTop: Int?
         if punchCardModel == nil{
-            content = model.content ?? ""
+            content = model.content?.listReplaceSpaceAndReturn() ?? ""
             createTime = model.createTime ?? ""
             teacherName = model.teacherName ?? ""
             className = model.className ?? ""
@@ -238,7 +238,7 @@ extension YXSPunchCardListCell{
             childrenId = model.childrenId
             isTop = model.isTop
         }else{
-            content = punchCardModel.title ?? ""
+            content = punchCardModel.title?.listReplaceSpaceAndReturn() ?? ""
             createTime = punchCardModel.createTime ?? ""
             teacherName = punchCardModel.teacherName ?? ""
             className = punchCardModel.className ?? ""
