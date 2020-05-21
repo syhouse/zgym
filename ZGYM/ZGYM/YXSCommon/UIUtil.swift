@@ -73,7 +73,7 @@ extension UIUtil{
     public static func yxs_setLabelParagraphText(_ label: UILabel?, text: String?,font: UIFont = kTextMainBodyFont, lineSpacing: CGFloat = kMainContentLineHeight, removeSpace: Bool = false) {
         var newText = text
         if removeSpace{
-            newText = text?.removeSpace()
+            newText = text?.listReplaceSpaceAndReturn()
         }
         let paragraphStye = NSMutableParagraphStyle()
         //调整行间距
@@ -89,7 +89,7 @@ extension UIUtil{
     /// - Parameter colors: 文本颜色数组
     /// - Parameter fonts: 文本字体数组
     ///   - paragraphLineSpacing: 段落间距
-    public static func yxs_setLabelAttributed(_ label: UILabel?, text texts: [String]?, colors: [UIColor]? = nil, fonts: [UIFont]? = nil, paragraphLineSpacing: CGFloat? = nil) {
+    @discardableResult public static func yxs_setLabelAttributed(_ label: UILabel?, text texts: [String]?, colors: [UIColor]? = nil, fonts: [UIFont]? = nil, paragraphLineSpacing: CGFloat? = nil) -> NSAttributedString{
         var mixedColor = [MixedColor]()
         if let colors = colors{
             for color in colors{
@@ -97,7 +97,7 @@ extension UIUtil{
             }
             
         }
-        yxs_setLabelAttributed(label, text: texts, colors: mixedColor, fonts: fonts,paragraphLineSpacing: paragraphLineSpacing)
+        return yxs_setLabelAttributed(label, text: texts, colors: mixedColor, fonts: fonts,paragraphLineSpacing: paragraphLineSpacing)
     }
     
     
@@ -108,7 +108,7 @@ extension UIUtil{
     ///   - colors: 文本Mix颜色
     ///   - fonts: 文本字体数组
     ///   - paragraphLineSpacing: 段落间距
-    public static func yxs_setLabelAttributed(_ label: UILabel?, text texts: [String]?, colors: [MixedColor]?, fonts: [UIFont]? = nil, paragraphLineSpacing: CGFloat? = nil) {
+    @discardableResult public static func yxs_setLabelAttributed(_ label: UILabel?, text texts: [String]?, colors: [MixedColor]?, fonts: [UIFont]? = nil, paragraphLineSpacing: CGFloat? = nil) -> NSAttributedString{
         let textStr = texts?.joined(separator: "")
         let attrStr = NSMutableAttributedString(string: textStr ?? "")
         for i in 0..<(texts?.count ?? 0) {
@@ -134,6 +134,7 @@ extension UIUtil{
             
         }
         label?.attributedText = attrStr
+        return attrStr
     }
     
     /// 获取文字高度
@@ -188,6 +189,17 @@ extension UIUtil{
     ///   - width: 宽度
     ///   - numberOfLines: 高度限制几行
     public static func yxs_getTextHeigh(textStr : String?, attributes : [NSAttributedString.Key:Any]?, width : CGFloat, numberOfLines: Int?) -> CGFloat{
+        
+        return yxs_getTextHeigh(attributesText: NSMutableAttributedString.init(string: textStr ?? "", attributes: attributes), width: width, numberOfLines: numberOfLines)
+    }
+    
+    /// 获取文字高度
+    /// - Parameters:
+    ///   - textStr: 文本
+    ///   - attributes: attributes
+    ///   - width: 宽度
+    ///   - numberOfLines: 高度限制几行
+    public static func yxs_getTextHeigh(attributesText : NSAttributedString, width : CGFloat, numberOfLines: Int?) -> CGFloat{
         let lable = UILabel.init(frame: CGRect.init(x: 0, y: 0, width: width, height: 10))
         if let numberOfLines = numberOfLines{
             lable.numberOfLines = numberOfLines
@@ -195,7 +207,7 @@ extension UIUtil{
             lable.numberOfLines = 0
         }
         
-        lable.attributedText = NSMutableAttributedString.init(string: textStr ?? "", attributes: attributes)
+        lable.attributedText = attributesText
         lable.sizeToFit()
         return lable.height
     }

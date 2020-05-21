@@ -165,7 +165,7 @@ extension YXSNoticeListCell{
         visibleView.locailImage = "visible"
         visibleView.imageSize = CGSize.init(width: 18, height: 18)
 
-        UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content,removeSpace:  !model.isShowAll && model.needShowAllButton)
+        UIUtil.yxs_setLabelParagraphText(contentLabel, text: model.content?.listReplaceSpaceAndReturn())
         showAllControl.isSelected = model.isShowAll
         contentLabel.numberOfLines = model.isShowAll ? 0 : 2
         

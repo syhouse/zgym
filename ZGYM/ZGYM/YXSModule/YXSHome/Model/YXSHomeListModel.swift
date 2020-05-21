@@ -114,6 +114,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                     classStarModel = YXSClassStarPartentModel.init(JSONString: dataJson)
                 }else if type == .friendCicle{
                     friendCircleModel = YXSFriendCircleModel.init(JSONString: dataJson)
+                    friendCircleModel?.contentDealType = .homeList
                 }
             }
         }
@@ -426,10 +427,15 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                 let titleHeight: CGFloat = 40.0
                 return 14.0 + 52 + 41 + titleHeight + CGFloat(43.0*Double(maxHomePeriodicalLine)) + 5.5
             }
-            //班级圈
+            //班级之星
             if serviceType == 6{
-                if let classstartModel = classStarModel,classstartModel.showRemindTeacher{
-                    return 14.0 + 512.0
+                if let classstartModel = classStarModel{
+                    if   classstartModel.showRemindTeacher{
+                        return 14.0 + 512.0
+                    }else if classstartModel.currentChildren == nil{
+                        let titleHeight = UIUtil.yxs_getTextHeigh(textStr: "\(self.yxs_user.currentChild?.realName ?? "")\(NSUtil.yxs_getDateText(dateType: .W))暂未上榜，请再接再厉！", font: UIFont.boldSystemFont(ofSize: 20), width: SCREEN_WIDTH - 30 - 30)
+                        return 14.0 + 396.0 + titleHeight
+                    }
                 }
                 return 14.0 + 468.0
             }
@@ -736,8 +742,8 @@ extension YXSHomeListModel{
         paragraphStye.lineSpacing = kMainContentLineHeight
         paragraphStye.lineBreakMode = .byWordWrapping
         let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
-        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: attributes , width: contentLabelWidth)
-        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: (content ?? "").removeSpace() , attributes: attributes,width: contentLabelWidth, numberOfLines: 2) + 1
+        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content?.listReplaceSpaceAndReturn() ?? "", attributes: attributes , width: contentLabelWidth)
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: content?.listReplaceSpaceAndReturn() ?? "", attributes: attributes,width: contentLabelWidth, numberOfLines: 2) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > 50  ? true : false
     }
 }

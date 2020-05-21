@@ -108,6 +108,28 @@ extension String {
         return text
     }
     
+    ///列表处理多个空格内容只保留一个空格  过滤掉换行
+    func listReplaceSpaceAndReturn() -> String{
+        var text = self
+
+        var regex: NSRegularExpression? = nil
+        do {
+            regex = try NSRegularExpression(pattern: "\\s{2,}", options: .caseInsensitive)
+        } catch {
+            
+        }
+        var arr = regex?.matches(in: text, options: .reportCompletion, range: NSRange(location: 0, length: text.count))
+        arr = ((arr as NSArray?)?.reverseObjectEnumerator())?.allObjects as? [NSTextCheckingResult]
+        for str in arr ?? [] {
+
+            text = (text as NSString).replacingCharacters(in: str.range, with: " ")
+        }
+        text.removeAll(where: { (char) -> Bool in
+            return char == "\n"
+        })
+        return text
+    }
+    
     func yxs_RelationshipValue() -> String{
         switch self {
         case "MOM":
