@@ -30,8 +30,7 @@ target 'ZGYM' do
     
 #    pod 'LLDebugTool' ,:configurations => ['Debug']
 #    视频预览
-    pod 'YBImageBrowser/Video'
-    
+    pod 'YBImageBrowser/Video' , '~> 3.0.9'
     pod 'JCore', '2.1.4-noidfa'
     pod 'JPush', '3.2.4-noidfa'
     

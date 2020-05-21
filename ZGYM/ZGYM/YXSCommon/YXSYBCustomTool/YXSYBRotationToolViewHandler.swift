@@ -127,7 +127,6 @@ class YXSYBRotationCell: YBIBImageCell, YBIBImageDataDelegate{
             let imageViewFrame = data.layout.yb_imageViewFrame(withContainerSize: containerSize, imageSize: imageSize, orientation: orientation)
             let contentSize = self.contentSizeWithContainerSize(containerSize: containerSize, imageViewFrame: imageViewFrame)
             let maxZoomScale = imageType == .thumb ? 1 : data.layout.yb_maximumZoomScale(withContainerSize: containerSize, imageSize: imageSize, orientation: orientation)
-            
             self.imageScrollView.zoomScale = 1
             self.imageScrollView.contentSize = contentSize
             self.imageScrollView.minimumZoomScale = 1

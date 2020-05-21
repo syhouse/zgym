@@ -218,7 +218,7 @@ class YXSPunchSucessBgView: UIImageView{
         yxs_nameLabel.text = shareModel.name
         yxs_titleLabel.text = shareModel.title
         UIUtil.yxs_setLabelAttributed(yxs_punchCardCountLabel, text: ["累计打卡 ","\(shareModel.clockInDayCount)", " 天"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#747983"), night: kNightBCC6D4),MixedColor(normal: kTextMainBodyColor, night: UIColor.white), MixedColor(normal: kTextMainBodyColor, night: UIColor.white)], fonts: [UIFont.systemFont(ofSize: 13),UIFont.boldSystemFont(ofSize: 30),UIFont.systemFont(ofSize: 13)])
-        UIUtil.yxs_setLabelAttributed(yxs_punchCardOverLabel, text: ["超跃全班 ","\(Int(shareModel.percentOver) ?? 0)", " %人"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#747983"), night: kNightBCC6D4),MixedColor(normal: kTextMainBodyColor, night: UIColor.white), MixedColor(normal: kTextMainBodyColor, night: UIColor.white)], fonts: [UIFont.systemFont(ofSize: 13),UIFont.boldSystemFont(ofSize: 30),UIFont.systemFont(ofSize: 13)])
+        UIUtil.yxs_setLabelAttributed(yxs_punchCardOverLabel, text: ["超跃全班 ","\(Int(Float(shareModel.percentOver) ?? 0) )", " %人"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#747983"), night: kNightBCC6D4),MixedColor(normal: kTextMainBodyColor, night: UIColor.white), MixedColor(normal: kTextMainBodyColor, night: UIColor.white)], fonts: [UIFont.systemFont(ofSize: 13),UIFont.boldSystemFont(ofSize: 30),UIFont.systemFont(ofSize: 13)])
         yxs_scanImageView.image = self.yxs_setupQRCodeImage(shareModel.downLoadUrl, image: UIImage.init(named: "yxs_logo"))
         layout()
     }
