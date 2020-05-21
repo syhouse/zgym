@@ -152,7 +152,7 @@ class YXSFileManagerHelper: NSObject {
                 return UIImage(named: "yxs_file_ppt") ?? UIImage(named: "defultImage")
             case "docx","doc":
                 return UIImage(named: "yxs_file_word") ?? UIImage(named: "defultImage")
-            case "xlsx":
+            case "xlsx", "xls":
                 return UIImage(named: "yxs_file_excel") ?? UIImage(named: "defultImage")
             case "pdf":
                 return UIImage(named: "yxs_file_pdf") ?? UIImage(named: "defultImage")
