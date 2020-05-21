@@ -57,7 +57,14 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var childrenId : Int?
     var classId : Int?
     var className : String?
-    var content : String?
+    var content : String?{
+        didSet{
+            if type == .periodical{
+                periodicalListModel = YXSPeriodicalListModel.init(JSONString: content ?? "")
+            }
+            
+        }
+    }
     var createTime : String?
     var endTime : String?
     var currentTime: String?
@@ -72,7 +79,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     /// 业务ID
     var serviceId : Int?
     //7优期刊
-    /// 业务类型(0:通知,1:作业,2:打卡,3:接龙,4:成绩,5:班级圈6:班级之星  105 班级圈消息),首页聚合所有数据时无需传该参数,查询对应业务数据时需要传
+    /// 业务类型(0:通知,1:作业,2:打卡,3:接龙,4:成绩,5:班级圈6:班级之星 9.优期刊  105 班级圈消息),首页聚合所有数据时无需传该参数,查询对应业务数据时需要传
     var serviceType : Int?
     /// 学段
     var stage : String?
@@ -294,7 +301,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                 return .friendCicle
             case 6:
                 return .classstart
-            case 7:
+            case 9:
                 return .periodical
             default:
                 return .notice
@@ -411,7 +418,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var classStarModel: YXSClassStarPartentModel?
     /// 朋友圈数据 使用该model
     var friendCircleModel: YXSFriendCircleModel?
-    
+    ///优期刊数据 使用该model
+    var periodicalListModel: YXSPeriodicalListModel?
     ///是否是首页需要显示标签
     var isShowTag: Bool = false
     
@@ -420,12 +428,9 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var height: CGFloat{
         get{
             //优期刊
-            if serviceType == 7{
-                if let classstartModel = classStarModel,classstartModel.showRemindTeacher{
-                    return 14.0 + 512.0
-                }
-                let titleHeight: CGFloat = 40.0
-                return 14.0 + 52 + 41 + titleHeight + CGFloat(43.0*Double(maxHomePeriodicalLine)) + 5.5
+            if serviceType == 9{
+                let titleHeight: CGFloat = UIUtil.yxs_getTextHeigh(textStr: periodicalListModel?.articles?.first?.title ?? "", font: UIFont.boldSystemFont(ofSize: 16), width: SCREEN_WIDTH - 30 - 14.5 - 107)
+                return 14.0 + 52 + 41 + titleHeight + CGFloat(43.0*Double((periodicalListModel?.articles?.count ?? 1) - 1)) + 5.5
             }
             //班级之星
             if serviceType == 6{
@@ -533,7 +538,6 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         className <- map["className"]
         readListStr <- map["readList"]
         committedListStr <- map["committedList"]
-        content <- map["content"]
         createTime <- map["createTime"]
         endTime <- map["endTime"]
         hasAv <- map["hasAv"]
@@ -546,6 +550,9 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         stage <- map["stage"]
         teacherId <- map["teacherId"]
         teacherName <- map["teacherName"]
+        
+        content <- map["content"]
+        
         topTime <- map["topTime"]
         updateTime <- map["updateTime"]
         userId <- map["userId"]
@@ -609,6 +616,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         needShowAllButton = aDecoder.decodeBool(forKey: "needShowAllButton")
         
         currentTime = aDecoder.decodeObject(forKey: "currentTime") as? String
+        
+        periodicalListModel = aDecoder.decodeObject(forKey: "periodicalListModel") as? YXSPeriodicalListModel
     }
     
     /**
@@ -728,6 +737,10 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         
         if currentTime != nil{
             aCoder.encode(currentTime, forKey: "currentTime")
+        }
+        
+        if periodicalListModel != nil{
+            aCoder.encode(periodicalListModel, forKey: "periodicalListModel")
         }
     }
 }

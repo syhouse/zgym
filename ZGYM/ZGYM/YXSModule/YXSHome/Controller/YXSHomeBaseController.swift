@@ -279,8 +279,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         case .friendCicle:
             yxs_showComment(indexPath)
         case .periodical:
-            SLLog("dealSelectRow")
-            //        yxs_pushPeriodicalHtml(id: model.id ?? 0)
+            yxs_pushPeriodicalHtml(id: model.periodicalListModel?.articles?.first?.id ?? 0)
         default:
             break
         }
