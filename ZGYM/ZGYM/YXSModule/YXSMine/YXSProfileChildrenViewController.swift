@@ -164,17 +164,10 @@ class YXSProfileChildrenViewController: YXSProfileViewController {
                 return
             }
             
-//            MBProgressHUD.yxs_showLoading()
-//            YXSEducationGradeUpdateRequest(dic: ["gradeId":weakSelf.gradeId ?? 0, "subject": model.paramsKey]).request({ (json) in
-//                MBProgressHUD.yxs_hideHUD()
-//                MBProgressHUD.yxs_showMessage(message: "修改成功")
-//                weakSelf.model?.subject = model.paramsKey
-//                weakSelf.tableView.reloadData()
-//
-//            }) { (msg, code) in
-//                MBProgressHUD.yxs_hideHUD()
-//                MBProgressHUD.yxs_showMessage(message: msg)
-//            }
+            weakSelf.requestsEditProfile(parameter: ["relationship": model.paramsKey, "gradeId": "\(weakSelf.model?.grade?.id ?? 0)"]) {
+                weakSelf.model?.grade?.relationship = model.paramsKey
+                weakSelf.tableView.reloadData()
+            }
         }
     }
     

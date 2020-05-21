@@ -8,7 +8,7 @@
 import UIKit
 import NightNight
 
-public let maxHomePeriodicalLine = 3
+private let maxHomePeriodicalLine = 6
 private let kLineCellOrginTag = 33301
 
 class YXSHomePeriodicalCell: YXSHomeBaseCell {
@@ -29,10 +29,26 @@ class YXSHomePeriodicalCell: YXSHomeBaseCell {
     public var headerBlock: ((FriendsCircleHeaderBlockType) -> ())?
     override func yxs_setCellModel(_ model: YXSHomeListModel) {
         self.model = model
-        
-        titleLabel.text = "在家陪娃学汉字，在疫情期间一在家陪娃学汉字，在疫情期间一在家"
-        UIUtil.yxs_setLabelAttributed(periodicalNumbleLabel, text: [" | ", "23期"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#B6C9FD"), night: UIColor.yxs_hexToAdecimalColor(hex: "#B6C9FD")), MixedColor(normal: kBlueColor, night: kBlueColor)])
-        nameTimeLabel.text = "03.12 18:30"
+        if let periodicalListModel = model.periodicalListModel{
+            titleLabel.text = periodicalListModel.articles?.first?.title
+            UIUtil.yxs_setLabelAttributed(periodicalNumbleLabel, text: [" | ", "\(periodicalListModel.numPeriods ?? 0)期"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#B6C9FD"), night: UIColor.yxs_hexToAdecimalColor(hex: "#B6C9FD")), MixedColor(normal: kBlueColor, night: kBlueColor)])
+            nameTimeLabel.text = periodicalListModel.articles?.first?.uploadTime?.yxs_Time()
+            rightImageView.sd_setImage(with: URL.init(string: periodicalListModel.articles?.first?.cover?.yxs_getImageThumbnail() ?? ""), placeholderImage: kImageDefualtImage)
+            for index in 0..<maxHomePeriodicalLine{
+                let lineCell = bgContainView.viewWithTag(index + kLineCellOrginTag)
+                lineCell?.isHidden = true
+            }
+            if let articles = periodicalListModel.articles{
+                for (index, article) in articles.enumerated(){
+                    if index == 0{
+                        continue
+                    }
+                    let lineCell = bgContainView.viewWithTag(index - 1 + kLineCellOrginTag) as? LineCell
+                    lineCell?.titleLabel.text = article.title
+                    lineCell?.isHidden = false
+                }
+            }
+        }
     }
     
     private func initUI(){
@@ -43,9 +59,6 @@ class YXSHomePeriodicalCell: YXSHomeBaseCell {
         bgContainView.addSubview(periodicalNumbleLabel)
         bgContainView.addSubview(lookLastControl)
         bgContainView.addSubview(rightImageView)
-        
-        
-        
         
         for index in 0..<maxHomePeriodicalLine{
             let lineCell = LineCell()
@@ -93,8 +106,8 @@ class YXSHomePeriodicalCell: YXSHomeBaseCell {
         }
         var last: UIView?
         for index in 0..<maxHomePeriodicalLine{
-            let lineCell = bgContainView.viewWithTag(index + kLineCellOrginTag)!
-            lineCell.snp.makeConstraints { (make) in
+            let lineCell = bgContainView.viewWithTag(index + kLineCellOrginTag)
+            lineCell?.snp.makeConstraints { (make) in
                 make.left.right.equalTo(0)
                 make.height.equalTo(43)
                 if let last = last{
@@ -109,8 +122,9 @@ class YXSHomePeriodicalCell: YXSHomeBaseCell {
     
     @objc func controlClick(control: UIControl){
         let index: Int = control.tag - kLineCellOrginTag
-        SLLog("controlClick")
-//        yxs_pushPeriodicalHtml(id: model.id ?? 0)
+        if let articles = model.periodicalListModel?.articles{
+            UIUtil.TopViewController().yxs_pushPeriodicalHtml(id: articles[index + 1].id ?? 0)
+        }
     }
     @objc func pushPeriodicalListVc(){
         let vc = YXSPeriodicalListController()
@@ -164,7 +178,7 @@ class LineCell: UIControl{
         titleLabel.snp.makeConstraints { (make) in
             make.left.equalTo(15)
             make.right.equalTo(-35)
-            make.centerY.equalTo(0)
+            make.centerY.equalTo(self)
         }
         rightImageView.snp.makeConstraints { (make) in
             make.right.equalTo(-13)
