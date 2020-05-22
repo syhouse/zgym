@@ -781,6 +781,10 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     
     
     func setHomeworkGoodEvent(_ section: Int,isGood: Int){
+        //越界临时处理
+        if section >= dataSource.count{
+            return
+        }
         let model = dataSource[section]
         YXSEducationHomeworkInTeacherChangeGoodRequest.init(childrenId: model.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, homeworkId: self.homeModel.serviceId ?? 0, isGood: isGood).request({ (result) in
             
