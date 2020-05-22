@@ -567,7 +567,7 @@ extension UIUtil{
         }else if type == .notice{
             request = YXSEducationNoticeUpdateTopRequest.init(noticeId: id, noticeCreateTime: createTime, isTop: isTop)
         }else if type == .punchCard{
-            request = YXSEducationClockInUpdateTopRequest.init(clockInId: id)
+            request = YXSEducationClockInUpdateTopRequest.init(clockInId: id, isTop: isTop)
         }else if type == .solitaire{
             request = YXSEducationCensusUpdateTopRequest.init(censusId: id,isTop: isTop)
         }
