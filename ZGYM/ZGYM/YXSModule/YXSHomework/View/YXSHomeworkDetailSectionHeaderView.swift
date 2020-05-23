@@ -427,9 +427,24 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         if self.hmModel?.isExpired ?? false {
             MBProgressHUD.yxs_showMessage(message: "当前作业已过期")
         } else {
-            goodControl.isSelected = !goodControl.isSelected
-            goodClick?(self.model!)
-            finishView.isHidden = !goodControl.isSelected
+            if goodControl.isSelected {
+                let alertVC = UIAlertController.init(title: "是否确定取消该作业的优秀", message: "", preferredStyle: .alert)
+                alertVC.addAction(UIAlertAction.init(title: "取消", style: .default, handler: { (action) in
+                    
+                }))
+                alertVC.addAction(UIAlertAction.init(title: "确定", style: .default, handler: { (action) in
+                    /// 取消优秀
+                    self.goodControl.isSelected = !self.goodControl.isSelected
+                    self.goodClick?(self.model!)
+                    self.finishView.isHidden = !self.goodControl.isSelected
+                }))
+                UIUtil.currentNav().present(alertVC, animated: true, completion: nil)
+            } else {
+                goodControl.isSelected = !goodControl.isSelected
+                goodClick?(self.model!)
+                finishView.isHidden = !goodControl.isSelected
+            }
+            
         }
         
     }
