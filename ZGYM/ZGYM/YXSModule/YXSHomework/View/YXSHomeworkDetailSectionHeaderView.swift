@@ -427,9 +427,24 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
         if self.hmModel?.isExpired ?? false {
             MBProgressHUD.yxs_showMessage(message: "当前作业已过期")
         } else {
-            goodControl.isSelected = !goodControl.isSelected
-            goodClick?(self.model!)
-            finishView.isHidden = !goodControl.isSelected
+            if goodControl.isSelected {
+                let alertVC = UIAlertController.init(title: "是否确定取消该作业的优秀", message: "", preferredStyle: .alert)
+                alertVC.addAction(UIAlertAction.init(title: "取消", style: .default, handler: { (action) in
+                    
+                }))
+                alertVC.addAction(UIAlertAction.init(title: "确定", style: .default, handler: { (action) in
+                    /// 取消优秀
+                    self.goodControl.isSelected = !self.goodControl.isSelected
+                    self.goodClick?(self.model!)
+                    self.finishView.isHidden = !self.goodControl.isSelected
+                }))
+                UIUtil.currentNav().present(alertVC, animated: true, completion: nil)
+            } else {
+                goodControl.isSelected = !goodControl.isSelected
+                goodClick?(self.model!)
+                finishView.isHidden = !goodControl.isSelected
+            }
+            
         }
         
     }
@@ -466,12 +481,19 @@ class YXSHomeworkDetailSectionHeaderView: UITableViewHeaderFooterView {
     @objc func lookClassStartDetial(){
         cellBlock?(.lookLastWeakClassStart,self.model!)
     }
+    
+    /// 头像点击
+    @objc func tapClick(){
+        let vc = YXSFriendsCircleInfoController.init(userId: model?.custodianId ?? 0, childId: model?.childrenId ?? 0, type: PersonRole.PARENT.rawValue)
+        UIUtil.currentNav().pushViewController(vc)
+    }
 
     // MARK: - LazyLoad
     lazy var imgAvatar: UIImageView = {
         let img = UIImageView()
         img.backgroundColor = UIColor.lightGray
         img.cornerRadius = 21
+        img.addTaget(target: self, selctor: #selector(tapClick))
         img.image = UIImage(named: "normal")
         img.contentMode = .scaleAspectFill
         return img

@@ -116,12 +116,13 @@ class YXSEducationClockInTeacherUndoRequest: YXSBaseRequset {
 // MARK: -置顶 (老师)
 let clockInUpdateTop = "/clockIn/updateTop"
 class YXSEducationClockInUpdateTopRequest: YXSBaseRequset {
-    init(clockInId: Int) {
+    init(clockInId: Int, isTop: Int) {
         super.init()
         method = .post
         host = homeHost
         path = clockInUpdateTop
-        param = ["clockInId": clockInId]
+        param = ["clockInId": clockInId,
+                 "isTop": isTop]
     }
 }
 

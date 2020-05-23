@@ -33,7 +33,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     let group = DispatchGroup()
     
     let queue = DispatchQueue.global()
-
+    
     // MARK: - leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -211,19 +211,20 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     ///   - isScroll: 是否滚动到当前indexPath
     public func yxs_reloadTableView(_ indexPath: IndexPath, isScroll: Bool = false){
         if !isSingleHome{
-//            YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource)
+            //            YXSCacheHelper.yxs_cacheHomeList(dataSource: self.yxs_dataSource)
         }
         UIView.performWithoutAnimation {
-            let cell = tableView.cellForRow(at: indexPath)
-            tableView.reloadRows(at: [indexPath], with: .none)
-            if isScroll{
-                if let cell = cell, isScroll{
+            ///存在当前indexPath
+            if let cell = tableView.cellForRow(at: indexPath){
+                tableView.reloadRows(at: [indexPath], with: .none)
+                if isScroll{
                     let rc = tableView.convert(cell.frame, to: self.view)
                     SLLog(rc)
                     //首页 底部高度  滚动有问题
                     let top:CGFloat = isSingleHome ? 0.0 : 64.0 + 49.0
                     if rc.minY < top{
                         //展开全文滚动滚回来
+                        
                         self.tableView.selectRow(at: indexPath, animated: false, scrollPosition:.top)
                         var offset = self.tableView.contentOffset
                         offset.y -= top
@@ -236,6 +237,9 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                         
                     }
                 }
+                
+            }else{
+                tableView.reloadData()
             }
         }
         
@@ -356,30 +360,30 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         return 0
     }
     
-//    ///处理预加载数据
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if loadMore{
-//            var totalCount = 0
-//            for items in self.yxs_dataSource{
-//                totalCount += items.items.count
-//            }
-//            var currentCounts = 0
-//            for index in 0...indexPath.section{
-//                if index < indexPath.section{
-//                    currentCounts += yxs_dataSource[index].items.count
-//                }else{
-//                    currentCounts += indexPath.row + 1
-//                }
-//
-//            }
-//
-//            if currentCounts >= totalCount - kPreloadSize{
-//                if !isSingleHome{///单个详情页 tableview 会滑动跳到底部
-////                    tableView.mj_footer?.beginRefreshing()
-//                }
-//            }
-//        }
-//    }
+    //    ///处理预加载数据
+    //    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    //        if loadMore{
+    //            var totalCount = 0
+    //            for items in self.yxs_dataSource{
+    //                totalCount += items.items.count
+    //            }
+    //            var currentCounts = 0
+    //            for index in 0...indexPath.section{
+    //                if index < indexPath.section{
+    //                    currentCounts += yxs_dataSource[index].items.count
+    //                }else{
+    //                    currentCounts += indexPath.row + 1
+    //                }
+    //
+    //            }
+    //
+    //            if currentCounts >= totalCount - kPreloadSize{
+    //                if !isSingleHome{///单个详情页 tableview 会滑动跳到底部
+    ////                    tableView.mj_footer?.beginRefreshing()
+    //                }
+    //            }
+    //        }
+    //    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if yxs_dataSource.count > indexPath.section {

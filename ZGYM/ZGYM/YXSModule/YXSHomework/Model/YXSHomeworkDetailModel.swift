@@ -141,6 +141,8 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
     var childrenName : String?
     var optionList : [String]?
     var teacherImId : String?
+    /// 作业提交者家长id
+    var custodianId: Int?
     
     var remark : String? {
         didSet{
@@ -577,6 +579,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         homeworkId <- map["homeworkId"]
         homeworkCreateTime <- map["homeworkCreateTime"]
         homeworkEndTime <- map["homeworkEndTime"]
+        custodianId <- map["custodianId"]
     }
 
     /**
@@ -637,6 +640,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         homeworkCreateTime = aDecoder.decodeObject(forKey: "homeworkCreateTime") as? String
         homeworkEndTime = aDecoder.decodeObject(forKey: "homeworkEndTime") as? String
         selectChildrenId = aDecoder.decodeObject(forKey: "selectChildrenId") as? Int
+        custodianId = aDecoder.decodeObject(forKey: "custodianId") as? Int
     }
 
     /**
@@ -800,6 +804,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         if selectChildrenId != nil {
             aCoder.encode(selectChildrenId, forKey: "selectChildrenId")
+        }
+        if custodianId != nil {
+            aCoder.encode(custodianId, forKey: "custodianId")
         }
     }
 }

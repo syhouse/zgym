@@ -142,6 +142,7 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
             let url = URL.init(string: model.resourceUrl ?? "")
             let avPlayer = AVPlayer.init(url: url!)
             let vc = YXSPlayerVC.init(player: avPlayer)
+            avPlayer.play()
             vc.modalPresentationStyle = .fullScreen
             self.present(vc, animated: true, completion: nil)
         }

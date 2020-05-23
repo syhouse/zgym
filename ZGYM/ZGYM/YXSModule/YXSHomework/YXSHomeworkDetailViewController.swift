@@ -781,37 +781,34 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     
     
     func setHomeworkGoodEvent(_ section: Int,isGood: Int){
+        //越界临时处理
+        if section >= dataSource.count{
+            return
+        }
         let model = dataSource[section]
         YXSEducationHomeworkInTeacherChangeGoodRequest.init(childrenId: model.childrenId ?? 0, homeworkCreateTime: self.homeModel.createTime!, homeworkId: self.homeModel.serviceId ?? 0, isGood: isGood).request({ (result) in
-            
-            if isGood == 1{
+            if isGood == 1 {
                 //设置优秀作业不刷新页面
                 model.isGood = 1
                 self.refreshData(isRefreshList: false)
-                
             } else {
+                model.isGood = 0
                 if self.isGood != -1 {
+                    //不是在全部作业操作，刷新页面
                     self.dataSource.remove(at: section)
                     if self.dataSource.count == 0 {
                         self.tableView.tableFooterView = self.tableFooterView
                     } else {
                         self.tableView.tableFooterView = nil
                     }
+                    self.refreshData()
+                } else {
+                    self.refreshData(isRefreshList: false)
                 }
-                self.refreshData()
-//                self.refreshHomeworkData(index: self.isGood)
             }
-            
-            
-            
-//            self.reloadTableView()
             
         }) { (msg, code) in
-            if isGood == 1{
-                model.isGood = 0
-            } else {
-                model.isGood = 1
-            }
+            model.isGood = isGood == 1 ? 0 : 1
             self.tableView.reloadData()
             MBProgressHUD.yxs_showMessage(message: msg)
         }

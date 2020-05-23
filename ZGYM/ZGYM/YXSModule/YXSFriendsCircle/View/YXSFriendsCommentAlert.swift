@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import IQKeyboardManager
 
 class YXSFriendsCommentAlert: UIView {
     @discardableResult static func showAlert(_ tips: String? = nil, maxCount: Int = Int.max,compelect:((_ content: String?) ->())? = nil) -> YXSFriendsCommentAlert{
@@ -53,10 +54,21 @@ class YXSFriendsCommentAlert: UIView {
             make.right.equalTo(-10)
             make.centerY.equalTo(self)
         }
+        IQKeyboardManager.shared().isEnableAutoToolbar = false
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+        if newWindow == nil {
+            //移除
+            IQKeyboardManager.shared().isEnableAutoToolbar = true
+        }
     }
     
     func beginAnimation() {
@@ -95,6 +107,7 @@ class YXSFriendsCommentAlert: UIView {
             make.left.right.bottom.equalTo(0)
             make.height.equalTo(60.5)
         }
+//        IQKeyboardManager.shared().isEnableAutoToolbar = true
     }
     
     // MARK: -event
@@ -164,6 +177,7 @@ class YXSFriendsCommentAlert: UIView {
             guard let strongSelf = self else { return }
             strongSelf.changeTextField()
         }
+        textView.inputAccessoryView = nil
 //        textView.addTarget(self, action: #selector(changeTextField), for: .editingChanged)
         return textView
     }()
