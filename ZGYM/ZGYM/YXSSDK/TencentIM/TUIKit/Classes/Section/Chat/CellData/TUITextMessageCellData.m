@@ -121,7 +121,8 @@
                 //给附件添加图片
                 textAttachment.image = [[TUIImageCache sharedInstance] getFaceFromCache:face.path];
                 //调整一下图片的位置,如果你的图片偏上或者偏下，调整一下bounds的y值即可
-                textAttachment.bounds = CGRectMake(0, -(self.textFont.lineHeight-self.textFont.pointSize)/2, self.textFont.pointSize, self.textFont.pointSize);
+                CGFloat emoji_WH = 25; //self.textFont.pointSize
+                textAttachment.bounds = CGRectMake(0, -(self.textFont.lineHeight-self.textFont.pointSize)/2, emoji_WH, emoji_WH);
                 //把附件转换成可变字符串，用于替换掉源字符串中的表情文字
                 NSAttributedString *imageStr = [NSAttributedString attributedStringWithAttachment:textAttachment];
                 //把图片和图片对应的位置存入字典中

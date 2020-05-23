@@ -19,7 +19,6 @@
 		560B20CE24518C41003D8A19 /* YXSCustomShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20CA24518C40003D8A19 /* YXSCustomShareViewController.swift */; };
 		560B20CF24518C41003D8A19 /* right_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 560B20CB24518C40003D8A19 /* right_arrow.png */; };
 		560B20D024518C41003D8A19 /* ShareTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20CC24518C40003D8A19 /* ShareTableViewCell.swift */; };
-		560B20D3245193D9003D8A19 /* YXSFileItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07006B2445D7FE0090975B /* YXSFileItemModel.swift */; };
 		560B20D72456803E003D8A19 /* YXSShareExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20D62456803E003D8A19 /* YXSShareExtensionHelper.swift */; };
 		561011702457CAFD007EF91D /* UIColor+YXSHexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE202445D7F20090975B /* UIColor+YXSHexColor.swift */; };
 		561011732457D862007EF91D /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
@@ -282,7 +281,6 @@
 		6F0704562445D8040090975B /* YXSFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700682445D7FE0090975B /* YXSFileModel.swift */; };
 		6F0704572445D8040090975B /* YXSBaseFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700692445D7FE0090975B /* YXSBaseFileModel.swift */; };
 		6F0704582445D8040090975B /* YXSFolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07006A2445D7FE0090975B /* YXSFolderModel.swift */; };
-		6F0704592445D8040090975B /* YXSFileItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07006B2445D7FE0090975B /* YXSFileItemModel.swift */; };
 		6F07045A2445D8040090975B /* YXSFileGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07006D2445D7FE0090975B /* YXSFileGroupCell.swift */; };
 		6F07045B2445D8040090975B /* YXSFileAbleSlectedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07006E2445D7FE0090975B /* YXSFileAbleSlectedCell.swift */; };
 		6F07045C2445D8040090975B /* YXSFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07006F2445D7FE0090975B /* YXSFileCell.swift */; };
@@ -950,7 +948,6 @@
 		6F0700682445D7FE0090975B /* YXSFileModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSFileModel.swift; sourceTree = "<group>"; };
 		6F0700692445D7FE0090975B /* YXSBaseFileModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSBaseFileModel.swift; sourceTree = "<group>"; };
 		6F07006A2445D7FE0090975B /* YXSFolderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSFolderModel.swift; sourceTree = "<group>"; };
-		6F07006B2445D7FE0090975B /* YXSFileItemModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSFileItemModel.swift; sourceTree = "<group>"; };
 		6F07006D2445D7FE0090975B /* YXSFileGroupCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSFileGroupCell.swift; sourceTree = "<group>"; };
 		6F07006E2445D7FE0090975B /* YXSFileAbleSlectedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSFileAbleSlectedCell.swift; sourceTree = "<group>"; };
 		6F07006F2445D7FE0090975B /* YXSFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSFileCell.swift; sourceTree = "<group>"; };
@@ -2360,7 +2357,6 @@
 				6F0700682445D7FE0090975B /* YXSFileModel.swift */,
 				6F0700692445D7FE0090975B /* YXSBaseFileModel.swift */,
 				6F07006A2445D7FE0090975B /* YXSFolderModel.swift */,
-				6F07006B2445D7FE0090975B /* YXSFileItemModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -5696,7 +5692,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				561011702457CAFD007EF91D /* UIColor+YXSHexColor.swift in Sources */,
-				560B20D3245193D9003D8A19 /* YXSFileItemModel.swift in Sources */,
 				560B20CE24518C41003D8A19 /* YXSCustomShareViewController.swift in Sources */,
 				560B20D024518C41003D8A19 /* ShareTableViewCell.swift in Sources */,
 				561011732457D862007EF91D /* YXSFileManagerHelper.swift in Sources */,
@@ -6064,7 +6059,6 @@
 				E58F1703245149D500A6AC18 /* YXSCountDownTool.swift in Sources */,
 				6F0704642445D8040090975B /* YXSRegistViewController.swift in Sources */,
 				6F0704C52445D8040090975B /* YXSPunchCardCommintListModel.swift in Sources */,
-				6F0704592445D8040090975B /* YXSFileItemModel.swift in Sources */,
 				E53D8B02244E8BA600590B5A /* YXSSynClassModel.swift in Sources */,
 				6F0704D12445D8050090975B /* YXSSolitairePublishController.swift in Sources */,
 				6F0704822445D8040090975B /* YXSClassScheduleCardListController.swift in Sources */,

@@ -181,7 +181,6 @@ class YXSFileUploadHelper: NSObject {
                 }
                 
             } else if extName == "jpg" || extName == "png" || extName == "gif"{
-                
                 /// 拼接路径
                 switch storageType {
                 case .temporary:
@@ -245,6 +244,7 @@ class YXSFileUploadHelper: NSObject {
                         
                     }, failureHandler: failureHandler)
                 }
+                
             } else if extName == "m4a" || extName == "mp3" || extName == "wav" || extName == "ogg" || extName == "m4r" || extName == "acc" {
                 /// 拼接路径
                 switch storageType {
@@ -397,11 +397,12 @@ class YXSFileUploadHelper: NSObject {
         let group = DispatchGroup()
         
         for asset in mediaAssets {
+            
             let model = YXSUploadDataResourceModel()
             if asset.mediaType == .image {
                 let tmpName = (asset.value(forKey: "filename") as? String ?? "")
                 let fileName = tmpName.deletingPathExtension
-                let extName = "jpg"//tmpName.pathExtension.lowercased()
+                let extName = "jpg"
                 let fullName = "\(fileName).\(extName)"
                 
                 group.enter()
@@ -413,7 +414,6 @@ class YXSFileUploadHelper: NSObject {
                         group.leave()
                     }
                 }
-
                 
             } else if asset.mediaType == .video {
                 group.enter()
@@ -439,6 +439,7 @@ class YXSFileUploadHelper: NSObject {
                         }
                     }
                 }
+                
             } else if asset.mediaType == .audio {
                 
             }
@@ -724,68 +725,6 @@ class YXSFileUploadHelper: NSObject {
         return "product-env/curriculum/ios/\(classId)/\(name).\(extName)"
         #endif
     }
-    
-//
-//    /// 临时声音
-//    @objc func getVoiceUrl(fullName: String)-> String {
-//        let arr = name.components(separatedBy: ".")
-//        if arr.count > 1 {
-//            let strUrl = "voice/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name)"
-//            return strUrl
-//
-//        } else {
-//            let strUrl = "voice/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).mp3"
-//            return strUrl
-//        }
-//    }
-//
-//    /// 临时视频
-//    @objc func getVideoUrl(name: String)-> String {
-//        let arr = name.components(separatedBy: ".")
-//        if arr.count > 1 {
-//
-//            let strUrl = "video/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name)"
-//            return strUrl
-//
-//        } else {
-//            let strUrl = "video/ios/\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)/\(name).mp4"
-//            return strUrl
-//        }
-//    }
-    
-//    @objc func getAlbumImageUrl(name: String, classId: Int, albumId: Int)-> String{
-//        let arr = name.components(separatedBy: ".")
-//        if arr.count > 1 {
-//
-//            let strUrl = "album/ios/\(classId)/\(albumId)/\(name)"
-//            return strUrl
-//
-//        } else {
-//            let strUrl = "album/ios/\(classId)/\(albumId)/\(name).jpg"
-//            return strUrl
-//        }
-//
-//    }
-//
-//    /// 相册视频
-//    @objc func getAlbumVideoUrl(name: String, classId: Int, albumId: Int)-> String {
-//        let arr = name.components(separatedBy: ".")
-//        if arr.count > 1 {
-//            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5())"
-//            return strUrl
-//
-//        } else {
-//            let strUrl = "album/\(classId)/\(albumId)/\(name.MD5()).mp4"
-//            return strUrl
-//        }
-//
-//    }
-//
-//    /// 文件
-//    @objc func getFileUrl(name: String)-> String {
-//        let strUrl = "iOS/files/\(name)"
-//        return strUrl
-//    }
 }
 
 class YXSUploadDataResourceModel: NSObject {

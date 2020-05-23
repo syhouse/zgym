@@ -25,16 +25,6 @@ class YXSFileManagerHelper: NSObject {
     
     
     // MARK: - Tool
-    /// 根据文件路径返回文件对象
-    @objc func getFileItem(fileUrl: URL) -> YXSFileItemModel {
-        let model = YXSFileItemModel()
-        model.fileName = fileUrl.lastPathComponent
-        model.data = fileUrl2Data(fileUrl: fileUrl)
-        model.exteonsion = YXSFileExtension(rawValue: fileUrl.pathExtension)
-        model.fileSize = sizeMbOfFilePath(filePath: fileUrl)
-        return model
-    }
-    
     /**
      * 获得Documents路径
      * NSSearchPathDirectory.DocumentDirectory 查找Documents文件夹
@@ -143,58 +133,33 @@ class YXSFileManagerHelper: NSObject {
     
     /// 根据文件本地路径返回相对应的图标 注意:返回空的处理
     @objc func getIconWithFileUrl(_ fileUrl: URL) -> UIImage? {
-        let img = UIImage(named: "defultImage")//UIImage()
+        let img = UIImage(named: "defultImage")
         
         let fileEx = fileUrl.pathExtension.lowercased()
         switch fileEx {
             /// 办公
             case "pptx":
-                return UIImage(named: "yxs_file_ppt") ?? UIImage(named: "defultImage")
+                return UIImage(named: "yxs_file_ppt") ?? img
             case "docx","doc":
-                return UIImage(named: "yxs_file_word") ?? UIImage(named: "defultImage")
+                return UIImage(named: "yxs_file_word") ?? img
             case "xlsx", "xls":
-                return UIImage(named: "yxs_file_excel") ?? UIImage(named: "defultImage")
+                return UIImage(named: "yxs_file_excel") ?? img
             case "pdf":
-                return UIImage(named: "yxs_file_pdf") ?? UIImage(named: "defultImage")
+                return UIImage(named: "yxs_file_pdf") ?? img
             case "txt":
-                return UIImage(named: "yxs_file_txt") ?? UIImage(named: "defultImage")
+                return UIImage(named: "yxs_file_txt") ?? img
             /// 图片
             case "jpg","png":
             return nil
             /// 音频
             case "m4a","mp3","wav","ogg","m4r","acc":
-            return UIImage(named: "yxs_file_mp3") ?? UIImage(named: "defultImage")
+            return UIImage(named: "yxs_file_mp3") ?? img
             /// 视频
             case "mp4","MP4","mov":
-                return getVideoFirstPicture(url: fileUrl)//getIconWithFileUrl(fileUrl)
+                return getVideoFirstPicture(url: fileUrl)
         default:
             return img
         }
-    }
-    
-    ///
-    @objc func getFileIcon(itemProvider: NSItemProvider) -> UIImage {
-        let img = UIImage()
-        if itemProvider.hasItemConformingToTypeIdentifier(kUTTypePDF as String) {
-            /// PDF
-            
-        } else if itemProvider.hasItemConformingToTypeIdentifier("org.openxmlformats.wordprocessingml.document") {
-            /// Word
-            
-        } else if itemProvider.hasItemConformingToTypeIdentifier("org.openxmlformats.spreadsheetml.sheet") {
-            /// Excel
-            
-        } else if itemProvider.hasItemConformingToTypeIdentifier("org.openxmlformats.presentationml.presentation") {
-            /// PPT
-            
-        } else if itemProvider.hasItemConformingToTypeIdentifier("com.apple.m4a-audio") {
-            /// 苹果系统录音
-            
-        } else if itemProvider.hasItemConformingToTypeIdentifier(kUTTypeMP3 as String) {
-            /// mp3
-        }
-        
-        return img
     }
     
     // MARK: - 获取视频第一帧
@@ -216,23 +181,4 @@ class YXSFileManagerHelper: NSObject {
     }
     
     // MARK: - Converter
-    /// URL2Data
-    @objc func fileUrl2Data(fileUrl: URL) -> Data?{
-        do {
-            let data = try Data(contentsOf: fileUrl)
-            return data
-            
-        } catch {
-            
-        }
-        return nil
-    }
-    
-    /// 根据文件路径返回图片
-    @objc func fileUrl2Image(fileUrl: URL) -> UIImage? {
-        if let data = fileUrl2Data(fileUrl: fileUrl) {
-            return UIImage(data: data)
-        }
-        return nil
-    }
 }
