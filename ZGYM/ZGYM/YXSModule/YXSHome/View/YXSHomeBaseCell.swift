@@ -64,14 +64,14 @@ class YXSHomeBaseCell: UITableViewCell {
         }
     }
     
-    /// 是否展示标签
-    public var isShowTag: Bool = false
+    /// 是否首页瀑布流  展示标签  可以操作置顶
+    public var isWaterfallCell: Bool = false
     
     /// 是否置顶
     public var isTop: Bool = false{
         didSet{
             stickView.isHidden = isTop ? false : true
-            if isShowTag{
+            if isWaterfallCell{
                 topTimeLabel.snp.remakeConstraints { (make) in
                     make.left.equalTo(69)
                     make.centerY.equalTo(tagLabel)
@@ -99,7 +99,7 @@ class YXSHomeBaseCell: UITableViewCell {
     
     /// 初始化子类通用的约束
     public func initCommonUI(){
-        if isShowTag{
+        if isWaterfallCell{
             bgContainView.addSubview(tagLabel)
             tagLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
@@ -137,7 +137,7 @@ class YXSHomeBaseCell: UITableViewCell {
     
     @objc public func longTap(_ longTap: UILongPressGestureRecognizer){
         if longTap.state == UIGestureRecognizer.State.began{
-            if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER && isWaterfallCell{
                 cellLongTapEvent?()
             }
         }

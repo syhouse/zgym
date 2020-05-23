@@ -27,7 +27,7 @@ class YXSSolitaireListCell: YXSHomeBaseCell {
     
     init(style: UITableViewCell.CellStyle, reuseIdentifier: String?, isShowTag: Bool) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.isShowTag = isShowTag
+        self.isWaterfallCell = isShowTag
         
         initUI()
         layout()
@@ -140,7 +140,7 @@ class YXSSolitaireListCell: YXSHomeBaseCell {
     }()
     
     lazy var solitaireView: YXSHomeSolitaireBottom = {
-        let solitaireView = YXSHomeSolitaireBottom(self.isShowTag ? true : false)
+        let solitaireView = YXSHomeSolitaireBottom(self.isWaterfallCell ? true : false)
         return solitaireView
     }()
 }
@@ -151,7 +151,7 @@ extension YXSSolitaireListCell{
         recallView.isHidden = true
         redView.isHidden = true
         stickView.isHidden = true
-        if isShowTag{
+        if isWaterfallCell{
             setTagUI("接龙", backgroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#DFF3EC"), textColor: UIColor.yxs_hexToAdecimalColor(hex: "#38B16B"))
         }
         

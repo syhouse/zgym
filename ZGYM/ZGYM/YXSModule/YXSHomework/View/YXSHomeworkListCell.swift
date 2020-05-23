@@ -29,7 +29,7 @@ class YXSHomeworkListCell: YXSHomeBaseCell {
     }
     init(style: UITableViewCell.CellStyle, reuseIdentifier: String?, isShowTag: Bool) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.isShowTag = isShowTag
+        self.isWaterfallCell = isShowTag
         
         initUI()
         layout()
@@ -211,7 +211,7 @@ extension YXSHomeworkListCell{
         
         self.isTop = model.isTop == 1
         
-        if isShowTag{
+        if isWaterfallCell{
             setTagUI("作业", backgroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#DFF3EC"), textColor: UIColor.yxs_hexToAdecimalColor(hex: "#38B16B"))
         }
         
