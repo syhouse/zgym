@@ -41,6 +41,9 @@ class YXSPhotoCollectionView: UIView {
     
     fileprivate var vedioUrl: URL!
     
+    ///当前正在导出视频
+    fileprivate var isVedioExport: Bool = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.initCapture()
@@ -213,15 +216,20 @@ class YXSPhotoCollectionView: UIView {
     }
     
     @objc fileprivate func choseClick(){
+        if isVedioExport{
+            return
+        }
         if let fileUrl = vedioUrl{
             //保存至相册
             var localIdentifier:String!
+            isVedioExport = true
             PHPhotoLibrary.shared().performChanges({
                 let request = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileUrl)
                 localIdentifier = request?.placeholderForCreatedAsset?.localIdentifier
                 request?.creationDate = Date()
             }, completionHandler: { success, error in
                 DispatchQueue.main.async(execute: {
+                    self.isVedioExport = false
                     if success {
                         let asset = PHAsset.fetchAssets(withLocalIdentifiers: [localIdentifier], options: nil).firstObject
                         if let asset = asset{
@@ -418,7 +426,7 @@ class YXSPhotoCollectionView: UIView {
         return nil
     }
     
-    // MARK: -getter&setter
+    // MARK: - getter&setter
     lazy var captureButton: CaptureControl = {
         let button = CaptureControl()
         button.addTarget(self, action: #selector(captureChangeStates), for: .touchUpInside)
