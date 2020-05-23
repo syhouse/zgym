@@ -31,6 +31,7 @@ class YXSChatViewController: TUIChatController,TUIChatControllerDelegate {
 //            NNForegroundColorAttributeName: MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
 //        ]
         IQKeyboardManager.shared().isEnabled = true
+        IQKeyboardManager.shared().isEnableAutoToolbar = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -42,6 +43,7 @@ class YXSChatViewController: TUIChatController,TUIChatControllerDelegate {
 //        navigationController?.navigationBar.titleTextAttributes = nil
         
         IQKeyboardManager.shared().isEnabled = false
+        IQKeyboardManager.shared().isEnableAutoToolbar = true
     }
     
     override init!(conversation: TIMConversation!) {
