@@ -605,6 +605,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
         } else {
             let wk = YXSBaseWebViewController()
             wk.loadUrl = model.fileUrl
+            wk.title = model.fileName
             UIUtil.currentNav().pushViewController(wk)
         }
     }
