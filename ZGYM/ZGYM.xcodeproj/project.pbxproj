@@ -3934,8 +3934,8 @@
 		6F07FF552445D7FB0090975B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				6F07FF562445D7FB0090975B /* TUIKitResource.bundle */,
 				6F07FF572445D7FB0090975B /* TUIKitFace.bundle */,
+				6F07FF562445D7FB0090975B /* TUIKitResource.bundle */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
