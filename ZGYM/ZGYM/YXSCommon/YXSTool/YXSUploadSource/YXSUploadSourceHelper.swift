@@ -186,7 +186,7 @@ class YXSUploadSourceHelper: NSObject {
             }
             
             uploadModels.append(uploadModel)
-
+            
             
         }
         
@@ -200,41 +200,72 @@ class YXSUploadSourceHelper: NSObject {
             switch sourceType {
             case .image,.firstVideo:
                 if let model = (uploadModel.model as? YXSMediaModel){
-                    if model.showImg == nil{
-                        let semaphore = DispatchSemaphore(value: 0)
-                        UIUtil.PHAssetToImage(model.asset){
-                            (result) in
-                            model.showImg = result
-                            semaphore.signal()
+                    if let showImg = model.showImg {
+                        let data = showImg.yxs_compressImage(image: model.showImg!, maxLength: imageMax)
+                        newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
+                    }else{
+                        group.enter()
+                        queue.async{
+                            UIUtil.PHAssetToImage(model.asset){
+                                (result) in
+                                model.showImg = result
+                                let data = result.yxs_compressImage(image: model.showImg!, maxLength: imageMax)
+                                newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
+                                group.leave()
+                            }
                         }
-                        semaphore.wait()
                     }
-                    let data = model.showImg?.yxs_compressImage(image: model.showImg!, maxLength: imageMax)
-                    newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
+                    
                 }
                 
             case .video:
-                group.enter()
-                queue.async {
-                    if let model = (uploadModel.model as? YXSMediaModel){
-                        PHImageManager.default().requestExportSession(forVideo: model.asset, options: nil, exportPreset: AVAssetExportPresetMediumQuality) { (exportSession, info) in
+                //                if let model = (uploadModel.model as? YXSMediaModel){
+                //                    group.enter()
+                //                    queue.async {
+                //                        PHCachingImageManager.default().requestAVAsset(forVideo: model.asset, options: nil) { (asset, audioMix, info) in
+                //
+                //                            let asset = asset as? AVURLAsset
+                //
+                //                            if let url = asset?.url {
+                //                                newUploadModels.append(SLUploadDataSourceModel.init(data: try? Data.init(contentsOf: url), path: uploadModel.path, type: uploadModel.type))
+                //
+                //                            }else{
+                //                                failureHandlerMsg = "视频资源为空"
+                //                            }
+                //                            group.leave()
+                //                        }
+                //                    }
+//            }
+                
+                if let model = (uploadModel.model as? YXSMediaModel){
+                    group.enter()
+                    queue.async {
+                        //从iCloud云下载
+                        let options = PHVideoRequestOptions()
+                        options.isNetworkAccessAllowed = true
+                        options.version = .current
+                        options.deliveryMode = .automatic
+                        options.progressHandler = { (progress, error, point, obc)  in
+                            
+                        }
+                        
+                        PHImageManager.default().requestExportSession(forVideo: model.asset, options: options, exportPreset: AVAssetExportPresetMediumQuality) { (exportSession, info) in
                             //将asset转换为AVAssetExportSession对象,用AVAssetExportSession转化为Data
                             HMVideoCompression().compressVideo(exportSession) { (data) in
                                 if data.count > 0 {//做判断,判断是否转化成功
                                     //进行视频上传
                                     newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
                                 }else{
-                                    failureHandlerMsg = "视频资源请传mediaModel"
+                                    failureHandlerMsg = "视频资源错误"
                                     
                                 }
                                 group.leave()
+                                
+                                
                             }
                         }
-                        
                     }
-                    
                 }
-                
             case .voice:
                 if let audioModel = (uploadModel.model as? SLAudioModel){
                     let url = URL.init(fileURLWithPath: audioModel.path ?? "")
@@ -347,44 +378,48 @@ class HMVideoCompression: NSObject {
             let duration = CMTimeGetSeconds(assetTime)
             print("视频时长 \(duration)");
         }
-        
-        exportSession?.exportAsynchronously(completionHandler: {
-            
-            switch exportSession?.status{
+        if let exportSession = exportSession{
+            exportSession.exportAsynchronously(completionHandler: {
                 
-            case .failed?:
-                print("失败...\(String(describing: exportSession?.error?.localizedDescription))")
-                completion(Data())
-                break
-            case .cancelled?:
-                print("取消")
-                completion(Data())
-                break;
-            case .completed?:
-                print("转码成功")
-                do {
-                    let data = try Data.init(contentsOf: URL.init(fileURLWithPath: uuu), options: Data.ReadingOptions.init())
-                    let mp4Path = URL.init(fileURLWithPath: uuu)
-                    let size = self.fileSize(url: mp4Path)
-                    print("视频时长\(size)")
+                switch exportSession.status{
                     
-                    try? FileManager.default.removeItem(atPath: uuu)
-                    
-                    completion(data)
-                } catch let error {
-                    print("失败 \(error)")
-                    
-                    try? FileManager.default.removeItem(atPath: uuu)
+                case .failed:
+                    print("失败...\(String(describing: exportSession.error?.localizedDescription))")
                     completion(Data())
+                    break
+                case .cancelled:
+                    print("取消")
+                    completion(Data())
+                    break;
+                case .completed:
+                    print("转码成功")
+                    do {
+                        let data = try Data.init(contentsOf: URL.init(fileURLWithPath: uuu), options: Data.ReadingOptions.init())
+                        let mp4Path = URL.init(fileURLWithPath: uuu)
+                        let size = self.fileSize(url: mp4Path)
+                        print("视频大小\(size)")
+                        
+                        try? FileManager.default.removeItem(atPath: uuu)
+                        
+                        completion(data)
+                    } catch let error {
+                        print("失败 \(error)")
+                        
+                        try? FileManager.default.removeItem(atPath: uuu)
+                        completion(Data())
+                    }
+                    
+                    break;
+                default:
+                    print("..")
+                    completion(Data())
+                    break;
                 }
-                
-                break;
-            default:
-                print("..")
-                completion(Data())
-                break;
-            }
-        })
+            })
+        }else{
+            completion(Data())
+        }
+        
     }
     
     //保存压缩

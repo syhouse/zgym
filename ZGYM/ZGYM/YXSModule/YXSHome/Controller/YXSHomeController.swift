@@ -506,21 +506,6 @@ extension YXSHomeController{
         let model = notification.object as? IMCustomMessageModel
         if let model = model{
             
-            if model.msgType == 0{
-                YXSLocalMessageHelper.shareHelper.yxs_changeLocalMessageLists(list: [model])
-            }
-            
-            if model.msgType == 3{
-                UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.init(rawValue: model.serviceType ?? 0) ?? .homework])
-                if let children = self.yxs_user.children{
-                    for child in children{
-                        if child.grade?.id == model.classId{
-                            UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: child.id ?? 0)
-                        }
-                    }
-                }
-                
-            }
             
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
                 var currentModel: YXSHomeListModel?
@@ -538,6 +523,7 @@ extension YXSHomeController{
                 }
                 
                 if let currentModel = currentModel{
+                    //家长提交
                     if model.msgType == 0{
                         if !(currentModel.committedList?.contains(model.childrenId ?? 0) ?? false){
                             currentModel.committedList?.append(model.childrenId ?? 0)
@@ -546,19 +532,40 @@ extension YXSHomeController{
                         if !(currentModel.readList?.contains(model.childrenId ?? 0) ?? false){
                             currentModel.readList?.append(model.childrenId ?? 0)
                         }
+                        updateAgenda()
                     }
-                    
+                    //家长撤销
                     if model.msgType == 5{
                         if currentModel.commitCount > 0, (currentModel.committedList?.contains(model.childrenId ?? 0) ?? false){
                             let index = currentModel.committedList?.firstIndex(of: model.childrenId ?? 0) ?? 0
                             currentModel.committedList?.remove(at: index)
                         }
+                        
+                        updateAgenda()
                     }
                     yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))
                 }
                 
                 
             }else{
+
+                if model.msgType == 0{
+                    YXSLocalMessageHelper.shareHelper.yxs_changeLocalMessageLists(list: [model])
+                }
+                //老师撤销
+                if model.msgType == 3{
+                    UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.init(rawValue: model.serviceType ?? 0) ?? .homework])
+                    if let children = self.yxs_user.children{
+                        for child in children{
+                            if child.grade?.id == model.classId{
+                                UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: child.id ?? 0)
+                            }
+                        }
+                    }
+                    
+                }
+                
+                
                 if !isChateWaitRefreshData{
                     isChateWaitRefreshData = true
                     ///首次启动可能收到大量IM消息推送过来  接收几秒钟后统一刷新一次接口

@@ -19,6 +19,12 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
     var onBackBlock:(()->())?
     var isCache: Bool = false
     var scriptKey: String = ""
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.mixedBackgroundColor = MixedColor(normal: 0xffffff, night: 0x181A23)
