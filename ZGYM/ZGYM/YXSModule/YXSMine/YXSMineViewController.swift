@@ -307,16 +307,16 @@ class YXSMineViewController: YXSBaseTableViewController{
         let dic = sectionArr[indexPath.row] as! [String:String]
         
         var cell:YXSMineTableViewCell!
-        if indexPath.section == 0 {
-            cell = tableView.dequeueReusableCell(withIdentifier: "YXSMineTableViewCell") as? YXSMineTableViewCell
-            cell.bgView.cornerRadius = 5
-            
-        } else if indexPath.section == 2 {
+       if indexPath.section == 2 {
             let swtCell: YXSMineSwitchTableViewCell = tableView.dequeueReusableCell(withIdentifier: "YXSMineSwitchTableViewCell") as! YXSMineSwitchTableViewCell
             swtCell.swt.isOn = NightNight.theme == .night ? true : false
             swtCell.bgView.cornerRadius = 5
             swtCell.swt.addTarget(self, action: #selector((themeClick(sender:))), for: .valueChanged)
             cell = swtCell
+            
+        } else if sectionArr.count == 1 {
+            cell = tableView.dequeueReusableCell(withIdentifier: "YXSMineTableViewCell") as? YXSMineTableViewCell
+            cell.bgView.cornerRadius = 5
             
         } else {
             if indexPath.row == 0 {
@@ -396,28 +396,26 @@ class YXSMineViewController: YXSBaseTableViewController{
     
     // MARK: - LazyLoad
     lazy var dataSource: Array<Any> = {
-//        var arr: [[String: String]]!
+
         var arr:[Any] = [Any]()
-        
-        var section1 = [["title":"我的班级", "imgName":"yxs_mine_house", "action":"classListClick"]]
+        var section1 = [["title":"我的班级", "imgName":"yxs_mine_house", "action":"classListClick"], ["title":"班级文件", "imgName":"yxs_mine_classfile", "action":"classFileClick"]]
         arr.append(section1)
         
+        
         var section2 = [["title":"我的收藏", "imgName":"yxs_mine_collect", "action":"myCollectClick"]]
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            section2.append(["title":"我的文件", "imgName":"yxs_mine_myfile", "action":"fileBagClick"])
+        }
         arr.append(section2)
+        
         
         var section3 = [["title":"夜间模式", "imgName":"yxs_mine_theme", "action":""]]
         arr.append(section3)
         
-    
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            var section4 = [["title":"班级文件", "imgName":"yxs_mine_classfile", "action":"classFileClick"],["title":"我的文件", "imgName":"yxs_mine_myfile", "action":"fileBagClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
-            arr.append(section4)
+        
+        var section4 = [["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
+        arr.append(section4)
             
-        } else {
-            var section4 = [["title":"班级文件", "imgName":"yxs_mine_classfile", "action":"classFileClick"],["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
-            arr.append(section4)
-        }
-
         return arr
         
 //        var section4 = [["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
