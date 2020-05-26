@@ -31,7 +31,7 @@ class YXSSelectClassView: UIControl {
         imageView.snp.makeConstraints { (make) in
             make.right.equalTo(-14)
             make.centerY.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 13, height: 21))
+            make.size.equalTo(CGSize.init(width: 13.4, height: 13.4))
         }
         
         for index in 0..<maxcount{

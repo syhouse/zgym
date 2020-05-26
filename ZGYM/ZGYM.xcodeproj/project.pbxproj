@@ -621,6 +621,7 @@
 		6F90345F247CA63E000E1D85 /* YXSTemplateRequset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F90345E247CA63E000E1D85 /* YXSTemplateRequset.swift */; };
 		6F903461247CA976000E1D85 /* YXSTemplateListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F903460247CA976000E1D85 /* YXSTemplateListController.swift */; };
 		6F903464247CAE9A000E1D85 /* YXSTemplateListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F903463247CAE9A000E1D85 /* YXSTemplateListModel.swift */; };
+		6F903466247CF30E000E1D85 /* YXSTemplateDetialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F903465247CF30D000E1D85 /* YXSTemplateDetialModel.swift */; };
 		6F966CB32463B72A00BB073A /* YXSPeriodicalListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F966CB22463B72A00BB073A /* YXSPeriodicalListController.swift */; };
 		6F966CB52463F0E500BB073A /* UIView+Animal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F966CB42463F0E500BB073A /* UIView+Animal.swift */; };
 		6FA0F331242B451800E2E035 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F32F242B451800E2E035 /* Main.storyboard */; };
@@ -1764,6 +1765,7 @@
 		6F90345E247CA63E000E1D85 /* YXSTemplateRequset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateRequset.swift; sourceTree = "<group>"; };
 		6F903460247CA976000E1D85 /* YXSTemplateListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateListController.swift; sourceTree = "<group>"; };
 		6F903463247CAE9A000E1D85 /* YXSTemplateListModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSTemplateListModel.swift; sourceTree = "<group>"; };
+		6F903465247CF30D000E1D85 /* YXSTemplateDetialModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateDetialModel.swift; sourceTree = "<group>"; };
 		6F966CB22463B72A00BB073A /* YXSPeriodicalListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPeriodicalListController.swift; sourceTree = "<group>"; };
 		6F966CB42463F0E500BB073A /* UIView+Animal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Animal.swift"; sourceTree = "<group>"; };
 		6FA0F326242B451800E2E035 /* 优学业.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "优学业.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4227,6 +4229,7 @@
 				6F903463247CAE9A000E1D85 /* YXSTemplateListModel.swift */,
 				6F903460247CA976000E1D85 /* YXSTemplateListController.swift */,
 				6F90345C247C9FB1000E1D85 /* YXSPublishTemplateSection.swift */,
+				6F903465247CF30D000E1D85 /* YXSTemplateDetialModel.swift */,
 			);
 			path = YXSTemplate;
 			sourceTree = "<group>";
@@ -6431,6 +6434,7 @@
 				6F0705342445D8050090975B /* YXSPhotoCollectionView.swift in Sources */,
 				E53D8B09244ED3EF00590B5A /* YXSSynClassFolderModel.swift in Sources */,
 				E58F1709245149D500A6AC18 /* YXSBaseCommentCell.swift in Sources */,
+				6F903466247CF30E000E1D85 /* YXSTemplateDetialModel.swift in Sources */,
 				E5AC9B7B246A849B000B47BB /* YXSCollectBabyhearListVC.swift in Sources */,
 				6F0704E12445D8050090975B /* YXSContactSectionHeaderView.swift in Sources */,
 				6F0704652445D8040090975B /* YXSRegisterSucessController.swift in Sources */,

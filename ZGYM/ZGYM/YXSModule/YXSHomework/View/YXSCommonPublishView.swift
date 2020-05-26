@@ -29,6 +29,13 @@ class YXSCommonPublishView: UIView{
         }
     }
     
+    ///设置模版内容
+    public func setTemplateText(_ text: String){
+        publishModel.publishText = text
+        textView.text = text
+        updateUI(updateOffSet: false)
+    }
+    
     // MARK: - init
     init(publishModel: YXSPublishModel,isShowMedia: Bool = true,limitTextLength: Int = 1000,audioMaxCount: Int = 1,type:YXSHomeType = .homework) {
            self.publishModel = publishModel
@@ -146,7 +153,10 @@ class YXSCommonPublishView: UIView{
     }
     
     // MARK: - UI
-    private func updateUI(){
+    
+    /// 更新UI
+    /// - Parameter updateOffSet: 是否需要通知父视图偏移
+    private func updateUI(updateOffSet: Bool = true){
         for index in 0..<audioMaxCount{
             let view = self.viewWithTag(kAudioViewOrginTag + index)
             view?.isHidden = true
@@ -159,7 +169,11 @@ class YXSCommonPublishView: UIView{
         textView.snp.updateConstraints({ (make) in
             make.height.equalTo(textHeight)
         })
-        updateContentOffSet?(textHeight - textOrginHeight)
+        
+        if updateOffSet{
+            updateContentOffSet?(textHeight - textOrginHeight)
+        }
+        
         if isShowMedia{
             var frame = listView.frame
             frame.origin.y = 50 + textHeight

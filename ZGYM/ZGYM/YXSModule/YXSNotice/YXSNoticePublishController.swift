@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ObjectMapper
 
 
 class YXSNoticePublishController: YXSCommonPublishBaseController {
@@ -25,6 +26,8 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
         title = "通知"
         setTeacherUI()
         self.publishType = .notice
+        
+        loadTemplateData()
     }
     
     // MARK: -UI
@@ -40,6 +43,7 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
             make.top.bottom.equalTo(scrollView)
             make.left.right.equalTo(view) // 确定的宽度，因为垂直滚动
         }
+        contentView.addSubview(templateSection)
         contentView.addSubview(publishView)
         contentView.addSubview(selectClassView)
         contentView.addSubview(needReceiptSwitch)
@@ -51,9 +55,13 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
             make.left.right.equalTo(0)
             make.height.equalTo(49)
         }
+        templateSection.snp.makeConstraints { (make) in
+            make.top.equalTo(selectClassView.snp_bottom).offset(10)
+            make.left.right.equalTo(0)
+        }
         publishView.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
-            make.top.equalTo(selectClassView.snp_bottom).offset(10)
+            make.top.equalTo(templateSection.snp_bottom).offset(10)
         }
         
         
@@ -80,6 +88,33 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
     }
     
     // MARK: -loadData
+    ///查询模版列表
+    func loadTemplateData(){
+        YXSEducationTemplateQueryRecommendTemplateRequest(serviceType: 0).requestCollection({ (templateLists: [YXSTemplateListModel]) in
+            self.templateLists = templateLists
+            if let templateListModel = self.publishModel.templateListModel{
+                for model in self.templateLists{
+                    if model.id == templateListModel.id{
+                        model.isSelected = true
+                        break
+                    }
+                }
+            }
+            self.templateSection.setTemplates(items: self.templateLists)
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
+    ///查询模版详情
+    func loadTemplateDetialData(id: Int){
+        YXSEducationTemplateQueryTemplateByIdRequest(id: id).request({ (detialModel: YXSTemplateDetialModel) in
+            self.publishModel.publishText = detialModel.content
+            self.publishView.setTemplateText(detialModel.content ?? "")
+        }, failureHandler: { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        })
+    }
+    
     override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
         var fileList = [[String: Any]]()
         var classIdList = [Int]()
@@ -161,6 +196,19 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
         let synClassFileSwitch = YXSPublishSwitchLabel()
         synClassFileSwitch.titleLabel.text = "文件自动同步至班级文件"
         return synClassFileSwitch
+    }()
+    
+    lazy var templateSection: YXSPublishTemplateSection = {
+        let templateSection = YXSPublishTemplateSection()
+        templateSection.didSelectTemplateBlock = {
+            [weak self] (model) in
+            guard let strongSelf = self else { return }
+            strongSelf.publishModel.templateListModel = model
+            strongSelf.loadTemplateDetialData(id: model.id ?? 0)
+        }
+        templateSection.type = .notice
+        templateSection.topControl.leftlabel.text = "通知模板"
+        return templateSection
     }()
 }
 

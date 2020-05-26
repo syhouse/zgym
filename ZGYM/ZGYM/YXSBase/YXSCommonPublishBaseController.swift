@@ -58,6 +58,10 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     
     /// 单个班级详情页发布
     var singlePublishClassId: Int?
+    
+    ///模版列表
+    var templateLists = [YXSTemplateListModel]()
+    
     init(_ serviceId: Int?) {
         self.serviceId = serviceId
         super.init()
