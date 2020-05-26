@@ -820,6 +820,15 @@
 		E5AC9B7B246A849B000B47BB /* YXSCollectBabyhearListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7A246A849B000B47BB /* YXSCollectBabyhearListVC.swift */; };
 		E5AC9B7E246BD3AF000B47BB /* YXSCollectArticleListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7D246BD3AF000B47BB /* YXSCollectArticleListVC.swift */; };
 		E5AC9B80246BD49F000B47BB /* YXSCollectArticleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7F246BD49F000B47BB /* YXSCollectArticleCell.swift */; };
+		E5DD271D247B5712000BB1A9 /* UMCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD271C247B5712000BB1A9 /* UMCommon.framework */; };
+		E5DD271F247B5A71000BB1A9 /* UMAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD271E247B5A71000BB1A9 /* UMAnalytics.framework */; };
+		E5DD2723247B5A7A000BB1A9 /* UMVisualConfig.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD2720247B5A79000BB1A9 /* UMVisualConfig.framework */; };
+		E5DD2724247B5A7A000BB1A9 /* UMVisual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD2721247B5A7A000BB1A9 /* UMVisual.framework */; };
+		E5DD2725247B5A7B000BB1A9 /* UMVisual.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E5DD2722247B5A7A000BB1A9 /* UMVisual.bundle */; };
+		E5DD272B247B5AA8000BB1A9 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD272A247B5AA7000BB1A9 /* CoreTelephony.framework */; };
+		E5DD272D247B5AAF000BB1A9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD272C247B5AAF000BB1A9 /* SystemConfiguration.framework */; };
+		E5DD272F247B5AB8000BB1A9 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD272E247B5AB7000BB1A9 /* libz.tbd */; };
+		E5DD2731247B5AC7000BB1A9 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD2730247B5AC7000BB1A9 /* libsqlite3.tbd */; };
 		E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */; };
 		E5F41C59244D52B5007F27AC /* YXSExcellentEducationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */; };
 		E5F41C5D244D7744007F27AC /* YXSSynClassHomeListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */; };
@@ -2097,6 +2106,15 @@
 		E5AC9B7A246A849B000B47BB /* YXSCollectBabyhearListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectBabyhearListVC.swift; sourceTree = "<group>"; };
 		E5AC9B7D246BD3AF000B47BB /* YXSCollectArticleListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectArticleListVC.swift; sourceTree = "<group>"; };
 		E5AC9B7F246BD49F000B47BB /* YXSCollectArticleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectArticleCell.swift; sourceTree = "<group>"; };
+		E5DD271C247B5712000BB1A9 /* UMCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMCommon.framework; sourceTree = "<group>"; };
+		E5DD271E247B5A71000BB1A9 /* UMAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMAnalytics.framework; sourceTree = "<group>"; };
+		E5DD2720247B5A79000BB1A9 /* UMVisualConfig.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMVisualConfig.framework; sourceTree = "<group>"; };
+		E5DD2721247B5A7A000BB1A9 /* UMVisual.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMVisual.framework; sourceTree = "<group>"; };
+		E5DD2722247B5A7A000BB1A9 /* UMVisual.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UMVisual.bundle; sourceTree = "<group>"; };
+		E5DD272A247B5AA7000BB1A9 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		E5DD272C247B5AAF000BB1A9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		E5DD272E247B5AB7000BB1A9 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		E5DD2730247B5AC7000BB1A9 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		E5F41C56244D529D007F27AC /* YXSExcellentEducationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationVC.swift; sourceTree = "<group>"; };
 		E5F41C58244D52B4007F27AC /* YXSExcellentEducationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationCell.swift; sourceTree = "<group>"; };
 		E5F41C5C244D7744007F27AC /* YXSSynClassHomeListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassHomeListVC.swift; sourceTree = "<group>"; };
@@ -2118,9 +2136,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5DD2731247B5AC7000BB1A9 /* libsqlite3.tbd in Frameworks */,
+				E5DD272F247B5AB8000BB1A9 /* libz.tbd in Frameworks */,
+				E5DD272D247B5AAF000BB1A9 /* SystemConfiguration.framework in Frameworks */,
+				E5DD272B247B5AA8000BB1A9 /* CoreTelephony.framework in Frameworks */,
 				6F0703D82445D8030090975B /* TencentOpenAPI.framework in Frameworks */,
+				E5DD2723247B5A7A000BB1A9 /* UMVisualConfig.framework in Frameworks */,
 				6F0705622445D8050090975B /* lame.framework in Frameworks */,
 				1F822DB2F8FEBE4193BA5026 /* Pods_ZGYM.framework in Frameworks */,
+				E5DD2724247B5A7A000BB1A9 /* UMVisual.framework in Frameworks */,
+				E5DD271F247B5A71000BB1A9 /* UMAnalytics.framework in Frameworks */,
+				E5DD271D247B5712000BB1A9 /* UMCommon.framework in Frameworks */,
 				6F6511D42445DC820024A5DA /* ImSDK.framework in Frameworks */,
 				6F0703C02445D8030090975B /* libopencore-amrnb.a in Frameworks */,
 				6F0703BF2445D8030090975B /* libopencore-amrwb.a in Frameworks */,
@@ -2149,6 +2175,10 @@
 		557FB7817754CB9BC2A9CE90 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E5DD2730247B5AC7000BB1A9 /* libsqlite3.tbd */,
+				E5DD272E247B5AB7000BB1A9 /* libz.tbd */,
+				E5DD272C247B5AAF000BB1A9 /* SystemConfiguration.framework */,
+				E5DD272A247B5AA7000BB1A9 /* CoreTelephony.framework */,
 				6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */,
 				4D2807CC37D3F419340D76A2 /* Pods_Share.framework */,
 			);
@@ -2467,6 +2497,7 @@
 		6F07009C2445D7FE0090975B /* YXSClassScheduleCard */ = {
 			isa = PBXGroup;
 			children = (
+				E5DD2732247CECAF000BB1A9 /* View */,
 				6F07009D2445D7FE0090975B /* YXSClassScheduleCardCell.swift */,
 				6F07009E2445D7FE0090975B /* YXSScoreDetialController.swift */,
 				6F07009F2445D7FE0090975B /* YXSClassScheduleCardListController.swift */,
@@ -3408,6 +3439,7 @@
 		6F07FE3C2445D7FA0090975B /* YXSSDK */ = {
 			isa = PBXGroup;
 			children = (
+				E5DD2717247B56FB000BB1A9 /* UMVisualSDK */,
 				6F07FE3D2445D7FA0090975B /* TencentIM */,
 				6F07FF5A2445D7FB0090975B /* CLPlayer */,
 				6F07FF6F2445D7FB0090975B /* UITableView+FDTemplateLayoutCell */,
@@ -5356,6 +5388,49 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		E5DD2717247B56FB000BB1A9 /* UMVisualSDK */ = {
+			isa = PBXGroup;
+			children = (
+				E5DD2719247B56FB000BB1A9 /* UMCommon */,
+				E5DD271A247B56FB000BB1A9 /* UMVisual */,
+				E5DD271B247B56FB000BB1A9 /* UMAnalytics */,
+			);
+			path = UMVisualSDK;
+			sourceTree = "<group>";
+		};
+		E5DD2719247B56FB000BB1A9 /* UMCommon */ = {
+			isa = PBXGroup;
+			children = (
+				E5DD271C247B5712000BB1A9 /* UMCommon.framework */,
+			);
+			path = UMCommon;
+			sourceTree = "<group>";
+		};
+		E5DD271A247B56FB000BB1A9 /* UMVisual */ = {
+			isa = PBXGroup;
+			children = (
+				E5DD2722247B5A7A000BB1A9 /* UMVisual.bundle */,
+				E5DD2721247B5A7A000BB1A9 /* UMVisual.framework */,
+				E5DD2720247B5A79000BB1A9 /* UMVisualConfig.framework */,
+			);
+			path = UMVisual;
+			sourceTree = "<group>";
+		};
+		E5DD271B247B56FB000BB1A9 /* UMAnalytics */ = {
+			isa = PBXGroup;
+			children = (
+				E5DD271E247B5A71000BB1A9 /* UMAnalytics.framework */,
+			);
+			path = UMAnalytics;
+			sourceTree = "<group>";
+		};
+		E5DD2732247CECAF000BB1A9 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		E5F41C53244D4051007F27AC /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -5541,6 +5616,7 @@
 				6FEA7C0C2452990D0017C9CA /* LFTipsGuideView.bundle in Resources */,
 				E58F16F0245149D500A6AC18 /* message.wav in Resources */,
 				6F07FDE92445D7290090975B /* Assets.xcassets in Resources */,
+				E5DD2725247B5A7B000BB1A9 /* UMVisual.bundle in Resources */,
 				6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */,
 				6FEA7C242452990D0017C9CA /* LFMediaEditingController.bundle in Resources */,
 				6F0703EA2445D8030090975B /* XMResource.bundle in Resources */,
@@ -6731,6 +6807,9 @@
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/TencentIM",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/QQShare",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/OSS",
+					"$(PROJECT_DIR)/ZGYM/YXSSDK/UMVisualSDK/UMCommon",
+					"$(PROJECT_DIR)/ZGYM/YXSSDK/UMVisualSDK/UMAnalytics",
+					"$(PROJECT_DIR)/ZGYM/YXSSDK/UMVisualSDK/UMVisual",
 					"$(PROJECT_DIR)/ZGYM/YXSSupport\\ Files/ConvertAudio/Lame",
 				);
 				INFOPLIST_FILE = ZGYM/Info.plist;
@@ -6772,6 +6851,9 @@
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/TencentIM",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/QQShare",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/OSS",
+					"$(PROJECT_DIR)/ZGYM/YXSSDK/UMVisualSDK/UMCommon",
+					"$(PROJECT_DIR)/ZGYM/YXSSDK/UMVisualSDK/UMAnalytics",
+					"$(PROJECT_DIR)/ZGYM/YXSSDK/UMVisualSDK/UMVisual",
 					"$(PROJECT_DIR)/ZGYM/YXSSupport\\ Files/ConvertAudio/Lame",
 				);
 				INFOPLIST_FILE = ZGYM/Info.plist;

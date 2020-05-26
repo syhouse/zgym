@@ -48,6 +48,9 @@
 
 #import "YXSConvertAudioFile.h"
 
+#import <UMCommon/UMCommon.h>
+#import <UMVisual/UMVisual.h>
+
 ///xmly
 #import "XMReqMgr.h"
 #import "XMSDK.h"
