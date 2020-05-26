@@ -108,7 +108,7 @@ class YXSSelectClassView: UIControl {
     }()
     
     lazy var imageView: UIImageView = {
-        let imageView = UIImageView.init(image: UIImage.init(named: "yxs_class_arrow"))
+        let imageView = UIImageView.init(image: UIImage.init(named: "arrow_gray"))
         return imageView
     }()
 }

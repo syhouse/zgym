@@ -55,7 +55,7 @@ class YXSFileUploadHelper: NSObject {
             ///conf
             let conf = OSSClientConfiguration()
             conf.maxRetryCount = 2
-            conf.timeoutIntervalForRequest = 300
+            conf.timeoutIntervalForRequest = 15
             conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
             conf.maxConcurrentRequestCount = 50
             
