@@ -52,6 +52,12 @@ class YXSBaseTabBarController: UITabBarController {
 //            let fpsView = LSLFPSMonitor.init(frame: CGRect.init(x: UIScreen.main.bounds.size.width - 100 - 70, y: 0, width: 100, height: 30))
 //            self.view.addSubview(fpsView)
         }
+        
+        YXSEducationTemplateQueryAllTemplateRequest(serviceType: 2).request({ (json) in
+            
+        }) { (msg, code) in
+            
+        }
     }
     
     deinit {

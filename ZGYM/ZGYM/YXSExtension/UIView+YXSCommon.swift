@@ -53,6 +53,7 @@ extension UIView {
             UIUtil.currentNav().pushViewController(YXSScoreDetialController())
             
         case .addressbook:
+//            UIUtil.currentNav().pushViewController(YXSPhotoClassListController())
             UIUtil.currentNav().pushViewController(YXSContactController.init(classId: classId))
             break
         case .classstart:

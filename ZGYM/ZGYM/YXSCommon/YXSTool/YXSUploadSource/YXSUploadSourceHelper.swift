@@ -135,8 +135,8 @@ class YXSUploadSourceHelper: NSObject {
     /// - Parameter mediaModel: YXSMediaModel
     /// - Parameter sucess: 成功后回调图片地址
     /// - Parameter failureHandler: 失败错误信息
-    func uploadImage(mediaModel:YXSMediaModel, storageType: YXSStorageType, classId: Int? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
-        uploadMedia(mediaInfos: [SLUploadSourceModel.init(model: mediaModel, type: .image, storageType: storageType, fileName: mediaModel.fileName, classId: classId)], sucess:{ (urls) in
+    func uploadImage(mediaModel:YXSMediaModel, storageType: YXSStorageType, classId: Int? = nil, albumId: Int? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
+        uploadMedia(mediaInfos: [SLUploadSourceModel.init(model: mediaModel, type: .image, storageType: storageType, fileName: mediaModel.fileName, classId: classId, albumId: albumId)], sucess:{ (urls) in
             sucess?(urls.first?.aliYunUploadBackUrl ?? "" )
         }, failureHandler: failureHandler)
         
