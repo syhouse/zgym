@@ -19,6 +19,18 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
     var onBackBlock:(()->())?
     var isCache: Bool = false
     var scriptKey: String = ""
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        YXSMusicPlayerWindowView.setView(hide: true)
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        YXSMusicPlayerWindowView.setView(hide: false)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.mixedBackgroundColor = MixedColor(normal: 0xffffff, night: 0x181A23)

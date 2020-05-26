@@ -104,13 +104,13 @@ extension MBProgressHUD {
     
     static func yxs_updateUploadProgess(progess: CGFloat, inView: UIView? = UIApplication.shared.keyWindow) {
         if let inView = inView{
-            for view in inView.subviews{
-                if view is MBProgressHUD{
-                    if let customView = (view as! MBProgressHUD).customView as? YXSUploadCustomView{
-                        DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                for view in inView.subviews{
+                    if view is MBProgressHUD{
+                        if let customView = (view as! MBProgressHUD).customView as? YXSUploadCustomView{
                             customView.progress = progess
+                            break
                         }
-                        break
                     }
                 }
             }

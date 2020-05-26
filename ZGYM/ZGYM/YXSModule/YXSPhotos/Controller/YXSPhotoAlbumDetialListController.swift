@@ -73,7 +73,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     }
     
     func yxs_loadData() {
-        YXSEducationAlbumPagequeryResourceRequest.init(albumId: albumModel.id ?? 0, currentPage: currentPage).request({ (result) in
+        YXSEducationAlbumPagequeryResourceRequest.init(classId: albumModel.classId ?? 0 ,albumId: albumModel.id ?? 0, currentPage: currentPage).request({ (result) in
             self.yxs_endingRefresh()
             if self.currentPage == 1{
                 self.dataSource.removeAll()
@@ -99,39 +99,39 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     var uploadCount: Int = 0
     func loadUploadRequest(_ assets: [YXSMediaModel]){
         uploadCount = assets.count
-        var mediaInfos = [[String: Any]]()
+        var mediaInfos = [SLUploadSourceModel]()
         for asset in assets{
             if asset.type == .video {
-                mediaInfos.append([typeKey: SourceNameType.video,modelKey: asset])
+                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .video, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
                 videoDuration = Int(asset.asset.duration)
             }else{
-                mediaInfos.append([typeKey: SourceNameType.image,modelKey: asset])
+                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .image, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
             }
         }
-        MBProgressHUD.yxs_showLoading(message: "上传中", inView: self.navigationController!.view)
-//        YXSUploadSourceHelper().uploadMedia(mediaInfos: mediaInfos, uploadPaths: <#[String]#>, sucess: { (infos) in
-//            SLLog(infos)
-//            self.loadUploadAlbumRequest(mediaInfos: infos)
-//        }) { (msg, code) in
-//            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-//            MBProgressHUD.yxs_showMessage(message: msg)
-//        }
+        MBProgressHUD.yxs_showUpload()
+        YXSUploadSourceHelper().uploadMedia(mediaInfos: mediaInfos  , progress: {
+            (progress) in
+            MBProgressHUD.yxs_updateUploadProgess(progess: progress)
+        }, sucess: { (lists) in
+            self.loadUploadAlbumRequest(mediaInfos: lists)
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+        
     }
-
-    func loadUploadAlbumRequest(mediaInfos: [[String: Any]]){
+    
+    func loadUploadAlbumRequest(mediaInfos: [SLUploadDataSourceModel]){
         var resourceList = [[String: Any]]()
         var pictures = [String]()
         var video: String = ""
         var bgUrl: String = ""
         for model in mediaInfos{
-            if let type = model[typeKey] as? SourceNameType{
-                if type == .video{
-                    video = model[urlKey] as? String ?? ""
-                }else if type == .image{
-                    pictures.append(model[urlKey] as? String ?? "")
-                }else if type == .firstVideo{
-                    bgUrl = model[urlKey] as? String ?? ""
-                }
+            if model.type == .video{
+                video = model.aliYunUploadBackUrl ?? ""
+            }else if model.type == .image{
+                pictures.append(model.aliYunUploadBackUrl ?? "")
+            }else if model.type == .firstVideo{
+                bgUrl = model.aliYunUploadBackUrl ?? ""
             }
         }
         
@@ -143,9 +143,8 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
                 resourceList.append(["resourceType": 0, "resourceUrl": picUrl,"bgUrl": "", "videoDuration": 0])
             }
         }
-        YXSEducationAlbumUploadResourceRequest.init(albumId: albumModel.id ?? 0, resourceList: resourceList).request({ (result) in
-            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-            MBProgressHUD.yxs_showMessage(message: "上传完成")
+        YXSEducationAlbumUploadResourceRequest.init(classId: albumModel.classId ?? 0,albumId: albumModel.id ?? 0, resourceList: resourceList).request({ (result) in
+            MBProgressHUD.yxs_hideHUD()
             self.yxs_refreshData()
             self.albumModel.resourceCount = (self.albumModel.resourceCount ?? 0) + self.uploadCount
             self.updateAlbumModel?(self.albumModel)

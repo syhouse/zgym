@@ -15,7 +15,7 @@ class YXSEducationAlbumPagequeryRequest: YXSBaseRequset {
     init(classId: Int, currentPage: Int,pageSize: Int = kPageSize){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumPagequery
         param = [
             "classId":classId,
@@ -31,7 +31,7 @@ class YXSEducationAlbumCreateRequest: YXSBaseRequset {
     init(classId: Int, albumName: String,coverUrl: String?){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumCreate
         param = [
             "classId":classId,
@@ -46,15 +46,16 @@ class YXSEducationAlbumCreateRequest: YXSBaseRequset {
 /// 班级相册资源分页查询
 let albumPagequeryResource = "/album/page-query-resource"
 class YXSEducationAlbumPagequeryResourceRequest: YXSBaseRequset {
-    init(albumId: Int, currentPage: Int,pageSize: Int = kPageSize){
+    init(classId: Int, albumId: Int, currentPage: Int,pageSize: Int = kPageSize){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumPagequeryResource
         param = [
             "albumId":albumId,
             "currentPage":currentPage,
-            "pageSize":pageSize]
+            "pageSize":pageSize,
+            "classId": classId]
     }
 }
 
@@ -62,14 +63,15 @@ class YXSEducationAlbumPagequeryResourceRequest: YXSBaseRequset {
 /// 班级相册资源上传
 let albumUploadResource = "/album/upload-resource"
 class YXSEducationAlbumUploadResourceRequest: YXSBaseRequset {
-    init(albumId: Int, resourceList: [[String: Any]]){
+    init(classId: Int,albumId: Int, resourceList: [[String: Any]]){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumUploadResource
         param = [
             "albumId":albumId,
-            "resourceList":resourceList]
+            "resourceList":resourceList,
+            "classId": classId]
     }
 }
 
@@ -79,7 +81,7 @@ class YXSEducationAlbumBatchDeleteResourceRequest: YXSBaseRequset {
     init(albumId: Int, resourceIdList: [Int]){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumBatchDeleteResource
         param = [
             "albumId":albumId,
@@ -93,7 +95,7 @@ class YXSEducationAlbumUpdateAlbumNameOrCoverRequest: YXSBaseRequset {
     init(id: Int, albumName: String?,coverUrl: String?){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumUpdateAlbumNameOrCover
         param = [
             "id":id]
@@ -112,7 +114,7 @@ class YXSEducationAlbumDeleteRequest: YXSBaseRequset {
     init(id: Int){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumDelete
         param = [
             "id":id]
@@ -126,7 +128,7 @@ class YXSEducationAlbumQueryCommentListAndPraiseRequest: YXSBaseRequset {
     init(albumId: Int, resourceId: Int){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumQueryCommentListAndPraise
         param = [
             "albumId":albumId,
@@ -140,7 +142,7 @@ class YXSEducationAlbumPraiseOrCancelRequest: YXSBaseRequset {
     init(albumId: Int, resourceId: Int){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumQueryCommentListAndPraise
         param = [
             "albumId":albumId,
@@ -154,7 +156,7 @@ class YXSEducationAlbumQueryClassListRequest: YXSBaseRequset {
     init(stage: StageType){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumQueryClassList
         param = [
             "stage":stage.rawValue]
@@ -167,7 +169,7 @@ class YXSEducationAlbumCommentRequest: YXSBaseRequset {
     init(albumId: Int, resourceId: Int,id: Int,type: String = "COMMENT",content: String){
         super.init()
         method = .post
-        host = homeHost
+        host = fileHost
         path = albumComment
         param = [
             "albumId":albumId,

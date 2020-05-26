@@ -418,26 +418,42 @@ class YXSFileUploadHelper: NSObject {
             } else if asset.mediaType == .video {
                 group.enter()
                 queue.async {
-                    PHCachingImageManager.default().requestAVAsset(forVideo: asset, options: nil) { (asset, audioMix, info) in
-                       
-                        let asset = asset as? AVURLAsset
-
-                        if let url = asset?.url {
-                            /// 视频数据
-                            let tmpName = asset?.url.lastPathComponent
-                            let fileName = tmpName?.deletingPathExtension
-                            let extName = tmpName?.pathExtension.lowercased()
-                            let fullName = "\(fileName ?? "").\(extName ?? "")"
-                            
-                            let data = try? Data(contentsOf: url)
-                            model.dataSource = data
-                            model.fileName = fullName
-                            let img = self.getVideoFirstPicture(asset: asset!)
-                            model.bgImage = img
-                            dataSource.append(model)
+                    //从iCloud云下载
+                    let options = PHVideoRequestOptions()
+                    options.isNetworkAccessAllowed = true
+                    options.version = .current
+                    options.deliveryMode = .automatic
+                    options.progressHandler = { (progress, error, point, obc)  in
+                        
+                    }
+                    
+                    PHImageManager.default().requestExportSession(forVideo: asset, options: options, exportPreset: AVAssetExportPresetMediumQuality) { (exportSession, info) in
+                        //将asset转换为AVAssetExportSession对象,用AVAssetExportSession转化为Data
+                        if let exportSession = exportSession{
+                            HMVideoCompression().compressVideo(exportSession) { (data) in
+                                if data.count > 0 {//做判断,判断是否转化成功
+                                    /// 视频数据
+                                    let tmpName = String((asset.value(forKey: "filename") as? String ?? "").split(separator: ".").last ?? "")
+                                    let fileName = String((asset.value(forKey: "filename") as? String ?? "").split(separator: ".").first ?? "")
+                                    let extName = tmpName.lowercased()
+                                    let fullName = "\(fileName).\(extName)"
+                                    model.dataSource = data
+                                    model.fileName = fullName
+                                    let img = self.getVideoFirstPicture(asset: exportSession.asset)
+                                    model.bgImage = img
+                                    dataSource.append(model)
+                                }
+                                
+                                group.leave()
+                                
+                            }
+                        }else{
                             group.leave()
                         }
+                        
+                        
                     }
+                    
                 }
                 
             } else if asset.mediaType == .audio {

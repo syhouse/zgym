@@ -80,20 +80,19 @@ class YXSEditAlbumBaseController: YXSBaseViewController {
     /// 上传照片请求
     func loadUploadImageData(){
         MBProgressHUD.yxs_showLoading(inView: self.view)
-//        if selectMediaModel != nil{
-//            YXSUploadSourceHelper().uploadImage(mediaModel: selectMediaModel, uploadPath: YXSUploadSourceHelper.albumDoucmentPath(classId: <#T##Int#>, albumId: <#T##Int#>), sucess: { (successUrl) in
-//             self.coverUrl = successUrl
-//                MBProgressHUD.yxs_hideHUDInView(view: self.view)
-//                self.loadUploadFinishData()
-//
-//            }) { (msg, code) in
-//                MBProgressHUD.yxs_hideHUDInView(view: self.view)
-//                MBProgressHUD.yxs_showMessage(message: msg)
-//            }
-//        }
-//        else{
-//            self.loadUploadFinishData()
-//        }
+        if selectMediaModel != nil{
+            YXSUploadSourceHelper().uploadImage(mediaModel: selectMediaModel, storageType: .album, classId: classId, albumId: 0, sucess: { (successUrl) in
+                self.coverUrl = successUrl
+                MBProgressHUD.yxs_hideHUDInView(view: self.view)
+                self.loadUploadFinishData()
+            }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.view)
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
+        else{
+            self.loadUploadFinishData()
+        }
     }
     
     var coverUrl: String?

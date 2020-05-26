@@ -25,7 +25,7 @@ class YXSPunchCardListCell: YXSHomeBaseCell {
     
     init(style: UITableViewCell.CellStyle, reuseIdentifier: String?, isShowTag: Bool) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.isShowTag = isShowTag
+        self.isWaterfallCell = isShowTag
         
         initUI()
         layout()
@@ -117,7 +117,7 @@ class YXSPunchCardListCell: YXSHomeBaseCell {
             make.right.equalTo(-15)
             make.bottom.equalTo(0).priorityHigh()
         }
-        if isShowTag{
+        if isWaterfallCell{
             nameTimeLabel.snp.makeConstraints { (make) in
                 make.left.equalTo(classLabel)
                 make.bottom.equalTo(classLabel.snp_top).offset(-10)
@@ -197,7 +197,7 @@ extension YXSPunchCardListCell{
         var commonStatusButtonSize = CGSize.init(width: 79, height: 32)
         
         
-        if isShowTag{
+        if isWaterfallCell{
             setTagUI("打卡", backgroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#F4E2DF"), textColor: UIColor.yxs_hexToAdecimalColor(hex: "#E8534C"))
         }
         
@@ -364,7 +364,7 @@ extension YXSPunchCardListCell{
         }
         
         classLabel.snp.remakeConstraints { (make) in
-            make.top.equalTo(contentLabel.snp_bottom).offset(isShowTag ? 37 : 14)
+            make.top.equalTo(contentLabel.snp_bottom).offset(isWaterfallCell ? 37 : 14)
              make.left.equalTo(contentLabel)
              make.right.equalTo(-80)
 //            if YXSPersonDataModel.sharePerson.personRole == .TEACHER || hasPunch || !hasNeedPunch{

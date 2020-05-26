@@ -201,7 +201,7 @@ class YXSContentDetialController: YXSBaseTableViewController {
     }()
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > headerHeight - (64 + kSafeTopHeight) {//64 + kSafeTopHeight{
+        if scrollView.contentOffset.y > 50 {//headerHeight - (64 + kSafeTopHeight)
             customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
             customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
             rightButton.setMixedImage(MixedImage(normal: "yxs_xmly_no_fav_black", night: "yxs_xmly_no_fav"), forState: .normal)

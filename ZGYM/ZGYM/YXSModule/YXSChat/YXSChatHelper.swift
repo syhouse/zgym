@@ -306,6 +306,7 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
         if elem is TIMCustomElem {
             let customElem: TIMCustomElem = elem as! TIMCustomElem
             let json = try? JSON(data: customElem.data)
+            SLLog(json)
             let resultModel = Mapper<IMCustomMessageModel>().map(JSONObject:json?.object) ?? IMCustomMessageModel.init(JSON: ["": ""])!
             return resultModel
         }

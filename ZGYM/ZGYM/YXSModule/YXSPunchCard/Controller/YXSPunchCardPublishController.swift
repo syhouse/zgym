@@ -181,6 +181,8 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
         }
         contentView.addSubview(publishView)
         contentView.addSubview(selectClassView)
+        contentView.addSubview(templateSection)
+        
         contentView.addSubview(subjectField)
         contentView.addSubview(weakSection)
         contentView.addSubview(daysSection)
@@ -193,8 +195,13 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
             make.height.equalTo(49)
         }
         
-        subjectField.snp.makeConstraints { (make) in
+        templateSection.snp.makeConstraints { (make) in
             make.top.equalTo(selectClassView.snp_bottom).offset(10)
+            make.left.right.equalTo(0)
+        }
+        
+        subjectField.snp.makeConstraints { (make) in
+            make.top.equalTo(templateSection.snp_bottom).offset(10)
             make.left.right.equalTo(0)
             make.height.equalTo(49)
         }
@@ -569,5 +576,11 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
         section.leftlabel.text = "补卡日期"
         section.addTarget(self, action: #selector(patchSelectTimeClick), for: .touchUpInside)
         return section
+    }()
+    
+    lazy var templateSection: YXSPublishTemplateSection = {
+        let templateSection = YXSPublishTemplateSection()
+        templateSection.setTemplates(items: [YXSTemplateListModel]())
+        return templateSection
     }()
 }

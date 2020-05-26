@@ -178,6 +178,10 @@
         if (self.listFilter) {
             if (!self.listFilter(data))
                 continue;
+        } else {
+            if([data.convId isEqualToString:@"spy"]) {
+                continue;
+            }
         }
 
         NSInteger existIdx = [dataList indexOfObject:data];

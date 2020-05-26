@@ -25,7 +25,7 @@ class YXSNoticeListCell: YXSHomeBaseCell {
     
     init(style: UITableViewCell.CellStyle, reuseIdentifier: String?, isShowTag: Bool) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.isShowTag = isShowTag
+        self.isWaterfallCell = isShowTag
         
         initUI()
         layout()
@@ -148,7 +148,7 @@ extension YXSNoticeListCell{
         stickView.isHidden = true
         self.isTop = model.isTop == 1
         
-        if isShowTag{
+        if isWaterfallCell{
             setTagUI("通知", backgroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#E1EBFE"), textColor: kBlueColor)
         }
         ///红点
