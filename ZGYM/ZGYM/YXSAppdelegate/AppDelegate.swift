@@ -94,7 +94,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 //            LifetimeTracker.setup(onUpdate: LifetimeTrackerDashboardIntegration(visibility: .alwaysVisible, style: .bar).refreshUI)
 //        #endif
         
-        
+        // MARK: - 友盟   打包发布时，需要设置为false
+        UMConfigure.setLogEnabled(true)
+        UMConfigure.initWithAppkey(KUMAPPKEY, channel: "App Store")
+//        UMVisual.setVisualEnabled(true)
         // MARK: - xmly
         registerXMLY()
         UIApplication.shared.beginReceivingRemoteControlEvents()
