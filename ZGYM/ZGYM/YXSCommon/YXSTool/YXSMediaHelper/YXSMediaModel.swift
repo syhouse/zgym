@@ -16,55 +16,18 @@ class YXSMediaModel: NSObject, NSCoding {
     /// 类型
     var type: PHAssetMediaType = .image
     
-    //图片先设置image
-    var showImg: UIImage?{
-        didSet{
-            if let showImg = showImg{
-                let newSize = showImg.yxs_scaleImage(image: showImg, imageLength: 500)
-                thumbnailImage = showImg.yxs_resizeImage(image: showImg, newSize: newSize)
-            }
-            
-        }
-    }
     var videoUrl: URL?
     
+    ///相册图片的image or 相册视频的第一帧
+    private var assetImage: UIImage?
+    
     //缩略图用于展示
-    var thumbnailImage: UIImage?
-
-    /// 设置asset 后自动初始化图片、 缩略图成功回调
-    var imageSetSucessBlock: ((_ showImg: UIImage?, _ thumbnailImage: UIImage?) ->())?
+    private var thumbnailImage: UIImage?
     
     /// 相册资源  这个会自动设置图片 缩略图  会有延迟
     var asset: PHAsset!{
         didSet{
             type = asset.mediaType
-            if showImg == nil{
-                if type == .image{
-                    DispatchQueue.global().async {
-                        UIUtil.PHAssetToImage(self.asset){
-                            (result) in
-                            self.showImg = result
-                            
-                            let newSize = result.yxs_scaleImage(image: result, imageLength: 500)
-                            self.thumbnailImage = result.yxs_resizeImage(image: result, newSize: newSize)
-                            DispatchQueue.main.async {
-                                self.imageSetSucessBlock?(result , self.thumbnailImage)
-                            }
-                        }
-                    }
-                }else if type == .video{
-                    DispatchQueue.global().async {
-                        PHCachingImageManager().requestAVAsset(forVideo: self.asset, options:nil, resultHandler: { (asset, audioMix, info)in
-                            let avAsset = asset as? AVURLAsset
-                            self.videoUrl = avAsset?.url
-                            self.showImg = UIImage.yxs_getScreenShotImage(fromVideoUrl: avAsset?.url)
-                            DispatchQueue.main.async {
-                                self.imageSetSucessBlock?(self.showImg, self.showImg)
-                            }
-                        })
-                    }
-                }
-            }
             localIdentifiers = asset.localIdentifier
         }
     }
@@ -92,6 +55,66 @@ class YXSMediaModel: NSObject, NSCoding {
         }
     }
     
+    // MARK: - tool
+    ///设置媒体资源图片
+    public func setAssetImage(image: UIImage?){
+        self.assetImage = image
+        if let showImg = assetImage{
+            let newSize = showImg.yxs_scaleImage(image: showImg, imageLength: 500)
+            thumbnailImage = showImg.yxs_resizeImage(image: showImg, newSize: newSize)
+        }
+    }
+    
+    
+    public func getThumbnailImage(completHandle: @escaping((_ image: UIImage?) ->())){
+        if let thumbnailImage = thumbnailImage{
+            completHandle(thumbnailImage)
+        }else{
+            getImage(isThumbnail: true, completHandle: completHandle)
+            
+        }
+    }
+    
+    public func getAssetImage(completHandle: @escaping((_ image: UIImage?) ->())){
+        if let thumbnailImage = thumbnailImage{
+            completHandle(thumbnailImage)
+        }else{
+            getImage(isThumbnail: false, completHandle: completHandle)
+            
+        }
+    }
+    
+    private func getImage(isThumbnail: Bool ,completHandle: @escaping((_ image: UIImage?) ->())){
+        DispatchQueue.global().async {
+            if self.type == .video{
+                PHCachingImageManager().requestAVAsset(forVideo: self.asset, options:nil, resultHandler: { (asset, audioMix, info)in
+                    let avAsset = asset as? AVURLAsset
+                    self.videoUrl = avAsset?.url
+                    self.assetImage = UIImage.yxs_getScreenShotImage(fromVideoUrl: avAsset?.url)
+                    if let assetImage = self.assetImage{
+                        let newSize = assetImage.yxs_scaleImage(image: assetImage , imageLength: 500)
+                        self.thumbnailImage = assetImage.yxs_resizeImage(image: assetImage, newSize: newSize)
+                        DispatchQueue.main.async {
+                            completHandle(isThumbnail ? self.thumbnailImage : assetImage)
+                        }
+                    }
+                })
+            }else{
+                UIUtil.PHAssetToImage(self.asset){
+                    (result) in
+                    self.assetImage = result
+                    
+                    let newSize = result.yxs_scaleImage(image: result, imageLength: 500)
+                    self.thumbnailImage = result.yxs_resizeImage(image: result, newSize: newSize)
+                    DispatchQueue.main.async {
+                        completHandle(isThumbnail ? self.thumbnailImage : self.assetImage)
+                    }
+                }
+            }
+        }
+    }
+    
+    
     static func getMediaModels(assets: [PHAsset]) -> [YXSMediaModel]{
         var models = [YXSMediaModel]()
         for asset in assets{
@@ -106,7 +129,7 @@ class YXSMediaModel: NSObject, NSCoding {
     {
         videoUrl = aDecoder.decodeObject(forKey: "videoUrl") as? URL
         localIdentifiers = aDecoder.decodeObject(forKey: "localIdentifiers") as? String
-
+        
         if let localIdentifiers = localIdentifiers{
             let asset = PHAsset.fetchAssets(withLocalIdentifiers: [(localIdentifiers)], options: nil).firstObject
             self.asset = asset
@@ -123,7 +146,7 @@ class YXSMediaModel: NSObject, NSCoding {
         if videoUrl != nil{
             aCoder.encode(videoUrl, forKey: "videoUrl")
         }
-      
+        
         if localIdentifiers != nil{
             aCoder.encode(localIdentifiers, forKey: "localIdentifiers")
         }
@@ -169,7 +192,7 @@ class SLPublishMediaModel: YXSMediaModel {
         if showImageUrl != nil{
             aCoder.encode(showImageUrl, forKey: "showImageUrl")
         }
-      
+        
         if serviceUrl != nil{
             aCoder.encode(serviceUrl, forKey: "serviceUrl")
         }

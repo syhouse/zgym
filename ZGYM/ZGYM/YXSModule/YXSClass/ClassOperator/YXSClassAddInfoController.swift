@@ -260,7 +260,9 @@ class YXSClassAddInfoController: YXSBaseViewController {
         YXSUploadSourceHelper().uploadImage(mediaModel: asset, storageType: YXSStorageType.avatar, sucess: {(successUrl) in
             MBProgressHUD.yxs_hideHUDInView(view: self.view)
             self.headerUrl = successUrl
-            self.avarSection.imgAvatar.image = asset.thumbnailImage
+            asset.getThumbnailImage { (image) in
+                self.avarSection.imgAvatar.image = image
+            }
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
