@@ -83,6 +83,8 @@ class SLUploadSourceModel: NSObject{
                 return YXSFileUploadHelper.sharedInstance.getCurriculumUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0)
             case .star:
                 return YXSFileUploadHelper.sharedInstance.getStarUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0)
+            case .albumCover:
+                return YXSFileUploadHelper.sharedInstance.getAlbumCoverUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0)
             }
         }
     }

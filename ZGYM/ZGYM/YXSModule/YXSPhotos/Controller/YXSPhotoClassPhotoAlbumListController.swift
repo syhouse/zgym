@@ -10,6 +10,7 @@ import UIKit
 import NightNight
 import ObjectMapper
 
+/// 单个相册列表
 class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     var dataSource: [YXSPhotoAlbumsModel] = [YXSPhotoAlbumsModel]()
     let classId: Int
@@ -30,7 +31,6 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "班级相册"
@@ -65,12 +65,22 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
             self.collectionView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     
-    // MARK: -UI
+    // MARK: - Action
+    /// 创建相册
+    @objc func createAlbumClick() {
+        let vc = YXSPhotoCreateAlbumController(classId: classId)
+        vc.changeAlbumBlock = {
+            [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.yxs_refreshData()
+        }
+        self.navigationController?.pushViewController(vc)
+    }
     
-    // MARK: -action
     @objc func addPhotoClick(){
         let vc = YXSPhotoCreateAlbumController.init(classId: classId)
         vc.changeAlbumBlock = {
@@ -80,10 +90,6 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
         }
         self.navigationController?.pushViewController(vc)
     }
-    
-    // MARK: -private
-    
-    // MARK: -public
     
     /// 删除相册
     /// - Parameter albumModel: 相册modle
@@ -96,7 +102,7 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
         
     }
     
-    // MARK: -tableViewDelegate
+    // MARK: - tableViewDelegate
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -132,17 +138,25 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
         let view = SLBaseEmptyView()
         view.frame = self.view.frame
         view.imageView.mixedImage = MixedImage(normal: "yxs_photo_nodata", night: "yxs_photo_nodata")
-        view.label.text = "你还没有创建过相册哦"
-        view.button.setTitle("新建相册", for: .normal)
-        view.button.setTitleColor(UIColor.white, for: .normal)
-        view.button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        view.button.addTarget(self, action: #selector(addPhotoClick), for: .touchUpInside)
-        view.button.yxs_gradualBackground(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 24.5)
-        view.button.yxs_shadow(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), color: UIColor(red: 0.3, green: 0.45, blue: 0.96, alpha: 0.5), cornerRadius:  24.5, offset: CGSize(width: 0, height: 3))
-        view.button.snp.updateConstraints { (make) in
-            make.size.equalTo(CGSize.init(width: 230, height: 49))
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            view.label.text = "你还没有创建过相册哦"
+            view.button.isHidden = false
+            view.button.setTitle("新建相册", for: .normal)
+            view.button.setTitleColor(UIColor.white, for: .normal)
+            view.button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+            view.button.addTarget(self, action: #selector(addPhotoClick), for: .touchUpInside)
+            view.button.yxs_gradualBackground(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 24.5)
+            view.button.yxs_shadow(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), color: UIColor(red: 0.3, green: 0.45, blue: 0.96, alpha: 0.5), cornerRadius:  24.5, offset: CGSize(width: 0, height: 3))
+            view.button.snp.updateConstraints { (make) in
+                make.size.equalTo(CGSize.init(width: 230, height: 49))
+            }
+            view.button.cornerRadius = 24.5
+            
+        } else {
+            view.label.text = "老师还没有上传照片哦"
+            view.button.isHidden = true
         }
-        view.button.cornerRadius = 24.5
+        
         return view
     }
     // MARK: - getter&setter

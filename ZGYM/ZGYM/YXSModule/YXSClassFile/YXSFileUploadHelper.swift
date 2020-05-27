@@ -18,6 +18,8 @@ enum YXSStorageType: String {
     case temporary
     /// 班级相册
     case album
+    /// 班级相册封面
+    case albumCover
     /// 班级文件
     case classFile
     /// 书包
@@ -72,7 +74,7 @@ class YXSFileUploadHelper: NSObject {
     // MARK: - Method 上传文件方法
     /**
      *  注意！
-     *  当storageType 为 classFile、star、curriculum时 classId必填；
+     *  当storageType 为 albumCover、classFile、star、curriculum时 classId必填；
      *  当storageType 为 album时 classId、albumId必填
      */
     func uploadDataSource(dataSource: [YXSUploadDataResourceModel], storageType: YXSStorageType, classId: Int? = nil, albumId: Int? = nil, progress : ((_ progress: CGFloat)->())?, sucess: (([YXSFileModel])->())?, failureHandler: ((String, String) -> ())?) {
@@ -110,6 +112,13 @@ class YXSFileUploadHelper: NSObject {
                         return
                     }
                     path = self.getAlbumUrl(fullName: fullName, classId: classId ?? 0, albumId: albumId ?? 0)
+                    
+                case .albumCover:
+                    if classId == nil {
+                        failureHandler?("albumCover没有班级ID", "400")
+                        return
+                    }
+                    path = self.getAlbumCoverUrl(fullName: fullName, classId: classId ?? 0)
                     
                 case .classFile:
                     if classId == nil {
@@ -198,6 +207,13 @@ class YXSFileUploadHelper: NSObject {
                     }
                     path = self.getAlbumUrl(fullName: fullName, classId: classId ?? 0, albumId: albumId ?? 0)
                     
+                case .albumCover:
+                    if classId == nil {
+                        failureHandler?("albumCover没有班级ID", "400")
+                        return
+                    }
+                    path = self.getAlbumCoverUrl(fullName: fullName, classId: classId ?? 0)
+                    
                 case .classFile:
                     if classId == nil {
                         failureHandler?("classFile没有班级ID", "400")
@@ -262,6 +278,13 @@ class YXSFileUploadHelper: NSObject {
                         return
                     }
                     path = self.getAlbumUrl(fullName: fullName, classId: classId ?? 0, albumId: albumId ?? 0)
+                    
+                case .albumCover:
+                    if classId == nil {
+                        failureHandler?("albumCover没有班级ID", "400")
+                        return
+                    }
+                    path = self.getAlbumCoverUrl(fullName: fullName, classId: classId ?? 0)
                     
                 case .classFile:
                     if classId == nil {
@@ -328,6 +351,13 @@ class YXSFileUploadHelper: NSObject {
                         return
                     }
                     path = self.getAlbumUrl(fullName: fullName, classId: classId ?? 0, albumId: albumId ?? 0)
+                    
+                case .albumCover:
+                    if classId == nil {
+                        failureHandler?("albumCover没有班级ID", "400")
+                        return
+                    }
+                    path = self.getAlbumCoverUrl(fullName: fullName, classId: classId ?? 0)
                     
                 case .classFile:
                     if classId == nil {
@@ -673,6 +703,17 @@ class YXSFileUploadHelper: NSObject {
         return "test-env/album/ios/\(classId)/\(albumId)/\(name).\(extName)"
         #else
         return "product-env/album/ios/\(classId)/\(albumId)/\(name).\(extName)"
+        #endif
+    }
+    
+    /// 相册封面文件
+    @objc func getAlbumCoverUrl(fullName: String, classId: Int)-> String {
+        let name = fullName.deletingPathExtension
+        let extName = fullName.pathExtension.lowercased()
+        #if isTest
+        return "test-env/album/ios/\(classId)/\(name).\(extName)"
+        #else
+        return "product-env/album/ios/\(classId)/\(name).\(extName)"
         #endif
     }
     
