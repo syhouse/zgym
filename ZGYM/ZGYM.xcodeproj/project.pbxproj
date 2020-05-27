@@ -23,6 +23,7 @@
 		561011702457CAFD007EF91D /* UIColor+YXSHexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE202445D7F20090975B /* UIColor+YXSHexColor.swift */; };
 		561011732457D862007EF91D /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
 		56101176245AA399007EF91D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F07FDE82445D7290090975B /* Assets.xcassets */; };
+		5615A7A4247E1308003A64FB /* PHAsset+YXSCategor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5615A7A3247E1308003A64FB /* PHAsset+YXSCategor.swift */; };
 		565122652462ADF300FBE0D3 /* YXSSearchFileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565122642462ADF300FBE0D3 /* YXSSearchFileViewController.swift */; };
 		565122682473CE3A00FBE0D3 /* ToolViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565122672473CE3A00FBE0D3 /* ToolViewHandler.swift */; };
 		5680F822247CC619002CEE5B /* YXSPhotoClassListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5680F821247CC619002CEE5B /* YXSPhotoClassListController.swift */; };
@@ -912,6 +913,7 @@
 		560B20CC24518C40003D8A19 /* ShareTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareTableViewCell.swift; sourceTree = "<group>"; };
 		560B20D424519839003D8A19 /* Share.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Share.entitlements; sourceTree = "<group>"; };
 		560B20D62456803E003D8A19 /* YXSShareExtensionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSShareExtensionHelper.swift; sourceTree = "<group>"; };
+		5615A7A3247E1308003A64FB /* PHAsset+YXSCategor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAsset+YXSCategor.swift"; sourceTree = "<group>"; };
 		565122642462ADF300FBE0D3 /* YXSSearchFileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSearchFileViewController.swift; sourceTree = "<group>"; };
 		565122672473CE3A00FBE0D3 /* ToolViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolViewHandler.swift; sourceTree = "<group>"; };
 		5680F821247CC619002CEE5B /* YXSPhotoClassListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoClassListController.swift; sourceTree = "<group>"; };
@@ -3419,6 +3421,7 @@
 				6F07FE3A2445D7F20090975B /* NSObject+XYSDescription.swift */,
 				6F07FE3B2445D7F20090975B /* Toast.swift */,
 				6F966CB42463F0E500BB073A /* UIView+Animal.swift */,
+				5615A7A3247E1308003A64FB /* PHAsset+YXSCategor.swift */,
 			);
 			path = YXSExtension;
 			sourceTree = "<group>";
@@ -5968,6 +5971,7 @@
 				6F0704D82445D8050090975B /* PAirSandbox.m in Sources */,
 				E58F16E6245149D400A6AC18 /* YXSBaseDetailViewCell.swift in Sources */,
 				E58F17152452BE4F00A6AC18 /* YXSChildContentHomeListVC.swift in Sources */,
+				5615A7A4247E1308003A64FB /* PHAsset+YXSCategor.swift in Sources */,
 				6FEA7C042452990D0017C9CA /* LFAssetExportSession.m in Sources */,
 				6F0704F22445D8050090975B /* YXSHomeListSelectView.swift in Sources */,
 				6F0703972445D8030090975B /* TUIMenuCell.m in Sources */,

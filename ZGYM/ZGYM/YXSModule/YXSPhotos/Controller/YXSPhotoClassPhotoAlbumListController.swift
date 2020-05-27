@@ -10,7 +10,7 @@ import UIKit
 import NightNight
 import ObjectMapper
 
-/// 单个相册列表
+/// 相册列表
 class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     var dataSource: [YXSPhotoAlbumsModel] = [YXSPhotoAlbumsModel]()
     let classId: Int
@@ -81,16 +81,6 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
         self.navigationController?.pushViewController(vc)
     }
     
-    @objc func addPhotoClick(){
-        let vc = YXSPhotoCreateAlbumController.init(classId: classId)
-        vc.changeAlbumBlock = {
-            [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.yxs_refreshData()
-        }
-        self.navigationController?.pushViewController(vc)
-    }
-    
     /// 删除相册
     /// - Parameter albumModel: 相册modle
     func removeAlbum(albumModel:YXSPhotoAlbumsModel){
@@ -99,6 +89,11 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
             dataSource.remove(at: index)
             collectionView.reloadData()
         }
+        
+    }
+    
+    /// 新消息按钮点击
+    @objc func newMessageClick(sender: YXSButton) {
         
     }
     
@@ -118,7 +113,8 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let model = self.dataSource[indexPath.row]
         if model.isSystemCreateItem{
-            addPhotoClick()
+            createAlbumClick()
+            
         }else{
             let vc = YXSPhotoAlbumDetialListController.init(albumModel: model)
             vc.updateAlbumModel = {[weak self](albumModel) in
@@ -144,7 +140,7 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
             view.button.setTitle("新建相册", for: .normal)
             view.button.setTitleColor(UIColor.white, for: .normal)
             view.button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-            view.button.addTarget(self, action: #selector(addPhotoClick), for: .touchUpInside)
+            view.button.addTarget(self, action: #selector(createAlbumClick), for: .touchUpInside)
             view.button.yxs_gradualBackground(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 24.5)
             view.button.yxs_shadow(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), color: UIColor(red: 0.3, green: 0.45, blue: 0.96, alpha: 0.5), cornerRadius:  24.5, offset: CGSize(width: 0, height: 3))
             view.button.snp.updateConstraints { (make) in
@@ -159,6 +155,18 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
         
         return view
     }
-    // MARK: - getter&setter
+    
+    // MARK: - LazyLoad
+    lazy var btnTopMsg: YXSButton = {
+        let btn = YXSButton()
+        btn.setTitle("2条新消息", for: .normal)
+        btn.setTitleColor(UIColor.white, for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        btn.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#93B0F9")
+        btn.clipsToBounds = true
+        btn.layer.cornerRadius = 15
+        btn.addTarget(self, action: #selector(newMessageClick(sender:)), for: .touchUpInside)
+        return btn
+    }()
 }
 
