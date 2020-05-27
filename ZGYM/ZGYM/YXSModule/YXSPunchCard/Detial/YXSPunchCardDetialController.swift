@@ -473,6 +473,7 @@ extension YXSPunchCardDetialController: YXSRouterEventProtocol{
                 [weak self] in
                 guard let strongSelf = self else { return }
                 strongSelf.headerView.setHeaderModel(strongSelf.punchModel, messageModel: strongSelf.messageModel)
+                strongSelf.updateHeaderHeight()
             }
             self.navigationController?.pushViewController(vc)
         default:

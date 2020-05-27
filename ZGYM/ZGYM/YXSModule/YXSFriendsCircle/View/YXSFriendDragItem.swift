@@ -60,10 +60,10 @@ class YXSFriendDragItem: UIImageView {
                     if let thumbnailImage = model.thumbnailImage{
                         image = thumbnailImage
                     }else{
-                        UIUtil.PHAssetToImage(model.asset){
-                            (result) in
-                            let newSize = result.yxs_scaleImage(image: result, imageLength: 300)
-                            self.image = result.yxs_resizeImage(image: result, newSize: newSize)
+                        model.imageSetSucessBlock = {
+                            [weak self] (showImage, thumbnailImage)in
+                            guard let strongSelf = self else { return }
+                            strongSelf.image = thumbnailImage
                         }
                     }
                 }

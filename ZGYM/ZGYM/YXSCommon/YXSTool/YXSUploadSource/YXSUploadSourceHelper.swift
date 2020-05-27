@@ -18,7 +18,7 @@ let productPrefix = sericeType == ServiceType.ServiceTest ? "test-env/": "produc
 //拍15s   大小50M以内 时长3min
 //视频大小
 
-//图片大小2M以内
+//图片大小3M以内
 let imageMax: Int = 3*1024*1024
 let videoMax: Int = 50*1024*1024
 
