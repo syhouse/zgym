@@ -91,7 +91,11 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     // MARK: - property
     private var classId: Int
     private var clockInId: Int
-    private var childrenId: Int?
+    
+    ///用于请求列表数据的孩子id
+    private var queryChildrenId: Int?
+    ///当前账号查看打卡详情的孩子id
+    private var operationChildrenId: Int?
     private var clockInCommitId: Int?
     private let punchCardModel: YXSPunchCardModel?
     /// 是否是我发布
@@ -119,7 +123,8 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         self.clockInId = punchCardModel?.clockInId ?? 0
         self.isMyPublish = isMyPublish
         self.classId = punchCardModel?.classId ?? 0
-        self.childrenId = punchCardModel?.childrenId
+        self.queryChildrenId = punchCardModel?.childrenId
+        self.operationChildrenId = punchCardModel?.childrenId
         self.type = type
         self.topHistoryModel = topHistoryModel
         super.init()
@@ -130,25 +135,28 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
     
     /// 单个提交详情
     /// - Parameters:
-    convenience init(clockInId: Int, clockInCommitId: Int, isMyPublish: Bool, classId: Int, topHistoryModel: YXSClassStarTopHistoryModel?) {
+    convenience init(clockInId: Int, clockInCommitId: Int, isMyPublish: Bool, classId: Int, topHistoryModel: YXSClassStarTopHistoryModel?, operationChildrenId: Int?) {
         self.init(punchCardModel: nil, isMyPublish: isMyPublish, type: .detial, topHistoryModel: topHistoryModel)
         self.clockInCommitId = clockInCommitId
         self.clockInId = clockInId
         self.classId = classId
+        self.operationChildrenId = operationChildrenId
         self.title = "详情"
     }
     /// 指定孩子查询
-    convenience init(isMyPublish: Bool, type: YXSSingleStudentListType,clockInId: Int, childrenId: Int, classId: Int, topHistoryModel: YXSClassStarTopHistoryModel?) {
+    convenience init(isMyPublish: Bool, type: YXSSingleStudentListType,clockInId: Int, queryChildrenId: Int, operationChildrenId: Int?, classId: Int, topHistoryModel: YXSClassStarTopHistoryModel?) {
         self.init(punchCardModel: nil, isMyPublish: isMyPublish, type: type, topHistoryModel: topHistoryModel)
-        self.childrenId = childrenId
+        self.queryChildrenId = queryChildrenId
+        self.operationChildrenId = operationChildrenId
         self.clockInId = clockInId
         self.classId = classId
     }
     
     /// 指定孩子历史优秀
-    convenience init(isMyPublish: Bool, childrenId: Int, classId: Int, topHistoryModel: YXSClassStarTopHistoryModel?) {
+    convenience init(isMyPublish: Bool, queryChildrenId: Int, operationChildrenId: Int?, classId: Int, topHistoryModel: YXSClassStarTopHistoryModel?) {
         self.init(punchCardModel: nil, isMyPublish: isMyPublish, type: .goodHistory, topHistoryModel: topHistoryModel)
-        self.childrenId = childrenId
+        self.queryChildrenId = queryChildrenId
+        self.operationChildrenId = operationChildrenId
         self.classId = classId
     }
     
@@ -192,7 +200,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
         
         addNotification()
         
-        self.dataSource = YXSCacheHelper.yxs_getCachePunchCardTaskStudentCommintList(clockInId: clockInId, childrenId:childrenId, type: type)
+        self.dataSource = YXSCacheHelper.yxs_getCachePunchCardTaskStudentCommintList(clockInId: clockInId, childrenId:queryChildrenId, type: type)
         
         if topHistoryModel == nil{
             yxs_loadClassStarTopHistoryData()
@@ -239,7 +247,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
                     self.dataSource.removeAll()
                 }
                 model.isMyPublish = self.isMyPublish
-                self.childrenId = model.childrenId
+                self.queryChildrenId = model.childrenId
                 self.dataSource = [model]
                 self.dealIsShowTime()
                 self.reloadTableView()
@@ -263,7 +271,7 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
                 request = YXSEducationClockInExcellentCommentsListRequest.init(clockInId: clockInId, currentPage: currentPage)
             case .myPunchCard:
                 
-                request = YXSEducationClockInParentMyCommentsListRequest.init(clockInId: clockInId, currentPage: currentPage, childrenId: childrenId ?? 0)
+                request = YXSEducationClockInParentMyCommentsListRequest.init(clockInId: clockInId, currentPage: currentPage, childrenId: queryChildrenId ?? 0)
             case .calendar:
                 var endTime = yxs_startTime().yxs_tomorrow()
                 var startTime = yxs_startTime()
@@ -273,9 +281,9 @@ class YXSPunchCardSingleStudentBaseListController: YXSBaseTableViewController{
                 }
                 request = YXSEducationClockInCalendarCommentsListRequest.init(clockInId: clockInId, currentPage: currentPage, endTime: endTime, startTime: startTime)
             case .studentPunchCardList:
-                request = YXSEducationClockInSingleChildCommitListPageRequest.init(childrenId: childrenId ?? 0, clockInId: clockInId, currentPage: currentPage)
+                request = YXSEducationClockInSingleChildCommitListPageRequest.init(childrenId: queryChildrenId ?? 0, clockInId: clockInId, currentPage: currentPage)
             case .goodHistory:
-                request = YXSEducationClockInMyExcellentCommentsListRequest.init(childrenId: childrenId ?? 0, classId: classId, currentPage: currentPage)
+                request = YXSEducationClockInMyExcellentCommentsListRequest.init(childrenId: queryChildrenId ?? 0, classId: classId, currentPage: currentPage)
             default:
                 break
             }
@@ -655,14 +663,14 @@ extension YXSPunchCardSingleStudentBaseListController{
     
     func lookStudentAllPunchCardCommintEvent(_ section: Int){
         let model = dataSource[section]
-        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, childrenId: model.childrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
+        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, type: .studentPunchCardList, clockInId: model.clockInId ?? 0, queryChildrenId: model.childrenId ?? 0, operationChildrenId: operationChildrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
         vc.title = model.realName
         UIUtil.currentNav().pushViewController(vc)
     }
     
     func lookPunchCardGoodEvent(_ section: Int){
         let model = dataSource[section]
-        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, childrenId: model.childrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
+        let vc = YXSPunchCardSingleStudentBaseListController.init(isMyPublish: isMyPublish, queryChildrenId: model.childrenId ?? 0, operationChildrenId: operationChildrenId ?? 0, classId: classId, topHistoryModel: topHistoryModel)
         vc.title = "\(model.realName ?? "")"
         UIUtil.currentNav().pushViewController(vc)
     }
@@ -721,10 +729,10 @@ extension YXSPunchCardSingleStudentBaseListController{
             }
         }else{
             if let commentModel = commentModel{
-                requset = YXSEducationClockInParentReplyCommentsRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: self.yxs_user.currentChild?.id ?? 0, clockInCommentsId:  commentModel.id ?? 0)
+                requset = YXSEducationClockInParentReplyCommentsRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: operationChildrenId ?? 0, clockInCommentsId:  commentModel.id ?? 0)
                 
             }else{
-                requset = YXSEducationClockInParentReplyClockContentRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: self.yxs_user.currentChild?.id ?? 0)
+                requset = YXSEducationClockInParentReplyClockContentRequest.init(clockInId: listModel.clockInId ?? 0, clockInCommitId: listModel.clockInCommitId ?? 0,content: content, childrenId: operationChildrenId ?? 0)
             }
         }
         requset.request({ (model:YXSPunchCardCommentModel) in
@@ -787,7 +795,7 @@ extension YXSPunchCardSingleStudentBaseListController{
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             requset = YXSEducationClockInTeacherPraiseCommentsRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0)
         }else{
-            requset = YXSEducationClockInParentPraiseCommentsRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0, childrenId: self.yxs_user.currentChild?.id ?? 0)
+            requset = YXSEducationClockInParentPraiseCommentsRequest.init(clockInId: model.clockInId ?? 0, clockInCommitId: model.clockInCommitId ?? 0, childrenId: operationChildrenId ?? 0)
         }
         
         requset.request({ (result:YXSFriendsPraiseModel) in
@@ -801,7 +809,7 @@ extension YXSPunchCardSingleStudentBaseListController{
     // MARK: -底层刷新UI
     //    _ section: Int
     func reloadTableView(section: Int? = nil, scroll: Bool = false){
-        YXSCacheHelper.yxs_cachePunchCardTaskStudentCommintList(dataSource: self.dataSource, clockInId: clockInId, childrenId: childrenId, type: type)
+        YXSCacheHelper.yxs_cachePunchCardTaskStudentCommintList(dataSource: self.dataSource, clockInId: clockInId, childrenId: queryChildrenId, type: type)
         
         UIView.performWithoutAnimation {
             if let section = section{
@@ -827,7 +835,7 @@ extension YXSPunchCardSingleStudentBaseListController{
     /// - Parameter section: section
     func reloadTableViewToScrollComment(section: Int){
         //                none
-        YXSCacheHelper.yxs_cachePunchCardTaskStudentCommintList(dataSource: self.dataSource, clockInId: clockInId, childrenId: childrenId, type: type)
+        YXSCacheHelper.yxs_cachePunchCardTaskStudentCommintList(dataSource: self.dataSource, clockInId: clockInId, childrenId: queryChildrenId, type: type)
         let model = self.dataSource[section]
         UIView.performWithoutAnimation {
             tableView.reloadSections(IndexSet.init(arrayLiteral: section), with: UITableView.RowAnimation.none)

@@ -9,8 +9,19 @@
 import UIKit
 import NightNight
 
+/// 新建相册
 class YXSPhotoCreateAlbumController: YXSEditAlbumBaseController {
     // MARK: -leftCycle
+    var albumId: Int?
+    init(classId: Int, albumId: Int? = nil) {
+        self.albumId = albumId
+        super.init(classId: classId)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -27,14 +38,44 @@ class YXSPhotoCreateAlbumController: YXSEditAlbumBaseController {
     
     @objc func createClick(){
         if nameField.text?.count == 0 {
-            yxs_showAlert(title: "请输入相册名称")
+            MBProgressHUD.yxs_showMessage(message: "请输入相册名称")
             return
         }
-        if selectMediaModel != nil{
-            loadUploadImageData()
-        }else{
-            loadUploadFinishData()
+        
+        if selectMediaModel == nil {
+            MBProgressHUD.yxs_showMessage(message: "请选择相册封面")
+            return
         }
+        
+        YXSFileUploadHelper.sharedInstance.uploadPHAssetDataSource(mediaAssets: [selectMediaModel.asset], storageType: .album, classId: classId, albumId: albumId, progress: nil, sucess: { [weak self](list) in
+            guard let weakSelf = self else {return}
+            
+            if let url = list.first?.fileUrl {
+                MBProgressHUD.yxs_showLoading(inView: weakSelf.view)
+                YXSEducationAlbumCreateRequest.init(classId: weakSelf.classId, albumName: weakSelf.nameField.text!, coverUrl: url).request({ (json) in
+                    MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+                    MBProgressHUD.yxs_showMessage(message: "创建成功")
+                    weakSelf.changeAlbumBlock?()
+                    weakSelf.navigationController?.popViewController()
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+                    weakSelf.view.makeToast("\(msg)")
+                }
+            }
+            
+        }) { [weak self](msg, code) in
+            guard let weakSelf = self else {return}
+
+            MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+        
+//        if selectMediaModel != nil{
+//            loadUploadImageData()
+//
+//        }else{
+//            loadUploadFinishData()
+//        }
     }
     
     lazy var createBtn: YXSButton = {

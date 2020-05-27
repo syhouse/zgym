@@ -21,10 +21,11 @@
 		560B20D024518C41003D8A19 /* ShareTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20CC24518C40003D8A19 /* ShareTableViewCell.swift */; };
 		560B20D72456803E003D8A19 /* YXSShareExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20D62456803E003D8A19 /* YXSShareExtensionHelper.swift */; };
 		561011702457CAFD007EF91D /* UIColor+YXSHexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE202445D7F20090975B /* UIColor+YXSHexColor.swift */; };
-		561011732457D862007EF91D /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
 		56101176245AA399007EF91D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F07FDE82445D7290090975B /* Assets.xcassets */; };
 		565122652462ADF300FBE0D3 /* YXSSearchFileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565122642462ADF300FBE0D3 /* YXSSearchFileViewController.swift */; };
 		565122682473CE3A00FBE0D3 /* ToolViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565122672473CE3A00FBE0D3 /* ToolViewHandler.swift */; };
+		5680F822247CC619002CEE5B /* YXSPhotoClassListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5680F821247CC619002CEE5B /* YXSPhotoClassListController.swift */; };
+		5680F824247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5680F823247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift */; };
 		6F0703262445D8020090975B /* Date+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE102445D7F20090975B /* Date+YXSCategory.swift */; };
 		6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE112445D7F20090975B /* String+YXSCategory.swift */; };
 		6F0703282445D8020090975B /* UITextField+YXSPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE122445D7F20090975B /* UITextField+YXSPlaceholder.swift */; };
@@ -610,6 +611,9 @@
 		6F07FE0C2445D7C70090975B /* YXSCommonPublishBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FDFF2445D7C70090975B /* YXSCommonPublishBaseController.swift */; };
 		6F07FE0E2445D7E80090975B /* YXSBaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE0D2445D7E80090975B /* YXSBaseTabBarController.swift */; };
 		6F4918FE242B591A00DCA713 /* ZGYMREADME.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */; };
+		6F56779B247DFF5300B523ED /* YXSTemplateTabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56779A247DFF5300B523ED /* YXSTemplateTabModel.swift */; };
+		6F56779D247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */; };
+		6F56779E247E11E300B523ED /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
 		6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */ = {isa = PBXBuildFile; fileRef = 6F5720BE24493CAC00E1F301 /* 打包注意 */; };
 		6F641E3C2456E4020049D295 /* YXSXMCommonFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F641E3B2456E4020049D295 /* YXSXMCommonFooterView.swift */; };
 		6F641E3E24590DBE0049D295 /* YXSClassStarTopHistoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F641E3D24590DBE0049D295 /* YXSClassStarTopHistoryModel.swift */; };
@@ -621,6 +625,7 @@
 		6F90345F247CA63E000E1D85 /* YXSTemplateRequset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F90345E247CA63E000E1D85 /* YXSTemplateRequset.swift */; };
 		6F903461247CA976000E1D85 /* YXSTemplateListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F903460247CA976000E1D85 /* YXSTemplateListController.swift */; };
 		6F903464247CAE9A000E1D85 /* YXSTemplateListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F903463247CAE9A000E1D85 /* YXSTemplateListModel.swift */; };
+		6F903466247CF30E000E1D85 /* YXSTemplateDetialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F903465247CF30D000E1D85 /* YXSTemplateDetialModel.swift */; };
 		6F966CB32463B72A00BB073A /* YXSPeriodicalListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F966CB22463B72A00BB073A /* YXSPeriodicalListController.swift */; };
 		6F966CB52463F0E500BB073A /* UIView+Animal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F966CB42463F0E500BB073A /* UIView+Animal.swift */; };
 		6FA0F331242B451800E2E035 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F32F242B451800E2E035 /* Main.storyboard */; };
@@ -914,6 +919,8 @@
 		560B20D62456803E003D8A19 /* YXSShareExtensionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSShareExtensionHelper.swift; sourceTree = "<group>"; };
 		565122642462ADF300FBE0D3 /* YXSSearchFileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSearchFileViewController.swift; sourceTree = "<group>"; };
 		565122672473CE3A00FBE0D3 /* ToolViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolViewHandler.swift; sourceTree = "<group>"; };
+		5680F821247CC619002CEE5B /* YXSPhotoClassListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoClassListController.swift; sourceTree = "<group>"; };
+		5680F823247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoClassListCellModel.swift; sourceTree = "<group>"; };
 		6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0700302445D7FE0090975B /* YXSVersionUpdateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateView.swift; sourceTree = "<group>"; };
 		6F0700322445D7FE0090975B /* YXSVersionUpdateModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateModel.swift; sourceTree = "<group>"; };
@@ -1766,6 +1773,8 @@
 		6F07FFE82445D7FC0090975B /* YXSNoticeRequset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSNoticeRequset.swift; sourceTree = "<group>"; };
 		6F07FFE92445D7FC0090975B /* YXSSatchelRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSatchelRequest.swift; sourceTree = "<group>"; };
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
+		6F56779A247DFF5300B523ED /* YXSTemplateTabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateTabModel.swift; sourceTree = "<group>"; };
+		6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireSelectTypeController.swift; sourceTree = "<group>"; };
 		6F5720BE24493CAC00E1F301 /* 打包注意 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "打包注意"; sourceTree = "<group>"; };
 		6F641E3B2456E4020049D295 /* YXSXMCommonFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSXMCommonFooterView.swift; sourceTree = "<group>"; };
 		6F641E3D24590DBE0049D295 /* YXSClassStarTopHistoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarTopHistoryModel.swift; sourceTree = "<group>"; };
@@ -1776,6 +1785,7 @@
 		6F90345E247CA63E000E1D85 /* YXSTemplateRequset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateRequset.swift; sourceTree = "<group>"; };
 		6F903460247CA976000E1D85 /* YXSTemplateListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateListController.swift; sourceTree = "<group>"; };
 		6F903463247CAE9A000E1D85 /* YXSTemplateListModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSTemplateListModel.swift; sourceTree = "<group>"; };
+		6F903465247CF30D000E1D85 /* YXSTemplateDetialModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateDetialModel.swift; sourceTree = "<group>"; };
 		6F966CB22463B72A00BB073A /* YXSPeriodicalListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPeriodicalListController.swift; sourceTree = "<group>"; };
 		6F966CB42463F0E500BB073A /* UIView+Animal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Animal.swift"; sourceTree = "<group>"; };
 		6FA0F326242B451800E2E035 /* 优学业.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "优学业.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2609,11 +2619,11 @@
 				6F0700C92445D7FE0090975B /* YXSPhotoShowAlbumItemController.swift */,
 				6F0700CA2445D7FE0090975B /* YXSPhotoCreateAlbumController.swift */,
 				6F0700CB2445D7FE0090975B /* YXSPhotoClassPhotoAlbumListController.swift */,
-				6F0700CC2445D7FE0090975B /* YXSPhotoClassClassListCell.swift */,
 				6F0700CD2445D7FE0090975B /* YXSPhotoShowAlbumController.swift */,
 				6F0700CE2445D7FE0090975B /* YXSPhotoAlbumDetialListController.swift */,
 				6F0700CF2445D7FE0090975B /* YXSEditAlbumBaseController.swift */,
 				6F0700D02445D7FE0090975B /* YXSPhotoEditAlbumController.swift */,
+				5680F821247CC619002CEE5B /* YXSPhotoClassListController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2624,6 +2634,7 @@
 				6F0700D22445D7FE0090975B /* YXSPhotoAlbumsModel.swift */,
 				6F0700D32445D7FE0090975B /* YXSPhotoAlbumsDetailListModel.swift */,
 				6F0700D42445D7FE0090975B /* YXSPhotoAlbumsPraiseModel.swift */,
+				5680F823247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2631,6 +2642,7 @@
 		6F0700D52445D7FE0090975B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6F0700CC2445D7FE0090975B /* YXSPhotoClassClassListCell.swift */,
 				6F0700D62445D7FE0090975B /* YXSPhotoShowAlubmFooterView.swift */,
 				6F0700D72445D7FF0090975B /* YXSPhotoAlbumDetialFooterView.swift */,
 				6F0700D82445D7FF0090975B /* YXSPhotoAlbumsDetailListCell.swift */,
@@ -2710,6 +2722,7 @@
 		6F0700FC2445D7FF0090975B /* YXSSolitaire */ = {
 			isa = PBXGroup;
 			children = (
+				6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */,
 				6F0700FD2445D7FF0090975B /* YXSSolitairePublishController.swift */,
 				6F0700FE2445D7FF0090975B /* YXSSolitaireModel.swift */,
 				6F0700FF2445D7FF0090975B /* YXSSolitaireListController.swift */,
@@ -4267,6 +4280,8 @@
 				6F903463247CAE9A000E1D85 /* YXSTemplateListModel.swift */,
 				6F903460247CA976000E1D85 /* YXSTemplateListController.swift */,
 				6F90345C247C9FB1000E1D85 /* YXSPublishTemplateSection.swift */,
+				6F903465247CF30D000E1D85 /* YXSTemplateDetialModel.swift */,
+				6F56779A247DFF5300B523ED /* YXSTemplateTabModel.swift */,
 			);
 			path = YXSTemplate;
 			sourceTree = "<group>";
@@ -5806,8 +5821,8 @@
 			files = (
 				561011702457CAFD007EF91D /* UIColor+YXSHexColor.swift in Sources */,
 				560B20CE24518C41003D8A19 /* YXSCustomShareViewController.swift in Sources */,
+				6F56779E247E11E300B523ED /* YXSFileManagerHelper.swift in Sources */,
 				560B20D024518C41003D8A19 /* ShareTableViewCell.swift in Sources */,
-				561011732457D862007EF91D /* YXSFileManagerHelper.swift in Sources */,
 				560B20CD24518C41003D8A19 /* UIViewController+ShareExtension.swift in Sources */,
 				560B20BD24518AC3003D8A19 /* ShareViewController.swift in Sources */,
 			);
@@ -5948,6 +5963,7 @@
 				6FEA7C562452990F0017C9CA /* LFVideoClipToolbar.m in Sources */,
 				6F07042D2445D8040090975B /* YXSVersionUpdateManager.swift in Sources */,
 				6FEA7BF72452990C0017C9CA /* LFEraserBrush.m in Sources */,
+				6F56779B247DFF5300B523ED /* YXSTemplateTabModel.swift in Sources */,
 				6F0703BE2445D8030090975B /* TCAnnotation.m in Sources */,
 				6F0705EF2445D8060090975B /* LFAsset.m in Sources */,
 				6FEA7BFE2452990C0017C9CA /* LFHighlightBrush.m in Sources */,
@@ -6005,6 +6021,7 @@
 				6F07043A2445D8040090975B /* YXSMAMapView.m in Sources */,
 				6F0703732445D8030090975B /* TUIContactController.m in Sources */,
 				6F0703B82445D8030090975B /* TIMConversation+DataProvider.m in Sources */,
+				5680F822247CC619002CEE5B /* YXSPhotoClassListController.swift in Sources */,
 				6F0704C42445D8040090975B /* YXSGoToPunchCardFooterView.swift in Sources */,
 				6F07042E2445D8040090975B /* YXSMineCommentViewController.swift in Sources */,
 				6FEA7C3F2452990E0017C9CA /* JRImageCollectionViewCell.m in Sources */,
@@ -6102,6 +6119,7 @@
 				6F0705692445D8060090975B /* LBXScanViewStyle.swift in Sources */,
 				6F0705282445D8050090975B /* YXSHomeworkListCell.swift in Sources */,
 				6F0703862445D8030090975B /* TUIVoiceMessageCellData.m in Sources */,
+				6F56779D247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift in Sources */,
 				6F0704892445D8040090975B /* YXSClassAddErrorModel.swift in Sources */,
 				6F0705D12445D8060090975B /* UIView+LFFrame.m in Sources */,
 				6F0703F22445D8030090975B /* YXSHomeWorkRequset.swift in Sources */,
@@ -6408,6 +6426,7 @@
 				6FEA7C222452990D0017C9CA /* LFMediaEditingHeader.m in Sources */,
 				6F07044F2445D8040090975B /* YXSNoticeListCell.swift in Sources */,
 				6F0705482445D8050090975B /* YXSFriendsCircleFrameModel.swift in Sources */,
+				5680F824247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift in Sources */,
 				6FEA7C452452990E0017C9CA /* LFStickerProgressView.m in Sources */,
 				6F0705252445D8050090975B /* YXSParentModel.swift in Sources */,
 				E58F16FF245149D500A6AC18 /* YXSClassEmptyView.swift in Sources */,
@@ -6526,6 +6545,7 @@
 				6F0705342445D8050090975B /* YXSPhotoCollectionView.swift in Sources */,
 				E53D8B09244ED3EF00590B5A /* YXSSynClassFolderModel.swift in Sources */,
 				E58F1709245149D500A6AC18 /* YXSBaseCommentCell.swift in Sources */,
+				6F903466247CF30E000E1D85 /* YXSTemplateDetialModel.swift in Sources */,
 				E5AC9B7B246A849B000B47BB /* YXSCollectBabyhearListVC.swift in Sources */,
 				6F0704E12445D8050090975B /* YXSContactSectionHeaderView.swift in Sources */,
 				6F0704652445D8040090975B /* YXSRegisterSucessController.swift in Sources */,
@@ -6681,7 +6701,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				INFOPLIST_FILE = Share/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6705,7 +6725,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				INFOPLIST_FILE = Share/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6844,7 +6864,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6888,7 +6908,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

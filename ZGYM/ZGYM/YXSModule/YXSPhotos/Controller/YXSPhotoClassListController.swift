@@ -2,58 +2,18 @@
 //  YXSPhotoClassListController.swift
 //  ZGYM
 //
-//  Created by sy_mac on 2020/2/27.
-//  Copyright © 2020 hmym. All rights reserved.
+//  Created by Liu Jie on 2020/5/26.
+//  Copyright © 2020 zgym. All rights reserved.
 //
 
 import UIKit
 import NightNight
 import ObjectMapper
-
 import MBProgressHUD
 
-class YXSPhotoClassClassListCell: SLClassBaseListCell {
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-      
-        bgView.addSubview(photoCountButton)
-        photoCountButton.snp.makeConstraints { (make) in
-            make.centerY.equalTo(bgView)
-            make.right.equalTo(-44)
-            make.size.equalTo(CGSize.init(width: 65, height: 19))
-        }
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    var model:YXSClassModel!
-    func yxs_setCellModel(_ model: YXSClassModel){
-        self.model = model
-        nameLabel.text = model.name
-        numberLabel.text = "班级号：\(model.num ?? "")"
-        memberLabel.text = "成员：\(model.members ?? 0)"
-        
-//        button.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), for: .disabled)
-    }
-    
-    lazy var photoCountButton: UIButton = {
-        let button = UIButton.init()
-        button.setTitleColor(kBlueColor, for: .normal)
-        button.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), for: .disabled)
-        button.setTitle("暂无相册", for: .disabled)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        button.setBackgroundImage(UIImage.yxs_image(with: UIColor.yxs_hexToAdecimalColor(hex: "#E1EBFE")), for: .normal)
-        button.setBackgroundImage(UIImage.yxs_image(with: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0")), for: .disabled)
-        button.isUserInteractionEnabled = false
-        return button
-    }()
-    
-}
-
+/// 相册的班级列表
 class YXSPhotoClassListController: YXSBaseTableViewController {
-    var dataSource: [YXSClassModel] = [YXSClassModel]()
+    var dataSource: [YXSPhotoClassListCellModel] = [YXSPhotoClassListCellModel]()
     override init() {
         super.init()
         showBegainRefresh = false
@@ -76,29 +36,22 @@ class YXSPhotoClassListController: YXSBaseTableViewController {
     }
     
     func yxs_loadData() {
-        YXSEducationGradeListRequest().request({ (json) in
-            let joinClassList = Mapper<YXSClassModel>().mapArray(JSONString: json["listJoin"].rawString()!) ?? [YXSClassModel]()
-            let listCreate = Mapper<YXSClassModel>().mapArray(JSONString: json["listCreate"].rawString()!) ?? [YXSClassModel]()
+        
+        YXSEducationAlbumQueryClassListRequest(stage: YXSPersonDataModel.sharePerson.personStage).requestCollection({ [weak self](list: [YXSPhotoClassListCellModel]) in
+            guard let weakSelf = self else {return}
+            weakSelf.dataSource = list
+            weakSelf.tableView.reloadData()
             
-            self.dataSource = joinClassList + listCreate
-            self.tableView.reloadData()
         }) { (msg, code) in
-            self.view.makeToast("\(msg)")
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     
-    // MARK: -UI
-    
-    // MARK: -action
+    // MARK: - Action
     @objc func addPhotoClick(){
         
     }
     
-    // MARK: -private
-    
-    // MARK: -public
-    
-    // MARK: -tableViewDelegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -106,12 +59,13 @@ class YXSPhotoClassListController: YXSBaseTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "YXSPhotoClassClassListCell") as! YXSPhotoClassClassListCell
         cell.selectionStyle = .none
-        cell.yxs_setCellModel(dataSource[indexPath.row])
+        cell.model = dataSource[indexPath.row]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let classId = dataSource[indexPath.row].id ?? 0
+        let classId = dataSource[indexPath.row].classId ?? 0
+//        let albumId = dataSource[indexPath.row].alb
         let vc = YXSPhotoClassPhotoAlbumListController(classId: classId)
         self.navigationController?.pushViewController(vc)
     }

@@ -8,6 +8,7 @@
 
 import UIKit
 import NightNight
+import ObjectMapper
 
 class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     // MARK: -leftCycle
@@ -110,6 +111,10 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
                                                selector: #selector(self.greetingTextFieldChanged),
                                                name:NSNotification.Name(rawValue:"UITextFieldTextDidChangeNotification"),
                                                object: self.subjectField)
+        
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            loadTemplateData()
+        }
     }
     
     override func initPublish() {
@@ -241,11 +246,6 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
         daysSection.yxs_addLine(position: .bottom, leftMargin: 15)
         remindTimeSection.yxs_addLine(position: .bottom, leftMargin: 15)
         patchSwitch.yxs_addLine(position: .bottom, leftMargin: 15)
-        
-        topSwitch.swt.isOn = publishModel.isTop
-        patchSwitch.swt.isOn = publishModel.isAllowPatch
-        self.remindTimeSection.rightLabel.text = publishModel.remindPanchCardTime
-        self.remindTimeSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
     }
     
     func setPartentUI(){
@@ -322,6 +322,11 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
         }
         self.daysSection.rightLabel.text = punchCardDay.text
         self.daysSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        
+        topSwitch.swt.isOn = publishModel.isTop
+        patchSwitch.swt.isOn = publishModel.isAllowPatch
+        self.remindTimeSection.rightLabel.text = publishModel.remindPanchCardTime
+        self.remindTimeSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
     }
     
     // MARK: -loadData
@@ -387,7 +392,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
         }
     }
     
-    // MARK: -loadData
+    // MARK: - loadData
     override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
         var classIdList = [Int]()
         var picture: String = ""
@@ -474,6 +479,78 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
         }
+    }
+    ///查询模版列表
+    func loadTemplateData(){
+        YXSEducationTemplateQueryAllTemplateRequest(serviceType: 2).request({ (json) in
+            self.templateLists =  Mapper<YXSTemplateListModel>().mapArray(JSONObject: json["templateList"].object) ?? [YXSTemplateListModel]()
+            if let templateListModel = self.publishModel.templateListModel{
+                for model in self.templateLists{
+                    if model.id == templateListModel.id{
+                        model.isSelected = true
+                        break
+                    }
+                }
+            }
+            self.templateSection.setTemplates(items: self.templateLists)
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
+    ///查询模版详情
+    func loadTemplateDetialData(id: Int){
+        YXSEducationTemplateQueryTemplateByIdRequest(id: id).request({ (detialModel: YXSTemplateDetialModel) in
+            self.publishModel.subjectText = detialModel.title
+            self.publishModel.publishText = detialModel.content
+            
+            let jsonData:Data = (detialModel.period ?? "").data(using: .utf8)!
+            let array = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+            var list = [Int]()
+            if let array = array as? [Any]{
+                for item in array{
+                    if item is Int{
+                        list.append(item as! Int)
+                    }
+                }
+            }
+            var punchCardWeaks = [YXSPunchCardWeak]()
+            for week in list{
+                switch week {
+                case 1:
+                    punchCardWeaks.append(YXSPunchCardWeak.init("周日", 1))
+                case 2:
+                punchCardWeaks.append(YXSPunchCardWeak.init("周一", 2))
+                case 3:
+                punchCardWeaks.append(YXSPunchCardWeak.init("周二", 3))
+                case 4:
+                punchCardWeaks.append(YXSPunchCardWeak.init("周三", 4))
+                case 5:
+                punchCardWeaks.append(YXSPunchCardWeak.init("周四", 5))
+                case 6:
+                punchCardWeaks.append(YXSPunchCardWeak.init("周五", 6))
+                case 7:
+                punchCardWeaks.append(YXSPunchCardWeak.init("周六", 7))
+                default:
+                    break
+                }
+            }
+            
+            self.publishModel.punchCardWeaks = punchCardWeaks
+            self.publishModel.remindPanchCardTime = "\(String.init(format: "%02d", detialModel.reminder ?? 0) ):00"
+            
+            PunchCardDays.forEach { (model) in
+                if model.text == "\(detialModel.totalDay ?? 0)"{
+                    self.publishModel.punchCardDay = model
+                    return
+                }
+            }
+            self.publishView.setTemplateText(detialModel.content ?? "")
+            self.subjectField.text = detialModel.title
+            self.updateUI()
+            
+        }, failureHandler: { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        })
     }
     
     func loadChildInfoData(){
@@ -580,7 +657,12 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     
     lazy var templateSection: YXSPublishTemplateSection = {
         let templateSection = YXSPublishTemplateSection()
-        templateSection.setTemplates(items: [YXSTemplateListModel]())
+        templateSection.didSelectTemplateBlock = {
+            [weak self] (model) in
+            guard let strongSelf = self else { return }
+            strongSelf.publishModel.templateListModel = model
+            strongSelf.loadTemplateDetialData(id: model.id ?? 0)
+        }
         return templateSection
     }()
 }

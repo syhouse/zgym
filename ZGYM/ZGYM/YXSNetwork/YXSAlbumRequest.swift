@@ -9,6 +9,31 @@
 import UIKit
 import Alamofire
 
+//当老师有多个班级时，获取老师班级列表信息以及相册统计 *
+let albumQueryClassList = "/album/query-class-list"
+class YXSEducationAlbumQueryClassListRequest: YXSBaseRequset {
+    init(stage: StageType){
+        super.init()
+        method = .post
+        host = fileHost
+        path = albumQueryClassList
+        param = [
+            "stage":stage.rawValue]
+    }
+}
+
+// MARK: - 获取班级相册数量
+let albumQueryAlbumMessage = "/album/query-album-message"
+class YXSEducationAlbumQueryAlbumMessageRequest: YXSBaseRequset {
+    override init(){
+        super.init()
+        method = .post
+        host = fileHost
+        path = albumPagequery
+//        param = []
+    }
+}
+
 // MARK: -分页查询相册
 let albumPagequery = "/album/page-query"
 class YXSEducationAlbumPagequeryRequest: YXSBaseRequset {
@@ -147,19 +172,6 @@ class YXSEducationAlbumPraiseOrCancelRequest: YXSBaseRequset {
         param = [
             "albumId":albumId,
             "resourceId":resourceId]
-    }
-}
-
-//当老师有多个班级时，获取老师班级列表信息以及相册统计
-let albumQueryClassList = "/album/query-class-list"
-class YXSEducationAlbumQueryClassListRequest: YXSBaseRequset {
-    init(stage: StageType){
-        super.init()
-        method = .post
-        host = fileHost
-        path = albumQueryClassList
-        param = [
-            "stage":stage.rawValue]
     }
 }
 

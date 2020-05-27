@@ -31,8 +31,10 @@ class YXSMediaModel: NSObject, NSCoding {
     //缩略图用于展示
     var thumbnailImage: UIImage?
 
+    /// 设置asset 后自动初始化图片、 缩略图成功回调
+    var imageSetSucessBlock: ((_ showImg: UIImage?, _ thumbnailImage: UIImage?) ->())?
     
-    /// 相册资源
+    /// 相册资源  这个会自动设置图片 缩略图  会有延迟
     var asset: PHAsset!{
         didSet{
             type = asset.mediaType
@@ -41,26 +43,26 @@ class YXSMediaModel: NSObject, NSCoding {
                     DispatchQueue.global().async {
                         UIUtil.PHAssetToImage(self.asset){
                             (result) in
-                            let data = result.jpegData(compressionQuality: 1.0)
-                            //检查原图
-                            if data?.count ?? 0 <= imageMax{
-                               self.showImg = result
-                            }else{
-                                let newSize = result.yxs_scaleImage(image: result, imageLength: 2600)
-                                self.showImg = result.yxs_resizeImage(image: result, newSize: newSize)
-                            }
+                            self.showImg = result
+                            
                             let newSize = result.yxs_scaleImage(image: result, imageLength: 500)
                             self.thumbnailImage = result.yxs_resizeImage(image: result, newSize: newSize)
-
+                            DispatchQueue.main.async {
+                                self.imageSetSucessBlock?(result , self.thumbnailImage)
+                            }
                         }
                     }
                 }else if type == .video{
-                    PHCachingImageManager().requestAVAsset(forVideo: asset, options:nil, resultHandler: { (asset, audioMix, info)in
-                        let avAsset = asset as? AVURLAsset
-                        self.videoUrl = avAsset?.url
-                        self.showImg = UIImage.yxs_getScreenShotImage(fromVideoUrl: avAsset?.url)
-                    })
-                    
+                    DispatchQueue.global().async {
+                        PHCachingImageManager().requestAVAsset(forVideo: self.asset, options:nil, resultHandler: { (asset, audioMix, info)in
+                            let avAsset = asset as? AVURLAsset
+                            self.videoUrl = avAsset?.url
+                            self.showImg = UIImage.yxs_getScreenShotImage(fromVideoUrl: avAsset?.url)
+                            DispatchQueue.main.async {
+                                self.imageSetSucessBlock?(self.showImg, self.showImg)
+                            }
+                        })
+                    }
                 }
             }
             localIdentifiers = asset.localIdentifier

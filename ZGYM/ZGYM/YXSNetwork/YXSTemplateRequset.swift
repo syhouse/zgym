@@ -9,13 +9,14 @@
 import Foundation
 
 // MARK: -根据业务类型获取对应的所有标签和模板
-let templateQueryTabTemplate = "/template/query-tab-template"
-class YXSEducationTemplateQueryTabTemplateRequest: YXSBaseRequset {
-    override init() {
+let templateQueryRecommendTemplate = "/template/query-recommend-template"
+class YXSEducationTemplateQueryRecommendTemplateRequest: YXSBaseRequset {
+    init(serviceType: Int) {
         super.init()
         method = .post
         host = homeHost
-        path = templateQueryTabTemplate
+        path = templateQueryRecommendTemplate
+        param = ["serviceType": serviceType]
     }
 }
 // MARK: -根据业务类型获取所有模板模板内容(适用如打卡模板)
@@ -30,4 +31,31 @@ class YXSEducationTemplateQueryAllTemplateRequest: YXSBaseRequset {
         param = ["serviceType": serviceType]
     }
 }
+
+// MARK: -查询指定id模板详情
+
+let templateQueryTemplateById = "/template/query-template-by-id"
+class YXSEducationTemplateQueryTemplateByIdRequest: YXSBaseRequset {
+    init(id: Int) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = templateQueryTemplateById
+        param = ["id": id]
+    }
+}
+
+// MARK: -获取业务类型的所有标签、模板
+
+let templateQueryTabTemplate = "/template/query-tab-template"
+class YXSEducationTemplateQueryTabTemplateRequest: YXSBaseRequset {
+    init(serviceType: Int) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = templateQueryTabTemplate
+        param = ["serviceType": serviceType]
+    }
+}
+
 

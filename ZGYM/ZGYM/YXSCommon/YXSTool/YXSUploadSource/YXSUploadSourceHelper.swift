@@ -18,7 +18,7 @@ let productPrefix = sericeType == ServiceType.ServiceTest ? "test-env/": "produc
 //拍15s   大小50M以内 时长3min
 //视频大小
 
-//图片大小2M以内
+//图片大小3M以内
 let imageMax: Int = 3*1024*1024
 let videoMax: Int = 50*1024*1024
 
@@ -83,6 +83,8 @@ class SLUploadSourceModel: NSObject{
                 return YXSFileUploadHelper.sharedInstance.getCurriculumUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0)
             case .star:
                 return YXSFileUploadHelper.sharedInstance.getStarUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0)
+            case .albumCover:
+                return YXSFileUploadHelper.sharedInstance.getAlbumCoverUrl(fullName: fileName.MD5() + suffix, classId: classId ?? 0)
             }
         }
     }
@@ -455,7 +457,7 @@ class YXSUploadDataHepler: NSObject{
     fileprivate func initClient(){
         let conf = OSSClientConfiguration()
         conf.maxRetryCount = 2
-        conf.timeoutIntervalForRequest = 300
+        conf.timeoutIntervalForRequest = 15
         conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
         conf.maxConcurrentRequestCount = 50
         let credential2:OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: self.oSSAuth?.accessKeyId ?? "", secretKeyId: self.oSSAuth?.accessKeySecret ?? "", securityToken: self.oSSAuth?.securityToken ?? "")

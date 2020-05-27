@@ -109,6 +109,7 @@ class YXSEditAlbumBaseController: YXSBaseViewController {
         YXSSelectMediaHelper.shareHelper.delegate = self
     }
     
+    // MARK: - LazyLoad
     lazy var nameField: YXSQSTextField = {
         let nameFiled = UIUtil.yxs_getTextField(UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 0), placeholder: "添加相册名称（7个字以内）", placeholderColor: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), mixedTextColor:MixedColor(normal: kTextMainBodyColor, night: UIColor.white))
         nameFiled.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
@@ -127,6 +128,7 @@ class YXSEditAlbumBaseController: YXSBaseViewController {
     
 }
 
+// MARK: - Extension
 extension YXSEditAlbumBaseController: YXSSelectMediaHelperDelegate{
     func didSelectMedia(asset: YXSMediaModel) {
         self.selectMediaModel = asset
