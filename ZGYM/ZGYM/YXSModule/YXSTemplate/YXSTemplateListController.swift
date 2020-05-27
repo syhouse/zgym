@@ -15,11 +15,6 @@ enum YXSTemplateType{
     case punchcard
 }
 
-class YXSTabSectionModel: NSObject {
-    var items: [YXSTemplateListModel] = [YXSTemplateListModel]()
-    var sectionModel: YXSTemplateListModel?
-}
-
 class YXSTemplateListController: YXSBaseCollectionViewController{
     
     /// 提交完成后的block
@@ -30,7 +25,7 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
     var punchCardTemplates: [YXSTemplateListModel] = [YXSTemplateListModel]()
     
     ///展示标签+模版
-    var tabListTemplates: [YXSTabSectionModel] = [YXSTabSectionModel]()
+    var tabListTemplates: [YXSTemplateTabModel] = [YXSTemplateTabModel]()
     
     ///初始化选中模版
     var selectTemplate: YXSTemplateListModel? = nil
@@ -85,27 +80,26 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
     
     // MARK: - loadData
     func loadData(){
-        YXSEducationTemplateQueryTabTemplateRequest(serviceType: 0).request({ (result) in
-            let tabList =  Mapper<YXSTemplateListModel>().mapArray(JSONObject: result["tabList"].object) ?? [YXSTemplateListModel]()
-            let templateList =  Mapper<YXSTemplateListModel>().mapArray(JSONObject: result["templateList"].object) ?? [YXSTemplateListModel]()
-            var dataSource = [YXSTabSectionModel]()
-            for tabModel in tabList{
-                let sectionModel = YXSTabSectionModel()
-                sectionModel.sectionModel = tabModel
-                ///设置初始化选中
-                for tem in templateList{
-                    if tem.id == self.selectTemplate?.id{
-                        tem.isSelected = true
-                    }
-                    if tem.tabId == tabModel.id{
-                        sectionModel.items.append(tem)
+        YXSEducationTemplateQueryTabTemplateRequest(serviceType: 0).requestCollection({ (list: [YXSTemplateTabModel]) in
+            var hasFound = false
+            for tabModel in list{
+                if let templateList = tabModel.templateList{
+                    ///设置初始化选中
+                    for tem in templateList{
+                        if tem.id == self.selectTemplate?.id{
+                            tem.isSelected = true
+                            hasFound = true
+                            break
+                        }
+                        
                     }
                     
+                    if hasFound{
+                        break
+                    }
                 }
-                dataSource.append(sectionModel)
-            
             }
-            self.tabListTemplates = dataSource
+            self.tabListTemplates = list
             self.collectionView.reloadData()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -134,20 +128,25 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
                 didSelectTemplateModel?(curruntModel)
             }
         case .notice:
-            let curruntModel = tabListTemplates[indexPath.section].items[indexPath.row]
+            let curruntModel = tabListTemplates[indexPath.section].templateList?[indexPath.row]
+            if let curruntModel = curruntModel{
             if curruntModel.isSelected{
                 return
             }
             for (section, sectionModel) in tabListTemplates.enumerated(){
-                for (index, model) in sectionModel.items.enumerated(){
-                    if index == indexPath.row && section == indexPath.section{
-                        model.isSelected = true
-                    }else{
-                        model.isSelected = false
+                if let templateList = sectionModel.templateList{
+                    for (index, model) in templateList.enumerated(){
+                        if index == indexPath.row && section == indexPath.section{
+                            model.isSelected = true
+                        }else{
+                            model.isSelected = false
+                        }
                     }
                 }
+                
                 didSelectTemplateModel?(curruntModel)
             }
+        }
         }
         
         collectionView.reloadData()
@@ -158,7 +157,7 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
         case .punchcard:
             return punchCardTemplates.count
         case .notice:
-            return tabListTemplates[section].items.count
+            return tabListTemplates[section].templateList?.count ?? 0
         }
     }
     
@@ -178,7 +177,7 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
         case .punchcard:
             cell.setModel(punchCardTemplates[indexPath.row])
         case .notice:
-            cell.setModel(tabListTemplates[indexPath.section].items[indexPath.row])
+            cell.setModel(tabListTemplates[indexPath.section].templateList?[indexPath.row])
         }
         return cell
     }
@@ -186,7 +185,7 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSTemplateListHeaderView", for: indexPath) as! YXSTemplateListHeaderView
-            headerView.setModel(tabListTemplates[indexPath.section].sectionModel)
+            headerView.setModel(tabListTemplates[indexPath.section])
             return headerView
         }
         return YXSTemplateListHeaderView()
@@ -209,9 +208,9 @@ class YXSTemplateListCell: UICollectionViewCell{
     }
     
     
-    func setModel(_ model: YXSTemplateListModel){
-        button.setTitle(model.title, for: .normal)
-        button.isSelected = model.isSelected
+    func setModel(_ model: YXSTemplateListModel?){
+        button.setTitle(model?.title, for: .normal)
+        button.isSelected = model?.isSelected ?? false
         updateButtonUI(button)
     }
     
@@ -255,7 +254,7 @@ class YXSTemplateListHeaderView: UICollectionReusableView{
         }
     }
     
-    func setModel(_ model: YXSTemplateListModel?){
+    func setModel(_ model: YXSTemplateTabModel?){
         titleLabel.text = model?.tabName
         icon.sd_setImage(with: URL.init(string: model?.icon ?? ""), placeholderImage: kImageDefualtImage)
     }
