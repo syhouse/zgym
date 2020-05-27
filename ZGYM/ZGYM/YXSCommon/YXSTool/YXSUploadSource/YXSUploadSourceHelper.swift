@@ -457,7 +457,7 @@ class YXSUploadDataHepler: NSObject{
     fileprivate func initClient(){
         let conf = OSSClientConfiguration()
         conf.maxRetryCount = 2
-        conf.timeoutIntervalForRequest = 300
+        conf.timeoutIntervalForRequest = 15
         conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
         conf.maxConcurrentRequestCount = 50
         let credential2:OSSCredentialProvider = OSSStsTokenCredentialProvider.init(accessKeyId: self.oSSAuth?.accessKeyId ?? "", secretKeyId: self.oSSAuth?.accessKeySecret ?? "", securityToken: self.oSSAuth?.securityToken ?? "")

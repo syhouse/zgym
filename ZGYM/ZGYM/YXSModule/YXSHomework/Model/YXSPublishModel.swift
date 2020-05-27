@@ -108,6 +108,9 @@ class YXSPublishModel: NSObject, NSCoding {
     /// 班级总人数
     var commitUpperLimit: Int?
     
+    ///模版
+    var templateListModel: YXSTemplateListModel?
+    
     override init() {
         super.init()
     }
@@ -147,6 +150,7 @@ class YXSPublishModel: NSObject, NSCoding {
         homeworkDate = aDecoder.decodeObject(forKey: "homeworkDate") as? Date
         homeworkAllowLook = aDecoder.decodeBool(forKey: "homeworkAllowLook")
         homeworkCommentAllowLook = aDecoder.decodeBool(forKey: "homeworkCommentAllowLook")
+        templateListModel = aDecoder.decodeObject(forKey: "templateListModel") as? YXSTemplateListModel
     }
     
     /**
@@ -208,6 +212,10 @@ class YXSPublishModel: NSObject, NSCoding {
         aCoder.encode(homeworkDate, forKey: "homeworkDate")
         aCoder.encode(homeworkAllowLook, forKey: "homeworkAllowLook")
         aCoder.encode(homeworkCommentAllowLook, forKey: "homeworkCommentAllowLook")
+        
+        if templateListModel != nil{
+            aCoder.encode(templateListModel, forKey: "templateListModel")
+        }
     }
 }
 

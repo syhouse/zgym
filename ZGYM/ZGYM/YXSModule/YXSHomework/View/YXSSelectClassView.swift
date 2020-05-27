@@ -31,7 +31,7 @@ class YXSSelectClassView: UIControl {
         imageView.snp.makeConstraints { (make) in
             make.right.equalTo(-14)
             make.centerY.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 13, height: 21))
+            make.size.equalTo(CGSize.init(width: 13.4, height: 13.4))
         }
         
         for index in 0..<maxcount{
@@ -108,7 +108,7 @@ class YXSSelectClassView: UIControl {
     }()
     
     lazy var imageView: UIImageView = {
-        let imageView = UIImageView.init(image: UIImage.init(named: "yxs_class_arrow"))
+        let imageView = UIImageView.init(image: UIImage.init(named: "arrow_gray"))
         return imageView
     }()
 }
