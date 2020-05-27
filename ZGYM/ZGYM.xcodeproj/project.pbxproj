@@ -617,6 +617,7 @@
 		6F56779B247DFF5300B523ED /* YXSTemplateTabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56779A247DFF5300B523ED /* YXSTemplateTabModel.swift */; };
 		6F56779D247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */; };
 		6F56779E247E11E300B523ED /* YXSFileManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700732445D7FE0090975B /* YXSFileManagerHelper.swift */; };
+		6F5677A1247E430400B523ED /* YXSSolitaireTemplateListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5677A0247E430400B523ED /* YXSSolitaireTemplateListController.swift */; };
 		6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */ = {isa = PBXBuildFile; fileRef = 6F5720BE24493CAC00E1F301 /* 打包注意 */; };
 		6F641E3C2456E4020049D295 /* YXSXMCommonFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F641E3B2456E4020049D295 /* YXSXMCommonFooterView.swift */; };
 		6F641E3E24590DBE0049D295 /* YXSClassStarTopHistoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F641E3D24590DBE0049D295 /* YXSClassStarTopHistoryModel.swift */; };
@@ -1781,6 +1782,7 @@
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
 		6F56779A247DFF5300B523ED /* YXSTemplateTabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateTabModel.swift; sourceTree = "<group>"; };
 		6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireSelectTypeController.swift; sourceTree = "<group>"; };
+		6F5677A0247E430400B523ED /* YXSSolitaireTemplateListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireTemplateListController.swift; sourceTree = "<group>"; };
 		6F5720BE24493CAC00E1F301 /* 打包注意 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "打包注意"; sourceTree = "<group>"; };
 		6F641E3B2456E4020049D295 /* YXSXMCommonFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSXMCommonFooterView.swift; sourceTree = "<group>"; };
 		6F641E3D24590DBE0049D295 /* YXSClassStarTopHistoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarTopHistoryModel.swift; sourceTree = "<group>"; };
@@ -2730,6 +2732,7 @@
 		6F0700FC2445D7FF0090975B /* YXSSolitaire */ = {
 			isa = PBXGroup;
 			children = (
+				6F5677A0247E430400B523ED /* YXSSolitaireTemplateListController.swift */,
 				6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */,
 				6F0700FD2445D7FF0090975B /* YXSSolitairePublishController.swift */,
 				6F0700FE2445D7FF0090975B /* YXSSolitaireModel.swift */,
@@ -6185,6 +6188,7 @@
 				560B20AE244706E4003D8A19 /* YXSXMLYNativeRequest.swift in Sources */,
 				6F0705CB2445D8060090975B /* LFGifPlayerManager.m in Sources */,
 				6F0703882445D8030090975B /* TUIMessageCellData.m in Sources */,
+				6F5677A1247E430400B523ED /* YXSSolitaireTemplateListController.swift in Sources */,
 				6F07054B2445D8050090975B /* YXSClassModel.swift in Sources */,
 				6FEA7C1C2452990D0017C9CA /* LFFilterImageView.m in Sources */,
 				6FEA7BF52452990C0017C9CA /* JRPickColorView.m in Sources */,
