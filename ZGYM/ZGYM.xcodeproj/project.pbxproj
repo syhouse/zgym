@@ -23,6 +23,8 @@
 		561011702457CAFD007EF91D /* UIColor+YXSHexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE202445D7F20090975B /* UIColor+YXSHexColor.swift */; };
 		56101176245AA399007EF91D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F07FDE82445D7290090975B /* Assets.xcassets */; };
 		5615A7A4247E1308003A64FB /* PHAsset+YXSCategor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5615A7A3247E1308003A64FB /* PHAsset+YXSCategor.swift */; };
+		5615A7A6247E4CFC003A64FB /* YXSPhotoClassPhotoAlbumListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5615A7A5247E4CFC003A64FB /* YXSPhotoClassPhotoAlbumListHeader.swift */; };
+		5615A7A8247E5BA7003A64FB /* YXSPhotoClassPhotoAlbumListMsgModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5615A7A7247E5BA7003A64FB /* YXSPhotoClassPhotoAlbumListMsgModel.swift */; };
 		565122652462ADF300FBE0D3 /* YXSSearchFileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565122642462ADF300FBE0D3 /* YXSSearchFileViewController.swift */; };
 		565122682473CE3A00FBE0D3 /* ToolViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565122672473CE3A00FBE0D3 /* ToolViewHandler.swift */; };
 		5680F822247CC619002CEE5B /* YXSPhotoClassListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5680F821247CC619002CEE5B /* YXSPhotoClassListController.swift */; };
@@ -919,6 +921,8 @@
 		560B20D424519839003D8A19 /* Share.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Share.entitlements; sourceTree = "<group>"; };
 		560B20D62456803E003D8A19 /* YXSShareExtensionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSShareExtensionHelper.swift; sourceTree = "<group>"; };
 		5615A7A3247E1308003A64FB /* PHAsset+YXSCategor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAsset+YXSCategor.swift"; sourceTree = "<group>"; };
+		5615A7A5247E4CFC003A64FB /* YXSPhotoClassPhotoAlbumListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoClassPhotoAlbumListHeader.swift; sourceTree = "<group>"; };
+		5615A7A7247E5BA7003A64FB /* YXSPhotoClassPhotoAlbumListMsgModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoClassPhotoAlbumListMsgModel.swift; sourceTree = "<group>"; };
 		565122642462ADF300FBE0D3 /* YXSSearchFileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSearchFileViewController.swift; sourceTree = "<group>"; };
 		565122672473CE3A00FBE0D3 /* ToolViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolViewHandler.swift; sourceTree = "<group>"; };
 		5680F821247CC619002CEE5B /* YXSPhotoClassListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoClassListController.swift; sourceTree = "<group>"; };
@@ -2637,6 +2641,7 @@
 				6F0700D32445D7FE0090975B /* YXSPhotoAlbumsDetailListModel.swift */,
 				6F0700D42445D7FE0090975B /* YXSPhotoAlbumsPraiseModel.swift */,
 				5680F823247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift */,
+				5615A7A7247E5BA7003A64FB /* YXSPhotoClassPhotoAlbumListMsgModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2650,6 +2655,7 @@
 				6F0700D82445D7FF0090975B /* YXSPhotoAlbumsDetailListCell.swift */,
 				6F0700D92445D7FF0090975B /* YXSPhotoShowAlubmCell.swift */,
 				6F0700DA2445D7FF0090975B /* YXSPhotoAlbumsListCell.swift */,
+				5615A7A5247E4CFC003A64FB /* YXSPhotoClassPhotoAlbumListHeader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -6278,6 +6284,7 @@
 				6FEA7BF82452990C0017C9CA /* LFBlurryBrush.m in Sources */,
 				6F0703652445D8030090975B /* TAddHelper.m in Sources */,
 				6F0704D42445D8050090975B /* YXSSolitaireDetailController.swift in Sources */,
+				5615A7A8247E5BA7003A64FB /* YXSPhotoClassPhotoAlbumListMsgModel.swift in Sources */,
 				6F07053D2445D8050090975B /* YXSHomeworkListController.swift in Sources */,
 				E5AC9B7E246BD3AF000B47BB /* YXSCollectArticleListVC.swift in Sources */,
 				6F0704A92445D8040090975B /* YXSPhotoShowAlbumController.swift in Sources */,
@@ -6359,6 +6366,7 @@
 				6FEA7C132452990D0017C9CA /* UIView+LFDownloadManager.m in Sources */,
 				6F0705D92445D8060090975B /* LFBaseViewController.m in Sources */,
 				6F07035D2445D8030090975B /* TUIImageViewController.m in Sources */,
+				5615A7A6247E4CFC003A64FB /* YXSPhotoClassPhotoAlbumListHeader.swift in Sources */,
 				6F07FE012445D7C70090975B /* YXSBaseWebViewController.swift in Sources */,
 				6F90345D247C9FB1000E1D85 /* YXSPublishTemplateSection.swift in Sources */,
 				6FEA7BF32452990C0017C9CA /* JRFilterModel.m in Sources */,
