@@ -4,7 +4,7 @@
 //
 //  Created by zgjy_mac on 2020/1/17.
 //  Copyright © 2020 zgjy_mac. All rights reserved.
-//
+//  成绩列表
 
 import UIKit
 import NightNight
@@ -71,11 +71,12 @@ class YXSScoreListController: YXSBaseTableViewController{
         request.request({ [weak self](json) in
             guard let weakSelf = self else {return}
             weakSelf.yxs_endingRefresh()
-            let joinList = Mapper<YXSScoreListModel>().mapArray(JSONObject: json.object) ?? [YXSScoreListModel]()
+            let joinList = Mapper<YXSScoreListModel>().mapArray(JSONObject: json["list"].object) ?? [YXSScoreListModel]()
             if weakSelf.currentPage == 1{
                 weakSelf.dataSource.removeAll()
             }
             weakSelf.dataSource += joinList
+            weakSelf.loadMore = json["hasNext"].boolValue
             weakSelf.tableView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()
@@ -96,7 +97,8 @@ class YXSScoreListController: YXSBaseTableViewController{
     }
     
     @objc func yxs_publishClick() {
-        
+        let popView = YXSScorePublishView.init(frame: CGRect(x: 0, y: 0, width: 260*SCREEN_SCALE, height: 305*SCREEN_SCALE))
+        popView.showIn(target: UIUtil.RootController().view)
     }
     
     // MARK: - tableViewDelegate
@@ -125,6 +127,12 @@ class YXSScoreListController: YXSBaseTableViewController{
         tableView.deselectRow(at: indexPath, animated: true)
         if dataSource.count > indexPath.row {
             let model = dataSource[indexPath.row]
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                 let detail = YXSScoreNumTeacherDetailsVC.init(model: model)
+                self.navigationController?.pushViewController(detail)
+            } else {
+                
+            }
             
         }
     }

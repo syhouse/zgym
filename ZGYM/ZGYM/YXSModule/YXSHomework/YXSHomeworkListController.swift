@@ -179,8 +179,12 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
                 self.dataSource.remove(at: indexPath.row)
                 self.tableView.reloadData()
             }
+            if isAgenda {
+                yxs_pushHomeDetailVC(homeModel: model, selectChildrenId: model.childrenId ?? 0)
+            } else {
+                yxs_pushHomeDetailVC(homeModel: model, selectChildrenId: self.childId ?? 0)
+            }
             
-            yxs_pushHomeDetailVC(homeModel: model, selectChildrenId: self.childId ?? 0)
         }
     }
     

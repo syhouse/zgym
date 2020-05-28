@@ -82,6 +82,9 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         if YXSPersonDataModel.sharePerson.personRole == .PARENT {
             footerRemindBtn.isHidden = true
         }
+        self.tableView.estimatedRowHeight = 0
+        self.tableView.estimatedSectionHeaderHeight = 0
+        self.tableView.estimatedSectionFooterHeight = 0
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.bottomBtnView)
         tableView.tableHeaderView = tableHeaderView
@@ -1107,19 +1110,31 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     }()
 
     lazy var tableFooterView: UIView = {
-        let footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_WIDTH))
-        let imageView = UIImageView.init(frame: CGRect(x: 52, y: 30, width: SCREEN_WIDTH - 104, height: 188))
+        let footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 170))
+        let imageView = UIImageView.init(frame: CGRect(x: 0, y: 60, width: SCREEN_WIDTH, height: 188))
         imageView.mixedImage = MixedImage(normal: "yxs_homework_defultImage_nodata", night: "yxs_defultImage_nodata_night")
         imageView.contentMode = .scaleAspectFit
         footer.addSubview(imageView)
         footer.addSubview(footerContentLbl)
         footer.addSubview(footerRemindBtn)
         
+        self.footerContentLbl.snp.makeConstraints { (make) in
+            make.top.equalTo(imageView.snp_bottom)
+            make.left.right.equalTo(0)
+            make.height.equalTo(20)
+        }
+        self.footerRemindBtn.snp.makeConstraints { (make) in
+            make.top.equalTo(self.footerContentLbl.snp_bottom).offset(5)
+            make.centerX.equalTo(self.footerContentLbl.snp_centerX)
+            make.width.equalTo(105)
+            make.height.equalTo(30)
+        }
+        
         return footer
     }()
     
     lazy var footerContentLbl: UILabel = {
-        let lbl = UILabel.init(frame: CGRect(x: 0, y: 228, width: SCREEN_WIDTH, height: 20))
+        let lbl = UILabel()
         lbl.text = "暂无作业提交"
         lbl.textAlignment = .center
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
@@ -1128,11 +1143,10 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     }()
     
     lazy var footerRemindBtn: UIButton = {
-        let btn = UIButton.init(frame: CGRect(x: 0, y: 268, width: 105, height: 30))
+        let btn = UIButton()
         btn.setTitle("一键提醒", for: .normal)
         btn.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), for: .normal)
         btn.layer.borderWidth = 1.0
-        btn.yxs_centerX = SCREEN_WIDTH * 0.5
         btn.layer.cornerRadius = 15
         btn.layer.borderColor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7").cgColor
         btn.addTarget(self, action: #selector(remindClick), for: .touchUpInside)

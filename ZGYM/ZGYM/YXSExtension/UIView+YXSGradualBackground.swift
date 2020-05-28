@@ -11,7 +11,7 @@ import NightNight
 
 extension UIView {
     /// 设置渐变背景颜色
-    func yxs_gradualBackground(frame: CGRect, startColor: UIColor, endColor: UIColor, cornerRadius: CGFloat) {
+    func yxs_gradualBackground(frame: CGRect, startColor: UIColor, endColor: UIColor, cornerRadius: CGFloat, isRightOrientation:Bool = true) {
         var tmp: CAGradientLayer!
         var shadow: CALayer?
         
@@ -34,8 +34,14 @@ extension UIView {
         
         let gl:CAGradientLayer = tmp
         gl.frame = frame
-        gl.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gl.endPoint = CGPoint(x: 1.0, y: 0.5)
+        if isRightOrientation {
+            gl.startPoint = CGPoint(x: 0.0, y: 0.5)
+            gl.endPoint = CGPoint(x: 1.0, y: 0.5)
+        } else {
+            gl.startPoint = CGPoint(x: 0.0, y: 0)
+            gl.endPoint = CGPoint(x: 0.0, y: 1.0)
+        }
+        
         gl.colors = [startColor.cgColor, endColor.cgColor]
         gl.locations = [0, 1.0]
         gl.cornerRadius = cornerRadius
