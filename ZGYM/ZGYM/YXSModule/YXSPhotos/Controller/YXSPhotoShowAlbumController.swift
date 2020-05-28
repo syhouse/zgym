@@ -12,6 +12,7 @@ import ObjectMapper
 import FDFullscreenPopGesture_Bell
 import JXCategoryView
 
+/// 详情
 class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate, JXCategoryListContainerViewDelegate {
     func number(ofListsInlistContainerView listContainerView: JXCategoryListContainerView!) -> Int {
         return dataSource.count

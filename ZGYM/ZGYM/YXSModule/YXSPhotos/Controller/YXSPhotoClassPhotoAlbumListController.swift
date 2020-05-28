@@ -10,9 +10,11 @@ import UIKit
 import NightNight
 import ObjectMapper
 
-/// 单个相册列表
-class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
+/// 相册列表
+class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController, UICollectionViewDelegateFlowLayout {
     var dataSource: [YXSPhotoAlbumsModel] = [YXSPhotoAlbumsModel]()
+    var messageInfo: YXSPhotoClassPhotoAlbumListMsgModel?
+    
     let classId: Int
     init(classId: Int) {
         self.classId = classId
@@ -34,8 +36,9 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "班级相册"
-        
+
         collectionView.register(YXSPhotoAlbumsListCell.self, forCellWithReuseIdentifier: "YXSPhotoAlbumsListCell")
+        collectionView.register(YXSPhotoClassPhotoAlbumListHeader.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSPhotoClassPhotoAlbumListHeader")
     }
     
     override func yxs_refreshData() {
@@ -48,21 +51,26 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     }
     
     func yxs_loadData() {
-        YXSEducationAlbumPagequeryRequest.init(classId: classId, currentPage: currentPage).request({ (result) in
-            self.yxs_endingRefresh()
-            if self.currentPage == 1{
-                self.dataSource.removeAll()
+        YXSEducationAlbumPagequeryRequest.init(classId: classId, currentPage: currentPage).request({ [weak self](result) in
+            guard let weakSelf = self else {return}
+            weakSelf.yxs_endingRefresh()
+            
+            weakSelf.messageInfo = Mapper<YXSPhotoClassPhotoAlbumListMsgModel>().map(JSONObject: result["messageInfo"].object)
+            
+            if weakSelf.currentPage == 1{
+                weakSelf.dataSource.removeAll()
             }
             let list = Mapper<YXSPhotoAlbumsModel>().mapArray(JSONObject: result["classAlbumList"].object) ?? [YXSPhotoAlbumsModel]()
-            self.dataSource += list
+            weakSelf.dataSource += list
+            
             if list.count != 0 {
                 let createAlbums = YXSPhotoAlbumsModel.init(JSON: ["": ""])
                 createAlbums?.isSystemCreateItem = true
-                self.dataSource.insert(createAlbums!, at: 0)
+                weakSelf.dataSource.insert(createAlbums!, at: 0)
             }
-            self.loadMore = result["hasNext"].boolValue
+            weakSelf.loadMore = result["hasNext"].boolValue
             
-            self.collectionView.reloadData()
+            weakSelf.collectionView.reloadData()
         }) { (msg, code) in
             self.yxs_endingRefresh()
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -73,16 +81,6 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     /// 创建相册
     @objc func createAlbumClick() {
         let vc = YXSPhotoCreateAlbumController(classId: classId)
-        vc.changeAlbumBlock = {
-            [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.yxs_refreshData()
-        }
-        self.navigationController?.pushViewController(vc)
-    }
-    
-    @objc func addPhotoClick(){
-        let vc = YXSPhotoCreateAlbumController.init(classId: classId)
         vc.changeAlbumBlock = {
             [weak self] in
             guard let strongSelf = self else { return }
@@ -102,6 +100,11 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
         
     }
     
+    /// 新消息按钮点击
+    @objc func newMessageClick(sender: YXSButton) {
+        
+    }
+    
     // MARK: - tableViewDelegate
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
@@ -118,7 +121,8 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let model = self.dataSource[indexPath.row]
         if model.isSystemCreateItem{
-            addPhotoClick()
+            createAlbumClick()
+            
         }else{
             let vc = YXSPhotoAlbumDetialListController.init(albumModel: model)
             vc.updateAlbumModel = {[weak self](albumModel) in
@@ -144,7 +148,7 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
             view.button.setTitle("新建相册", for: .normal)
             view.button.setTitleColor(UIColor.white, for: .normal)
             view.button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-            view.button.addTarget(self, action: #selector(addPhotoClick), for: .touchUpInside)
+            view.button.addTarget(self, action: #selector(createAlbumClick), for: .touchUpInside)
             view.button.yxs_gradualBackground(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 24.5)
             view.button.yxs_shadow(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), color: UIColor(red: 0.3, green: 0.45, blue: 0.96, alpha: 0.5), cornerRadius:  24.5, offset: CGSize(width: 0, height: 3))
             view.button.snp.updateConstraints { (make) in
@@ -159,6 +163,24 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController {
         
         return view
     }
-    // MARK: - getter&setter
+    
+    // MARK: - Header Footer
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if messageInfo?.messageCount ?? 0 > 0 {
+            return CGSize(width: SCREEN_WIDTH, height: 50)
+
+        } else {
+            return CGSize.zero
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            let header: YXSPhotoClassPhotoAlbumListHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSPhotoClassPhotoAlbumListHeader", for: indexPath) as! YXSPhotoClassPhotoAlbumListHeader
+            header.messageInfo = messageInfo
+            return header
+        }
+        return UICollectionReusableView()
+    }
 }
 

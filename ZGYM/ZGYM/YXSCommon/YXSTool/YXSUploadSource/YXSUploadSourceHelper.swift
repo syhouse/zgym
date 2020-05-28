@@ -202,43 +202,19 @@ class YXSUploadSourceHelper: NSObject {
             switch sourceType {
             case .image,.firstVideo:
                 if let model = (uploadModel.model as? YXSMediaModel){
-                    if let showImg = model.showImg {
-                        let data = showImg.yxs_compressImage(image: model.showImg!, maxLength: imageMax)
-                        newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
-                    }else{
-                        group.enter()
-                        queue.async{
-                            UIUtil.PHAssetToImage(model.asset){
-                                (result) in
-                                model.showImg = result
-                                let data = result.yxs_compressImage(image: model.showImg!, maxLength: imageMax)
+                    group.enter()
+                    queue.async{
+                        model.getAssetImage { (assetImage) in
+                            if let assetImage = assetImage{
+                                let data = assetImage.yxs_compressImage(image: assetImage, maxLength: imageMax)
                                 newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
-                                group.leave()
                             }
+                            group.leave()
                         }
                     }
-                    
                 }
                 
             case .video:
-                //                if let model = (uploadModel.model as? YXSMediaModel){
-                //                    group.enter()
-                //                    queue.async {
-                //                        PHCachingImageManager.default().requestAVAsset(forVideo: model.asset, options: nil) { (asset, audioMix, info) in
-                //
-                //                            let asset = asset as? AVURLAsset
-                //
-                //                            if let url = asset?.url {
-                //                                newUploadModels.append(SLUploadDataSourceModel.init(data: try? Data.init(contentsOf: url), path: uploadModel.path, type: uploadModel.type))
-                //
-                //                            }else{
-                //                                failureHandlerMsg = "视频资源为空"
-                //                            }
-                //                            group.leave()
-                //                        }
-                //                    }
-//            }
-                
                 if let model = (uploadModel.model as? YXSMediaModel){
                     group.enter()
                     queue.async {

@@ -98,9 +98,13 @@ class YXSEditAlbumBaseController: YXSBaseViewController {
     var coverUrl: String?
     var selectMediaModel :YXSMediaModel!{
         didSet{
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
-                self.photoSection.setImages(images: [self.selectMediaModel.thumbnailImage])
+            self.selectMediaModel.asset.yxs_convert2ImageThumbnail { [weak self](image) in
+                guard let weakSelf = self else {return}
+                weakSelf.photoSection.setImages(images: [image])
             }
+//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
+//                self.photoSection.setImages(images: [self.selectMediaModel.thumbnailImage])
+//            }
         }
     }
     

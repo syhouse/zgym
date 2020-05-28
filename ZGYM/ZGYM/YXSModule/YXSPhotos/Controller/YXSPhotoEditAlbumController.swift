@@ -9,6 +9,7 @@
 import UIKit
 import NightNight
 
+/// 编辑相册
 class YXSPhotoEditAlbumController: YXSEditAlbumBaseController {
     var updateAlbumSucess: ((_ albumModel: YXSPhotoAlbumsModel)->())?
     let albumModel: YXSPhotoAlbumsModel
@@ -69,6 +70,7 @@ class YXSPhotoEditAlbumController: YXSEditAlbumBaseController {
         }
     }
     
+    // MARK: - Action
     @objc func rightClick(){
         if nameField.text == albumModel.albumName && self.selectMediaModel == nil {
             yxs_showAlert(title: "当前未有修改")
@@ -93,12 +95,14 @@ class YXSPhotoEditAlbumController: YXSEditAlbumBaseController {
     
     @objc func deleteClick(){
         MBProgressHUD.yxs_showLoading()
-        YXSEducationAlbumDeleteRequest.init(id: albumModel.id ?? 0).request({ (result) in
+        YXSEducationAlbumDeleteRequest.init(id: albumModel.id ?? 0, classId: albumModel.classId ?? 0).request({ (result) in
             MBProgressHUD.yxs_showMessage(message: "删除成功")
-            self.navigationController?.yxs_existViewController(existClass: YXSPhotoClassPhotoAlbumListController.self, complete: { (vc) in
-                vc.removeAlbum(albumModel: self.albumModel)
+            self.navigationController?.yxs_existViewController(existClass: YXSPhotoClassPhotoAlbumListController.self, complete: { [weak self](vc) in
+                guard let weakSelf = self else {return}
+                vc.removeAlbum(albumModel: weakSelf.albumModel)
+                weakSelf.navigationController?.popToViewController(vc, animated: true)
             })
-            self.navigationController?.popViewController()
+
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }

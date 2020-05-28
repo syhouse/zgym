@@ -12,15 +12,6 @@ import NightNight
 /// 新建相册
 class YXSPhotoCreateAlbumController: YXSEditAlbumBaseController {
     // MARK: -leftCycle
-    var albumId: Int?
-    init(classId: Int, albumId: Int? = nil) {
-        self.albumId = albumId
-        super.init(classId: classId)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,39 +34,41 @@ class YXSPhotoCreateAlbumController: YXSEditAlbumBaseController {
         }
         
         if selectMediaModel == nil {
-            MBProgressHUD.yxs_showMessage(message: "请选择相册封面")
-            return
-        }
-        
-        YXSFileUploadHelper.sharedInstance.uploadPHAssetDataSource(mediaAssets: [selectMediaModel.asset], storageType: .album, classId: classId, albumId: albumId, progress: nil, sucess: { [weak self](list) in
-            guard let weakSelf = self else {return}
-            
-            if let url = list.first?.fileUrl {
-                MBProgressHUD.yxs_showLoading(inView: weakSelf.view)
-                YXSEducationAlbumCreateRequest.init(classId: weakSelf.classId, albumName: weakSelf.nameField.text!, coverUrl: url).request({ (json) in
-                    MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
-                    MBProgressHUD.yxs_showMessage(message: "创建成功")
-                    weakSelf.changeAlbumBlock?()
-                    weakSelf.navigationController?.popViewController()
-                }) { (msg, code) in
-                    MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
-                    weakSelf.view.makeToast("\(msg)")
-                }
+            MBProgressHUD.yxs_showLoading(inView: self.view)
+            YXSEducationAlbumCreateRequest.init(classId: self.classId, albumName: self.nameField.text!, coverUrl: "").request({ (json) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.view)
+                MBProgressHUD.yxs_showMessage(message: "创建成功")
+                self.changeAlbumBlock?()
+                self.navigationController?.popViewController()
+            }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.view)
+                self.view.makeToast("\(msg)")
             }
             
-        }) { [weak self](msg, code) in
-            guard let weakSelf = self else {return}
+        } else {
+            YXSFileUploadHelper.sharedInstance.uploadPHAssetDataSource(mediaAssets: [selectMediaModel.asset], storageType: .albumCover, classId: classId, progress: nil, sucess: { [weak self](list) in
+                guard let weakSelf = self else {return}
+                
+                if let url = list.first?.fileUrl {
+                    MBProgressHUD.yxs_showLoading(inView: weakSelf.view)
+                    YXSEducationAlbumCreateRequest.init(classId: weakSelf.classId, albumName: weakSelf.nameField.text!, coverUrl: url).request({ (json) in
+                        MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+                        MBProgressHUD.yxs_showMessage(message: "创建成功")
+                        weakSelf.changeAlbumBlock?()
+                        weakSelf.navigationController?.popViewController()
+                    }) { (msg, code) in
+                        MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+                        weakSelf.view.makeToast("\(msg)")
+                    }
+                }
+                
+            }) { [weak self](msg, code) in
+                guard let weakSelf = self else {return}
 
-            MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
-            MBProgressHUD.yxs_showMessage(message: msg)
+                MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
         }
-        
-//        if selectMediaModel != nil{
-//            loadUploadImageData()
-//
-//        }else{
-//            loadUploadFinishData()
-//        }
     }
     
     lazy var createBtn: YXSButton = {

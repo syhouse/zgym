@@ -19,7 +19,7 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
     
     /// 提交完成后的block
     var didSelectTemplateModel: ((_ model: YXSTemplateListModel) -> ())?
-   
+    
     var type: YXSTemplateType = .punchcard
     ///只展示模版
     var punchCardTemplates: [YXSTemplateListModel] = [YXSTemplateListModel]()
@@ -29,7 +29,7 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
     
     ///初始化选中模版
     var selectTemplate: YXSTemplateListModel? = nil
-  
+    
     init(type: YXSTemplateType, templateItems: [YXSTemplateListModel]?) {
         if let templateItems = templateItems{
             self.punchCardTemplates = templateItems
@@ -80,7 +80,16 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
     
     // MARK: - loadData
     func loadData(){
-        YXSEducationTemplateQueryTabTemplateRequest(serviceType: 0).requestCollection({ (list: [YXSTemplateTabModel]) in
+        var serviceType = 0
+        switch YXSPersonDataModel.sharePerson.personStage {
+        case .KINDERGARTEN:
+            serviceType = 0
+        case .PRIMARY_SCHOOL:
+            serviceType = 100
+        case .MIDDLE_SCHOOL:
+            serviceType = 101
+        }
+        YXSEducationTemplateQueryTabTemplateRequest(serviceType: serviceType).requestCollection({ (list: [YXSTemplateTabModel]) in
             var hasFound = false
             for tabModel in list{
                 if let templateList = tabModel.templateList{
@@ -110,7 +119,7 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
         self.navigationController?.popViewController()
     }
     
-   
+    
     // MARK: - UICol
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch type {
@@ -130,23 +139,23 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
         case .notice:
             let curruntModel = tabListTemplates[indexPath.section].templateList?[indexPath.row]
             if let curruntModel = curruntModel{
-            if curruntModel.isSelected{
-                return
-            }
-            for (section, sectionModel) in tabListTemplates.enumerated(){
-                if let templateList = sectionModel.templateList{
-                    for (index, model) in templateList.enumerated(){
-                        if index == indexPath.row && section == indexPath.section{
-                            model.isSelected = true
-                        }else{
-                            model.isSelected = false
+                if curruntModel.isSelected{
+                    return
+                }
+                for (section, sectionModel) in tabListTemplates.enumerated(){
+                    if let templateList = sectionModel.templateList{
+                        for (index, model) in templateList.enumerated(){
+                            if index == indexPath.row && section == indexPath.section{
+                                model.isSelected = true
+                            }else{
+                                model.isSelected = false
+                            }
                         }
                     }
+                    
+                    didSelectTemplateModel?(curruntModel)
                 }
-                
-                didSelectTemplateModel?(curruntModel)
             }
-        }
         }
         
         collectionView.reloadData()

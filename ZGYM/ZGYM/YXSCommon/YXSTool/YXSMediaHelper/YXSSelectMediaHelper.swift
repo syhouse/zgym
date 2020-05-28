@@ -269,7 +269,7 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
             return
         }
         let model = YXSMediaModel()
-        model.showImg = coverImage
+        model.setAssetImage(image: coverImage)
         model.asset = asset
         self.delegate.didSelectMedia(asset: model)
 
@@ -305,7 +305,7 @@ extension YXSSelectMediaHelper: (UIImagePickerControllerDelegate & UINavigationC
                         {
                             //这里拿到了PHAsset对象，往下操作就看自己的需求了
                             let model = YXSMediaModel()
-                            model.showImg = image
+                            model.setAssetImage(image: image)
                             model.asset = assets.firstObject!
                             DispatchQueue.main.async {
                                 self.delegate.didSelectMedia(asset: model)

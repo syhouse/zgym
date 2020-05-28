@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+/// 相册封面
 class YXSPhotoAlbumsListCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,16 +49,23 @@ class YXSPhotoAlbumsListCell: UICollectionViewCell {
     
     func setCellModel(_ model: YXSPhotoAlbumsModel){
         createLabel.isHidden = true
-        redView.isHidden = true
+        
         titleLabel.isHidden = true
         countLabel.isHidden = true
+        
+        if model.id == nil {
+            /// 新建相册
+            redView.isHidden = true
+        } else {
+            redView.isHidden = false
+        }
         
         if model.isSystemCreateItem{
             imageView.image = UIImage.init(named: "yxs_photo_new_ablum")
             createLabel.isHidden = false
         }else{
             
-            imageView.sd_setImage(with: URL.init(string: (model.coverUrl ?? "").yxs_getImageThumbnail()), placeholderImage: UIImage.init(named: "yxs_photo_nocover"))
+            imageView.sd_setImage(with: URL.init(string: model.coverUrl ?? ""), placeholderImage: UIImage.init(named: "yxs_photo_nocover"))
             titleLabel.isHidden = false
             countLabel.isHidden = false
             titleLabel.text = model.albumName

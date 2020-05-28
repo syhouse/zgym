@@ -90,7 +90,16 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
     // MARK: -loadData
     ///查询模版列表
     func loadTemplateData(){
-        YXSEducationTemplateQueryRecommendTemplateRequest(serviceType: 0).requestCollection({ (templateLists: [YXSTemplateListModel]) in
+        var serviceType = 0
+        switch YXSPersonDataModel.sharePerson.personStage {
+        case .KINDERGARTEN:
+            serviceType = 0
+        case .PRIMARY_SCHOOL:
+            serviceType = 100
+        case .MIDDLE_SCHOOL:
+            serviceType = 101
+        }
+        YXSEducationTemplateQueryRecommendTemplateRequest(serviceType: serviceType).requestCollection({ (templateLists: [YXSTemplateListModel]) in
             self.templateLists = templateLists
             if let templateListModel = self.publishModel.templateListModel{
                 for model in self.templateLists{

@@ -57,14 +57,9 @@ class YXSFriendDragItem: UIImageView {
                         self.sd_setImage(with: URL.init(string: model.serviceUrl ?? ""),placeholderImage: kImageDefualtImage)
                     }
                 }else{
-                    if let thumbnailImage = model.thumbnailImage{
-                        image = thumbnailImage
-                    }else{
-                        model.imageSetSucessBlock = {
-                            [weak self] (showImage, thumbnailImage)in
-                            guard let strongSelf = self else { return }
-                            strongSelf.image = thumbnailImage
-                        }
+                    model.getThumbnailImage { [weak self](thumbnailImage) in
+                        guard let strongSelf = self else { return }
+                        strongSelf.image = thumbnailImage
                     }
                 }
                 if  model.type == PHAssetMediaType.video{

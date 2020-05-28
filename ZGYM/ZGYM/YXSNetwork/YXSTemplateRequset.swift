@@ -46,7 +46,7 @@ class YXSEducationTemplateQueryTemplateByIdRequest: YXSBaseRequset {
 }
 
 // MARK: -获取业务类型的所有标签、模板
-
+//        业务类型(已完成0:幼儿园通知模板,1:作业,2:打卡,3:接龙,100:小学通知模板,101:中学通知模板)
 let templateQueryTabTemplate = "/template/query-tab-template"
 class YXSEducationTemplateQueryTabTemplateRequest: YXSBaseRequset {
     init(serviceType: Int) {
@@ -54,6 +54,7 @@ class YXSEducationTemplateQueryTabTemplateRequest: YXSBaseRequset {
         method = .post
         host = homeHost
         path = templateQueryTabTemplate
+            
         param = ["serviceType": serviceType]
     }
 }
