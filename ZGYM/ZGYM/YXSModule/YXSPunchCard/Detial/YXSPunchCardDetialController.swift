@@ -74,6 +74,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
     convenience init(clockInId: Int, childId: Int?,classId: Int){
         self.init(clockInId: clockInId,classId: classId)
         self.childId = childId
+        
         UIUtil.yxs_reduceHomeRed(serviceId: clockInId, childId: childId ?? 0)
     }
     
@@ -266,8 +267,8 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         }
         
         var request: YXSBaseRequset!
-        if let childrenId = childId{
-            request = YXSEducationClockInParentTaskDetailRequest.init(clockInId: clockInId, childrenId: childrenId, currentPage: currentPage)
+        if YXSPersonDataModel.sharePerson.personRole == .PARENT{
+            request = YXSEducationClockInParentTaskDetailRequest.init(clockInId: clockInId, childrenId: childId ?? 0, currentPage: currentPage)
         }else{
             request = YXSEducationClockInTeacherTaskDetailRequest.init(clockInId: clockInId)
         }

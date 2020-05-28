@@ -105,8 +105,11 @@ class YXSPublishModel: NSObject, NSCoding {
     /// 补卡日期
     var patchCardTime: String!
     
-    /// 班级总人数
+    /// 当前选择班级参与人数
     var commitUpperLimit: Int?
+    
+    /// 班级总人数
+    var totalCommitUpperLimit: Int?
     
     ///模版
     var templateListModel: YXSTemplateListModel?
