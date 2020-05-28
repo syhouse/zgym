@@ -11,11 +11,16 @@ import UIKit
 import NightNight
 import ObjectMapper
 
+/// 相片列表
 class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     var dataSource: [YXSPhotoAlbumsDetailListModel] = [YXSPhotoAlbumsDetailListModel]()
     var albumModel: YXSPhotoAlbumsModel
     var videoDuration: Int?
     var updateAlbumModel: ((_ albumModel:  YXSPhotoAlbumsModel)->())?
+    /// 上传资源个数
+    var uploadCount: Int = 0
+    
+    var rightButton: UIButton!
     
     var isEdit: Bool = false
     var resourceIdList: [Int]{
@@ -43,8 +48,8 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    var rightButton: UIButton!
-    // MARK: -leftCycle
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = albumModel.albumName
@@ -63,6 +68,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         rightButton.addTarget(self, action: #selector(rightButtonClick), for: .touchUpInside)
     }
     
+    // MARK: - Request
     override func yxs_refreshData() {
         self.currentPage = 1
         yxs_loadData()
@@ -94,66 +100,103 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         }
     }
     
-    
-    /// 上传资源个数
-    var uploadCount: Int = 0
-    func loadUploadRequest(_ assets: [YXSMediaModel]){
+    /// 上传资源
+    func uploadRequest(_ assets: [YXSMediaModel]){
         uploadCount = assets.count
-        var mediaInfos = [SLUploadSourceModel]()
-        for asset in assets{
-            if asset.type == .video {
-                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .video, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
-                videoDuration = Int(asset.asset.duration)
-            }else{
-                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .image, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
-            }
+        var assetList:[PHAsset] = []
+        for obj in assets{
+            assetList.append(obj.asset)
         }
-        MBProgressHUD.yxs_showUpload()
-        YXSUploadSourceHelper().uploadMedia(mediaInfos: mediaInfos  , progress: {
-            (progress) in
-            MBProgressHUD.yxs_updateUploadProgess(progess: progress)
-        }, sucess: { (lists) in
-            self.loadUploadAlbumRequest(mediaInfos: lists)
+        YXSFileUploadHelper.sharedInstance.uploadPHAssetDataSource(mediaAssets: assetList, storageType: .album, classId: albumModel.classId, albumId: albumModel.id, progress: nil, sucess: { [weak self](list) in
+            guard let weakSelf = self else {return}
+            weakSelf.albumResourceUploadRequest(list: list)
+            
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
         
+//        uploadCount = assets.count
+//        var mediaInfos = [SLUploadSourceModel]()
+//        for asset in assets{
+//            if asset.type == .video {
+//                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .video, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
+//                videoDuration = Int(asset.asset.duration)
+//            }else{
+//                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .image, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
+//            }
+//        }
+//        MBProgressHUD.yxs_showUpload()
+//        YXSUploadSourceHelper().uploadMedia(mediaInfos: mediaInfos  , progress: {
+//            (progress) in
+//            MBProgressHUD.yxs_updateUploadProgess(progess: progress)
+//        }, sucess: { (lists) in
+//            self.loadUploadAlbumRequest(mediaInfos: lists)
+//        }) { (msg, code) in
+//            MBProgressHUD.yxs_showMessage(message: msg)
+//        }
+        
     }
     
-    func loadUploadAlbumRequest(mediaInfos: [SLUploadDataSourceModel]){
+    func albumResourceUploadRequest(list: [YXSFileModel]) {
         var resourceList = [[String: Any]]()
-        var pictures = [String]()
-        var video: String = ""
-        var bgUrl: String = ""
-        for model in mediaInfos{
-            if model.type == .video{
-                video = model.aliYunUploadBackUrl ?? ""
-            }else if model.type == .image{
-                pictures.append(model.aliYunUploadBackUrl ?? "")
-            }else if model.type == .firstVideo{
-                bgUrl = model.aliYunUploadBackUrl ?? ""
+        for model in list{
+            if model.fileType == "mp4" || model.fileType == "mov"{
+                /// 视频
+                resourceList.append(["resourceType": 1, "resourceUrl": model.fileUrl ?? "", "bgUrl": model.bgUrl ?? "", "videoDuration": model.fileDuration ?? 0])
+            }else {
+                /// 图片
+                resourceList.append(["resourceType": 0, "resourceUrl": model.fileUrl ?? "", "bgUrl": "", "videoDuration": 0])
             }
         }
         
         
-        if video.count != 0{
-            resourceList.append(["resourceType": 1, "resourceUrl": video, "bgUrl": bgUrl, "videoDuration": videoDuration ?? 0])
-        }else{
-            for picUrl in pictures{
-                resourceList.append(["resourceType": 0, "resourceUrl": picUrl,"bgUrl": "", "videoDuration": 0])
-            }
-        }
-        YXSEducationAlbumUploadResourceRequest.init(classId: albumModel.classId ?? 0,albumId: albumModel.id ?? 0, resourceList: resourceList).request({ (result) in
+        YXSEducationAlbumUploadResourceRequest(classId: albumModel.classId ?? 0,albumId: albumModel.id ?? 0, resourceList: resourceList).request({ [weak self](result) in
+            guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUD()
-            self.yxs_refreshData()
-            self.albumModel.resourceCount = (self.albumModel.resourceCount ?? 0) + self.uploadCount
-            self.updateAlbumModel?(self.albumModel)
+            weakSelf.yxs_refreshData()
+            weakSelf.albumModel.resourceCount = (weakSelf.albumModel.resourceCount ?? 0) + weakSelf.uploadCount
+            weakSelf.updateAlbumModel?(weakSelf.albumModel)
+            
         }) { (msg, code) in
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
-        
     }
+    
+//    func loadUploadAlbumRequest(mediaInfos: [SLUploadDataSourceModel]){
+//        var resourceList = [[String: Any]]()
+//        var pictures = [String]()
+//        var video: String = ""
+//        var bgUrl: String = ""
+//        for model in mediaInfos{
+//            if model.type == .video{
+//                video = model.aliYunUploadBackUrl ?? ""
+//            }else if model.type == .image{
+//                pictures.append(model.aliYunUploadBackUrl ?? "")
+//            }else if model.type == .firstVideo{
+//                bgUrl = model.aliYunUploadBackUrl ?? ""
+//            }
+//        }
+//
+//
+//        if video.count != 0{
+//            resourceList.append(["resourceType": 1, "resourceUrl": video, "bgUrl": bgUrl, "videoDuration": videoDuration ?? 0])
+//        }else{
+//            for picUrl in pictures{
+//                resourceList.append(["resourceType": 0, "resourceUrl": picUrl,"bgUrl": "", "videoDuration": 0])
+//            }
+//        }
+//        YXSEducationAlbumUploadResourceRequest.init(classId: albumModel.classId ?? 0,albumId: albumModel.id ?? 0, resourceList: resourceList).request({ (result) in
+//            MBProgressHUD.yxs_hideHUD()
+//            self.yxs_refreshData()
+//            self.albumModel.resourceCount = (self.albumModel.resourceCount ?? 0) + self.uploadCount
+//            self.updateAlbumModel?(self.albumModel)
+//        }) { (msg, code) in
+//            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+//            MBProgressHUD.yxs_showMessage(message: msg)
+//        }
+//
+//    }
     
     func loadDelectAlbum(){
         if resourceIdList.count == 0{
@@ -186,9 +229,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         }
     }
     
-    // MARK: -UI
-    
-    // MARK: -action
+    // MARK: - Action
     @objc func rightButtonClick(){
         let vc = YXSPhotoEditAlbumController.init(albumModel: albumModel)
         vc.updateAlbumSucess = {[weak self](albumModel) in
@@ -206,7 +247,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     }
     
     
-    // MARK: -private
+    // MARK: - Private
     func refreshShowFooterData(){
         if self.dataSource.count == 0{
             self.footerView.isHidden = true
@@ -238,9 +279,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         }
     }
     
-    // MARK: -public
-    
-    // MARK: -tableViewDelegate
+    // MARK: - Delegate
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -273,17 +312,23 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         let view = SLBaseEmptyView()
         view.frame = self.view.frame
         view.imageView.mixedImage = MixedImage(normal: "yxs_photo_nodata", night: "yxs_photo_nodata")
-        view.label.text = "你还没有上传过照片哦"
-        view.button.setTitle("上传照片", for: .normal)
-        view.button.setTitleColor(UIColor.white, for: .normal)
-        view.button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        view.button.addTarget(self, action: #selector(addPhotoClick), for: .touchUpInside)
-        view.button.yxs_gradualBackground(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 24.5)
-        view.button.yxs_shadow(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), color: UIColor(red: 0.3, green: 0.45, blue: 0.96, alpha: 0.5), cornerRadius:  24.5, offset: CGSize(width: 0, height: 3))
-        view.button.snp.updateConstraints { (make) in
-            make.size.equalTo(CGSize.init(width: 230, height: 49))
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            view.label.text = "你还没有上传过照片哦"
+            view.button.setTitle("上传照片", for: .normal)
+            view.button.setTitleColor(UIColor.white, for: .normal)
+            view.button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+            view.button.addTarget(self, action: #selector(addPhotoClick), for: .touchUpInside)
+            view.button.yxs_gradualBackground(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 24.5)
+            view.button.yxs_shadow(frame: CGRect.init(x: 0, y: 0, width: 230, height: 49), color: UIColor(red: 0.3, green: 0.45, blue: 0.96, alpha: 0.5), cornerRadius:  24.5, offset: CGSize(width: 0, height: 3))
+            view.button.snp.updateConstraints { (make) in
+                make.size.equalTo(CGSize.init(width: 230, height: 49))
+            }
+            view.button.cornerRadius = 24.5
+            
+        } else {
+            view.label.text = "老师还没有上传照片哦"
         }
-        view.button.cornerRadius = 24.5
+ 
         return view
     }
     // MARK: - getter&setter
@@ -308,15 +353,18 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     }()
 }
 
+// MARK: -
 extension YXSPhotoAlbumDetialListController: YXSSelectMediaHelperDelegate{
     func didSelectMedia(asset: YXSMediaModel) {
-        loadUploadRequest([asset])
+//        loadUploadRequest([asset])
+        uploadRequest([asset])
     }
     
     /// 选中多个图片资源
     /// - Parameter assets: models
     func didSelectSourceAssets(assets: [YXSMediaModel]) {
-        loadUploadRequest(assets)
+//        loadUploadRequest(assets)
+        uploadRequest(assets)
     }
 }
 

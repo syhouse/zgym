@@ -20,6 +20,7 @@ class YXSPhotoClassClassListCell: SLClassBaseListCell {
         bgView.addSubview(photoCountButton)
         photoCountButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(bgView)
+            make.left.equalTo(nameLabel.snp_right).offset(10)
             make.right.equalTo(-44)
             make.size.equalTo(CGSize.init(width: 65, height: 20))
         }

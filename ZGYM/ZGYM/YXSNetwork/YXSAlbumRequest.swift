@@ -136,13 +136,14 @@ class YXSEducationAlbumUpdateAlbumNameOrCoverRequest: YXSBaseRequset {
 /// 删除相册
 let albumDelete = "/album/delete"
 class YXSEducationAlbumDeleteRequest: YXSBaseRequset {
-    init(id: Int){
+    init(id: Int, classId: Int){
         super.init()
         method = .post
         host = fileHost
         path = albumDelete
         param = [
-            "id":id]
+            "id":id,
+            "classId":classId]
     }
 }
 
