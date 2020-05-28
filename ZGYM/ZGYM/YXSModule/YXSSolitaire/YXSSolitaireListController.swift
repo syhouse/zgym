@@ -200,10 +200,13 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
         let model = solitaireLists[indexPath.row]
         let vc = YXSSolitaireDetailController(censusId: model.censusId ?? 0, childrenId: model.childrenId ?? 0, classId: model.classId ?? 0)
         self.navigationController?.pushViewController(vc)
-        if isAgenda && YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             UIUtil.yxs_reduceAgenda(serviceId: model.censusId ?? 0, info: [kEventKey:YXSHomeType.solitaire])
-            //            self.dataSource.remove(at: indexPath.row)
-            //            self.tableView.reloadData()
+            if isAgenda {
+//            self.dataSource.remove(at: indexPath.row)
+//            self.tableView.reloadData()
+            }
+ 
         }
     }
     
