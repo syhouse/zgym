@@ -89,20 +89,21 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         YXSSolitaireQuestionWindow.showWindow {
             [weak self] (type) in
             guard let strongSelf = self else { return }
-            strongSelf.pushQuestionSetVC(questionModel: YXSSolitaireQuestionModel.init(questionType: type), isAdd: true)
+            strongSelf.pushQuestionSetVC(questionModel: nil, type: type)
         }
     }
     
-    func pushQuestionSetVC(questionModel: YXSSolitaireQuestionModel, isAdd: Bool){
-        let vc = YXSSolitaireQuestionSetController(questionModel)
+    func pushQuestionSetVC(questionModel: YXSSolitaireQuestionModel?, editIndex: Int? = nil, type: YXSQuestionType){
+        let vc = YXSSolitaireQuestionSetController(questionModel, type: type)
         vc.completeHandler = {
             [weak self] (questionModel) in
             guard let strongSelf = self else { return }
-            if isAdd{
-                strongSelf.publishModel.solitaireQuestions.append(questionModel)
+            if let editIndex = editIndex{
+                strongSelf.publishModel.solitaireQuestions[editIndex] = questionModel
             }else{
-                
+                strongSelf.publishModel.solitaireQuestions.append(questionModel)
             }
+            strongSelf.tableView.reloadData()
         }
         self.navigationController?.pushViewController(vc)
     }
@@ -148,18 +149,66 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         if #available(iOS 11.0, *){
             tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         }
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
+        tableView.register(YXSSolitaireQuestionItemsCell.self, forCellReuseIdentifier: "YXSSolitaireQuestionItemsCell")
+        tableView.register(YXSSolitaireQuestionBaseCell.self, forCellReuseIdentifier: "YXSSolitaireQuestionBaseCell")
         return tableView
     }()
 }
 
 extension YXSSolitaireCollectorPublishController: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return publishModel.solitaireQuestions.count == 0 ? 0 : 25
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return publishModel.solitaireQuestions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let model = publishModel.solitaireQuestions[indexPath.row]
+        var cell: YXSSolitaireQuestionBaseCell!
+        switch model.type {
+        case .gap, .image:
+            cell = tableView.dequeueReusableCell(withIdentifier: "YXSSolitaireQuestionBaseCell", for: indexPath) as? YXSSolitaireQuestionBaseCell
+        case .checkbox, .single:
+            cell = tableView.dequeueReusableCell(withIdentifier: "YXSSolitaireQuestionItemsCell", for: indexPath) as? YXSSolitaireQuestionItemsCell
+        }
+        cell.questionDealBlock = {
+            [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.dealChangeClick(indexPath: indexPath)
+        }
+        cell.setCellModel(model, index: indexPath.row)
+        return cell
+    }
+    
+    func dealChangeClick(indexPath: IndexPath){
+        let model = publishModel.solitaireQuestions[indexPath.row]
+        let cell = self.tableView.cellForRow(at: indexPath)
+        if let cell  = cell as? YXSSolitaireQuestionBaseCell{
+            let selectFrame = cell.convert(cell.dealBtn.frame, to: self.tabBarController?.view)
+            var y: CGFloat =  selectFrame.maxY - 4
+            let selectHeight: CGFloat = 2*35 + kSafeBottomHeight
+            if SCREEN_HEIGHT - y < selectHeight {
+                y = SCREEN_HEIGHT - selectHeight
+            }
+            
+            let selects = [YXSSelectModel.init(text: "编辑", isSelect: false, paramsKey: "10"),YXSSelectModel.init(text: "删除", isSelect: false, paramsKey: "20")]
+            YXSBaseSelectView.showAlert(offset: CGPoint.init(x: 14.5, y: y), selects:  selects) { [weak self](index, selectTypeModels) in
+                guard let strongSelf = self else { return }
+                if selects[index].paramsKey == "10"{
+                    strongSelf.pushQuestionSetVC(questionModel: model, editIndex: indexPath.row, type: model.type)
+                }else{
+                    strongSelf.publishModel.solitaireQuestions.remove(at: indexPath.row)
+                    strongSelf.tableView.reloadData()
+                }
+                strongSelf.fd_interactivePopDisabled = false
+            }
+        }
     }
 }
 

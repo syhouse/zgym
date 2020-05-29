@@ -216,7 +216,7 @@ class YXSSolitairePublishController: YXSCommonPublishBaseController {
             picture = pictures.joined(separator: ",")
         }
         MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
-        YXSEducationCensusTeacherPublishRequest.init(classIdList: classIdList, content: publishView.textView.text, audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "",commitUpperLimit: commitUpperLimit ?? 0, optionList: options, endTime: publishModel.solitaireDate!.toString(format: DateFormatType.custom("yyyy-MM-dd HH:mm:ss")), isTop: topSwitch.isSelect ? 1 : 0).request({ (result) in
+        YXSEducationCensusTeacherPublishRequest.init(classIdList: classIdList, content: publishView.getTextContent(), audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "",commitUpperLimit: commitUpperLimit ?? 0, optionList: options, endTime: publishModel.solitaireDate!.toString(format: DateFormatType.custom("yyyy-MM-dd HH:mm:ss")), isTop: topSwitch.isSelect ? 1 : 0).request({ (result) in
             MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
             MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
             self.yxs_remove()

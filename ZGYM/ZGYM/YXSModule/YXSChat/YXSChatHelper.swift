@@ -202,6 +202,8 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallRefreshPunchCardNotification), object: model)
                 }else if model.serviceType == 101 {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallRefreshHomeworkNotification), object: model)
+                }else if model.serviceType == 108 {//身份变更通知
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallChangeRoleLoginOutNotification), object: model)
                 }
                 else {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallRefreshNotification), object: model)

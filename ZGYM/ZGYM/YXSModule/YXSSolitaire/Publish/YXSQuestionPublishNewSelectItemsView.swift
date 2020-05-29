@@ -42,7 +42,7 @@ class YXSQuestionPublishNewSelectItemsView: UIView{
         let showMore:Bool = self.selectModels.count < maxItems
         var last: UIView!
         for (index, model) in self.selectModels.enumerated(){
-            let section = YXSQuestionPublishItem.init(selectModel: model, showDelect: (index != 0 && index == self.selectModels.count - 1))
+            let section = YXSQuestionPublishItem.init(selectModel: model, showDelect: index != 0)
             addSubview(section)
             if becomeFirst, index == self.selectModels.count - 1{
                 section.contentField.becomeFirstResponder()
@@ -102,7 +102,6 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
         addSubview(leftLabel)
         addSubview(contentField)
         addSubview(meidaItem)
-        contentField.text = selectModel?.title
         yxs_addLine(position: .bottom, leftMargin: 15.5, rightMargin: 0.5, lineHeight: 0.5)
         leftLabel.snp.makeConstraints { (make) in
             make.left.equalTo(14.5)
@@ -126,6 +125,10 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
                 make.top.equalTo(meidaItem.snp_bottom).offset(8)
             }
         }
+        
+        ///初始化数据
+        contentField.text = selectModel?.title
+        meidaItem.model = selectModel?.mediaModel
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.greetingTextFieldChanged),
@@ -155,7 +158,16 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
     
     @objc func itemClick(tap : UITapGestureRecognizer){
         if let model = meidaItem.model{
-            YXSShowBrowserHelper.showImage(assets: [model.asset], currentIndex: 0)
+            var urls = [URL]()
+            var assets = [PHAsset]()
+            if model.isService{
+                if let  url = URL.init(string: model.serviceUrl ?? ""){
+                    urls = [url]
+                }
+            }else{
+                assets = [model.asset]
+            }
+            YXSShowBrowserHelper.showImage(urls: urls,assets: assets, currentIndex: 0)
         }else{
             YXSSelectMediaHelper.shareHelper.showSelectMedia(selectImage: true)
             YXSSelectMediaHelper.shareHelper.delegate = self

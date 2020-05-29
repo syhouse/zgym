@@ -76,6 +76,7 @@ class NSUtil {
             }
         }
         let dirString = dir as NSString
+        SLLog(dirString.appendingPathComponent(file))
         return dirString.appendingPathComponent(file)
     }
     

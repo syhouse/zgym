@@ -67,6 +67,8 @@ enum StageType: String {
                 break
             }
         }
+        
+        NotificationCenter.default.addObserver(instance, selector: #selector(userLogout), name: NSNotification.Name(rawValue: kChatCallChangeRoleLoginOutNotification), object: nil)
         return instance
     }()
     /*
@@ -119,6 +121,16 @@ enum StageType: String {
         }
     }
     
+    ///是否是班主任
+    public func isMaster(_ classId: Int) -> Bool{
+        for model in YXSCacheHelper.yxs_getCacheClassCreateList(){
+            if model.id == classId{
+                return true
+            }
+        }
+        return false
+    }
+    
     public var showKINDERGARTENUI: Bool {
         get{
             return (YXSPersonDataModel.sharePerson.personRole == .PARENT && (StageType.init(rawValue:yxs_user.currentChild?.grade?.stage ?? "") ?? StageType.PRIMARY_SCHOOL) == StageType.KINDERGARTEN) || (YXSPersonDataModel.sharePerson.personRole == .TEACHER && self.personStage == .KINDERGARTEN)
@@ -137,7 +149,7 @@ enum StageType: String {
     }
     
     /// 退出登录
-    public func userLogout(){
+    @objc public func userLogout(){
         self.token = ""
         self.userModel = YXSEducationUserModel.init(JSON: ["": ""])
         YXSChatHelper.sharedInstance.logout()

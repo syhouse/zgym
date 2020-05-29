@@ -287,7 +287,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
                     self.yxs_remove()
                     
                     mySubmitModel.audioUrl = audioUrl
-                    mySubmitModel.content = self.publishView.textView.text
+                    mySubmitModel.content = self.publishView.getTextContent()
                     mySubmitModel.audioDuration = self.publishModel.audioModels.first?.time ?? 0
                     mySubmitModel.bgUrl = bgUrl
                     mySubmitModel.videoUrl = video
