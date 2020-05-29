@@ -10,7 +10,8 @@ import UIKit
 
 let kYXSPhotoShowAlubmFooterViewMoreEventKey = "YXSPhotoShowAlubmFooterViewMoreEventKey"
 
-class YXSPhotoShowAlubmFooterView: UIView {
+/// 赞/评论
+class YXSPhotoPreviewFooterView: UIView {
     var model: YXSPhotoAlbumsPraiseModel!
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -79,6 +80,7 @@ class YXSPhotoShowAlubmFooterView: UIView {
     }
     
     
+    // MARK: - LazyLoad
     lazy var minePriseButton: YXSCustomImageControl = {
         let minePriseButton = YXSCustomImageControl.init(imageSize: CGSize.init(width: 22, height: 22), position: YXSImagePositionType.left, padding: 7)
         minePriseButton.setTitleColor(UIColor.white, for: .normal)

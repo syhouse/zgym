@@ -171,8 +171,8 @@ class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate,
        return customNav
     }()
     
-    lazy var footerView: YXSPhotoShowAlubmFooterView = {
-       let footerView = YXSPhotoShowAlubmFooterView()
+    lazy var footerView: YXSPhotoPreviewFooterView = {
+       let footerView = YXSPhotoPreviewFooterView()
         footerView.isHidden = true
         footerView.cellBlock = {[weak self]
             (isComment) in

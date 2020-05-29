@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+/// X
 class YXSPhotoShowAlubmCell: UICollectionViewCell {
     var isEdit: Bool = false
     override init(frame: CGRect) {

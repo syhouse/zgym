@@ -117,13 +117,13 @@ class YXSEducationAlbumBatchDeleteResourceRequest: YXSBaseRequset {
 /// 修改相册名称或封面
 let albumUpdateAlbumNameOrCover = "/album/update-name-or-cover"
 class YXSEducationAlbumUpdateAlbumNameOrCoverRequest: YXSBaseRequset {
-    init(id: Int, albumName: String?,coverUrl: String?){
+    init(id: Int, classId: Int, albumName: String?,coverUrl: String?){
         super.init()
         method = .post
         host = fileHost
         path = albumUpdateAlbumNameOrCover
         param = [
-            "id":id]
+            "id":id, "classId":classId]
         if let albumName = albumName{
             param?["albumName"] = albumName
         }
