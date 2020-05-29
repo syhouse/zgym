@@ -624,6 +624,8 @@
 		6F5677AB247F56E800B523ED /* YXSSolitaireQuestionWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5677AA247F56E800B523ED /* YXSSolitaireQuestionWindow.swift */; };
 		6F5677AD247F665C00B523ED /* YXSSolitaireQuestionSetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5677AC247F665C00B523ED /* YXSSolitaireQuestionSetController.swift */; };
 		6F5677AF247F66B700B523ED /* YXSSolitaireQuestionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5677AE247F66B700B523ED /* YXSSolitaireQuestionModel.swift */; };
+		6F5677B1247F939200B523ED /* YXSQuestionPublishNewSelectItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5677B0247F939200B523ED /* YXSQuestionPublishNewSelectItemsView.swift */; };
+		6F5677B3247FB6A400B523ED /* YXSSolitaireQuestionBaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5677B2247FB6A400B523ED /* YXSSolitaireQuestionBaseCell.swift */; };
 		6F5720BF24493CAC00E1F301 /* 打包注意 in Resources */ = {isa = PBXBuildFile; fileRef = 6F5720BE24493CAC00E1F301 /* 打包注意 */; };
 		6F641E3C2456E4020049D295 /* YXSXMCommonFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F641E3B2456E4020049D295 /* YXSXMCommonFooterView.swift */; };
 		6F641E3E24590DBE0049D295 /* YXSClassStarTopHistoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F641E3D24590DBE0049D295 /* YXSClassStarTopHistoryModel.swift */; };
@@ -1797,6 +1799,8 @@
 		6F5677AA247F56E800B523ED /* YXSSolitaireQuestionWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireQuestionWindow.swift; sourceTree = "<group>"; };
 		6F5677AC247F665C00B523ED /* YXSSolitaireQuestionSetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireQuestionSetController.swift; sourceTree = "<group>"; };
 		6F5677AE247F66B700B523ED /* YXSSolitaireQuestionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireQuestionModel.swift; sourceTree = "<group>"; };
+		6F5677B0247F939200B523ED /* YXSQuestionPublishNewSelectItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSQuestionPublishNewSelectItemsView.swift; sourceTree = "<group>"; };
+		6F5677B2247FB6A400B523ED /* YXSSolitaireQuestionBaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireQuestionBaseCell.swift; sourceTree = "<group>"; };
 		6F5720BE24493CAC00E1F301 /* 打包注意 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "打包注意"; sourceTree = "<group>"; };
 		6F641E3B2456E4020049D295 /* YXSXMCommonFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSXMCommonFooterView.swift; sourceTree = "<group>"; };
 		6F641E3D24590DBE0049D295 /* YXSClassStarTopHistoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarTopHistoryModel.swift; sourceTree = "<group>"; };
@@ -4321,6 +4325,8 @@
 				6F5677AA247F56E800B523ED /* YXSSolitaireQuestionWindow.swift */,
 				6F5677AC247F665C00B523ED /* YXSSolitaireQuestionSetController.swift */,
 				6F5677AE247F66B700B523ED /* YXSSolitaireQuestionModel.swift */,
+				6F5677B0247F939200B523ED /* YXSQuestionPublishNewSelectItemsView.swift */,
+				6F5677B2247FB6A400B523ED /* YXSSolitaireQuestionBaseCell.swift */,
 			);
 			path = Publish;
 			sourceTree = "<group>";
@@ -6313,6 +6319,7 @@
 				E58F16DC245149D400A6AC18 /* YXSRouterEventProtocol.swift in Sources */,
 				E58F170A245149D500A6AC18 /* YXSURLProtocol.swift in Sources */,
 				6F0705EA2445D8060090975B /* LFResultVideo.m in Sources */,
+				6F5677B3247FB6A400B523ED /* YXSSolitaireQuestionBaseCell.swift in Sources */,
 				6FEA7C172452990D0017C9CA /* LFFilter+save.m in Sources */,
 				6F07051E2445D8050090975B /* YXSHomeworkCommitDetailViewController.swift in Sources */,
 				6F0703A02445D8030090975B /* TUIFaceMessageCell.m in Sources */,
@@ -6403,6 +6410,7 @@
 				6F0704662445D8040090975B /* YXSPersonDataModel.swift in Sources */,
 				6F0703912445D8030090975B /* TUIIncommingTextCellLayout.m in Sources */,
 				E5DD2740247E1835000BB1A9 /* YXSScorePublishView.swift in Sources */,
+				6F5677B1247F939200B523ED /* YXSQuestionPublishNewSelectItemsView.swift in Sources */,
 				6F0704A12445D8040090975B /* YXSTransferClassViewController.swift in Sources */,
 				6F0703DD2445D8030090975B /* UIImageView+AFNetworking.m in Sources */,
 				6F0703762445D8030090975B /* TUIContactActionCellData.m in Sources */,

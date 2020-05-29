@@ -89,9 +89,22 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         YXSSolitaireQuestionWindow.showWindow {
             [weak self] (type) in
             guard let strongSelf = self else { return }
-            let vc = YXSSolitaireQuestionSetController(YXSSolitaireQuestionModel.init(questionType: type))
-            strongSelf.navigationController?.pushViewController(vc)
+            strongSelf.pushQuestionSetVC(questionModel: YXSSolitaireQuestionModel.init(questionType: type), isAdd: true)
         }
+    }
+    
+    func pushQuestionSetVC(questionModel: YXSSolitaireQuestionModel, isAdd: Bool){
+        let vc = YXSSolitaireQuestionSetController(questionModel)
+        vc.completeHandler = {
+            [weak self] (questionModel) in
+            guard let strongSelf = self else { return }
+            if isAdd{
+                strongSelf.publishModel.solitaireQuestions.append(questionModel)
+            }else{
+                
+            }
+        }
+        self.navigationController?.pushViewController(vc)
     }
     
     // MARK: - private
@@ -142,11 +155,14 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
 
 extension YXSSolitaireCollectorPublishController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return publishModel.solitaireQuestions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }
 }
+
+
+
 

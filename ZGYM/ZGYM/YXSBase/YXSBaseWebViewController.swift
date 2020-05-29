@@ -28,7 +28,9 @@ class YXSBaseWebViewController: YXSBaseViewController, WKNavigationDelegate, WKS
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        YXSMusicPlayerWindowView.setView(hide: false)
+        if self.navigationController?.viewControllers.first is YXSExcellentEducationVC{
+            YXSMusicPlayerWindowView.setView(hide: false)
+        }
     }
     
     override func viewDidLoad() {
