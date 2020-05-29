@@ -33,6 +33,7 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
         super.viewDidLoad()
         title = "接龙"
         self.publishType = .solitaire
+        
         setTeacherUI()
         
         if classId != nil{
@@ -41,6 +42,8 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
         
         scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
         contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
+
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -161,7 +164,7 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
             picture = pictures.joined(separator: ",")
         }
         MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
-        YXSEducationCensusTeacherPublishRequest.init(classIdList: classIdList, content: publishView.textView.text, audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "",commitUpperLimit: publishModel.commitUpperLimit ?? 0, optionList: options, endTime: publishModel.solitaireDate!.toString(format: DateFormatType.custom("yyyy-MM-dd HH:mm:ss")), isTop: publishModel.isTop ? 1 : 0).request({ (result) in
+        YXSEducationCensusTeacherPublishRequest.init(classIdList: classIdList, content: publishView.getTextContent(), audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "",commitUpperLimit: publishModel.commitUpperLimit ?? 0, optionList: options, endTime: publishModel.solitaireDate!.toString(format: DateFormatType.custom("yyyy-MM-dd HH:mm:ss")), isTop: publishModel.isTop ? 1 : 0).request({ (result) in
             MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
             MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
             self.yxs_remove()
@@ -187,9 +190,7 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
     
     
     override func save(){
-//        publishModel.solitaireSelects = selectView.selectModels
-//        publishModel.isTop = topSwitch.swt.isOn
-//        NSKeyedArchiver.archiveRootObject(publishModel, toFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive"))
+        NSKeyedArchiver.archiveRootObject(publishModel, toFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive"))
     }
     
     // MARK: - private

@@ -23,8 +23,12 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
     
     let textMinHeight: CGFloat = 120
     
-    init(_ questionModel: YXSSolitaireQuestionModel) {
-        self.questionModel = questionModel
+    init(_ questionModel: YXSSolitaireQuestionModel?, type: YXSQuestionType) {
+        if let questionModel = questionModel{
+            self.questionModel = questionModel
+        }else{
+           self.questionModel = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_cachePath(file: "question_\(type.rawValue)", directory: "archive")) as? YXSSolitaireQuestionModel ?? YXSSolitaireQuestionModel(questionType: type)
+        }
         super.init()
     }
     
@@ -56,6 +60,7 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         let backButton = yxs_setNavLeftTitle(title: "取消")
         backButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         backButton.setMixedTitleColor( MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNightBCC6D4) , forState: .normal)
+        
         initUI()
     }
     
@@ -112,6 +117,11 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
             make.right.equalTo(-20)
             make.bottom.equalTo(-21.5)
         }
+        
+        
+        textView.text = questionModel.questionStemText
+        isNecessarySwitch.swt.isOn = questionModel.isNecessary
+        
         switch questionModel.type {
         case .single:
             self.title = "添加单选题"
@@ -192,6 +202,13 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
                 make.height.equalTo(10)
             }
             
+            textBgView.snp.remakeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.right.equalTo(0)
+                make.top.equalTo(questionItemCountSection.snp_bottom).offset(10)
+                make.bottom.equalTo(0).priorityHigh()
+            }
+            
             contentView.addSubview(questionNameLabel)
             questionNameLabel.snp.makeConstraints { (make) in
                 make.top.equalTo(textBgView.snp_bottom).offset(19)
@@ -205,6 +222,7 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
             }
             scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
             contentView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
+            
             resetQuestionItemCount()
         }
         
@@ -226,6 +244,7 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
     
     /// 保存
     func save(){
+        questionModel.solitaireSelects = selectView.selectModels
         NSKeyedArchiver.archiveRootObject(questionModel, toFile: NSUtil.yxs_cachePath(file: "question_\(self.questionModel.type.rawValue)", directory: "archive"))
     }
     
@@ -248,6 +267,8 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
     
     @objc func rightClick(){
         self.view.endEditing(true)
+        questionModel.solitaireSelects = selectView.selectModels
+        self.view.endEditing(true)
         if !yxs_cheackCanSetUp(){
             return
         }
@@ -256,6 +277,7 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
     }
     
     @objc func questionItemCountClick(){
+        self.view.endEditing(true)
         let maxImageCount: Int = questionModel.solitaireSelects?.count ?? 1
         var dataSource = [YXSPunchCardDay]()
         
@@ -363,11 +385,12 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         let textView = YXSPlaceholderTextView()
         textView.limitCount = limitTextLength
         textView.font = kTextMainBodyFont
-        textView.placeholderMixColor = MixedColor(normal: kNight898F9A, night: kNight898F9A)
+        textView.isScrollEnabled = false
+        textView.placeholderMixColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), night: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"))
         let textColor = NightNight.theme == .night ? UIColor.white : kTextMainBodyColor
         textView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight20232F)
         textView.placeholder = "请输入题干"
-        textView.contentInset = UIEdgeInsets.init(top: 20, left: 15, bottom: 0, right: 0)
+        textView.textContainerInset = UIEdgeInsets.init(top: 20, left: 15, bottom: 0, right: 0)
         textView.textDidChangeBlock = {
             [weak self](text: String) in
             guard let strongSelf = self else { return }

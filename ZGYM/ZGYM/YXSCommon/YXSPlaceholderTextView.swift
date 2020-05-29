@@ -71,8 +71,8 @@ class YXSPlaceholderTextView: UITextView{
     }
     
     override func layoutSubviews() {
-        placeholderLabel.yxs_y = 5
-        placeholderLabel.yxs_x = 2
+        placeholderLabel.yxs_y = textContainerInset.top
+        placeholderLabel.yxs_x = 2 + textContainerInset.left
         placeholderLabel.yxs_width = self.yxs_width - placeholderLabel.yxs_x*2
         placeholderLabel.yxs_height = placeholderLabel.sizeThatFits(CGSize(width: placeholderLabel.yxs_width,height: CGFloat.greatestFiniteMagnitude)).height
     }

@@ -433,7 +433,17 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                 cell.yxs_setCellModel(model)
                 cell.cellLongTapEvent = {[weak self]  in
                     guard let strongSelf = self else { return }
-                    strongSelf.yxs_showTopAlert(indexPath: indexPath)
+                    if model.isTop == 1{
+                        if model.teacherId == strongSelf.yxs_user.id || YXSPersonDataModel.sharePerson.isMaster(model.classId ?? 0){
+                            strongSelf.yxs_showTopAlert(indexPath: indexPath)
+                        }
+                    }else{
+                        if model.teacherId == strongSelf.yxs_user.id{
+                            strongSelf.yxs_showTopAlert(indexPath: indexPath)
+                        }
+                    }
+                    
+                    
                 }
                 cell.cellBlock = {[weak self] (type: YXSHomeCellEvent) in
                     guard let strongSelf = self else { return }

@@ -106,7 +106,9 @@ class YXSNineMediaView: UIView{
                     return
                 }else{
                     if model.type == .serviceImg {
-                        urls.append(URL.init(string: model.url ?? "")!)
+                        if let url = URL.init(string: model.url ?? ""){
+                            urls.append(url)
+                        }
                     }else{
                         images.append(UIImage.init(named: model.url ?? ""))
                     }
