@@ -84,6 +84,7 @@ class YXSPhotoPreviewFooterView: UIView {
     lazy var minePriseButton: YXSCustomImageControl = {
         let minePriseButton = YXSCustomImageControl.init(imageSize: CGSize.init(width: 22, height: 22), position: YXSImagePositionType.left, padding: 7)
         minePriseButton.setTitleColor(UIColor.white, for: .normal)
+        minePriseButton.setTitleColor(UIColor.white, for: .selected)
         minePriseButton.setTitle("赞", for: .normal)
         minePriseButton.setTitle("赞", for: .selected)
         minePriseButton.font = UIFont.systemFont(ofSize: 16)

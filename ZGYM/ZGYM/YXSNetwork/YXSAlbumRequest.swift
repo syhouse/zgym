@@ -165,13 +165,30 @@ class YXSEducationAlbumQueryCommentListAndPraiseRequest: YXSBaseRequset {
 ///点赞|取消点赞相册资源
 let albumPraiseOrCancel = "/album/praise-or-cancel"
 class YXSEducationAlbumPraiseOrCancelRequest: YXSBaseRequset {
-    init(albumId: Int, resourceId: Int){
+    init(albumId: Int, classId: Int, resourceId: Int){
         super.init()
         method = .post
         host = fileHost
-        path = albumQueryCommentListAndPraise
+        path = albumPraiseOrCancel
         param = [
             "albumId":albumId,
+            "classId":classId,
+            "resourceId":resourceId]
+    }
+}
+
+
+/// 某张图片的点赞数量
+let albumQueryPraiseCommentCount = "/album/query-praise-comment-count"
+class YXSEducationAlbumQueryPraiseCommentCountRequest: YXSBaseRequset {
+    init(albumId: Int, classId: Int, resourceId: Int){
+        super.init()
+        method = .post
+        host = fileHost
+        path = albumQueryPraiseCommentCount
+        param = [
+            "albumId":albumId,
+            "classId":classId,
             "resourceId":resourceId]
     }
 }

@@ -76,13 +76,58 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             make.height.equalTo(64)
         })
         
-//        footerView.cellBlock = {[weak self](value) in
-//            guard let weakSelf = self else {return}
-//        }
     }
     
+    // MARK: - Request
+    @objc func albumQueryPraiseCommentCountRequest(page: Int) {
+//        YXSEducationAlbumQueryPraiseCommentCountRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0)
+        let model = dataSource[page]
+        YXSEducationAlbumQueryPraiseCommentCountRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            
+            let praiseCount = json["praiseCount"].intValue
+            let commentCount = json["commentCount"].intValue
+            let praiseStat = json["praiseStat"].boolValue
+            
+            weakSelf.footerView.minePriseButton.isSelected = praiseStat
+            weakSelf.footerView.commentButton.title = "评论(\(commentCount))"
+            weakSelf.footerView.currentPriseButton.title = "\(praiseCount)"
+            
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
 
     // MARK: - Action
+    @objc func praiseOrCancelClick(sender: UIButton) {
+        let model = dataSource[browserView?.currentPage ?? 0]
+        YXSEducationAlbumPraiseOrCancelRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0).request({ [weak self](json) in
+            guard let weakSelf = self else {return}
+            let selected = json.boolValue
+            let priseCount = weakSelf.footerView.currentPriseButton.title
+
+            var count: Int = priseCount?.int ?? 0
+            if selected {
+                count += 1
+            } else {
+                count -= 1
+            }
+            weakSelf.footerView.currentPriseButton.title = "\(count)"
+
+            sender.isSelected = selected
+            
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
+    
+    @objc func commentClick(sender: UIButton) {
+        
+    }
+    
+    @objc func moreClick(sender: UIButton) {
+        
+    }
     
     
     // MARK: - Delegate
@@ -115,6 +160,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, pageChanged page: Int, data: YBIBDataProtocol) {
         customNav.title = "\(page + 1)/\(dataSource.count)"
+        albumQueryPraiseCommentCountRequest(page: page)
     }
     
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, respondsToLongPressWithData data: YBIBDataProtocol) {
@@ -167,6 +213,9 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     lazy var footerView: YXSPhotoPreviewFooterView = {
         let view = YXSPhotoPreviewFooterView()
         view.backgroundColor = UIColor.black
+//        view.minePriseButton.addTarget(self, action: #selector(pra), for: .touchUpInside)
+        view.minePriseButton.addTarget(self, action: #selector(praiseOrCancelClick(sender:)), for: .touchUpInside)
+        view.commentButtonClick()
         return view
     }()
     
