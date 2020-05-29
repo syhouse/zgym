@@ -14,11 +14,15 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
     /// 问题model
     var questionModel : YXSSolitaireQuestionModel
     
+    var completeHandler: ((_ questionModel: YXSSolitaireQuestionModel) -> ())?
+    
     let scrollView = UIScrollView()
     let contentView = UIView()
     
     let limitTextLength = 400
-
+    
+    let textMinHeight: CGFloat = 120
+    
     init(_ questionModel: YXSSolitaireQuestionModel) {
         self.questionModel = questionModel
         super.init()
@@ -52,11 +56,6 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         let backButton = yxs_setNavLeftTitle(title: "取消")
         backButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         backButton.setMixedTitleColor( MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNightBCC6D4) , forState: .normal)
-        
-        
-        scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNightBackgroundColor)
-        contentView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNightBackgroundColor)
-        
         initUI()
     }
     
@@ -74,31 +73,58 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
             make.left.right.equalTo(view) // 确定的宽度，因为垂直滚动
         }
         contentView.addSubview(isNecessarySwitch)
-        contentView.addSubview(textView)
-        contentView.addSubview(textCountlabel)
+        contentView.addSubview(textBgView)
+        
+        textBgView.addSubview(textView)
+        textBgView.addSubview(textCountlabel)
+        
+        let lineView = UIView()
+        lineView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
+        contentView.addSubview(lineView)
+        lineView.snp.makeConstraints { (make) in
+            make.top.equalTo(0)
+            make.left.right.equalTo(0)
+            make.height.equalTo(10)
+        }
+        
+        let lineView1 = UIView()
+        lineView1.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
+        contentView.addSubview(lineView1)
         
         isNecessarySwitch.snp.makeConstraints { (make) in
             make.top.equalTo(10)
             make.left.right.equalTo(0)
             make.height.equalTo(49)
         }
-                   textView.snp.makeConstraints { (make) in
-                    make.left.right.equalTo(0)
-            make.right.equalTo(-15)
-            make.height.equalTo(120)
-                    make.top.equalTo(isNecessarySwitch.snp_bottom).offset(10)
+        textBgView.snp.makeConstraints { (make) in
+            make.left.right.equalTo(0)
+            make.right.equalTo(0)
+            make.top.equalTo(isNecessarySwitch.snp_bottom).offset(10)
         }
-
+        textView.snp.makeConstraints { (make) in
+            make.left.top.equalTo(0)
+            make.right.equalTo(-15)
+            make.height.equalTo(textMinHeight)
+        }
+        textCountlabel.snp.makeConstraints { (make) in
+            make.top.equalTo(textView.snp_bottom).offset(5)
+            make.height.equalTo(20)
+            make.right.equalTo(-20)
+            make.bottom.equalTo(-21.5)
+        }
         switch questionModel.type {
         case .single:
-            textCountlabel.snp.makeConstraints { (make) in
-                make.top.equalTo(textView.snp_bottom).offset(5)
-                make.height.equalTo(20)
-                make.right.equalTo(-20)
+            self.title = "添加单选题"
+            
+            lineView1.snp.makeConstraints { (make) in
+                make.top.equalTo(isNecessarySwitch.snp_bottom)
+                make.left.right.equalTo(0)
+                make.height.equalTo(10)
             }
+            
             contentView.addSubview(questionNameLabel)
             questionNameLabel.snp.makeConstraints { (make) in
-                make.top.equalTo(textCountlabel.snp_bottom).offset(19)
+                make.top.equalTo(textBgView.snp_bottom).offset(19)
                 make.left.equalTo(15)
             }
             contentView.addSubview(selectView)
@@ -107,18 +133,100 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
                 make.top.equalTo(questionNameLabel.snp_bottom).offset(13)
                 make.bottom.equalTo(-40)
             }
-        default:
-            break
+            scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
+            contentView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
+        case .gap:
+            self.title = "添加填空题"
+            
+            lineView1.snp.makeConstraints { (make) in
+                make.top.equalTo(isNecessarySwitch.snp_bottom)
+                make.left.right.equalTo(0)
+                make.height.equalTo(10)
+            }
+            
+            textBgView.snp.remakeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.right.equalTo(0)
+                make.top.equalTo(isNecessarySwitch.snp_bottom).offset(10)
+                make.bottom.equalTo(0).priorityHigh()
+            }
+            scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
+            contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
+        case .image:
+            self.title = "添加图片题"
+            contentView.addSubview(imageSelectSection)
+            imageSelectSection.snp.makeConstraints { (make) in
+                make.top.equalTo(isNecessarySwitch.snp_bottom)
+                make.left.right.equalTo(0)
+                make.height.equalTo(49)
+            }
+            lineView1.snp.makeConstraints { (make) in
+                make.top.equalTo(imageSelectSection.snp_bottom)
+                make.left.right.equalTo(0)
+                make.height.equalTo(10)
+            }
+            
+            textBgView.snp.remakeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.right.equalTo(0)
+                make.top.equalTo(imageSelectSection.snp_bottom).offset(10)
+                make.bottom.equalTo(0).priorityHigh()
+            }
+            
+            scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
+            contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
+            
+            self.questionItemCountSection.rightLabel.text = "\(questionModel.imageLimint)"
+            self.questionItemCountSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        case .checkbox:
+            self.title = "添加多选题"
+            contentView.addSubview(questionItemCountSection)
+            questionItemCountSection.snp.makeConstraints { (make) in
+                make.top.equalTo(isNecessarySwitch.snp_bottom)
+                make.left.right.equalTo(0)
+                make.height.equalTo(49)
+            }
+            lineView1.snp.makeConstraints { (make) in
+                make.top.equalTo(questionItemCountSection.snp_bottom)
+                make.left.right.equalTo(0)
+                make.height.equalTo(10)
+            }
+            
+            contentView.addSubview(questionNameLabel)
+            questionNameLabel.snp.makeConstraints { (make) in
+                make.top.equalTo(textBgView.snp_bottom).offset(19)
+                make.left.equalTo(15)
+            }
+            contentView.addSubview(selectView)
+            selectView.snp.makeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.top.equalTo(questionNameLabel.snp_bottom).offset(13)
+                make.bottom.equalTo(-40)
+            }
+            scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
+            contentView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
+            resetQuestionItemCount()
         }
         
-        
-        
-        
+    }
+    
+    func updateUI(){
+        let size = textView.sizeThatFits(CGSize.init(width: SCREEN_WIDTH - 30, height: 3000))
+        let textHeight = size.height + 20 > textMinHeight ? size.height + 20 : textMinHeight
+        textView.snp.updateConstraints({ (make) in
+            make.height.equalTo(textHeight)
+        })
+    }
+    
+    ///更新图片上线数
+    func resetQuestionItemCount(){
+        self.questionItemCountSection.rightLabel.text = "\(questionModel.maxSelect ?? (questionModel.solitaireSelects?.count ?? 1))"
+        self.questionItemCountSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
     }
     
     /// 保存
     func save(){
-        
+        NSKeyedArchiver.archiveRootObject(questionModel, toFile: NSUtil.yxs_cachePath(file: "question_\(self.questionModel.type.rawValue)", directory: "archive"))
     }
     
     // MARK: -action
@@ -140,10 +248,50 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
     
     @objc func rightClick(){
         self.view.endEditing(true)
-        
         if !yxs_cheackCanSetUp(){
             return
         }
+        completeHandler?(questionModel)
+        self.navigationController?.popViewController()
+    }
+    
+    @objc func questionItemCountClick(){
+        let maxImageCount: Int = questionModel.solitaireSelects?.count ?? 1
+        var dataSource = [YXSPunchCardDay]()
+        
+        let curruntIndex: Int = questionItemCountSection.rightLabel.text?.int ?? 1
+        var selectModel: YXSPunchCardDay!
+        
+        for index in 1...maxImageCount{
+            let model = YXSPunchCardDay.init("\(maxImageCount - index + 1)", index)
+            dataSource.append(model)
+            if index == curruntIndex{
+                selectModel = model
+            }
+        }
+        YXSPunchCardSelectDaysView.showAlert(selectModel,yxs_dataSource: dataSource,title: "最多可选择项数", compelect: {  [weak self] (modle, _) in
+            guard let strongSelf = self else { return }
+            strongSelf.questionModel.maxSelect = modle.text.int
+            strongSelf.resetQuestionItemCount()
+            
+        })
+    }
+    
+    // MARK: -tool
+    func yxs_cheackCanSetUp() -> Bool{
+        //主题不能为空
+        if questionModel.type == .single || questionModel.type == .checkbox{
+            if selectView.selectModels.first?.title?.isBlank ?? true {
+                yxs_showAlert(title: "请添加选项内容")
+                return false
+            }
+        }
+        
+        if textView.text.isEmpty{
+            yxs_showAlert(title: "请输入题干")
+            return false
+        }
+        return true
     }
     
     
@@ -151,44 +299,64 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         try? FileManager.default.removeItem(atPath: NSUtil.yxs_cachePath(file: "question_\(self.questionModel.type.rawValue)", directory: "archive"))
     }
     
-    
-    // MARK: -tool
-    func yxs_cheackCanSetUp() -> Bool{
-        //主题不能为空
-//        let publishText: String = publishModel.publishText?.removeSpace() ?? ""
-//        if publishText.count == 0{
-//            yxs_showAlert(title: "正文不能为空")
-//            return false
-//        }
-//        if publishModel.classs == nil && (YXSPersonDataModel.sharePerson.personRole == .TEACHER || publishModel.isFriendCiclePublish){
-//            yxs_showAlert(title: "接收班级不能为空")
-//            return false
-//        }
-        return true
-    }
-    
     // MARK: - getter&setter
-//    lazy var publishView: YXSCommonPublishView = {
-//        let publishView = YXSCommonPublishView.init(publishModel: publishModel, audioMaxCount: audioMaxCount,type: self.publishType)
-//        publishView.updateContentOffSet = {
-//            [weak self](offsetY) in
-//            guard let strongSelf = self else { return }
-//            var offset = strongSelf.scrollView.contentOffset
-//            offset.y += offsetY
-//            strongSelf.scrollView.contentOffset = offset
-//        }
-//        return publishView
-//    }()
     
     lazy var isNecessarySwitch: YXSPublishSwitchLabel = {
         let isNecessarySwitch = YXSPublishSwitchLabel()
         isNecessarySwitch.titleLabel.text = "必答"
+        isNecessarySwitch.valueChangeBlock = {
+            [weak self] (isOn) in
+            guard let strongSelf = self else { return }
+            strongSelf.questionModel.isNecessary = isOn
+        }
+        isNecessarySwitch.swt.snp.remakeConstraints { (make) in
+            make.right.equalTo(-25)
+            make.size.equalTo(CGSize.init(width: 43, height: 22))
+            make.centerY.equalTo(isNecessarySwitch)
+        }
         return isNecessarySwitch
     }()
     
     lazy var selectView: YXSQuestionPublishNewSelectItemsView = {
         let selectView = YXSQuestionPublishNewSelectItemsView(selectModels: questionModel.solitaireSelects)
+        selectView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
+        selectView.updateItemsBlock = {
+            [weak self] (selectModels) in
+            guard let strongSelf = self else { return }
+            strongSelf.questionModel.solitaireSelects = selectModels
+            strongSelf.resetQuestionItemCount()
+        }
         return selectView
+    }()
+    
+    lazy var textBgView: UIView = {
+        let textBgView = UIView()
+        textBgView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
+        return textBgView
+    }()
+    
+    lazy var imageSelectSection: SLTipsRightLabelSection = {
+        let imageSelectSection = SLTipsRightLabelSection()
+        imageSelectSection.leftlabel.text = "图片上传数量限制"
+        //        imageSelectSection.addTarget(self, action: #selector(questionItemCountClick), for: .touchUpInside)
+        imageSelectSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        imageSelectSection.rightLabel.snp.remakeConstraints { (make) in
+            make.right.equalTo(-20)
+            make.centerY.equalTo(imageSelectSection)
+        }
+        imageSelectSection.arrowImage.isHidden = true
+        return imageSelectSection
+    }()
+    
+    lazy var questionItemCountSection: SLTipsRightLabelSection = {
+        let imageSelectSection = SLTipsRightLabelSection()
+        imageSelectSection.leftlabel.text = "最多可选择项数"
+        imageSelectSection.addTarget(self, action: #selector(questionItemCountClick), for: .touchUpInside)
+        imageSelectSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        imageSelectSection.arrowImage.snp.updateConstraints { (make) in
+            make.right.equalTo(-17.5)
+        }
+        return imageSelectSection
     }()
     
     lazy var textView : YXSPlaceholderTextView = {
@@ -203,9 +371,9 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         textView.textDidChangeBlock = {
             [weak self](text: String) in
             guard let strongSelf = self else { return }
-//            strongSelf.textCountlabel.text = "\(text.count)/\(strongSelf.limitTextLength)"
-//            strongSelf.publishModel.publishText = text
-//            strongSelf.updateUI()
+            strongSelf.textCountlabel.text = "\(text.count)/\(strongSelf.limitTextLength)"
+            strongSelf.questionModel.questionStemText = text
+            strongSelf.updateUI()
         }
         
         let paragraphStye = NSMutableParagraphStyle()
@@ -224,14 +392,6 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         return label
     }()
     
-    lazy var tipsLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))
-        label.text = "增加选项"
-        return label
-    }()
-    
     lazy var questionNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
@@ -242,198 +402,3 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
 }
 
 
-class YXSQuestionPublishNewSelectItemsView: UIView{
-    var selectModels: [SolitairePublishNewSelectModel]
-    init(selectModels: [SolitairePublishNewSelectModel]?) {
-        if let  selectModels = selectModels {
-            self.selectModels = selectModels
-        }else{
-            let model = SolitairePublishNewSelectModel()
-            model.index = 0
-            self.selectModels = [model]
-        }
-        super.init(frame: CGRect.zero)
-        updateUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc func showMoreClick(){
-        let model = SolitairePublishNewSelectModel()
-        model.index = self.selectModels.count
-        self.selectModels.append(model)
-        updateUI(true)
-    }
-    
-    func updateUI(_ becomeFirst: Bool = false){
-        removeSubviews()
-        let showMore:Bool = self.selectModels.count < 4
-        var last: UIView!
-        for (index, model) in self.selectModels.enumerated(){
-            let section = YXSQuestionPublishItem.init(selectModel: model, showDelect: (index != 0 && index == self.selectModels.count - 1))
-            addSubview(section)
-            if becomeFirst, index == self.selectModels.count - 1{
-                section.contentField.becomeFirstResponder()
-            }
-            
-            section.sectionBlock = {
-                [weak self] in
-                guard let strongSelf = self else { return }
-                strongSelf.selectModels.remove(at: strongSelf.selectModels.firstIndex(of: model) ?? 0)
-                strongSelf.updateUI(true)
-            }
-            section.snp.makeConstraints { (make) in
-                make.height.equalTo(49)
-                make.left.right.equalTo(0)
-                if index == 0{
-                    make.top.equalTo(0)
-                }else{
-                    make.top.equalTo(last.snp_bottom)
-                }
-                
-                if !showMore && index == 3{
-                    make.bottom.equalTo(0)
-                }
-            }
-            last = section
-        }
-        
-        if showMore{
-            let button = YXSButton.init()
-            button.setTitleColor(kBlueColor, for: .normal)
-            button.setTitle("增加选项", for: .normal)
-            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-            button.setImage(UIImage.init(named: "yxs_solitaire_add"), for: .normal)
-            button.addTarget(self, action: #selector(showMoreClick), for: .touchUpInside)
-            button.yxs_setIconInLeftWithSpacing(5)
-            addSubview(button)
-            button.snp.makeConstraints { (make) in
-                make.height.equalTo(49)
-                make.top.equalTo(last.snp_bottom)
-                make.left.right.bottom.equalTo(0)
-            }
-        }
-    }
-}
-
-
-class YXSQuestionPublishItem: UIView{
-    var selectModel: SolitairePublishNewSelectModel?
-    var showDelect: Bool
-    init(selectModel: SolitairePublishNewSelectModel?, showDelect: Bool) {
-        self.selectModel = selectModel
-        self.showDelect = showDelect
-        super.init(frame: CGRect.zero)
-        mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
-        addSubview(leftLabel)
-        addSubview(contentField)
-        contentField.text = selectModel?.title
-        yxs_addLine(position: .bottom, leftMargin: 15.5, rightMargin: 0.5, lineHeight: 0.5)
-        leftLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(14.5)
-            make.centerY.equalTo(self)
-        }
-        contentField.snp.makeConstraints { (make) in
-            make.left.equalTo(30)
-            make.top.bottom.equalTo(0)
-            make.right.equalTo(-50)
-        }
-        if showDelect{
-            addSubview(delectButton)
-            delectButton.snp.makeConstraints { (make) in
-                make.right.equalTo(-7.5)
-                make.size.equalTo(CGSize.init(width: 39, height: 39))
-                make.centerY.equalTo(self)
-            }
-        }
-        
-        NotificationCenter.default.addObserver(self,
-            selector: #selector(self.greetingTextFieldChanged),
-            name:NSNotification.Name(rawValue:"UITextFieldTextDidChangeNotification"),
-            object: self.contentField)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    
-    
-    // MARK: -action
-    @objc func greetingTextFieldChanged(obj:Notification) {
-        self.greetingTextFieldChanged(obj: obj, charslength: 20)
-        selectModel?.title = contentField.text
-    }
-    
-    var sectionBlock: (() ->())?
-    @objc func delectClick(){
-        sectionBlock?()
-    }
-    
-    lazy var leftLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 15)
-        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: UIColor.white)
-        label.text = selectModel?.leftText
-        return label
-    }()
-    
-    lazy var contentField: YXSQSTextField = {
-        let contentField = UIUtil.yxs_getTextField(UIEdgeInsets.init(top: 0, left: 5, bottom: 0, right: 0), placeholder: "请输入选项内容", placeholderColor: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), mixedTextColor:MixedColor(normal: kTextMainBodyColor, night: kNightBCC6D4))
-        return contentField
-    }()
-    
-    lazy var delectButton: YXSButton = {
-        let button = YXSButton.init()
-        button.setImage(UIImage.init(named: "yxs_solitaire_delect"), for: .normal)
-        button.addTarget(self, action: #selector(delectClick), for: .touchUpInside)
-        return button
-    }()
-}
-
-
-class SolitairePublishNewSelectModel: NSObject, NSCoding{
-    var title: String?
-    var index: Int = 0{
-        didSet{
-            switch index {
-            case 0:
-                leftText = "A"
-            case 1:
-                leftText = "B"
-            case 2:
-                leftText = "C"
-            default:
-                leftText = "D"
-            }
-        }
-    }
-    var leftText: String?
-    
-    override init() {
-    }
-    
-    @objc required init(coder aDecoder: NSCoder){
-        title = aDecoder.decodeObject(forKey: "title") as? String
-        index = aDecoder.decodeInteger(forKey: "index")
-        leftText = aDecoder.decodeObject(forKey: "leftText") as? String
-    }
-    @objc func encode(with aCoder: NSCoder)
-    {
-        if title != nil{
-            aCoder.encode(title, forKey: "title")
-            
-        }
-        if leftText != nil{
-            aCoder.encode(leftText, forKey: "leftText")
-            
-        }
-        aCoder.encode(index, forKey: "index")
-        
-    }
-}

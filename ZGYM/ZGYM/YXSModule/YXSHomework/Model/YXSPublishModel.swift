@@ -69,6 +69,9 @@ class YXSPublishModel: NSObject, NSCoding {
     
     var solitaireSelects:[SolitairePublishSelectModel]?
     
+    ///新版本接龙
+    var solitaireQuestions: [YXSSolitaireQuestionModel] = [YXSSolitaireQuestionModel]()
+    
     /// 接龙截止日期
     var solitaireDate: Date?
     
@@ -154,6 +157,8 @@ class YXSPublishModel: NSObject, NSCoding {
         homeworkAllowLook = aDecoder.decodeBool(forKey: "homeworkAllowLook")
         homeworkCommentAllowLook = aDecoder.decodeBool(forKey: "homeworkCommentAllowLook")
         templateListModel = aDecoder.decodeObject(forKey: "templateListModel") as? YXSTemplateListModel
+        
+        solitaireQuestions = aDecoder.decodeObject(forKey: "solitaireQuestions") as? [YXSSolitaireQuestionModel] ?? [YXSSolitaireQuestionModel]()
     }
     
     /**
@@ -219,6 +224,8 @@ class YXSPublishModel: NSObject, NSCoding {
         if templateListModel != nil{
             aCoder.encode(templateListModel, forKey: "templateListModel")
         }
+        
+        aCoder.encode(solitaireQuestions, forKey: "solitaireQuestions")
     }
 }
 
