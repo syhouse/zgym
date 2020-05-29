@@ -36,6 +36,12 @@ class YXSHomeworkHistoryGoodVC: YXSBaseTableViewController {
         self.scrollView.snp.makeConstraints { (make) in
             make.edges.equalTo(0)
         }
+        self.tableView.estimatedRowHeight = 0
+        self.tableView.estimatedSectionHeaderHeight = 0
+        self.tableView.estimatedSectionFooterHeight = 0
+        if #available(iOS 11.0, *){
+            tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
+        }
         tableView.register(YXSHomeworkDetailCell.self, forCellReuseIdentifier: "YXSHomeworkDetailCell")
         tableView.register(YXSHomeworkDetailSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: "YXSHomeworkDetailSectionHeaderViewHistory")
         tableView.register(YXSPunchCardDetialTableFooterView.self, forHeaderFooterViewReuseIdentifier: "YXSPunchCardDetialTableFooterView")

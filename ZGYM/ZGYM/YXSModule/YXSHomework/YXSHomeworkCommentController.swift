@@ -8,6 +8,7 @@
 
 import UIKit
 import NightNight
+import ObjectMapper
 
 class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate, UITableViewDataSource{
     
@@ -36,6 +37,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         super.viewDidLoad()
         self.title = "点评作业"
         yxs_setupRightBarButtonItem()
+        loadData()
         // Do any additional setup after loading the view.
         self.view.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), night: kNightBackgroundColor)
         self.view.addSubview(contentView)
@@ -106,6 +108,17 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         })
         goodControl.isSelected = (remarkGood == 1 ? true : false)
         initPublish()
+    }
+    
+    func loadData() {
+        YXSEducationTemplateQueryTabTemplateContentRequest.init(serviceType: 1, currentPage: 1, pageSize: 1000).request({ (json) in
+            let joinList = json["contentList"].arrayObject as! [String]
+            self.dataSource.removeAll()
+            self.dataSource = joinList
+            self.tableView.reloadData()
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     func initPublish() {

@@ -59,4 +59,19 @@ class YXSEducationTemplateQueryTabTemplateRequest: YXSBaseRequset {
     }
 }
 
+// MARK: -根据业务类型分页查询模板内容
+//        业务类型(0:幼儿园通知模板,1:作业,2:打卡,3:接龙,100:小学通知模板,101:中学通知模板)
+let templateQueryTabTemplateContent = "/template/page-query-template-content"
+class YXSEducationTemplateQueryTabTemplateContentRequest: YXSBaseRequset {
+    init(serviceType: Int,currentPage: Int = 1, pageSize: Int = 20) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = templateQueryTabTemplateContent
+        param = ["serviceType": serviceType,
+                 "currentPage":currentPage,
+                 "pageSize":pageSize]
+    }
+}
+
 

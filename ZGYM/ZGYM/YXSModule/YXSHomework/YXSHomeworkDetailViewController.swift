@@ -82,9 +82,6 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
         if YXSPersonDataModel.sharePerson.personRole == .PARENT {
             footerRemindBtn.isHidden = true
         }
-        self.tableView.estimatedRowHeight = 0
-        self.tableView.estimatedSectionHeaderHeight = 0
-        self.tableView.estimatedSectionFooterHeight = 0
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.bottomBtnView)
         tableView.tableHeaderView = tableHeaderView
