@@ -77,6 +77,7 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
     /// 更新本地红点消息
     /// - Parameter list: IM通知列表
     public func yxs_changeLocalMessageLists(list: [IMCustomMessageModel]){
+        SLLog(list.toJSONString())
         if let gradeIds = self.yxs_user.gradeIds{
             var newList = [IMCustomMessageModel]()
             for model in list{
@@ -138,6 +139,7 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
         if localRedServiceList.has(key: "\(childId)"){
             localRedServiceList["\(childId)"]?.remove(serviceId)
             DispatchQueue.global().async {
+                SLLog("serviceId=\(serviceId), childId = \(childId)")
                 //删除所有满足条件的本地数据
                 self.localMessageLists.removeAll { (model) -> Bool in
                     return model.serviceId == serviceId && model.childrenId == childId

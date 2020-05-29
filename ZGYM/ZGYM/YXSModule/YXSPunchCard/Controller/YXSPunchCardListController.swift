@@ -202,10 +202,13 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
         let model = yxs_punchCardDataSource[indexPath.row]
         let vc = YXSPunchCardDetialController.init(clockInId: model.clockInId ?? 0, childId: model.childrenId,classId: model.classId ?? 0)
         navigationController?.pushViewController(vc)
-        if isAgenda && YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             UIUtil.yxs_reduceAgenda(serviceId: model.clockInId ?? 0, info: [kEventKey: YXSHomeType.punchCard])
+            if isAgenda {
 //            self.dataSource.remove(at: indexPath.row)
 //            self.tableView.reloadData()
+            }
+
         }
     }
     

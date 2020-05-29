@@ -174,13 +174,19 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
             UIUtil.yxs_loadReadData(model)
             reloadTableView(indexPath)
             
-            if isAgenda && YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info:[kEventKey: YXSHomeType.homework])
-                self.dataSource.remove(at: indexPath.row)
-                self.tableView.reloadData()
+                if isAgenda {
+                    self.dataSource.remove(at: indexPath.row)
+                    self.tableView.reloadData()
+                }
+            }
+            if isAgenda {
+                yxs_pushHomeDetailVC(homeModel: model, selectChildrenId: model.childrenId ?? 0)
+            } else {
+                yxs_pushHomeDetailVC(homeModel: model, selectChildrenId: self.childId ?? 0)
             }
             
-            yxs_pushHomeDetailVC(homeModel: model, selectChildrenId: self.childId ?? 0)
         }
     }
     

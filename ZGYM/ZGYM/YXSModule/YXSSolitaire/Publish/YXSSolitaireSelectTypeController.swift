@@ -73,7 +73,11 @@ class YXSSolitaireSelectTypeController: YXSBaseTableViewController {
             [weak self] (index)in
             guard let strongSelf = self else { return }
             if index == 0{
-                let vc = YXSSolitairePublishController()
+                let vc = YXSSolitaireNewPublishBaseController()
+                vc.singlePublishClassId = strongSelf.singlePublishClassId
+                strongSelf.navigationController?.pushViewController(vc)
+            }else{
+                let vc = YXSSolitaireCollectorPublishController()
                 vc.singlePublishClassId = strongSelf.singlePublishClassId
                 strongSelf.navigationController?.pushViewController(vc)
             }

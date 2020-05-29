@@ -185,10 +185,13 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
         let detailVC = YXSNoticeDetailViewController.init(model: model)
         self.navigationController?.pushViewController(detailVC)
         
-        if isAgenda && YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.notice])
+            if isAgenda {
 //            self.dataSource.remove(at: indexPath.row)
 //            self.tableView.reloadData()
+            }
+
         }
     }
     

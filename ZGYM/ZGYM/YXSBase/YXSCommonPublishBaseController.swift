@@ -75,6 +75,9 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     // MARK: -leftCicle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.fd_interactivePopDisabled = true
+        
         initPublish()
         
         rightButton = YXSButton(frame: CGRect(x: 0, y: 0, width: 58, height: 25))

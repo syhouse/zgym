@@ -33,6 +33,12 @@ class YXSPublishSwitchLabel: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    var valueChangeBlock: ((_ isOn: Bool) ->())?
+    
+    @objc func swtChangeValue(){
+        valueChangeBlock?(swt.isOn)
+    }
+    
     public var isSelect: Bool{
         get{
             return swt.isOn
@@ -50,7 +56,7 @@ class YXSPublishSwitchLabel: UIView {
     lazy var swt: UISwitch = {
         let swt = UISwitch(frame: CGRect(x: 0, y: 0, width: 43, height: 22))
         swt.onTintColor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
-        
+        swt.addTarget(self, action: #selector(swtChangeValue), for: .valueChanged)
         return swt
     }()
 

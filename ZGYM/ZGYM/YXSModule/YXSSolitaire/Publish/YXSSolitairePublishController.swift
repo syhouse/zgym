@@ -77,6 +77,8 @@ class YXSSolitairePublishController: YXSCommonPublishBaseController {
         contentView.addSubview(selectView)
         contentView.addSubview(studentSection)
         
+        
+        
         selectClassView.snp.makeConstraints { (make) in
             make.top.equalTo(10)
             make.left.right.equalTo(0)
