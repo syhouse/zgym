@@ -126,7 +126,31 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     }
     
     @objc func moreClick(sender: UIButton) {
+        let lists = [YXSCommonBottomParams.init(title: "保存到手机", event: "save"),YXSCommonBottomParams.init(title: "设置为封面", event: "setCover")]
         
+        YXSCommonBottomAlerView.showIn(buttons: lists) { [weak self](model) in
+            guard let weakSelf = self else {return}
+            switch model.event {
+            case "save":
+                weakSelf.browserView?.currentData().yb_saveToPhotoAlbum?()
+                
+            case "setCover":
+                let model = self?.dataSource[weakSelf.browserView?.currentPage ?? 0]
+                MBProgressHUD.yxs_showLoading()
+                YXSEducationAlbumUpdateAlbumNameOrCoverRequest(id: weakSelf.albumModel?.id ?? 0, classId: weakSelf.albumModel?.classId ?? 0, albumName: nil, coverUrl: model?.resourceUrl).request({ [weak self](json) in
+                    guard let weakSelf = self else {return}
+                    MBProgressHUD.yxs_showMessage(message: "修改成功")
+                    weakSelf.albumModel?.coverUrl = model?.resourceUrl
+                    weakSelf.updateAlbumModel?(weakSelf.albumModel!)
+                    
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
+
+            default:
+                break
+            }
+        }
     }
     
     
@@ -154,9 +178,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             data.singleTouchBlock = {(ybImgData) in}
             return data
         }
-
     }
-    
     
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, pageChanged page: Int, data: YBIBDataProtocol) {
         customNav.title = "\(page + 1)/\(dataSource.count)"
@@ -164,32 +186,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     }
     
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, respondsToLongPressWithData data: YBIBDataProtocol) {
-        
-        let lists = [YXSCommonBottomParams.init(title: "保存到手机", event: "save"),YXSCommonBottomParams.init(title: "设置为封面", event: "setCover")]
-        
-        YXSCommonBottomAlerView.showIn(buttons: lists) { [weak self](model) in
-            guard let weakSelf = self else {return}
-            switch model.event {
-            case "save":
-                data.yb_saveToPhotoAlbum?()
-                
-            case "setCover":
-                let model = self?.dataSource[imageBrowser.currentPage]
-                MBProgressHUD.yxs_showLoading()
-                YXSEducationAlbumUpdateAlbumNameOrCoverRequest(id: weakSelf.albumModel?.id ?? 0, classId: weakSelf.albumModel?.classId ?? 0, albumName: nil, coverUrl: model?.resourceUrl).request({ [weak self](json) in
-                    guard let weakSelf = self else {return}
-                    MBProgressHUD.yxs_showMessage(message: "修改成功")
-                    weakSelf.albumModel?.coverUrl = model?.resourceUrl
-                    weakSelf.updateAlbumModel?(weakSelf.albumModel!)
-                    
-                }) { (msg, code) in
-                    MBProgressHUD.yxs_showMessage(message: msg)
-                }
-
-            default:
-                break
-            }
-        }
+        moreClick(sender: UIButton())
     }
     
     
@@ -216,6 +213,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
 //        view.minePriseButton.addTarget(self, action: #selector(pra), for: .touchUpInside)
         view.minePriseButton.addTarget(self, action: #selector(praiseOrCancelClick(sender:)), for: .touchUpInside)
         view.commentButtonClick()
+        view.moreActionButton.addTarget(self, action: #selector(moreClick(sender:)), for: .touchUpInside)
         return view
     }()
     
