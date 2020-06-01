@@ -172,6 +172,10 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
     var isGood : Int?
     /// 是否已点评
     var isRemark : Int?
+    
+    /// 当前作业详情选项  -1全部/ 1优秀 / 0 我的
+    var currentIsGood: Int? = -1
+    
     /// 评论的json
     var commentJson : String? {
         didSet {
@@ -641,6 +645,7 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         homeworkEndTime = aDecoder.decodeObject(forKey: "homeworkEndTime") as? String
         selectChildrenId = aDecoder.decodeObject(forKey: "selectChildrenId") as? Int
         custodianId = aDecoder.decodeObject(forKey: "custodianId") as? Int
+        currentIsGood = aDecoder.decodeObject(forKey: "currentIsGood") as? Int
     }
 
     /**
@@ -807,6 +812,9 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         if custodianId != nil {
             aCoder.encode(custodianId, forKey: "custodianId")
+        }
+        if currentIsGood != nil {
+            aCoder.encode(currentIsGood, forKey: "currentIsGood")
         }
     }
 }

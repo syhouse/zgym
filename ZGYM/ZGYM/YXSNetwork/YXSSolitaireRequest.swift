@@ -201,3 +201,28 @@ class YXSEducationGradeFindNumberOfStudentsRequest: YXSBaseRequset {
         param = ["gradeId":gradeId]
     }
 }
+
+// MARK: - 调查表模板列表(老师)
+let censusTeacherGatherTemplateList = "/census/teacherGatherTemplateList"
+class YXSEducationCensusTeacherGatherTemplateListRequest: YXSBaseRequset {
+    init(currentPage: Int,pageSize: Int = kPageSize) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusTeacherGatherTemplateList
+        param = ["currentPage": currentPage,
+        "pageSize": pageSize]
+    }
+}
+
+// MARK: - 调查表模板详情(老师)
+let censusTeacherGatherTemplateDetail = "/census/teacherGatherTemplateDetail"
+class YXSEducationCensusTeacherGatherTemplateDetailRequest: YXSBaseRequset {
+    init(id: Int) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusTeacherGatherTemplateDetail
+        param = ["id": id]
+    }
+}

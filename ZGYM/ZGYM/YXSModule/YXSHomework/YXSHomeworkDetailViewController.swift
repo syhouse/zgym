@@ -405,6 +405,10 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             weakSelf.tableViewRefreshHeader.endRefreshing()
             model.topHistoryModel = weakSelf.topHistoryModel
             weakSelf.model = model
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT && model.homeworkVisible == 0 && weakSelf.isGood == -1{
+                weakSelf.isGood = 1
+            }
+            model.currentIsGood = weakSelf.isGood
             weakSelf.tableHeaderView.setModel(model: model)
             YXSCacheHelper.yxs_cachePublishHomeworkDetailTask(data: model, homeworkId: weakSelf.homeModel.serviceId ?? 0)
             if YXSPersonDataModel.sharePerson.personRole == .PARENT && weakSelf.homeModel.isRead != 1{
@@ -418,6 +422,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     UIUtil.yxs_loadReadData(hModel!)
                 }
             }
+            
             if isRefreshList {
                 
                 weakSelf.refreshHomeworkData(index: weakSelf.isGood)
@@ -1107,7 +1112,10 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     }()
 
     lazy var tableFooterView: UIView = {
-        let footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 170))
+        var footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 170))
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 100))
+        }
         let imageView = UIImageView.init(frame: CGRect(x: 0, y: 60, width: SCREEN_WIDTH, height: 188))
         imageView.mixedImage = MixedImage(normal: "yxs_homework_defultImage_nodata", night: "yxs_defultImage_nodata_night")
         imageView.contentMode = .scaleAspectFit

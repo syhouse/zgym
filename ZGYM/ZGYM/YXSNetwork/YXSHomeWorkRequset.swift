@@ -324,13 +324,23 @@ class YXSEducationHomeworkBatchRemark:YXSBaseRequset {
         host = homeHost
         method = .post
         path = homeworkBatchRemark
-        param = ["homeworkId":homeworkId,
-                 "remark": remark,
-                 "childrenIdList": childrenIdList,
-                 "remarkAudioUrl":remarkAudioUrl,
-                 "remarkAudioDuration":remarkAudioDuration,
-                 "homeworkCreateTime":homeworkCreateTime,
-                 "isGood":isGood]
+        if isGood == -1 {
+            param = ["homeworkId":homeworkId,
+            "remark": remark,
+            "childrenIdList": childrenIdList,
+            "remarkAudioUrl":remarkAudioUrl,
+            "remarkAudioDuration":remarkAudioDuration,
+            "homeworkCreateTime":homeworkCreateTime]
+        } else {
+            param = ["homeworkId":homeworkId,
+            "remark": remark,
+            "childrenIdList": childrenIdList,
+            "remarkAudioUrl":remarkAudioUrl,
+            "remarkAudioDuration":remarkAudioDuration,
+            "homeworkCreateTime":homeworkCreateTime,
+            "isGood":isGood]
+        }
+        
     }
 }
 

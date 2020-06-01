@@ -12,6 +12,8 @@ import ObjectMapper
 
 class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate, UITableViewDataSource{
     
+    /// 是否为批量点评
+    var isBatch: Bool = false
     var isChangeRemark: Bool = false
     var isModify: Bool = false
     var remarkContent: String = ""
@@ -108,6 +110,10 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         })
         goodControl.isSelected = (remarkGood == 1 ? true : false)
         initPublish()
+        if isBatch {
+            goodControl.isHidden = true
+            remarkGood = -1
+        }
     }
     
     func loadData() {

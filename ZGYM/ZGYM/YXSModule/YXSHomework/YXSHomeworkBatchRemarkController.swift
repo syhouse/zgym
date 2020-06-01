@@ -134,6 +134,7 @@ class YXSHomeworkBatchRemarkController: YXSBaseViewController , UITableViewDeleg
         }
         
         let vc = YXSHomeworkCommentController()
+        vc.isBatch = true
         vc.homeModel = homeModel
         vc.childrenIdList = idList
         vc.commetCallBack = { (list)in

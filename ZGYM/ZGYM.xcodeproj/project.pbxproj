@@ -647,6 +647,7 @@
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
+		6FA2556C2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA2556B2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift */; };
 		6FA849682473E0110021A57F /* YXSYBRotationToolViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA849672473E0110021A57F /* YXSYBRotationToolViewHandler.swift */; };
 		6FB0DA13246D18D1009E46F1 /* UIControl+YXSTapRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA12246D18D1009E46F1 /* UIControl+YXSTapRange.swift */; };
 		6FB0DA15246E31AF009E46F1 /* YXSPeriodicalListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA14246E31AE009E46F1 /* YXSPeriodicalListModel.swift */; };
@@ -771,6 +772,7 @@
 		6FEA7C6524553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */; };
 		6FEA7C67245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C66245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift */; };
 		96C37695CA743AAF4EA54F3F /* Pods_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D2807CC37D3F419340D76A2 /* Pods_Share.framework */; };
+		E528ABC02481107A0035E69B /* YXSScoreDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E528ABBF2481107A0035E69B /* YXSScoreDetailsModel.swift */; };
 		E53D8AF9244E80C400590B5A /* YXSContentHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */; };
 		E53D8AFB244E80C400590B5A /* YXSContentDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF4244E80C400590B5A /* YXSContentDetialController.swift */; };
 		E53D8AFC244E80C400590B5A /* YXSPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF5244E80C400590B5A /* YXSPlayListViewController.swift */; };
@@ -841,6 +843,14 @@
 		E59D7C3D24555D6A00471A21 /* YXSSelectAccessoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D7C3C24555D6A00471A21 /* YXSSelectAccessoryVC.swift */; };
 		E59D7C3F24566B9D00471A21 /* YXSSelectAccessoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D7C3E24566B9D00471A21 /* YXSSelectAccessoryCell.swift */; };
 		E59D7C412458059D00471A21 /* YXSPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D7C402458059D00471A21 /* YXSPlayerVC.swift */; };
+		E5AA444D2484901C0032C2CF /* SSWMutipleLineChart.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AA44422484901C0032C2CF /* SSWMutipleLineChart.m */; };
+		E5AA444E2484901C0032C2CF /* SSWCharts.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AA44442484901C0032C2CF /* SSWCharts.m */; };
+		E5AA444F2484901C0032C2CF /* SSWLineChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AA44462484901C0032C2CF /* SSWLineChartView.m */; };
+		E5AA44502484901C0032C2CF /* SSWPieChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AA44472484901C0032C2CF /* SSWPieChartView.m */; };
+		E5AA44512484901C0032C2CF /* SSWBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AA444A2484901C0032C2CF /* SSWBarChartView.m */; };
+		E5AA44522484901C0032C2CF /* SSWMutipleBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AA444C2484901C0032C2CF /* SSWMutipleBarChartView.m */; };
+		E5AA445524849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AA445424849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift */; };
+		E5AA44572484A3040032C2CF /* YXSScoreParentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AA44562484A3040032C2CF /* YXSScoreParentHeaderView.swift */; };
 		E5AC9B7B246A849B000B47BB /* YXSCollectBabyhearListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7A246A849B000B47BB /* YXSCollectBabyhearListVC.swift */; };
 		E5AC9B7E246BD3AF000B47BB /* YXSCollectArticleListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7D246BD3AF000B47BB /* YXSCollectArticleListVC.swift */; };
 		E5AC9B80246BD49F000B47BB /* YXSCollectArticleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7F246BD49F000B47BB /* YXSCollectArticleCell.swift */; };
@@ -1831,6 +1841,7 @@
 		6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZGYMUITests.swift; sourceTree = "<group>"; };
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
+		6FA2556B2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireTemplateDetialModel.swift; sourceTree = "<group>"; };
 		6FA849672473E0110021A57F /* YXSYBRotationToolViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSYBRotationToolViewHandler.swift; sourceTree = "<group>"; };
 		6FB0DA12246D18D1009E46F1 /* UIControl+YXSTapRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+YXSTapRange.swift"; sourceTree = "<group>"; };
 		6FB0DA14246E31AE009E46F1 /* YXSPeriodicalListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPeriodicalListModel.swift; sourceTree = "<group>"; };
@@ -2080,6 +2091,7 @@
 		6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarEvaluationItemLogoViewController.swift; sourceTree = "<group>"; };
 		6FEA7C66245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPlayerMediaSingleControlTool.swift; sourceTree = "<group>"; };
 		78DA037DE3DFCFE843299175 /* Pods-Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.debug.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.debug.xcconfig"; sourceTree = "<group>"; };
+		E528ABBF2481107A0035E69B /* YXSScoreDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreDetailsModel.swift; sourceTree = "<group>"; };
 		E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentHomeController.swift; sourceTree = "<group>"; };
 		E53D8AF4244E80C400590B5A /* YXSContentDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentDetialController.swift; sourceTree = "<group>"; };
 		E53D8AF5244E80C400590B5A /* YXSPlayListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPlayListViewController.swift; sourceTree = "<group>"; };
@@ -2156,6 +2168,20 @@
 		E59D7C3C24555D6A00471A21 /* YXSSelectAccessoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSelectAccessoryVC.swift; sourceTree = "<group>"; };
 		E59D7C3E24566B9D00471A21 /* YXSSelectAccessoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSelectAccessoryCell.swift; sourceTree = "<group>"; };
 		E59D7C402458059D00471A21 /* YXSPlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPlayerVC.swift; sourceTree = "<group>"; };
+		E5AA44412484901C0032C2CF /* SSWPieChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSWPieChartView.h; sourceTree = "<group>"; };
+		E5AA44422484901C0032C2CF /* SSWMutipleLineChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSWMutipleLineChart.m; sourceTree = "<group>"; };
+		E5AA44432484901C0032C2CF /* SSWBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSWBarChartView.h; sourceTree = "<group>"; };
+		E5AA44442484901C0032C2CF /* SSWCharts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSWCharts.m; sourceTree = "<group>"; };
+		E5AA44452484901C0032C2CF /* SSWMutipleBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSWMutipleBarChartView.h; sourceTree = "<group>"; };
+		E5AA44462484901C0032C2CF /* SSWLineChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSWLineChartView.m; sourceTree = "<group>"; };
+		E5AA44472484901C0032C2CF /* SSWPieChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSWPieChartView.m; sourceTree = "<group>"; };
+		E5AA44482484901C0032C2CF /* SSWMutipleLineChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSWMutipleLineChart.h; sourceTree = "<group>"; };
+		E5AA44492484901C0032C2CF /* SSWCharts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSWCharts.h; sourceTree = "<group>"; };
+		E5AA444A2484901C0032C2CF /* SSWBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSWBarChartView.m; sourceTree = "<group>"; };
+		E5AA444B2484901C0032C2CF /* SSWLineChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSWLineChartView.h; sourceTree = "<group>"; };
+		E5AA444C2484901C0032C2CF /* SSWMutipleBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSWMutipleBarChartView.m; sourceTree = "<group>"; };
+		E5AA445424849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreNumParentDetailsVC.swift; sourceTree = "<group>"; };
+		E5AA44562484A3040032C2CF /* YXSScoreParentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreParentHeaderView.swift; sourceTree = "<group>"; };
 		E5AC9B7A246A849B000B47BB /* YXSCollectBabyhearListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectBabyhearListVC.swift; sourceTree = "<group>"; };
 		E5AC9B7D246BD3AF000B47BB /* YXSCollectArticleListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectArticleListVC.swift; sourceTree = "<group>"; };
 		E5AC9B7F246BD49F000B47BB /* YXSCollectArticleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectArticleCell.swift; sourceTree = "<group>"; };
@@ -2556,11 +2582,11 @@
 		6F07009C2445D7FE0090975B /* YXSClassScheduleCard */ = {
 			isa = PBXGroup;
 			children = (
+				E5AA445324849A410032C2CF /* ScoreDetails */,
 				E5DD273C247D1B13000BB1A9 /* Model */,
 				E5DD2732247CECAF000BB1A9 /* View */,
 				6F07009D2445D7FE0090975B /* YXSClassScheduleCardCell.swift */,
 				6F07009E2445D7FE0090975B /* YXSScoreListController.swift */,
-				E5DD2741247E4714000BB1A9 /* YXSScoreNumTeacherDetailsVC.swift */,
 				6F07009F2445D7FE0090975B /* YXSClassScheduleCardListController.swift */,
 				6F0700A02445D7FE0090975B /* YXSClassScheduleCardDetialController.swift */,
 				6F0700A12445D7FE0090975B /* YXSClassScheduleCardModel.swift */,
@@ -3508,6 +3534,7 @@
 		6F07FE3C2445D7FA0090975B /* YXSSDK */ = {
 			isa = PBXGroup;
 			children = (
+				E5AA44402484901C0032C2CF /* Chart */,
 				E5DD2717247B56FB000BB1A9 /* UMVisualSDK */,
 				6F07FE3D2445D7FA0090975B /* TencentIM */,
 				6F07FF5A2445D7FB0090975B /* CLPlayer */,
@@ -4336,6 +4363,7 @@
 				6F5677AE247F66B700B523ED /* YXSSolitaireQuestionModel.swift */,
 				6F5677B0247F939200B523ED /* YXSQuestionPublishNewSelectItemsView.swift */,
 				6F5677B2247FB6A400B523ED /* YXSSolitaireQuestionBaseCell.swift */,
+				6FA2556B2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift */,
 			);
 			path = Publish;
 			sourceTree = "<group>";
@@ -5487,6 +5515,34 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		E5AA44402484901C0032C2CF /* Chart */ = {
+			isa = PBXGroup;
+			children = (
+				E5AA44412484901C0032C2CF /* SSWPieChartView.h */,
+				E5AA44422484901C0032C2CF /* SSWMutipleLineChart.m */,
+				E5AA44432484901C0032C2CF /* SSWBarChartView.h */,
+				E5AA44442484901C0032C2CF /* SSWCharts.m */,
+				E5AA44452484901C0032C2CF /* SSWMutipleBarChartView.h */,
+				E5AA44462484901C0032C2CF /* SSWLineChartView.m */,
+				E5AA44472484901C0032C2CF /* SSWPieChartView.m */,
+				E5AA44482484901C0032C2CF /* SSWMutipleLineChart.h */,
+				E5AA44492484901C0032C2CF /* SSWCharts.h */,
+				E5AA444A2484901C0032C2CF /* SSWBarChartView.m */,
+				E5AA444B2484901C0032C2CF /* SSWLineChartView.h */,
+				E5AA444C2484901C0032C2CF /* SSWMutipleBarChartView.m */,
+			);
+			path = Chart;
+			sourceTree = "<group>";
+		};
+		E5AA445324849A410032C2CF /* ScoreDetails */ = {
+			isa = PBXGroup;
+			children = (
+				E5DD2741247E4714000BB1A9 /* YXSScoreNumTeacherDetailsVC.swift */,
+				E5AA445424849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift */,
+			);
+			path = ScoreDetails;
+			sourceTree = "<group>";
+		};
 		E5AC9B7C246BD353000B47BB /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -5538,6 +5594,7 @@
 			children = (
 				E5DD2733247CEE8E000BB1A9 /* YXSScoreListCell.swift */,
 				E5DD273F247E1835000BB1A9 /* YXSScorePublishView.swift */,
+				E5AA44562484A3040032C2CF /* YXSScoreParentHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -5546,6 +5603,7 @@
 			isa = PBXGroup;
 			children = (
 				E5DD273D247D1B26000BB1A9 /* YXSScoreListModel.swift */,
+				E528ABBF2481107A0035E69B /* YXSScoreDetailsModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -5905,6 +5963,7 @@
 				6F0703742445D8030090975B /* TUIBlackListController.m in Sources */,
 				6F0705102445D8050090975B /* YXSClassStartClassListCell.swift in Sources */,
 				6F07035F2445D8030090975B /* TUIProfileCardCell.m in Sources */,
+				E528ABC02481107A0035E69B /* YXSScoreDetailsModel.swift in Sources */,
 				6F0703AA2445D8030090975B /* TUIGroupMembersCell.m in Sources */,
 				E58F16E1245149D400A6AC18 /* YXSLAuthorityTool.swift in Sources */,
 				6FEA7C262452990D0017C9CA /* AVAsset+LFMECommon.m in Sources */,
@@ -5977,6 +6036,7 @@
 				6F0703AC2445D8030090975B /* TUIGroupInfoDataProviderService.m in Sources */,
 				6F0703D02445D8030090975B /* CLPlayerView.m in Sources */,
 				E58F16ED245149D500A6AC18 /* YXSSelectMediaHelper.swift in Sources */,
+				E5AA44572484A3040032C2CF /* YXSScoreParentHeaderView.swift in Sources */,
 				6F0705DF2445D8060090975B /* LFAssetCell.m in Sources */,
 				6F0704E82445D8050090975B /* YXSHomeController.swift in Sources */,
 				6F07046A2445D8040090975B /* YXSPasswordLoginViewController.swift in Sources */,
@@ -6018,6 +6078,7 @@
 				6F0703DB2445D8030090975B /* UIRefreshControl+AFNetworking.m in Sources */,
 				6F0705D02445D8060090975B /* LF_VideoUtils.m in Sources */,
 				6F0705592445D8050090975B /* YXSNineMediaView.swift in Sources */,
+				E5AA44512484901C0032C2CF /* SSWBarChartView.m in Sources */,
 				6F0705452445D8050090975B /* YXSCommonMessageListController.swift in Sources */,
 				6F0703382445D8020090975B /* FloatExtensions.swift in Sources */,
 				6FEA7C192452990D0017C9CA /* LFFilterVideoView.m in Sources */,
@@ -6214,11 +6275,13 @@
 				6F07035C2445D8030090975B /* TUIAvatarViewController.m in Sources */,
 				6F5677A7247F4FA800B523ED /* YXSSolitaireCollectorPublishController.swift in Sources */,
 				6F0705EC2445D8060090975B /* LFResultImage.m in Sources */,
+				6FA2556C2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift in Sources */,
 				E5F41C59244D52B5007F27AC /* YXSExcellentEducationCell.swift in Sources */,
 				6F0704AC2445D8040090975B /* YXSPhotoEditAlbumController.swift in Sources */,
 				6F0703872445D8030090975B /* TUIImageMessageCellData.m in Sources */,
 				6F0705082445D8050090975B /* YXSClassStarChildrenModel.swift in Sources */,
 				6F0704B02445D8040090975B /* YXSPhotoPreviewFooterView.swift in Sources */,
+				E5AA444D2484901C0032C2CF /* SSWMutipleLineChart.m in Sources */,
 				6FEA7C4D2452990E0017C9CA /* LFText.m in Sources */,
 				6FEA7C432452990E0017C9CA /* JRCollectionViewTitleModel.m in Sources */,
 				6FEA7C6524553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift in Sources */,
@@ -6350,6 +6413,7 @@
 				6F0703652445D8030090975B /* TAddHelper.m in Sources */,
 				6F0704D42445D8050090975B /* YXSSolitaireDetailController.swift in Sources */,
 				5615A7A8247E5BA7003A64FB /* YXSPhotoClassPhotoAlbumListMsgModel.swift in Sources */,
+				E5AA445524849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift in Sources */,
 				6F07053D2445D8050090975B /* YXSHomeworkListController.swift in Sources */,
 				E5AC9B7E246BD3AF000B47BB /* YXSCollectArticleListVC.swift in Sources */,
 				6F0704A92445D8040090975B /* YXSPhotoShowAlbumController.swift in Sources */,
@@ -6371,6 +6435,7 @@
 				6F07054C2445D8050090975B /* YXSFriendsPraiseModel.swift in Sources */,
 				6F07036A2445D8030090975B /* TAddCollectionCell.m in Sources */,
 				6F0703852445D8030090975B /* TUISystemMessageCellData.m in Sources */,
+				E5AA444E2484901C0032C2CF /* SSWCharts.m in Sources */,
 				6F0703582445D8030090975B /* TNavigationController.m in Sources */,
 				6F87B88C244FF0AC0085CD3B /* YXSRemoteControlInfoHelper.swift in Sources */,
 				6FEA7C282452990D0017C9CA /* UIView+LFMEFrame.m in Sources */,
@@ -6604,6 +6669,7 @@
 				6F0703492445D8020090975B /* UIImage+YXSColor.swift in Sources */,
 				6F0704F52445D8050090975B /* YXSHomeTableHeaderView.swift in Sources */,
 				560B20B524501D7E003D8A19 /* YXSFileClassListCell.swift in Sources */,
+				E5AA444F2484901C0032C2CF /* SSWLineChartView.m in Sources */,
 				6F0705602445D8050090975B /* WRCycleScrollView.swift in Sources */,
 				6FEA7C622452990F0017C9CA /* LFZoomingView.m in Sources */,
 				6F0703562445D8030090975B /* TAddCell.m in Sources */,
@@ -6651,10 +6717,12 @@
 				6F0704F32445D8050090975B /* YXSHomeSourceView.swift in Sources */,
 				6F07051D2445D8050090975B /* YXSHomeworkCommentController.swift in Sources */,
 				6FEA7C272452990D0017C9CA /* UIView+LFMECommon.m in Sources */,
+				E5AA44502484901C0032C2CF /* SSWPieChartView.m in Sources */,
 				6FEA7C002452990C0017C9CA /* LFSmearBrush.m in Sources */,
 				6F966CB32463B72A00BB073A /* YXSPeriodicalListController.swift in Sources */,
 				E58F1701245149D500A6AC18 /* YXSShowBrowserHelper.swift in Sources */,
 				6F0703AD2445D8030090975B /* TUIUserProfileDataProviderService.m in Sources */,
+				E5AA44522484901C0032C2CF /* SSWMutipleBarChartView.m in Sources */,
 				560B20B1244995A9003D8A19 /* YXSFileUploadHelper.swift in Sources */,
 				6F07037C2445D8030090975B /* TContactListPickerCell.m in Sources */,
 				6FEA7C152452990D0017C9CA /* LFMutableFilter.m in Sources */,
@@ -6785,7 +6853,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				INFOPLIST_FILE = Share/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6809,7 +6877,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				INFOPLIST_FILE = Share/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6948,7 +7016,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6992,7 +7060,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

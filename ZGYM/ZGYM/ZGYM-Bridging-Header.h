@@ -51,6 +51,8 @@
 #import <UMCommon/UMCommon.h>
 #import <UMVisual/UMVisual.h>
 
+#import "SSWBarChartView.h"
+
 ///xmly
 #import "XMReqMgr.h"
 #import "XMSDK.h"
