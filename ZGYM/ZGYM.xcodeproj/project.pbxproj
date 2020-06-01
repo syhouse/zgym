@@ -30,6 +30,8 @@
 		5680F822247CC619002CEE5B /* YXSPhotoClassListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5680F821247CC619002CEE5B /* YXSPhotoClassListController.swift */; };
 		5680F824247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5680F823247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift */; };
 		56FCE289247F91A300890EA3 /* YXSPhotoPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FCE288247F91A300890EA3 /* YXSPhotoPreviewController.swift */; };
+		56FCE28B2484A02600890EA3 /* YXSPhotoPreviewCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FCE28A2484A02600890EA3 /* YXSPhotoPreviewCommentView.swift */; };
+		56FCE28D2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FCE28C2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift */; };
 		6F0703262445D8020090975B /* Date+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE102445D7F20090975B /* Date+YXSCategory.swift */; };
 		6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE112445D7F20090975B /* String+YXSCategory.swift */; };
 		6F0703282445D8020090975B /* UITextField+YXSPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE122445D7F20090975B /* UITextField+YXSPlaceholder.swift */; };
@@ -940,6 +942,8 @@
 		5680F821247CC619002CEE5B /* YXSPhotoClassListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoClassListController.swift; sourceTree = "<group>"; };
 		5680F823247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoClassListCellModel.swift; sourceTree = "<group>"; };
 		56FCE288247F91A300890EA3 /* YXSPhotoPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoPreviewController.swift; sourceTree = "<group>"; };
+		56FCE28A2484A02600890EA3 /* YXSPhotoPreviewCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoPreviewCommentView.swift; sourceTree = "<group>"; };
+		56FCE28C2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoPreviewCommentModel.swift; sourceTree = "<group>"; };
 		6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0700302445D7FE0090975B /* YXSVersionUpdateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateView.swift; sourceTree = "<group>"; };
 		6F0700322445D7FE0090975B /* YXSVersionUpdateModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateModel.swift; sourceTree = "<group>"; };
@@ -2668,6 +2672,7 @@
 				6F0700D42445D7FE0090975B /* YXSPhotoAlbumsPraiseModel.swift */,
 				5680F823247CFAC6002CEE5B /* YXSPhotoClassListCellModel.swift */,
 				5615A7A7247E5BA7003A64FB /* YXSPhotoClassPhotoAlbumListMsgModel.swift */,
+				56FCE28C2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2682,6 +2687,7 @@
 				6F0700D92445D7FF0090975B /* YXSPhotoShowAlubmCell.swift */,
 				6F0700DA2445D7FF0090975B /* YXSPhotoAlbumsListCell.swift */,
 				5615A7A5247E4CFC003A64FB /* YXSPhotoClassPhotoAlbumListHeader.swift */,
+				56FCE28A2484A02600890EA3 /* YXSPhotoPreviewCommentView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -6060,6 +6066,7 @@
 				6F0703972445D8030090975B /* TUIMenuCell.m in Sources */,
 				6F0704F72445D8050090975B /* YXSHomePublishView.swift in Sources */,
 				6F07034D2445D8020090975B /* UIView+YXSAddTap.swift in Sources */,
+				56FCE28B2484A02600890EA3 /* YXSPhotoPreviewCommentView.swift in Sources */,
 				6F0703792445D8030090975B /* TUIContactActionCell.m in Sources */,
 				6F0703572445D8030090975B /* TUIFileViewController.m in Sources */,
 				6F0703F82445D8030090975B /* YXSNoticeRequset.swift in Sources */,
@@ -6656,6 +6663,7 @@
 				E5AC9B80246BD49F000B47BB /* YXSCollectArticleCell.swift in Sources */,
 				6F0703B42445D8030090975B /* TUIConversationCellData.m in Sources */,
 				6F0703CB2445D8030090975B /* AILoadingView.m in Sources */,
+				56FCE28D2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift in Sources */,
 				6F07050A2445D8050090975B /* YXSClassStarSignleClassCommonController.swift in Sources */,
 				6F0705192445D8050090975B /* YXSClassStartTeacherClassListController.swift in Sources */,
 				6F0704F92445D8050090975B /* YXSAgendaListModel.swift in Sources */,

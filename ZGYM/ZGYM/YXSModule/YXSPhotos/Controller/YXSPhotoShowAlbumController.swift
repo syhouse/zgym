@@ -83,13 +83,13 @@ class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate,
     }
     // MARK: - loadData
     func loadPraiseData(index: Int){
-        let model = dataSource[index]
-        YXSEducationAlbumQueryCommentListAndPraiseRequest.init(albumId: model.albumId ?? 0, resourceId: model.id ?? 0).request({ (resultModel: YXSPhotoAlbumsPraiseModel) in
-            self.praisesModels[model.id ?? 0] = resultModel
-            self.updateUI()
-        }) { (msg, code) in
-            
-        }
+//        let model = dataSource[index]
+//        YXSEducationAlbumQueryCommentListAndPraiseRequest.init(albumId: model.albumId ?? 0, resourceId: model.id ?? 0).request({ (resultModel: YXSPhotoAlbumsPraiseModel) in
+//            self.praisesModels[model.id ?? 0] = resultModel
+//            self.updateUI()
+//        }) { (msg, code) in
+//            
+//        }
     }
     
     func loadPraiseOrCancelData(index: Int){

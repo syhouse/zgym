@@ -148,16 +148,17 @@ class YXSEducationAlbumDeleteRequest: YXSBaseRequset {
 }
 
 
-/// 获取照片评论和点赞数量
-let albumQueryCommentListAndPraise = "/album/query-comment-list-and-praise"
-class YXSEducationAlbumQueryCommentListAndPraiseRequest: YXSBaseRequset {
-    init(albumId: Int, resourceId: Int){
+/// 获取照片评论列表
+let albumQueryCommentList = "/album/query-comment-list"
+class YXSEducationAlbumQueryCommentListRequest: YXSBaseRequset {
+    init(albumId: Int, classId: Int, resourceId: Int){
         super.init()
         method = .post
         host = fileHost
-        path = albumQueryCommentListAndPraise
+        path = albumQueryCommentList
         param = [
             "albumId":albumId,
+            "classId":classId,
             "resourceId":resourceId]
     }
 }
@@ -196,16 +197,17 @@ class YXSEducationAlbumQueryPraiseCommentCountRequest: YXSBaseRequset {
 //评论相册资源
 let albumComment = "/album/comment"
 class YXSEducationAlbumCommentRequest: YXSBaseRequset {
-    init(albumId: Int, resourceId: Int,id: Int,type: String = "COMMENT",content: String){
+    init(albumId: Int, classId: Int, resourceId: Int, type: String = "COMMENT", content: String, id: Int){
         super.init()
         method = .post
         host = fileHost
         path = albumComment
         param = [
             "albumId":albumId,
-            "resourceId":resourceId,
-            "type":type,
-            "content":content,
-            "id":id]
+            "classId": classId,
+            "resourceId": resourceId,
+            "type": type,
+            "content": content,
+            "id": id]
     }
 }

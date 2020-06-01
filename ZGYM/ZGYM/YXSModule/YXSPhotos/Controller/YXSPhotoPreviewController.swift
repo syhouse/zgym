@@ -34,6 +34,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         fd_prefersNavigationBarHidden = true
+        self.view.backgroundColor = UIColor.black
         
         view.addSubview(customNav)
         customNav.snp.makeConstraints({ (make) in
@@ -72,10 +73,21 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             make.top.equalTo(contentPanel.snp_bottom)
             make.left.equalTo(0).offset(0)
             make.right.equalTo(0).offset(0)
-            make.bottom.equalTo(0).offset(0)
+            if #available(iOS 11.0, *) {
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                // Fallback on earlier versions
+                make.bottom.equalTo(0).offset(0)
+            }
             make.height.equalTo(64)
         })
         
+        view.addSubview(commentView)
+        commentView.snp.makeConstraints({ (make) in
+            make.left.equalTo(0)
+            make.right.equalTo(0)
+            make.bottom.equalTo(0)
+        })
     }
     
     // MARK: - Request
@@ -98,6 +110,15 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         }
     }
 
+//    @objc func albumQueryCommentListRequest(page: Int) {
+//        let model = dataSource[page]
+//        YXSEducationAlbumQueryCommentListRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0).request({ (json) in
+//
+//        }) { (msg, code) in
+//
+//        }
+//    }
+    
     // MARK: - Action
     @objc func praiseOrCancelClick(sender: UIButton) {
         let model = dataSource[browserView?.currentPage ?? 0]
@@ -183,6 +204,8 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, pageChanged page: Int, data: YBIBDataProtocol) {
         customNav.title = "\(page + 1)/\(dataSource.count)"
         albumQueryPraiseCommentCountRequest(page: page)
+//        albumQueryCommentListRequest(page: page)
+        commentView.loadData(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: dataSource[page].id ?? 0)
     }
     
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, respondsToLongPressWithData data: YBIBDataProtocol) {
@@ -214,6 +237,13 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         view.minePriseButton.addTarget(self, action: #selector(praiseOrCancelClick(sender:)), for: .touchUpInside)
         view.commentButtonClick()
         view.moreActionButton.addTarget(self, action: #selector(moreClick(sender:)), for: .touchUpInside)
+        return view
+    }()
+    
+    lazy var commentView: YXSPhotoPreviewCommentView = {
+        let view = YXSPhotoPreviewCommentView()
+        view.backgroundColor = UIColor.black
+        view.isUserInteractionEnabled = true
         return view
     }()
     
