@@ -840,16 +840,33 @@ class HomeworkDetailFilterBtnView : UIView {
                             make.height.equalTo(40)
                             make.width.equalTo(90)
                         }
-                        goodBtn.isSelected = true
-                        goodBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), leftMargin: 20, rightMargin: 20, lineHeight: 2)
                         allBtn.yxs_removeLine()
-                        myBtn.yxs_removeLine()
-                        allBtn.isSelected = false
-                        myBtn.isSelected = false
                         self.filterBtn.isHidden = true
                     }
 //                    self.filterBtn.isHidden = true
                 }
+            }
+            if self.model?.currentIsGood == -1 {
+                allBtn.isSelected = true
+                goodBtn.isSelected = false
+                myBtn.isSelected = false
+                goodBtn.yxs_removeLine()
+                allBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), leftMargin: 20, rightMargin: 20, lineHeight: 2)
+                myBtn.yxs_removeLine()
+            } else if self.model?.currentIsGood == 1 {
+                allBtn.isSelected = false
+                goodBtn.isSelected = true
+                myBtn.isSelected = false
+                goodBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), leftMargin: 20, rightMargin: 20, lineHeight: 2)
+                allBtn.yxs_removeLine()
+                myBtn.yxs_removeLine()
+            } else {
+                allBtn.isSelected = false
+                goodBtn.isSelected = false
+                myBtn.isSelected = true
+                goodBtn.yxs_removeLine()
+                allBtn.yxs_removeLine()
+                myBtn.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#698DF6"), leftMargin: 20, rightMargin: 20, lineHeight: 2)
             }
         }
     }

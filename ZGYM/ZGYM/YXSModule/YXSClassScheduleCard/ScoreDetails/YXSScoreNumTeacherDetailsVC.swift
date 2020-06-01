@@ -98,7 +98,6 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
     // MARK: -loadData
     func loadData(){
         YXSEducationScoreTeacherDetailsRequest.init(examId: listModel?.examId ?? 0).request({ (json) in
-            print("123")
             let model = Mapper<YXSScoreDetailsModel>().map(JSONObject:json.object) ?? YXSScoreDetailsModel.init(JSON: ["": ""])!
             self.detailsModel = model
             self.headerClassNameLbl.text = model.className ?? ""
@@ -109,6 +108,10 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
             self.averageScoreLbl.text = "\(String(model.averageScore ?? 0))分"
             self.maxNumberLbl.text = "999-999分，共99人"
             UIUtil.yxs_setLabelAttributed(self.visibleView.textLabel, text: [String(model.readNumber ?? 0), "/\(model.number ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF")])
+//            self.barChartView.xValuesArr = ["0-60","61-70","71-80","81-90","91-100"]
+//            self.barChartView.yValuesArr = ["3人","10人","15人","9人","4人"]
+//            self.barChartView.yAxisCount = 6
+//            self.barChartView.yScaleValue = 4
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
@@ -119,7 +122,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
     lazy var customNav: YXSCustomNav = {
         let customNav = YXSCustomNav()
         customNav.leftImage = "back"
-        customNav.titleLabel.textColor = UIColor.black
+        customNav.titleLabel.textColor = kTextMainBodyColor
         customNav.hasRightButton = false
         customNav.backgroundColor = UIColor.clear
         return customNav
@@ -127,6 +130,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: self.view.frame)
+        scrollView.delegate = self
         return scrollView
     }()
     
@@ -184,6 +188,13 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
             make.width.equalTo(SCREEN_WIDTH - 60)
             make.bottom.equalTo(-25)
             make.height.equalTo(92)
+        }
+        view.addSubview(barChartView)
+        barChartView.snp.makeConstraints { (make) in
+            make.left.equalTo(15)
+            make.bottom.equalTo(contentBottomView.snp_top).offset(-20)
+            make.right.equalTo(-15)
+            make.top.equalTo(60)
         }
         return view
     }()
@@ -307,6 +318,31 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         return lbl
     }()
     
+    lazy var barChartView: SSWBarChartView = {
+        let chartView = SSWBarChartView.init(chartType: SSWChartsType.bar)
+        chartView?.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9")
+        chartView?.barCorlor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
+        chartView?.xValuesArr = ["0-60","61-70","71-80","81-90","91-100"]
+        chartView?.yValuesArr = ["3人","10人","15人","9人","4人"]
+        chartView?.yAxisCount = 5
+        chartView?.yScaleValue = 4
+        chartView?.gapWidth = 30*SCREEN_SCALE
+        return chartView!
+    }()
+}
+
+extension YXSScoreNumTeacherDetailsVC: UIScrollViewDelegate{
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y > kSafeTopHeight + 64{
+            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+            customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "yxs_back_white"), forState: .normal)
+            customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        }else{
+            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: UIColor.clear)
+            customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "back"), forState: .normal)
+            customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kTextMainBodyColor)
+        }
+    }
 }
 
 

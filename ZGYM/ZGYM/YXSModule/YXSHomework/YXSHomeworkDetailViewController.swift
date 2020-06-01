@@ -405,6 +405,10 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
             weakSelf.tableViewRefreshHeader.endRefreshing()
             model.topHistoryModel = weakSelf.topHistoryModel
             weakSelf.model = model
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT && model.homeworkVisible == 0 && weakSelf.isGood == -1{
+                weakSelf.isGood = 1
+            }
+            model.currentIsGood = weakSelf.isGood
             weakSelf.tableHeaderView.setModel(model: model)
             YXSCacheHelper.yxs_cachePublishHomeworkDetailTask(data: model, homeworkId: weakSelf.homeModel.serviceId ?? 0)
             if YXSPersonDataModel.sharePerson.personRole == .PARENT && weakSelf.homeModel.isRead != 1{
@@ -418,6 +422,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
                     UIUtil.yxs_loadReadData(hModel!)
                 }
             }
+            
             if isRefreshList {
                 
                 weakSelf.refreshHomeworkData(index: weakSelf.isGood)

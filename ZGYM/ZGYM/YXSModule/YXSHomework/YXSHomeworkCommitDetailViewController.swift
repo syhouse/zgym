@@ -493,6 +493,8 @@ class YXSHomeworkCommitDetailViewController: YXSBaseViewController {
     
     @objc func yxs_addCommentClick(sender:YXSButton) {//老师点评
         let vc = YXSHomeworkCommentController()
+        vc.initChangeReview(myReviewModel: self.teacherModel, model: homeModel!)
+//        vc.initChangeReview(myReviewModel: model, model: weakSelf.homeModel)
         vc.homeModel = homeModel
         vc.childrenIdList = [(homeModel?.childrenId ?? 0)]
         vc.isPop = true
