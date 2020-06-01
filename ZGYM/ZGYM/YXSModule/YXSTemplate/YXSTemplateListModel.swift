@@ -15,6 +15,9 @@ class YXSTemplateListModel : NSObject, NSCoding, Mappable{
     var icon: String?
     var tabName: String?
     
+    ///接龙模版名称
+    var name: String?
+    
     required init?(map: Map){}
     private override init(){}
     
@@ -27,6 +30,8 @@ class YXSTemplateListModel : NSObject, NSCoding, Mappable{
         title <- map["title"]
         icon <- map["icon"]
         tabName <- map["tabName"]
+        name <- map["name"]
+        
     }
     
     /**
@@ -43,7 +48,7 @@ class YXSTemplateListModel : NSObject, NSCoding, Mappable{
         isSelected = aDecoder.decodeBool(forKey: "isSelected")
         icon = aDecoder.decodeObject(forKey: "icon") as? String
         tabName = aDecoder.decodeObject(forKey: "tabName") as? String
-        
+        name = aDecoder.decodeObject(forKey: "name") as? String
     }
     
     /**
@@ -72,6 +77,9 @@ class YXSTemplateListModel : NSObject, NSCoding, Mappable{
         }
         if tabName != nil{
             aCoder.encode(tabName, forKey: "tabName")
+        }
+        if name != nil{
+            aCoder.encode(name, forKey: "name")
         }
         aCoder.encode(isSelected, forKey: "isSelected")
     }

@@ -114,7 +114,11 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             loadTemplateData()
+            
+            publishView.limitTextLength = 500
+            publishView.setPlaceholderText("请输入打卡任务，最多可输入500字")
         }
+        
     }
     
     override func initPublish() {
@@ -212,7 +216,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
         }
         publishView.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
-            make.top.equalTo(subjectField.snp_bottom).offset(10)
+            make.top.equalTo(subjectField.snp_bottom).offset(0)
         }
         
         weakSection.snp.makeConstraints { (make) in
@@ -429,13 +433,13 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
         //修改打卡
         if let changePunchCardModel = changePunchCardModel{
             MBProgressHUD.yxs_showLoading(message: "提交中", inView: self.navigationController?.view)
-            YXSEducationClockInParentUpDateCommitRequest.init(childrenId: changePunchCardModel.childrenId ?? 0, clockInId: clockInId, content: publishView.textView.text, audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, clockInCommitId: changePunchCardModel.clockInCommitId ?? 0).request({ (result) in
+            YXSEducationClockInParentUpDateCommitRequest.init(childrenId: changePunchCardModel.childrenId ?? 0, clockInId: clockInId, content: publishView.getTextContent(), audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, clockInCommitId: changePunchCardModel.clockInCommitId ?? 0).request({ (result) in
                 MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
                 MBProgressHUD.yxs_showMessage(message: "修改成功", inView: self.navigationController!.view)
                 //                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationIdKey: self.punchCardModel?.clockInId ?? 0])
                 
                 changePunchCardModel.audioUrl = audioUrl
-                changePunchCardModel.content = self.publishView.textView.text
+                changePunchCardModel.content = self.publishView.getTextContent()
                 changePunchCardModel.audioDuration = self.publishModel.audioModels.first?.time ?? 0
                 changePunchCardModel.bgUrl = bgUrl
                 changePunchCardModel.videoUrl = video
@@ -450,9 +454,9 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
         }else if YXSPersonDataModel.sharePerson.personRole == .PARENT {
             var request: YXSBaseRequset!
             if isPatch{
-                request = YXSEducationClockInParentPatchCardRequest.init(clockInId: clockInId, childrenId: punchCardModel?.childrenId ?? 0, patchCardTime: patchCardTime ?? "", content: publishView.textView.text, audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture)
+                request = YXSEducationClockInParentPatchCardRequest.init(clockInId: clockInId, childrenId: punchCardModel?.childrenId ?? 0, patchCardTime: patchCardTime ?? "", content: publishView.getTextContent(), audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture)
             }else{
-                request = YXSEducationClockInParentCommitRequest.init(childrenId: punchCardModel?.childrenId ?? 0, clockInId: clockInId, content: publishView.textView.text, audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture)
+                request = YXSEducationClockInParentCommitRequest.init(childrenId: punchCardModel?.childrenId ?? 0, clockInId: clockInId, content: publishView.getTextContent(), audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture)
             }
             MBProgressHUD.yxs_showLoading(message: "提交中", inView: self.navigationController?.view)
             MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
@@ -460,15 +464,18 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
                 MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
                 MBProgressHUD.yxs_showMessage(message: "提交成功", inView: self.navigationController?.view)
                 self.yxs_remove()
-                self.loadChildInfoData()
-                
+                if self.isPatch{
+                    self.punchcardSucess()
+                }else{
+                    self.loadChildInfoData()
+                }
             }) { (msg, code) in
                 MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
         }else{
             MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
-            YXSEducationClockInTeacherPublishRequest.init(classIdList: classIdList,content: publishView.textView.text, title: subjectField.text!, periodList: publishModel.periodList, totalDay: publishModel.punchCardDay!.paramsKey, audioUrl: audioUrl, audioDuration:  publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "", isTop: topSwitch.isSelect ? 1 : 0, reminder: publishModel.remindPanchCardTime.removingSuffix(":00").int ?? 0, isPatchCard: patchSwitch.isSelect ? 1 : 0).request({ (result) in
+            YXSEducationClockInTeacherPublishRequest.init(classIdList: classIdList,content: publishView.getTextContent(), title: subjectField.text!, periodList: publishModel.periodList, totalDay: publishModel.punchCardDay!.paramsKey, audioUrl: audioUrl, audioDuration:  publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "", isTop: topSwitch.isSelect ? 1 : 0, reminder: publishModel.remindPanchCardTime.removingSuffix(":00").int ?? 0, isPatchCard: patchSwitch.isSelect ? 1 : 0).request({ (result) in
                 MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
                 MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
                 self.yxs_remove()
@@ -559,12 +566,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_hideHUD()
 
-            if self.patchCardTime == nil{//不是补卡 发送打卡成功通知
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationIdKey: self.punchCardModel?.clockInId ?? 0])
-            }
-            let hasFinish = self.punchCardModel?.surplusClockInDayCount ?? 1 ==  1
-            UIUtil.yxs_reduceAgenda(serviceId: self.punchCardModel?.clockInId ?? 0, info: [kEventKey: YXSHomeType.punchCard,kValueKey: hasFinish])
-            self.navigationController?.popViewController()
+            self.punchcardSucess()
             
             self.punchCardComplete?(HMRequestShareModel.init(clockInId: self.punchCardModel?.clockInId ?? 0, childrenId: self.punchCardModel?.childrenId ?? 0)
                 ,YXSPunchCardShareModel.init(downLoadUrl: result["appDownloadUrl"].stringValue, name: self.yxs_user.currentChild?.realName ?? "", avar: self.yxs_user.currentChild?.avatar ?? "", title: self.punchCardModel?.title ?? "", clockInDayCount: result["clockInDayCount"].intValue, percentOver: result["percentOver"].stringValue, bgUrl: result["bgUrl"].stringValue))
@@ -572,6 +574,16 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
+    }
+    
+    ///家长打卡操作
+    func punchcardSucess(){
+        if self.patchCardTime == nil{//不是补卡 发送打卡成功通知
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationIdKey: self.punchCardModel?.clockInId ?? 0])
+        }
+        let hasFinish = self.punchCardModel?.surplusClockInDayCount ?? 1 ==  1
+        UIUtil.yxs_reduceAgenda(serviceId: self.punchCardModel?.clockInId ?? 0, info: [kEventKey: YXSHomeType.punchCard,kValueKey: hasFinish])
+        self.navigationController?.popViewController()
     }
     
     // MARK: -pivate
@@ -609,8 +621,9 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     // MARK: - getter&setter
     
     lazy var subjectField: YXSQSTextField = {
-        let classField = UIUtil.yxs_getTextField(UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 0), placeholder: "请输入打卡主题，最多可输入20字", placeholderColor: kNight898F9A, mixedTextColor:MixedColor(normal: kTextMainBodyColor, night: UIColor.white))
+        let classField = UIUtil.yxs_getTextField(UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 0), placeholder: "请输入打卡主题，最多可输入20字", placeholderColor: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), mixedTextColor:MixedColor(normal: kTextMainBodyColor, night: UIColor.white))
         classField.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+        classField.yxs_addLine(position: .bottom, color: kLineColor, leftMargin: 15, lineHeight: 0.5)
         return classField
     }()
     

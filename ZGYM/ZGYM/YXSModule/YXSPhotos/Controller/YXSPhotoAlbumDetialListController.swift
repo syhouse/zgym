@@ -298,8 +298,12 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             model.isSelected = !model.isSelected
             footerView.rightButton.setTitle("删除(\(resourceIdList.count))", for: .normal)
             collectionView.reloadItems(at: [indexPath])
+            
         }else{
-            let vc = YXSPhotoShowAlbumController(dataSource: self.dataSource, currentIndex: indexPath.row)
+            let vc = YXSPhotoPreviewController(dataSource: dataSource, albumModel: albumModel)
+            vc.updateAlbumModel = updateAlbumModel
+            vc.currentPage = indexPath.row
+
             self.navigationController?.pushViewController(vc)
         }
     }

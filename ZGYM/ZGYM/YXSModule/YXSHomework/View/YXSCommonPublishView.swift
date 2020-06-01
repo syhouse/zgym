@@ -15,13 +15,12 @@ private let textMinHeight: CGFloat = 120.0
 private let kAudioViewOrginTag: Int = 101
 class YXSCommonPublishView: UIView{
     // MARK: - public
+    
+    
+    // MARK: - textView相关
     /// 输入内容时偏移更新
     public var updateContentOffSet: ((CGFloat) ->())?
     
-    /// 音频最大数量
-    public var audioMaxCount: Int
-    var publishType: YXSHomeType = .homework
-    /// 输入文本长度限制
     public var limitTextLength: Int{
         didSet{
             textView.limitCount = limitTextLength
@@ -33,60 +32,77 @@ class YXSCommonPublishView: UIView{
     public func setTemplateText(_ text: String){
         publishModel.publishText = text
         textView.text = text
+        textCountlabel.text = "\(text.count)/\(self.limitTextLength)"
         updateUI(updateOffSet: false)
     }
     
+    ///设置模版内容
+    public func setPlaceholderText(_ text: String){
+        textView.placeholder = text
+    }
+    
+    ///获取输入框内容
+    public func getTextContent() -> String{
+        return textView.text
+    }
+    
+    /// 音频最大数量
+    public var audioMaxCount: Int
+    var publishType: YXSHomeType = .homework
+    /// 输入文本长度限制
+    
     // MARK: - init
     init(publishModel: YXSPublishModel,isShowMedia: Bool = true,limitTextLength: Int = 1000,audioMaxCount: Int = 1,type:YXSHomeType = .homework) {
-           self.publishModel = publishModel
-           self.isShowMedia = isShowMedia
+        self.publishModel = publishModel
+        self.isShowMedia = isShowMedia
         self.publishType = type
-           self.limitTextLength = limitTextLength
-           self.audioMaxCount = audioMaxCount
-           super.init(frame: CGRect.zero)
-           addSubview(listView)
-           addSubview(textView)
-           addSubview(textCountlabel)
-           addSubview(buttonView)
-           addSubview(linkView)
-            addSubview(fileFirstView)
-            addSubview(fileSecondView)
-            addSubview(fileThirdView)
-           mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight20232F)
-           textView.snp.makeConstraints { (make) in
-               make.left.equalTo(0)
-               make.right.equalTo(-15)
-               make.height.equalTo(textMinHeight)
-               make.top.equalTo(0)
-           }
-           textCountlabel.snp.makeConstraints { (make) in
-               make.top.equalTo(textView.snp_bottom).offset(5)
-               make.height.equalTo(20)
-               make.right.equalTo(-20)
-           }
-           
-           for index in 0..<audioMaxCount{
-               let voiceView = YXSVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 36), complete: {
-                   [weak self](url, duration) in
-                   guard let strongSelf = self else { return }
-                   strongSelf.showAudio(strongSelf.publishModel.audioModels[index], index: index)
-                   }, delectHandler: {
-                       [weak self] in
-                       guard let strongSelf = self else { return }
-                       strongSelf.removeAudio(at: index)
-                   }, showDelect: true)
-               voiceView.tapPlayer = false
-               voiceView.tag = kAudioViewOrginTag + index
-               voiceView.isHidden = true
-               addSubview(voiceView)
-           }
-           
-           textView.text = publishModel.publishText
-           
-           initListViewUI()
-           
-           updateUI()
-       }
+        self.limitTextLength = limitTextLength
+        self.audioMaxCount = audioMaxCount
+        super.init(frame: CGRect.zero)
+        addSubview(listView)
+        addSubview(textView)
+        addSubview(textCountlabel)
+        addSubview(buttonView)
+        addSubview(linkView)
+        addSubview(fileFirstView)
+        addSubview(fileSecondView)
+        addSubview(fileThirdView)
+        mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight20232F)
+        textView.snp.makeConstraints { (make) in
+            make.left.equalTo(0)
+            make.right.equalTo(-15)
+            make.height.equalTo(textMinHeight)
+            make.top.equalTo(0)
+        }
+        textCountlabel.snp.makeConstraints { (make) in
+            make.top.equalTo(textView.snp_bottom).offset(5)
+            make.height.equalTo(20)
+            make.right.equalTo(-20)
+        }
+        
+        for index in 0..<audioMaxCount{
+            let voiceView = YXSVoiceView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 36), complete: {
+                [weak self](url, duration) in
+                guard let strongSelf = self else { return }
+                strongSelf.showAudio(strongSelf.publishModel.audioModels[index], index: index)
+                }, delectHandler: {
+                    [weak self] in
+                    guard let strongSelf = self else { return }
+                    strongSelf.removeAudio(at: index)
+                }, showDelect: true)
+            voiceView.tapPlayer = false
+            voiceView.tag = kAudioViewOrginTag + index
+            voiceView.isHidden = true
+            addSubview(voiceView)
+        }
+        
+        textView.text = publishModel.publishText
+        textCountlabel.text = "\(textView.text.count)/\(self.limitTextLength)"
+        
+        initListViewUI()
+        
+        updateUI()
+    }
     
     // MARK: - private property
     private var publishModel: YXSPublishModel
@@ -134,7 +150,7 @@ class YXSCommonPublishView: UIView{
     /// 是否有媒体资源展示
     private var isShowMedia: Bool
     
-   
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -200,12 +216,12 @@ class YXSCommonPublishView: UIView{
             if publishModel.publishLink == nil{
                 linkView.isHidden = true
                 
-//                buttonView.snp.remakeConstraints { (make) in
-//                    make.top.equalTo(last.itemListH + frame.origin.y + 20)
-//                    make.left.right.equalTo(0)
-//                    make.bottom.equalTo(-20)
-//                    make.height.equalTo(29)
-//                }
+                //                buttonView.snp.remakeConstraints { (make) in
+                //                    make.top.equalTo(last.itemListH + frame.origin.y + 20)
+                //                    make.left.right.equalTo(0)
+                //                    make.bottom.equalTo(-20)
+                //                    make.height.equalTo(29)
+                //                }
                 
             }else{
                 last = linkView
@@ -217,7 +233,7 @@ class YXSCommonPublishView: UIView{
                     make.right.equalTo(-15)
                     make.height.equalTo(44)
                 }
-
+                
             }
             if publishModel.publishFileLists.count > 0 {
                 for index in 0..<publishModel.publishFileLists.count{
@@ -299,7 +315,7 @@ class YXSCommonPublishView: UIView{
                 
             }
             
-    
+            
             if publishModel.audioModels.count != 0{
                 if publishModel.audioModels.count == audioMaxCount{
                     self.publishModel.publishSource.append(.audioMax)
@@ -314,7 +330,7 @@ class YXSCommonPublishView: UIView{
                 if assets.count == maxcount{
                     self.publishModel.publishSource.append(.imageMax)
                 }else{
-                   self.publishModel.publishSource.append(.image)
+                    self.publishModel.publishSource.append(.image)
                 }
             }
             if publishModel.audioModels.count == 0 && assets.count == 0{
@@ -387,8 +403,8 @@ class YXSCommonPublishView: UIView{
             let nav = UINavigationController.init(rootViewController: vc)
             nav.modalPresentationStyle = .fullScreen
             UIUtil.RootController().present(nav, animated: true, completion: nil)
-//            UIUtil.currentNav().pushViewController(vc)
-
+            //            UIUtil.currentNav().pushViewController(vc)
+            
         case .vedio:
             let vc = YXSRecordVideoController.init(complete: { [weak self](asset) in
                 guard let strongSelf = self else { return }
@@ -439,18 +455,20 @@ class YXSCommonPublishView: UIView{
         changeModel()
         updateUI()
     }
-
+    
     
     // MARK: - getter&setter
-    lazy var textView : YXSPlaceholderTextView = {
+    private lazy var textView : YXSPlaceholderTextView = {
         let textView = YXSPlaceholderTextView()
         textView.limitCount = limitTextLength
         textView.font = kTextMainBodyFont
-        textView.placeholderMixColor = MixedColor(normal: kNight898F9A, night: kNight898F9A)
+        textView.isScrollEnabled = false
+        
+        textView.placeholderMixColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), night: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"))
         let textColor = NightNight.theme == .night ? UIColor.white : kTextMainBodyColor
         textView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight20232F)
         textView.placeholder = "请输入要发布的内容，最长支持\(limitTextLength)字"
-        textView.contentInset = UIEdgeInsets.init(top: 20, left: 15, bottom: 0, right: 0)
+        textView.textContainerInset = UIEdgeInsets.init(top: 20, left: 15, bottom: 0, right: 0)
         textView.textDidChangeBlock = {
             [weak self](text: String) in
             guard let strongSelf = self else { return }

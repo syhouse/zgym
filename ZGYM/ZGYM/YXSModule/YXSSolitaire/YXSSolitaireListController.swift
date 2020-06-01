@@ -189,10 +189,10 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
             guard let strongSelf = self else { return }
             strongSelf.dealCellEvent(type, indexPath: indexPath)
         }
-        cell.cellLongTapEvent = {[weak self]  in
-            guard let strongSelf = self else { return }
-            strongSelf.showTopAlert(indexPath: indexPath)
-        }
+//        cell.cellLongTapEvent = {[weak self]  in
+//            guard let strongSelf = self else { return }
+//            strongSelf.showTopAlert(indexPath: indexPath)
+//        }
         return cell
     }
     

@@ -37,8 +37,12 @@ class YXSSolitaireSelectTypeController: YXSBaseTableViewController {
     
     // MARK: - loadData
     func loadTemplateData(){
-        YXSEducationTemplateQueryRecommendTemplateRequest(serviceType: 3).requestCollection({ (templateLists: [YXSTemplateListModel]) in
-            self.dataSouer = templateLists
+        YXSEducationCensusTeacherGatherTemplateListRequest(currentPage: 1).requestCollection({ (templateLists: [YXSTemplateListModel]) in
+            self.dataSouer.removeAll()
+            let maxCount = templateLists.count > 3 ? 3 : templateLists.count
+            for index in 0..<maxCount{
+                self.dataSouer.append(templateLists[index])
+            }
             self.tableView.reloadData()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -90,6 +94,7 @@ class YXSSolitaireSelectTypeController: YXSBaseTableViewController {
 class YXSSolitaireTemplateCell: UITableViewCell{
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
         addSubview(bgView)
         bgView.addSubview(icon)
         bgView.addSubview(title)
@@ -118,7 +123,7 @@ class YXSSolitaireTemplateCell: UITableViewCell{
     
     func setModel(_ model: YXSTemplateListModel?){
         icon.sd_setImage(with: URL.init(string: model?.icon ?? "" ), placeholderImage: kImageDefualtImage)
-        title.text = model?.title
+        title.text = model?.name
     }
     
     lazy var bgView: UIView = {
@@ -137,7 +142,7 @@ class YXSSolitaireTemplateCell: UITableViewCell{
     lazy var title: UILabel = {
         let label = UILabel()
         label.textColor = kTextMainBodyColor
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
     

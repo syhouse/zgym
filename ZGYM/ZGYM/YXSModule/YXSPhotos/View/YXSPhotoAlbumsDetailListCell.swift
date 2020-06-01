@@ -9,6 +9,7 @@
 
 import UIKit
 
+/// 相片/视频 Cell
 class YXSPhotoAlbumsDetailListCell: UICollectionViewCell {
     var isEdit: Bool = false
     override init(frame: CGRect) {

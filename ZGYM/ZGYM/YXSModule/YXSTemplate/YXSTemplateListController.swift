@@ -159,6 +159,7 @@ class YXSTemplateListController: YXSBaseCollectionViewController{
         }
         
         collectionView.reloadData()
+        self.navigationController?.popViewController()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

@@ -144,6 +144,8 @@ public let kChatCallRefreshFriendsCircleNotification = "ChatCallRefreshFriendsCi
 public let kChatCallRefreshPunchCardNotification = "ChatCallRefreshPunchCardNotification"
 /// 收到spy用户推过来的IM作业互动通知 更新作业互动消息数量
 public let kChatCallRefreshHomeworkNotification = "ChatCallRefreshHomeworkNotification"
+/// 收到spy用户推过来的IM身份变更通知通知 退出登录
+public let kChatCallChangeRoleLoginOutNotification = "ChatCallChangeRoleLoginOutNotification"
 
 // MARK: -置顶通知
 /// 单个班级首页操作置顶

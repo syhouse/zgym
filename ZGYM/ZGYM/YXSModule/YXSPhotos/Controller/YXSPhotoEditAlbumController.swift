@@ -82,13 +82,15 @@ class YXSPhotoEditAlbumController: YXSEditAlbumBaseController {
     /// 上传照片完成请求
     override func loadUploadFinishData(){
         MBProgressHUD.yxs_showLoading()
-        YXSEducationAlbumUpdateAlbumNameOrCoverRequest.init(id: albumModel.id ?? 0, albumName: nameField.text, coverUrl: coverUrl).request({ (result) in
+        YXSEducationAlbumUpdateAlbumNameOrCoverRequest.init(id: albumModel.id ?? 0,  classId: albumModel.classId ?? 0, albumName: nameField.text, coverUrl: coverUrl).request({ (result) in
             MBProgressHUD.yxs_showMessage(message: "修改成功")
+            MBProgressHUD.yxs_hideHUD()
             self.albumModel.albumName = self.nameField.text
             self.albumModel.coverUrl = self.coverUrl
             self.updateAlbumSucess?(self.albumModel)
             self.navigationController?.popViewController()
         }) { (msg, code) in
+            MBProgressHUD.yxs_hideHUD()
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }

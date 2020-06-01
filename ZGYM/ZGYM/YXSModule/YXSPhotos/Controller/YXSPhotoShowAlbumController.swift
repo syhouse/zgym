@@ -12,7 +12,7 @@ import ObjectMapper
 import FDFullscreenPopGesture_Bell
 import JXCategoryView
 
-/// 详情
+/// 详情 （废弃）
 class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate, JXCategoryListContainerViewDelegate {
     func number(ofListsInlistContainerView listContainerView: JXCategoryListContainerView!) -> Int {
         return dataSource.count
@@ -93,10 +93,10 @@ class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate,
     }
     
     func loadPraiseOrCancelData(index: Int){
-        let model = dataSource[index]
-        YXSEducationAlbumPraiseOrCancelRequest.init(albumId: model.albumId ?? 0, resourceId: model.id ?? 0).request({ (resultModel: YXSPhotoAlbumsPraiseModel) in
-        }) { (msg, code) in
-        }
+//        let model = dataSource[index]
+//        YXSEducationAlbumPraiseOrCancelRequest.init(albumId: model.albumId ?? 0, resourceId: model.id ?? 0).request({ (resultModel: YXSPhotoAlbumsPraiseModel) in
+//        }) { (msg, code) in
+//        }
     }
    
     
@@ -171,8 +171,8 @@ class YXSPhotoShowAlbumController: YXSBaseViewController,JXCategoryViewDelegate,
        return customNav
     }()
     
-    lazy var footerView: YXSPhotoShowAlubmFooterView = {
-       let footerView = YXSPhotoShowAlubmFooterView()
+    lazy var footerView: YXSPhotoPreviewFooterView = {
+       let footerView = YXSPhotoPreviewFooterView()
         footerView.isHidden = true
         footerView.cellBlock = {[weak self]
             (isComment) in
