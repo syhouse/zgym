@@ -12,8 +12,11 @@ import ObjectMapper
 
 class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     // MARK: -leftCycle
+    ///打卡成功回调
     public var punchCardComplete: ((_ requestModel: HMRequestShareModel, _ shareModel: YXSPunchCardShareModel) -> ())?
     
+    ///补卡成功回调
+    public var patchCardTComplete: (() -> ())?
     /// 是否是补卡
     private var isPatch: Bool = false
     
@@ -466,6 +469,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
                 self.yxs_remove()
                 if self.isPatch{
                     self.punchcardSucess()
+                    self.patchCardTComplete?()
                 }else{
                     self.loadChildInfoData()
                 }

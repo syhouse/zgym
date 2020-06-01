@@ -9,8 +9,8 @@
 import NightNight
 
 class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseController {
-    override init(){
-        super.init()
+    init(){
+        super.init(nil)
         saveDirectory = "Solitaire_collector"
         sourceDirectory = .solitaire
         isSelectSingleClass = true
@@ -35,13 +35,21 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
 
         tableView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
         tableView.estimatedRowHeight = 120
+        
+        publishView.updateUIBlock = {
+            [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.updateHeaderView()
+        }
+        
+        setCollectorUI()
     }
     
     
     // MARK: -UI
-    override func setTeacherUI() {
-        view.addSubview(tableView)
-        view.addSubview(footerSettingView)
+    func setCollectorUI() {
+        touchView.addSubview(tableView)
+        touchView.addSubview(footerSettingView)
         footerSettingView.snp.makeConstraints { (make) in
             make.height.equalTo(60 + kSafeBottomHeight)
             make.bottom.left.right.equalTo(0)
@@ -52,6 +60,7 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         }
         
         // 设置tableHeaderView
+        tableHeaderView.addSubview(subjectField)
         tableHeaderView.addSubview(publishView)
         tableHeaderView.addSubview(selectClassView)
         selectClassView.snp.makeConstraints { (make) in
@@ -59,9 +68,14 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
             make.left.right.equalTo(0)
             make.height.equalTo(49)
         }
+        subjectField.snp.makeConstraints { (make) in
+            make.top.equalTo(selectClassView.snp_bottom).offset(10)
+            make.left.right.equalTo(0)
+            make.height.equalTo(49)
+        }
         publishView.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
-            make.top.equalTo(selectClassView.snp_bottom).offset(10)
+            make.top.equalTo(subjectField.snp_bottom)
             make.bottom.equalTo(0)
         }
         publishView.yxs_addLine()
@@ -82,6 +96,190 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
     // MARK: -loadData
     override func yxs_loadClassDataSucess(){
         loadClassCountData()
+    }
+    
+    override func yxs_cheackCanSetUp() -> Bool {
+        if publishModel.solitaireQuestions.count == 0{
+            yxs_showAlert(title: "请添加题目")
+            return false
+        }
+        
+        return super.yxs_cheackCanSetUp()
+    }
+    
+    override func rightClick(){
+        self.view.endEditing(true)
+        
+        if !yxs_cheackCanSetUp(){
+            return
+        }
+        
+        var commintMediaInfos = [[String: Any]]()
+        //需要上传
+        var localMedias = [SLUploadSourceModel]()
+        
+        var localOptionMedias = [SLUploadSourceModel]()
+        var localOptionUploadModel = [SolitairePublishNewSelectModel]()
+
+        for model in publishModel.audioModels{
+            if let servicePath = model.servicePath{
+                commintMediaInfos.append([typeKey: SourceNameType.voice,urlKey: servicePath,modelKey: model])
+            }else{
+                localMedias.append(SLUploadSourceModel.init(model: model, type: .voice, storageType: .temporary, fileName: model.fileName ?? ""))
+            }
+        }
+        
+        for model in publishModel.medias{
+            if !model.isService{//本地资源 需要先上传获取url
+                if model.type == .video{
+                   localMedias.append(SLUploadSourceModel.init(model: model, type: .video, storageType: .temporary, fileName: model.fileName))
+                }else{
+                    localMedias.append(SLUploadSourceModel.init(model: model, type: .image, storageType: .temporary, fileName: model.fileName))
+                }
+            }else{//修改的服务器资源
+                if model.type == .video{
+                    commintMediaInfos.append([typeKey: SourceNameType.video,urlKey: model.serviceUrl ?? ""])
+                    
+                    commintMediaInfos.append([typeKey: SourceNameType.firstVideo,urlKey: model.showImageUrl ?? ""])
+                }else{
+                    commintMediaInfos.append([typeKey: SourceNameType.image,urlKey: model.serviceUrl ?? ""])
+                }
+            }
+        }
+        
+        for question in publishModel.solitaireQuestions{
+            if let solitaireSelects = question.solitaireSelects{
+                for solitaireSelect in solitaireSelects{
+                    if let mediaModel = solitaireSelect.mediaModel{
+                        if !mediaModel.isService{//本地资源 需要先上传获取url
+                            localOptionMedias.append(SLUploadSourceModel.init(model: mediaModel, type: .image, storageType: .temporary, fileName: mediaModel.fileName))
+                            localOptionUploadModel.append(solitaireSelect)
+                        }
+                    }
+                }
+            }
+        }
+        
+        //有本地资源上传
+        if localMedias.count != 0{
+            MBProgressHUD.yxs_showUpload(inView: self.navigationController!.view)
+        }
+    
+        YXSUploadSourceHelper().uploadMedia(mediaInfos: localMedias + localOptionMedias, progress: {
+            (progress)in
+            DispatchQueue.main.async {
+                 MBProgressHUD.yxs_updateUploadProgess(progess: progress, inView: self.navigationController!.view)
+            }
+        }, sucess: { (listModels) in
+            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+            
+            if localMedias.count + localOptionMedias.count == listModels.count{
+                for (index, model) in listModels.enumerated(){
+                    if index < localMedias.count{
+                        commintMediaInfos.append([typeKey: model.type,urlKey: model.aliYunUploadBackUrl ?? ""])
+                    }else{
+                        for question in self.publishModel.solitaireQuestions{
+                            if let solitaireSelects = question.solitaireSelects{
+                                for solitaireSelect in solitaireSelects{
+                                    let uploadSolitaireSelect = localOptionUploadModel[index - localMedias.count]
+                                    if uploadSolitaireSelect == solitaireSelect{
+                                        solitaireSelect.mediaModel?.serviceUrl = model.aliYunUploadBackUrl
+                                        break
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            }
+            self.yxs_loadCommintData(mediaInfos: commintMediaInfos)
+        }) { (msg, code) in
+            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
+    
+    override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
+        var classIdList = [Int]()
+        var picture: String = ""
+        var video: String = ""
+        var audioUrl: String = ""
+        var pictures = [String]()
+        var bgUrl: String = ""
+        var options = [String]()
+        
+        if let classs = publishModel.classs{
+            for model in classs{
+                classIdList.append(model.id ?? 0)
+            }
+        }
+        
+        for model in selectView.selectModels{
+            options.append(model.title ?? "")
+        }
+        
+        if let mediaInfos = mediaInfos{
+            for model in mediaInfos{
+                if let type = model[typeKey] as? SourceNameType{
+                    if type == .video{
+                        video = model[urlKey] as? String ?? ""
+                    }else if type == .image{
+                        pictures.append(model[urlKey] as? String ?? "")
+                    }else if type == .voice{
+                        audioUrl = model[urlKey] as? String ?? ""
+                    }else if type == .firstVideo{
+                        bgUrl = model[urlKey] as? String ?? ""
+                    }
+                }
+            }
+            
+        }
+        if pictures.count > 0{
+            picture = pictures.joined(separator: ",")
+        }
+        
+        var optionList = [[String: String]]()
+        for question in publishModel.solitaireQuestions{
+            var option = [String: String]()
+            var gatherHolderItem = [String: Any]()
+            var censusTopicOptionItems = [[String: Any]]()
+
+            gatherHolderItem["isRequired"] = question.isNecessary
+            gatherHolderItem["topicTitle"] = question.questionStemText ?? ""
+            switch question.type {
+            case .single, .checkbox:
+                if let solitaireSelects = question.solitaireSelects{
+                    for solitaireSelect in solitaireSelects{
+                        var censusTopicOptionItem = [String: Any]()
+                        censusTopicOptionItem["optionName"] = solitaireSelect.leftText ?? ""
+                        censusTopicOptionItem["optionContext"] = solitaireSelect.title ?? ""
+                        censusTopicOptionItem["optionImage"] = solitaireSelect.mediaModel?.serviceUrl ?? ""
+                        censusTopicOptionItems.append(censusTopicOptionItem)
+                    }
+                }
+                gatherHolderItem["censusTopicOptionItems"] = censusTopicOptionItems
+            default:
+                break
+            }
+            option["gatherType"] = question.type.rawValue
+            option["gatherHolderItemJson"] = gatherHolderItem.jsonString() ?? ""
+            
+            optionList.append(option)
+        }
+        
+        MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
+        YXSCensusV1TeacherPublishGatherRequest.init(classIdList: classIdList, content: publishView.getTextContent(), title:        subjectField.text ?? ""
+          , audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "",commitUpperLimit: publishModel.commitUpperLimit ?? 0, endTime: publishModel.solitaireDate!.toString(format: DateFormatType.custom("yyyy-MM-dd HH:mm:ss")), isTop: publishModel.isTop ? 1 : 0, optionList: optionList).request({ (result) in
+            MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
+            MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
+            self.yxs_remove()
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherPublishSucessNotification), object: nil)
+            self.navigationController?.popViewController()
+        }) { (msg, code) in
+            MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     // MARK: - action
@@ -211,7 +409,3 @@ extension YXSSolitaireCollectorPublishController: UITableViewDelegate, UITableVi
         }
     }
 }
-
-
-
-

@@ -17,25 +17,14 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
     var classId: Int? {
         return publishModel.classs?.first?.id
     }
+    ///接龙模版model
+    var solitaireTemplateModel: YXSSolitaireTemplateDetialModel?
 
-    init(){
-        super.init(nil)
-        saveDirectory = "Solitaire"
-        sourceDirectory = .solitaire
-        isSelectSingleClass = true
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "接龙"
         self.publishType = .solitaire
         
-        setTeacherUI()
-        
+        initTouchView()
         if classId != nil{
             loadClassCountData()
         }
@@ -43,7 +32,13 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
         scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
         contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
 
+        subjectField.text = publishModel.subjectText
         
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.greetingTextFieldChanged),
+                                               name:NSNotification.Name(rawValue:"UITextFieldTextDidChangeNotification"),
+                                               object: self.subjectField)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,126 +52,57 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
         IQKeyboardManager.shared().keyboardDistanceFromTextField = 0
     }
     
-    // MARK: -UI
-    func setTeacherUI(){
-        view.addSubview(scrollView)
-        view.addSubview(footerSettingView)
-        footerSettingView.snp.makeConstraints { (make) in
-            make.height.equalTo(60 + kSafeBottomHeight)
-            make.bottom.left.right.equalTo(0)
-        }
-        scrollView.snp.makeConstraints { (make) in
-            make.left.right.top.equalTo(view)
-            make.bottom.equalTo(-60 - kSafeBottomHeight)
-        }
-        // 添加容器视图
-        scrollView.addSubview(contentView)
-        contentView.snp.makeConstraints { (make) in
-            make.top.bottom.equalTo(scrollView)
-            make.left.right.equalTo(view) // 确定的宽度，因为垂直滚动
-        }
-        contentView.addSubview(publishView)
-        contentView.addSubview(selectClassView)
-        
-        let lineView = UIView()
-        lineView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
-        contentView.addSubview(lineView)
-        lineView.snp.makeConstraints { (make) in
-            make.top.equalTo(0)
-            make.left.right.equalTo(0)
-            make.height.equalTo(10)
-        }
-        
-        selectClassView.snp.makeConstraints { (make) in
-            make.top.equalTo(10)
-            make.left.right.equalTo(0)
-            make.height.equalTo(49)
-        }
-        
-        let lineView1 = UIView()
-        lineView1.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
-        contentView.addSubview(lineView1)
-        lineView1.snp.makeConstraints { (make) in
-            make.top.equalTo(selectClassView.snp_bottom)
-            make.left.right.equalTo(0)
-            make.height.equalTo(10)
-        }
-        
-        publishView.snp.makeConstraints { (make) in
-            make.left.right.equalTo(0)
-            make.top.equalTo(selectClassView.snp_bottom).offset(10)
-            make.bottom.equalTo(0)
-        }
-        publishView.yxs_addLine()
-
-    }
-    
-    // MARK: -loadData
-    override func yxs_loadClassDataSucess(){
-        loadClassCountData()
-    }
-    /// 请求班级人数
-    override func loadClassCountData(){
-        YXSEducationGradeFindNumberOfStudentsRequest.init(gradeId: classId ?? 0).request({ (result) in
-            self.publishModel.totalCommitUpperLimit = result.intValue
-        }) { (msg, code) in
-        }
-    }
-    
-    // MARK: -action
-    
-    override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
-        var classIdList = [Int]()
-        var picture: String = ""
-        var video: String = ""
-        var audioUrl: String = ""
-        var pictures = [String]()
-        var bgUrl: String = ""
-        var options = [String]()
-        
-        if let classs = publishModel.classs{
-            for model in classs{
-                classIdList.append(model.id ?? 0)
-            }
-        }
-        
-        for model in selectView.selectModels{
-            options.append(model.title ?? "")
-        }
-        
-        if let mediaInfos = mediaInfos{
-            for model in mediaInfos{
-                if let type = model[typeKey] as? SourceNameType{
-                    if type == .video{
-                        video = model[urlKey] as? String ?? ""
-                    }else if type == .image{
-                        pictures.append(model[urlKey] as? String ?? "")
-                    }else if type == .voice{
-                        audioUrl = model[urlKey] as? String ?? ""
-                    }else if type == .firstVideo{
-                        bgUrl = model[urlKey] as? String ?? ""
+    // MARK: - override
+    override func initPublish() {
+        if let solitaireTemplateModel = solitaireTemplateModel{
+            if let holders = solitaireTemplateModel.gatherHoldersModel?.gatherHolders{
+                var solitaireQuestions = [YXSSolitaireQuestionModel]()
+                for holder in holders{
+                    let questionModel = YXSSolitaireQuestionModel(questionType: holder.questionType)
+                    questionModel.questionStemText = holder.gatherHolderItem?.topicTitle
+                    questionModel.isNecessary = holder.gatherHolderItem?.isRequired ?? false
+                    if let optionItems = holder.gatherHolderItem?.censusTopicOptionItems{
+                        var optionModels = [SolitairePublishNewSelectModel]()
+                        for (index, optionItem) in optionItems.enumerated(){
+                            let solitaireselectModel = SolitairePublishNewSelectModel()
+                            solitaireselectModel.index = index
+                            solitaireselectModel.title = optionItem.optionContext
+                            let mediaModel = SLPublishMediaModel()
+                            mediaModel.serviceUrl = optionItem.optionImage
+                            solitaireselectModel.mediaModel = mediaModel
+                            optionModels.append(solitaireselectModel)
+                        }
+                        questionModel.solitaireSelects = optionModels
                     }
+                    solitaireQuestions.append(questionModel)
                 }
+                publishModel.solitaireQuestions = solitaireQuestions
+                publishModel.publishText = solitaireTemplateModel.title
             }
             
-        }
-        if pictures.count > 0{
-            picture = pictures.joined(separator: ",")
-        }
-        MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
-        YXSEducationCensusTeacherPublishRequest.init(classIdList: classIdList, content: publishView.getTextContent(), audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "",commitUpperLimit: publishModel.commitUpperLimit ?? 0, optionList: options, endTime: publishModel.solitaireDate!.toString(format: DateFormatType.custom("yyyy-MM-dd HH:mm:ss")), isTop: publishModel.isTop ? 1 : 0).request({ (result) in
-            MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
-            MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
-            self.yxs_remove()
-            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherPublishSucessNotification), object: nil)
-            self.navigationController?.popViewController()
-        }) { (msg, code) in
-            MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
-            MBProgressHUD.yxs_showMessage(message: msg)
+            
+        }else{
+            if let publishModel = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive")) as? YXSPublishModel{
+                self.publishModel = publishModel
+            }else{
+                initEmptyModel()
+            }
         }
     }
-    // MARK: -pivate
+    
+    override func save(){
+        publishModel.subjectText = subjectField.text
+        NSKeyedArchiver.archiveRootObject(publishModel, toFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive"))
+    }
+    
+    override func yxs_onBackClick() {
+        toolWindow?.hideTool()
+        super.yxs_onBackClick()
+    }
+    
     override func yxs_cheackCanSetUp() -> Bool {
+        toolWindow?.hideTool()
+        
         if publishModel.solitaireDate == nil {
             yxs_showAlert(title: "请选择截止日期")
             return false
@@ -189,13 +115,45 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
     }
     
     
-    override func save(){
-        NSKeyedArchiver.archiveRootObject(publishModel, toFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive"))
+    // MARK: -UI
+    func initTouchView(){
+        view.addSubview(touchView)
+        touchView.snp.makeConstraints { (make) in
+            make.edges.equalTo(0)
+        }
     }
     
+    // MARK: -loadData
+    override func yxs_loadClassDataSucess(){
+        loadClassCountData()
+    }
+    /// 请求班级人数
+    override func loadClassCountData(){
+        YXSEducationGradeFindNumberOfStudentsRequest.init(gradeId: classId ?? 0).request({ (result) in
+            self.publishModel.totalCommitUpperLimit = result.intValue
+            self.publishModel.commitUpperLimit = result.intValue
+        }) { (msg, code) in
+        }
+    }
+    
+    // MARK: -action
+    @objc func greetingTextFieldChanged(obj:Notification) {
+        self.greetingTextFieldChanged(obj: obj, length : 20)
+    }
+    
+    
     // MARK: - private
+    var toolWindow: YXSSolitaireToolWindow?
     func showSettingTool(){
-        YXSSolitaireToolWindow.showToolWindow(publishModel: publishModel)
+        toolWindow = YXSSolitaireToolWindow.showToolWindow(publishModel: publishModel, inView: touchView)
+    }
+    
+    ///工具栏是否正在试图上
+    func isToolWindowOnView() -> Bool{
+        if let toolWindow = toolWindow, toolWindow.superview != nil{
+            return true
+        }
+        return false
     }
     
     // MARK: - getter&setter
@@ -214,32 +172,39 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
         let selectView = SolitairePublishSelectView(selectModels: publishModel.solitaireSelects)
         return selectView
     }()
+    
+    lazy var subjectField: YXSQSTextField = {
+        let classField = UIUtil.yxs_getTextField(UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 0), placeholder: "输入接龙标题 （20字以内）", placeholderColor: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), mixedTextColor:MixedColor(normal: kTextMainBodyColor, night: UIColor.white))
+        classField.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+        classField.yxs_addLine(position: .bottom, color: kLineColor, leftMargin: 15, lineHeight: 0.5)
+        return classField
+    }()
+    
+    lazy var touchView: YXSTouchView = {
+        let touchView = YXSTouchView()
+        touchView.touchPoint = {
+            [weak self] (point: CGPoint)in
+            guard let strongSelf = self else { return }
+            
+            ///当前工具栏是否出现
+            if strongSelf.isToolWindowOnView(){
+                //点击位置不在工具栏上 隐藏工具栏
+                if !(strongSelf.toolWindow?.frame.contains(point) ?? false){
+                    strongSelf.toolWindow?.hideTool()
+                }
+            }
+        }
+        return touchView
+    }()
 }
 
-class YXSSolitaireApplyPublishController: YXSSolitaireNewPublishBaseController {
-    override init(){
-        super.init()
-        saveDirectory = "Solitaire_apply"
-        sourceDirectory = .solitaire
-        isSelectSingleClass = true
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "报名接龙"
-    }
 
-    
-    // MARK: -UI
-    
-    
-    // MARK: -loadData
-    override func yxs_loadClassDataSucess(){
-        loadClassCountData()
+class YXSTouchView: UIView {
+    var touchPoint: ((_ point: CGPoint)->())?
+    open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        SLLog("point = \(point)")
+        touchPoint?(point)
+        return super.point(inside: point, with: event)
     }
 }
 

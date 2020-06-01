@@ -771,6 +771,7 @@
 		6FEA7C632452990F0017C9CA /* LFDataFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7BEF2452990C0017C9CA /* LFDataFilterImageView.m */; };
 		6FEA7C6524553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */; };
 		6FEA7C67245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C66245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift */; };
+		6FF2C0AB2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2C0AA2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift */; };
 		96C37695CA743AAF4EA54F3F /* Pods_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D2807CC37D3F419340D76A2 /* Pods_Share.framework */; };
 		E528ABC02481107A0035E69B /* YXSScoreDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E528ABBF2481107A0035E69B /* YXSScoreDetailsModel.swift */; };
 		E53D8AF9244E80C400590B5A /* YXSContentHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */; };
@@ -2090,6 +2091,7 @@
 		6FEA7BF02452990C0017C9CA /* LFDataFilterImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFDataFilterImageView.h; sourceTree = "<group>"; };
 		6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarEvaluationItemLogoViewController.swift; sourceTree = "<group>"; };
 		6FEA7C66245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPlayerMediaSingleControlTool.swift; sourceTree = "<group>"; };
+		6FF2C0AA2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireApplyPublishController.swift; sourceTree = "<group>"; };
 		78DA037DE3DFCFE843299175 /* Pods-Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.debug.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.debug.xcconfig"; sourceTree = "<group>"; };
 		E528ABBF2481107A0035E69B /* YXSScoreDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreDetailsModel.swift; sourceTree = "<group>"; };
 		E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentHomeController.swift; sourceTree = "<group>"; };
@@ -4356,6 +4358,7 @@
 				6F5677A0247E430400B523ED /* YXSSolitaireTemplateListController.swift */,
 				6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */,
 				6F0700FD2445D7FF0090975B /* YXSSolitairePublishController.swift */,
+				6FF2C0AA2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift */,
 				6F5677A2247E527B00B523ED /* YXSSolitaireNewPublishBaseController.swift */,
 				6F5677A6247F4FA700B523ED /* YXSSolitaireCollectorPublishController.swift */,
 				6F5677AA247F56E800B523ED /* YXSSolitaireQuestionWindow.swift */,
@@ -6628,6 +6631,7 @@
 				6F07045D2445D8040090975B /* YXSBaseFileCell.swift in Sources */,
 				6F07050C2445D8050090975B /* YXSClassStartTeacherDetailStudentEmptyHeaderView.swift in Sources */,
 				6F07054E2445D8050090975B /* YXSFriendsMessageModel.swift in Sources */,
+				6FF2C0AB2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift in Sources */,
 				6FEA7C332452990E0017C9CA /* LFClipToolbar.m in Sources */,
 				6FEA7BF42452990C0017C9CA /* JRFilterBar.m in Sources */,
 				6F0705292445D8050090975B /* YXSCommonPublishView.swift in Sources */,

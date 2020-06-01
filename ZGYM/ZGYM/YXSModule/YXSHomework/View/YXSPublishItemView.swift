@@ -117,13 +117,20 @@ class SLPublishViewButtonView: UIView{
     private var isFriend: Bool
     private var buttons: [[String: Any]]{
         get{
-            var lists = [[kImageKey: "yxs_publish_image", kActionKey: PublishViewButtonEvent.image],[kImageKey: "yxs_publish_vedio", kActionKey: PublishViewButtonEvent.vedio]]
-            if YXSPersonDataModel.sharePerson.personRole == .TEACHER && !isFriend{
-                lists.append([kImageKey: "yxs_publish_link", kActionKey: PublishViewButtonEvent.link])
-                if self.publishType == .homework || self.publishType == .notice {
-                    lists.append([kImageKey: "yxs_publish_accessory", kActionKey: PublishViewButtonEvent.accessory])
+            var lists = [[kImageKey: "yxs_publish_image", kActionKey: PublishViewButtonEvent.image]]
+            
+            if self.publishType == .solitaire{
+                
+            }else{
+                lists.append([kImageKey: "yxs_publish_vedio", kActionKey: PublishViewButtonEvent.vedio])
+                if YXSPersonDataModel.sharePerson.personRole == .TEACHER && !isFriend{
+                    lists.append([kImageKey: "yxs_publish_link", kActionKey: PublishViewButtonEvent.link])
+                    if self.publishType == .homework || self.publishType == .notice {
+                        lists.append([kImageKey: "yxs_publish_accessory", kActionKey: PublishViewButtonEvent.accessory])
+                    }
                 }
             }
+            
             if !isFriend{
                 lists.insert([kImageKey: "yxs_publish_audio", kActionKey: PublishViewButtonEvent.audio], at: 0)
                 

@@ -7,16 +7,16 @@
 //
 import UIKit
 import NightNight
-
+///RADIO,MULTIPLE,TEXT,IMAGE
 public enum YXSQuestionType: String{
     ///单选题
-    case single
+    case single = "RADIO"
     ///多选题
-    case checkbox
+    case checkbox = "MULTIPLE"
     ///图片题
-    case image
+    case image = "IMAGE"
     ///填空题
-    case gap
+    case gap = "TEXT"
 }
 
 private var texts = ["单选题", "多选题", "填空题", "图片题"]

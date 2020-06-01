@@ -21,6 +21,9 @@ class YXSCommonPublishView: UIView{
     /// 输入内容时偏移更新
     public var updateContentOffSet: ((CGFloat) ->())?
     
+    ///UI更新block
+    public var updateUIBlock: (() -> ())?
+    
     public var limitTextLength: Int{
         didSet{
             textView.limitCount = limitTextLength
@@ -352,6 +355,7 @@ class YXSCommonPublishView: UIView{
             listView.isHidden = true
         }
         
+        updateUIBlock?()
     }
     
     // MARK: - tool
