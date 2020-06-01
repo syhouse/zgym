@@ -32,7 +32,7 @@ class YXSCommonPublishView: UIView{
     public func setTemplateText(_ text: String){
         publishModel.publishText = text
         textView.text = text
-        textView.textDidChange()
+        textCountlabel.text = "\(text.count)/\(self.limitTextLength)"
         updateUI(updateOffSet: false)
     }
     
@@ -97,7 +97,7 @@ class YXSCommonPublishView: UIView{
         }
         
         textView.text = publishModel.publishText
-        textView.textDidChange()
+        textCountlabel.text = "\(textView.text.count)/\(self.limitTextLength)"
         
         initListViewUI()
         

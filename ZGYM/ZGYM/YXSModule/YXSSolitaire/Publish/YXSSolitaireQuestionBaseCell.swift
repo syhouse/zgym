@@ -280,11 +280,10 @@ class YXSSolitaireLabelImageView : UIView {
     }
     
     // MARK: -getter&setter
-    
     lazy var titleLabel: YXSLabel = {
         let label = YXSLabel()
         label.numberOfLines = 0
-        label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.font = UIFont.systemFont(ofSize: 15)
         label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kTextMainBodyColor)
         return label
     }()

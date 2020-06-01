@@ -464,8 +464,11 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
                 MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
                 MBProgressHUD.yxs_showMessage(message: "提交成功", inView: self.navigationController?.view)
                 self.yxs_remove()
-                self.loadChildInfoData()
-                
+                if self.isPatch{
+                    self.punchcardSucess()
+                }else{
+                    self.loadChildInfoData()
+                }
             }) { (msg, code) in
                 MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
                 MBProgressHUD.yxs_showMessage(message: msg)
@@ -563,12 +566,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_hideHUD()
 
-            if self.patchCardTime == nil{//不是补卡 发送打卡成功通知
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationIdKey: self.punchCardModel?.clockInId ?? 0])
-            }
-            let hasFinish = self.punchCardModel?.surplusClockInDayCount ?? 1 ==  1
-            UIUtil.yxs_reduceAgenda(serviceId: self.punchCardModel?.clockInId ?? 0, info: [kEventKey: YXSHomeType.punchCard,kValueKey: hasFinish])
-            self.navigationController?.popViewController()
+            self.punchcardSucess()
             
             self.punchCardComplete?(HMRequestShareModel.init(clockInId: self.punchCardModel?.clockInId ?? 0, childrenId: self.punchCardModel?.childrenId ?? 0)
                 ,YXSPunchCardShareModel.init(downLoadUrl: result["appDownloadUrl"].stringValue, name: self.yxs_user.currentChild?.realName ?? "", avar: self.yxs_user.currentChild?.avatar ?? "", title: self.punchCardModel?.title ?? "", clockInDayCount: result["clockInDayCount"].intValue, percentOver: result["percentOver"].stringValue, bgUrl: result["bgUrl"].stringValue))
@@ -576,6 +574,16 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
+    }
+    
+    ///家长打卡操作
+    func punchcardSucess(){
+        if self.patchCardTime == nil{//不是补卡 发送打卡成功通知
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationIdKey: self.punchCardModel?.clockInId ?? 0])
+        }
+        let hasFinish = self.punchCardModel?.surplusClockInDayCount ?? 1 ==  1
+        UIUtil.yxs_reduceAgenda(serviceId: self.punchCardModel?.clockInId ?? 0, info: [kEventKey: YXSHomeType.punchCard,kValueKey: hasFinish])
+        self.navigationController?.popViewController()
     }
     
     // MARK: -pivate
