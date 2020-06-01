@@ -42,6 +42,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             addSubview(fileSecondView)
             addSubview(fileThirdView)
             addSubview(filterBtnView)
+            addSubview(contactTeacher)
         } else {
 //            addSubview(topHeaderView)
             addSubview(contactTeacher)
@@ -75,6 +76,12 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
     }
 
     func layout() {
+        contactTeacher.snp.makeConstraints({ (make) in
+            make.top.equalTo(33)
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.height.equalTo(42)
+        })
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
 //            topHeaderView.snp.makeConstraints({ (make) in
 //                make.top.equalTo(33)
@@ -166,12 +173,12 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
             //                make.right.equalTo(-15)
             //            })
 
-            contactTeacher.snp.makeConstraints({ (make) in
-                make.top.equalTo(33)
-                make.left.equalTo(15)
-                make.right.equalTo(-15)
-                make.height.equalTo(42)
-            })
+//            contactTeacher.snp.makeConstraints({ (make) in
+//                make.top.equalTo(33)
+//                make.left.equalTo(15)
+//                make.right.equalTo(-15)
+//                make.height.equalTo(42)
+//            })
             dateView.snp.makeConstraints { (make) in
                 make.top.equalTo(contactTeacher.snp_bottom).offset(20)
                 make.left.equalTo(contactTeacher)
@@ -242,6 +249,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
     var messageModel: YXSPunchCardMessageTipsModel? {
         didSet {
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                contactTeacher.isHidden = true
                 if let messageModel = messageModel,messageModel.count ?? 0 > 0{
                     messageView.snp.remakeConstraints { (make) in
                         make.left.right.top.equalTo(0).priorityHigh()
@@ -292,7 +300,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
     }
     func setModel(model:YXSHomeworkDetailModel) {
         self.model = model
-        var messagemodel:YXSPunchCardMessageTipsModel? = YXSPunchCardMessageTipsModel.init(JSONString: "{\"count\":0}")
+        let messagemodel:YXSPunchCardMessageTipsModel? = YXSPunchCardMessageTipsModel.init(JSONString: "{\"count\":0}")
         messagemodel?.count = self.model?.messageCount
         messagemodel?.commentsUserInfo?.avatar = self.model?.messageAvatar
         messagemodel?.commentsUserInfo?.userType = self.model?.messageUserType
@@ -313,6 +321,7 @@ class YXSHomeWorkDetailTableHeaderView : UIView {
         
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            contactTeacher.isHidden = true
             if model.createTime?.count ?? 0 > 0 {
                 var teacherName = "我"
                 if self.model?.teacherName != YXSPersonDataModel.sharePerson.userModel.name {

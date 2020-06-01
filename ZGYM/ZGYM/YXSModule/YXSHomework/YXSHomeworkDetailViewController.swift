@@ -1107,7 +1107,10 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     }()
 
     lazy var tableFooterView: UIView = {
-        let footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 170))
+        var footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 170))
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 100))
+        }
         let imageView = UIImageView.init(frame: CGRect(x: 0, y: 60, width: SCREEN_WIDTH, height: 188))
         imageView.mixedImage = MixedImage(normal: "yxs_homework_defultImage_nodata", night: "yxs_defultImage_nodata_night")
         imageView.contentMode = .scaleAspectFit

@@ -59,3 +59,17 @@ class YXSEducationReadingScoreRequest: YXSBaseRequset {
             "examId":examId]
     }
 }
+
+// MARK: -成绩详情报表(老师)
+let ScoreTeacherDetails = "/achievement/childScoreDetails"
+class YXSEducationScoreTeacherDetailsRequest: YXSBaseRequset {
+    init(examId: Int) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = ScoreTeacherDetails
+        param = [
+            "examId":examId]
+    }
+}
+
