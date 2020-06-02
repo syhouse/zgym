@@ -9,10 +9,10 @@
 import Foundation
 
 extension String {
-    func yxs_Date() -> Date{
+    func yxs_Date(format: String = "yyyy-MM-dd HH:mm:ss") -> Date{
         let formatter = DateFormatter()
         formatter.locale = Locale.init(identifier: "zh_CN")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.dateFormat = format
         NSLog(">>>>>>>>>:\(self)")
         return formatter.date(from: self) ?? Date()
     }
