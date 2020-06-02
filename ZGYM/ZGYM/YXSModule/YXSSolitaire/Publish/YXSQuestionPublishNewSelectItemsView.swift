@@ -10,6 +10,7 @@ import NightNight
 
 let maxItems: Int = 6
 
+///接龙题目选项view
 class YXSQuestionPublishNewSelectItemsView: UIView{
     var updateItemsBlock: ((_ selectModels: [SolitairePublishNewSelectModel]) ->())?
     
@@ -55,7 +56,6 @@ class YXSQuestionPublishNewSelectItemsView: UIView{
                 strongSelf.updateUI(true)
             }
             section.snp.makeConstraints { (make) in
-                make.height.equalTo(75)
                 make.left.right.equalTo(0)
                 if index == 0{
                     make.top.equalTo(0)
@@ -90,7 +90,7 @@ class YXSQuestionPublishNewSelectItemsView: UIView{
     }
 }
 
-
+///接龙题目单个选项view
 class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
     var selectModel: SolitairePublishNewSelectModel?
     var showDelect: Bool
@@ -101,56 +101,91 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
         mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         addSubview(leftLabel)
         addSubview(contentField)
+        addSubview(selectImageBtn)
         addSubview(meidaItem)
         yxs_addLine(position: .bottom, leftMargin: 15.5, rightMargin: 0.5, lineHeight: 0.5)
         leftLabel.snp.makeConstraints { (make) in
             make.left.equalTo(14.5)
-            make.centerY.equalTo(self)
+            make.top.equalTo(21)
         }
         contentField.snp.makeConstraints { (make) in
             make.left.equalTo(30)
-            make.top.bottom.equalTo(0)
             make.right.equalTo(-65)
+            make.top.equalTo(18.5)
+            make.height.equalTo(25)
         }
-        meidaItem.snp.makeConstraints { (make) in
-            make.top.equalTo(10)
-            make.right.equalTo(-22.5)
-            make.size.equalTo(CGSize.init(width: 36, height: 36))
+        selectImageBtn.snp.makeConstraints { (make) in
+            make.right.equalTo(-21.5)
+            make.top.equalTo(12)
+            make.bottom.equalTo(-24).priorityHigh()
+            make.height.equalTo(25)
+            make.width.height.equalTo(29)
         }
         if showDelect{
             addSubview(delectButton)
             delectButton.snp.makeConstraints { (make) in
                 make.right.equalTo(-15)
                 make.height.equalTo(13)
-                make.top.equalTo(meidaItem.snp_bottom).offset(8)
+                make.bottom.equalTo(-8.5)
             }
         }
         
         ///初始化数据
         contentField.text = selectModel?.title
-        meidaItem.model = selectModel?.mediaModel
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.greetingTextFieldChanged),
-                                               name:NSNotification.Name(rawValue:"UITextFieldTextDidChangeNotification"),
-                                               object: self.contentField)
+        updateUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    
+    func updateUI(){
+        meidaItem.isHidden = true
+        let size = contentField.sizeThatFits(CGSize.init(width: SCREEN_WIDTH - 30 - 65, height: 3000))
+        var textHeight = size.height + 8
+        if textHeight > 50{
+            textHeight = 50
+        }
+        if textHeight < 25{
+            textHeight = 25
+        }
+        contentField.snp.updateConstraints({ (make) in
+            make.height.equalTo(textHeight)
+        })
+        
+        if let mediaModel = selectModel?.mediaModel{
+            meidaItem.isHidden = false
+            meidaItem.snp.remakeConstraints { (make) in
+                make.top.equalTo(contentField.snp_bottom).offset(12.5)
+                make.left.equalTo(36.5)
+                make.bottom.equalTo(-20).priorityHigh()
+                make.size.equalTo(CGSize.init(width: 84, height: 84))
+            }
+            meidaItem.model = mediaModel
+            
+            selectImageBtn.snp.remakeConstraints { (make) in
+                make.right.equalTo(-21.5)
+                make.top.equalTo(12)
+                make.height.equalTo(25)
+                make.width.height.equalTo(29)
+            }
+            selectImageBtn.isSelected = true
+        }else{
+            selectImageBtn.snp.remakeConstraints { (make) in
+                make.right.equalTo(-21.5)
+                make.top.equalTo(12)
+                make.bottom.equalTo(-34).priorityHigh()
+                make.height.equalTo(25)
+                make.width.height.equalTo(29)
+            }
+            selectImageBtn.isSelected = false
+        }
+        
+        
     }
-    
-    
     
     // MARK: -action
-    @objc func greetingTextFieldChanged(obj:Notification) {
-        self.greetingTextFieldChanged(obj: obj, length: 50)
-        selectModel?.title = contentField.text
-    }
-    
     var sectionBlock: (() ->())?
     @objc func delectClick(){
         sectionBlock?()
@@ -168,10 +203,15 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
                 assets = [model.asset]
             }
             YXSShowBrowserHelper.showImage(urls: urls,assets: assets, currentIndex: 0)
-        }else{
-            YXSSelectMediaHelper.shareHelper.showSelectMedia(selectImage: true)
-            YXSSelectMediaHelper.shareHelper.delegate = self
         }
+    }
+    
+    @objc func selectClick(){
+        if selectImageBtn.isSelected{
+            return
+        }
+        YXSSelectMediaHelper.shareHelper.showSelectMedia(selectImage: true)
+        YXSSelectMediaHelper.shareHelper.delegate = self
     }
     
     // MARK: - ImgSelectDelegate
@@ -180,6 +220,7 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
         mediaModel.asset = asset.asset
         selectModel?.mediaModel = mediaModel
         meidaItem.model = mediaModel
+        updateUI()
     }
     
     /// 选中多个图片资源
@@ -189,6 +230,7 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
         mediaModel.asset = assets.first?.asset
         selectModel?.mediaModel = mediaModel
         meidaItem.model = mediaModel
+        updateUI()
     }
     
     // MARK: - getter&setter
@@ -201,9 +243,22 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
         return label
     }()
     
-    lazy var contentField: YXSQSTextField = {
-        let contentField = UIUtil.yxs_getTextField(UIEdgeInsets.init(top: 0, left: 5, bottom: 0, right: 0), placeholder: "请输入选项内容", placeholderColor: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), mixedTextColor:MixedColor(normal: kTextMainBodyColor, night: kNightBCC6D4))
-        return contentField
+    lazy var contentField: YXSPlaceholderTextView = {
+        let textView = YXSPlaceholderTextView()
+        textView.limitCount = 50
+        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.placeholderMixColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), night: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"))
+        let textColor = NightNight.theme == .night ? UIColor.white : kTextMainBodyColor
+        //               textView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight20232F)
+        textView.placeholder = "请输入选项内容"
+        textView.textContainerInset = UIEdgeInsets.init(top: 0, left: 5, bottom: 0, right: 0)
+        textView.textDidChangeBlock = {
+            [weak self](text: String) in
+            guard let strongSelf = self else { return }
+            strongSelf.selectModel?.title = text
+            strongSelf.updateUI()
+        }
+        return textView
     }()
     
     lazy var delectButton: YXSButton = {
@@ -216,20 +271,29 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
         return button
     }()
     
+    lazy var selectImageBtn: YXSButton = {
+        let button = YXSButton.init()
+        button.setBackgroundImage(UIImage.init(named: "yxs_solitaire_image_light"), for: .normal)
+        button.setBackgroundImage(UIImage.init(named: "yxs_solitaire_image_gray"), for: .selected)
+        button.addTarget(self, action: #selector(selectClick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        return button
+    }()
+    
     lazy var meidaItem: YXSQuestionItem = {
         let meidaItem = YXSQuestionItem(frame: CGRect.init(x: 0, y: 0, width: 36, height: 36))
         meidaItem.itemRemoveBlock = {
             [weak self] (model) in
             guard let strongSelf = self else { return }
             strongSelf.selectModel?.mediaModel = nil
-            strongSelf.meidaItem.image = strongSelf.meidaItem.defultImage
+            strongSelf.updateUI()
         }
         meidaItem.addTaget(target: self, selctor: #selector(itemClick))
         return meidaItem
     }()
 }
 
-
+///接龙题目选项Model
 class SolitairePublishNewSelectModel: NSObject, NSCoding{
     var title: String?
     var index: Int = 0{

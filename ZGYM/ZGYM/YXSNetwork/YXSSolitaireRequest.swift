@@ -106,7 +106,7 @@ class YXSEducationCensusTeacherCensusListRequest: YXSBaseRequset {
                  "state": state,
                  "currentPage": currentPage,
                  "stage": stage.rawValue
-                 ]
+        ]
         if let classId = classId{
             param?["classId"] = classId
         }
@@ -171,7 +171,7 @@ class YXSEducationCensusTeacherTodoTodoRequest: YXSBaseRequset {
         host = homeHost
         path = censusTeacherTodo
         param = ["currentPage": currentPage,
-        "pageSize": pageSize]
+                 "pageSize": pageSize]
     }
 }
 
@@ -184,7 +184,7 @@ class YXSEducationCensusParentTodoRequest: YXSBaseRequset {
         host = homeHost
         path = censusParentTodo
         param = ["currentPage": currentPage,
-        "pageSize": pageSize]
+                 "pageSize": pageSize]
     }
 }
 
@@ -203,7 +203,7 @@ class YXSEducationGradeFindNumberOfStudentsRequest: YXSBaseRequset {
 }
 
 // MARK: - 调查表模板列表(老师)
-let censusTeacherGatherTemplateList = "/census/teacherGatherTemplateList"
+let censusTeacherGatherTemplateList = "/census/teacherTemplateList"
 class YXSEducationCensusTeacherGatherTemplateListRequest: YXSBaseRequset {
     init(currentPage: Int,pageSize: Int = kPageSize) {
         super.init()
@@ -211,12 +211,12 @@ class YXSEducationCensusTeacherGatherTemplateListRequest: YXSBaseRequset {
         method = .post
         path = censusTeacherGatherTemplateList
         param = ["currentPage": currentPage,
-        "pageSize": pageSize]
+                 "pageSize": pageSize]
     }
 }
 
 // MARK: - 调查表模板详情(老师)
-let censusTeacherGatherTemplateDetail = "/census/teacherGatherTemplateDetail"
+let censusTeacherGatherTemplateDetail = "/census/teacherTemplateDetail"
 class YXSEducationCensusTeacherGatherTemplateDetailRequest: YXSBaseRequset {
     init(id: Int) {
         super.init()
@@ -224,5 +224,64 @@ class YXSEducationCensusTeacherGatherTemplateDetailRequest: YXSBaseRequset {
         method = .post
         path = censusTeacherGatherTemplateDetail
         param = ["id": id]
+    }
+}
+
+// MARK: - v1发布采集(老师)
+let censusV1TeacherPublishGather = "/census/v1/teacherPublishGather"
+class YXSCensusV1TeacherPublishGatherRequest: YXSBaseRequset {
+    init(classIdList: [Int], content:String = "", title: String, audioUrl: String = "", audioDuration: Int = 0,videoUrl: String = "",bgUrl: String = "",imageUrl: String = "",link: String = "",commitUpperLimit: Int,endTime: String ,isTop: Int, optionList:[[String: String]])  {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusV1TeacherPublishGather
+        //        //去除空字符串选项
+        //        var newOptionList = [String]()
+        //        for option in optionList{
+        //            if !option.isBlank{
+        //                newOptionList.append(option)
+        //            }
+        //        }
+        
+        param = [
+            "title": title,
+            "classIdList":classIdList,
+            "content": content,
+            "audioUrl":audioUrl,
+            "gatherHolders": optionList,
+            "audioDuration":audioDuration,
+            "videoUrl": videoUrl,
+            "bgUrl":bgUrl,
+            "link": link,
+            "imageUrl": imageUrl,
+            "endTime":endTime,
+            "isTop": isTop,
+            "commitUpperLimit":commitUpperLimit]
+    }
+}
+
+
+// MARK: - v1发布采集(老师)
+let censusV1TeacherPublishEnter = "/census/v1/teacherPublishEnter"
+class YXSCensusV1TeacherPublishEnterRequest: YXSBaseRequset {
+    init(classIdList: [Int], content:String = "", title: String, audioUrl: String = "", audioDuration: Int = 0,videoUrl: String = "",bgUrl: String = "",imageUrl: String = "",link: String = "",commitUpperLimit: Int,endTime: String ,isTop: Int)  {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusV1TeacherPublishEnter
+        
+        param = [
+            "title": title,
+            "classIdList":classIdList,
+            "content": content,
+            "audioUrl":audioUrl,
+            "audioDuration":audioDuration,
+            "videoUrl": videoUrl,
+            "bgUrl":bgUrl,
+            "link": link,
+            "imageUrl": imageUrl,
+            "endTime":endTime,
+            "isTop": isTop,
+            "commitUpperLimit":commitUpperLimit]
     }
 }

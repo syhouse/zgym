@@ -65,14 +65,16 @@ class YXSSolitaireSettingBar: UIView{
 
 
 class YXSSolitaireToolWindow: UIView{
-    @discardableResult static func showToolWindow(publishModel: YXSPublishModel) -> YXSSolitaireToolWindow{
-        let view = YXSSolitaireToolWindow(publishModel: publishModel)
+    @discardableResult static func showToolWindow(publishModel: YXSPublishModel, inView: UIView) -> YXSSolitaireToolWindow{
+        let view = YXSSolitaireToolWindow(publishModel: publishModel, inView: inView)
         view.beganShowTool()
         return view
     }
     private  let publishModel: YXSPublishModel
-    init(publishModel: YXSPublishModel) {
+    private let inView: UIView
+    init(publishModel: YXSPublishModel, inView: UIView) {
         self.publishModel = publishModel
+        self.inView = inView
         super.init(frame: CGRect.zero)
         self.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD")
         self.addSubview(settingView)
@@ -107,21 +109,16 @@ class YXSSolitaireToolWindow: UIView{
     }
     
     public func beganShowTool(){
-        UIUtil.RootController().view.addSubview(bgView)
-        bgView.snp.makeConstraints { (make) in
-            make.edges.equalTo(0)
-        }
-//        UIUtil.RootController().view.addSubview(self)
-        bgView.addSubview(self)
-        self.frame = CGRect(x: 0, y: SCREEN_HEIGHT - 60 - kSafeBottomHeight, width: SCREEN_WIDTH, height: 240 + kSafeBottomHeight)
+        inView.addSubview(self)
+        self.frame = CGRect(x: 0, y: inView.height - 60 - kSafeBottomHeight, width: inView.width, height: 240 + kSafeBottomHeight)
         UIView.animate(withDuration: 0.25) {
-            self.frame = CGRect(x: 0, y: SCREEN_HEIGHT - (240 + kSafeBottomHeight), width: SCREEN_WIDTH, height: 240 + kSafeBottomHeight)
+            self.frame = CGRect(x: 0, y: self.inView.height - (240 + kSafeBottomHeight), width: self.inView.width, height: 240 + kSafeBottomHeight)
         }
     }
     
     public func hideTool(){
         UIView.animate(withDuration: 0.25, animations: {
-            self.frame = CGRect(x: 0, y: SCREEN_HEIGHT - 60 - kSafeBottomHeight, width: SCREEN_WIDTH, height: 240 + kSafeBottomHeight)
+            self.frame = CGRect(x: 0, y: self.inView.height - 60 - kSafeBottomHeight, width: self.inView.width, height: 240 + kSafeBottomHeight)
         }) { (finish) in
             self.isHidden = true
             self.bgView.removeFromSuperview()

@@ -7,10 +7,11 @@
 //
 
 import NightNight
+import UIKit
 
 class YXSSolitaireTemplateListController: YXSBaseTableViewController {
     var dataSouer = [YXSTemplateListModel]()
-    
+    var singlePublishClassId: Int?
     override init() {
         super.init()
         showBegainRefresh = false
@@ -55,11 +56,24 @@ class YXSSolitaireTemplateListController: YXSBaseTableViewController {
     }
     
     func loadTemplateDetialData(id: Int){
-        YXSEducationCensusTeacherGatherTemplateDetailRequest.init(id: id).request({ (json) in
-            
+        YXSEducationCensusTeacherGatherTemplateDetailRequest.init(id: id).request({ (detialModel: YXSSolitaireTemplateDetialModel) in
+            self.pushPublishVC(index: detialModel.type == 2 ? 0 : 1, detialModel: detialModel)
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
+    }
+    
+    /// index 0 报名 1采集
+    func pushPublishVC(index: Int, detialModel: YXSSolitaireTemplateDetialModel?){
+        var vc: YXSSolitaireNewPublishBaseController!
+        if index == 0{
+            vc = YXSSolitaireApplyPublishController()
+        }else{
+            vc = YXSSolitaireCollectorPublishController()
+        }
+        vc.solitaireTemplateModel = detialModel
+        vc.singlePublishClassId = self.singlePublishClassId
+        self.navigationController?.pushViewController(vc)
     }
     
     // MARK: - UITableViewDataSource，UITableViewDelegate

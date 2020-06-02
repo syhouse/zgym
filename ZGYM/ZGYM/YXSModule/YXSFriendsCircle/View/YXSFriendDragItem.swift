@@ -113,12 +113,7 @@ class YXSSinglImage: UIImageView {
         didSet{
             if let model = model{
                 if model.isService{
-                    if let bgUrl = model.showImageUrl{
-                        self.sd_setImage(with: URL.init(string: bgUrl),placeholderImage: defultImage)
-                        
-                    }else{
-                        self.sd_setImage(with: URL.init(string: model.serviceUrl ?? ""),placeholderImage: defultImage)
-                    }
+                    self.sd_setImage(with: URL.init(string: model.serviceUrl ?? ""),placeholderImage: defultImage)
                 }else{
                     model.getThumbnailImage { [weak self](thumbnailImage) in
                         guard let strongSelf = self else { return }

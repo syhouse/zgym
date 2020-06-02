@@ -49,6 +49,28 @@ class YXSSolitaireSelectTypeController: YXSBaseTableViewController {
         }
     }
     
+    func loadTemplateDetialData(id: Int){
+        YXSEducationCensusTeacherGatherTemplateDetailRequest.init(id: id).request({ (detialModel: YXSSolitaireTemplateDetialModel) in
+//            SLLog(detialModel.toJSONString())
+            self.pushPublishVC(index: detialModel.type == 2 ? 0 : 1, detialModel: detialModel)
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
+    
+    /// index 0 报名 1采集
+    func pushPublishVC(index: Int, detialModel: YXSSolitaireTemplateDetialModel?){
+        var vc: YXSSolitaireNewPublishBaseController!
+        if index == 0{
+            vc = YXSSolitaireApplyPublishController()
+        }else{
+            vc = YXSSolitaireCollectorPublishController()
+        }
+        vc.solitaireTemplateModel = detialModel
+        vc.singlePublishClassId = self.singlePublishClassId
+        self.navigationController?.pushViewController(vc)
+    }
+    
     // MARK: - UITableViewDataSource，UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -62,8 +84,10 @@ class YXSSolitaireSelectTypeController: YXSBaseTableViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let model = dataSouer[indexPath.row]
+        loadTemplateDetialData(id: model.id ?? 0)
     }
+    
     
     lazy var headerView: YXSSolitaireSelectTypeTabelView = {
         let headerView = YXSSolitaireSelectTypeTabelView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 359))
@@ -71,20 +95,13 @@ class YXSSolitaireSelectTypeController: YXSBaseTableViewController {
             [weak self] in
             guard let strongSelf = self else { return }
             let vc = YXSSolitaireTemplateListController()
+            vc.singlePublishClassId = strongSelf.singlePublishClassId
             strongSelf.navigationController?.pushViewController(vc)
         }
         headerView.selectSectionBlock = {
             [weak self] (index)in
             guard let strongSelf = self else { return }
-            if index == 0{
-                let vc = YXSSolitaireNewPublishBaseController()
-                vc.singlePublishClassId = strongSelf.singlePublishClassId
-                strongSelf.navigationController?.pushViewController(vc)
-            }else{
-                let vc = YXSSolitaireCollectorPublishController()
-                vc.singlePublishClassId = strongSelf.singlePublishClassId
-                strongSelf.navigationController?.pushViewController(vc)
-            }
+            strongSelf.pushPublishVC(index: index, detialModel: nil)
         }
         return headerView
     }()
@@ -122,7 +139,7 @@ class YXSSolitaireTemplateCell: UITableViewCell{
     }
     
     func setModel(_ model: YXSTemplateListModel?){
-        icon.sd_setImage(with: URL.init(string: model?.icon ?? "" ), placeholderImage: kImageDefualtImage)
+        icon.image = UIImage(named: model?.type == 2 ? "yxs_solitaire_apply_small" : "yxs_solitaire_collector_small")
         title.text = model?.name
     }
     

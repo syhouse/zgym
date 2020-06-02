@@ -184,6 +184,7 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
     override func save(){
         publishModel.needReceipt = needReceiptSwitch.swt.isOn
         publishModel.isTop = topSwitch.swt.isOn
+        publishModel.isSynClassFile = synClassFileSwitch.swt.isOn
         NSKeyedArchiver.archiveRootObject(publishModel, toFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive"))
     }
     

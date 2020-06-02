@@ -13,6 +13,7 @@ extension String {
         let formatter = DateFormatter()
         formatter.locale = Locale.init(identifier: "zh_CN")
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        NSLog(">>>>>>>>>:\(self)")
         return formatter.date(from: self) ?? Date()
     }
     

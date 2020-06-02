@@ -178,23 +178,23 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         
         pageController.punchModel = punchModel
         pageController.topHistoryModel = topHistoryModel
-
+        
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-           if let calendarModel = punchCardFooter.calendarModel{
-            if let clockInDateStatusResponseList = punchModel.clockInDateStatusResponseList{
-                for model in clockInDateStatusResponseList{
-                    if calendarModel.responseModel?.clockInTime == model.clockInTime{
-                        if calendarModel.toDayDateCompare == .Small{
-                            if  model.state == 10{
-                                calendarModel.status = .beforeNotSign
-                                calendarModel.text = "未"
-                            }else{
-                                calendarModel.status = .beforeHasSign
+            if let calendarModel = punchCardFooter.calendarModel{
+                if let clockInDateStatusResponseList = punchModel.clockInDateStatusResponseList{
+                    for model in clockInDateStatusResponseList{
+                        if calendarModel.responseModel?.clockInTime == model.clockInTime{
+                            if calendarModel.toDayDateCompare == .Small{
+                                if  model.state == 10{
+                                    calendarModel.status = .beforeNotSign
+                                    calendarModel.text = "未"
+                                }else{
+                                    calendarModel.status = .beforeHasSign
+                                }
                             }
                         }
                     }
                 }
-            }
                 
             }
             punchCardFooter.setFooterModel(punchModel)
@@ -212,7 +212,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         }else{
             contentHeight = SCREEN_HEIGHT - kSafeTopHeight - 64 - 60 - kSafeBottomHeight
         }
-//        scrollview.contentSize = CGSize.init(width: 0, height: headerHeight + contentHeight)
+        //        scrollview.contentSize = CGSize.init(width: 0, height: headerHeight + contentHeight)
     }
     
     // MARK: - public
@@ -231,8 +231,8 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         group.enter()
         queue.async {
             DispatchQueue.main.async {
-                  self.yxs_loadTaskData()
-              }
+                self.yxs_loadTaskData()
+            }
             
         }
         
@@ -318,17 +318,21 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
             vc = YXSPunchCardPublishController.init(punchCardModel: punchModel)
         }
         self.navigationController?.pushViewController(vc)
+        vc.patchCardTComplete = { [weak self] in
+            guard let strongSelf = self else { return }
+            //从日历跳转过去的打卡
+            if patchTime != nil{
+                strongSelf.punchCardFooter.iscurrentCalendarVC = true
+            }
+            
+            strongSelf.loadData()
+        }
         vc.punchCardComplete = {[weak self](requestModel, shareModel)
             in
             guard let strongSelf = self else { return }
             YXSPunchCardShareView.showAlert(shareModel: shareModel) {(image) in
                 YXSShareTool.showCommonShare(shareModel: YXSShareModel.init(image: image))
             }
-            //从日历跳转过去的打卡
-            if patchTime != nil{
-                strongSelf.punchCardFooter.iscurrentCalendarVC = true
-            }
-            
             strongSelf.loadData()
         }
     }
@@ -416,7 +420,7 @@ extension YXSPunchCardDetialController{
                 "canScroll": "1"
             ])
             scrollView.showsVerticalScrollIndicator = false
-
+            
             customNav.titleLabel.textAlignment = .left
             customNav.title = punchModel.title ?? ""
             canScroll = false

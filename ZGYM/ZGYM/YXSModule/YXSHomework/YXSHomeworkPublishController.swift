@@ -343,6 +343,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
         publishModel.isTop = topSwitch.swt.isOn
         publishModel.homeworkCommentAllowLook = commentlookSwitch.swt.isOn
         publishModel.homeworkAllowLook = homeworkLookSwitch.swt.isOn
+        publishModel.isSynClassFile = synClassFileSwitch.swt.isOn
         NSKeyedArchiver.archiveRootObject(publishModel, toFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive"))
     }
     
