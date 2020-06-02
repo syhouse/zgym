@@ -124,6 +124,10 @@ class YXSPublishTemplateSection: UIView{
                 }
                 subButton.setTitle(model.title, for: .normal)
                 updateButtonUI(subButton)
+                let width = (model.title ?? "").yxs_getTextRectSize(font: UIFont.systemFont(ofSize: 14), size: CGSize.init(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)).width + 24
+                subButton.snp_updateConstraints { (make) in
+                    make.width.equalTo(width)
+                }
             }
         }
     }

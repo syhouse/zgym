@@ -105,9 +105,9 @@ class YXSPunchCalendarView: UICollectionView,UICollectionViewDelegate,UICollecti
         totalCalendars.removeAll()
         for index in 0..<totalCell{
             let model = YXSCalendarModel()
-            model.startTime = yxs_startTime(date, currentDay: "\(tempDay)")
             if index >= self.weekday && index < self.weekday + self.days{
                 model.text = "\(tempDay)"
+                model.startTime = yxs_startTime(date, currentDay: "\(tempDay)")
                 let todayCompare = yxs_isToDay(date, currentDay: "\(tempDay)")
                 model.toDayDateCompare = todayCompare
                 if let punchModel = self.model{
