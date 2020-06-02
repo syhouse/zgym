@@ -10,13 +10,32 @@ import Foundation
 import NightNight
 
 class YXSScoreParentHeaderView: UIView {
+    
+    var detailsModel: YXSScoreDetailsModel?
     override init(frame: CGRect) {
         super.init(frame: CGRect.zero)
-        
+        addSubview(contentView)
+        addSubview(avatarView)
+        avatarView.snp.makeConstraints { (make) in
+            make.centerX.equalTo(self.snp_centerX)
+            make.top.equalTo(10)
+            make.size.equalTo(CGSize(width: 80, height: 70))
+        }
+        contentView.snp.makeConstraints { (make) in
+            make.left.right.equalTo(0)
+            make.top.equalTo(avatarView.snp_top).offset(35)
+            make.bottom.equalTo(0)
+            make.height.equalTo(250)
+        }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setModel(model: YXSScoreDetailsModel) {
+        self.detailsModel = model
+        avatarImageV.sd_setImage(with: URL(string: ""), placeholderImage: kImageUserIconStudentDefualtImage)
     }
     
     lazy var avatarView: UIView = {
@@ -31,8 +50,8 @@ class YXSScoreParentHeaderView: UIView {
         view.addSubview(avatarImageV)
         avatarImageV.snp.makeConstraints { (make) in
             make.centerX.equalTo(view.snp_centerX)
-            make.top.equalTo(0)
-            make.size.equalTo(CGSize(width: 50, height: 50))
+            make.top.equalTo(7)
+            make.size.equalTo(CGSize(width: 48, height: 48))
         }
         
         return view

@@ -61,6 +61,20 @@ class YXSEducationReadingScoreRequest: YXSBaseRequset {
 }
 
 // MARK: -成绩详情报表(老师)
+let ScoreParentDetails = "/achievement/parent/childScoreReport"
+class YXSEducationScoreParentDetailsRequest: YXSBaseRequset {
+    init(examId: Int) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = ScoreTeacherDetails
+        param = [
+            "examId":examId]
+    }
+}
+
+
+// MARK: -成绩详情报表(家长)
 let ScoreTeacherDetails = "/achievement/childScoreDetails"
 class YXSEducationScoreTeacherDetailsRequest: YXSBaseRequset {
     init(examId: Int) {
@@ -72,4 +86,3 @@ class YXSEducationScoreTeacherDetailsRequest: YXSBaseRequset {
             "examId":examId]
     }
 }
-

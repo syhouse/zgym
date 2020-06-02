@@ -51,6 +51,19 @@ class YXSScoreNumParentDetailsVC: YXSBaseViewController {
     }
     
     func initUI() {
+        self.scrollView.addSubview(headerBgImageView)
+        self.scrollView.addSubview(headerView)
+        headerBgImageView.snp.makeConstraints { (make) in
+            make.left.top.right.equalTo(0)
+            make.height.equalTo(242*SCREEN_SCALE)
+        }
+        
+        headerView.snp.makeConstraints { (make) in
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.top.equalTo(64)
+        }
+        
     }
     
     // MARK: -loadData
@@ -58,7 +71,7 @@ class YXSScoreNumParentDetailsVC: YXSBaseViewController {
         YXSEducationScoreTeacherDetailsRequest.init(examId: listModel?.examId ?? 0).request({ (json) in
             let model = Mapper<YXSScoreDetailsModel>().map(JSONObject:json.object) ?? YXSScoreDetailsModel.init(JSON: ["": ""])!
             self.detailsModel = model
-
+            self.headerView.setModel(model: model)
 //            self.barChartView.xValuesArr = ["0-60","61-70","71-80","81-90","91-100"]
 //            self.barChartView.yValuesArr = ["3人","10人","15人","9人","4人"]
 //            self.barChartView.yAxisCount = 6
@@ -87,8 +100,13 @@ class YXSScoreNumParentDetailsVC: YXSBaseViewController {
     
     lazy var headerBgImageView: UIImageView = {
         let imageV = UIImageView()
-        imageV.image = UIImage.init(named: "yxs_score_detailsHear")
+        imageV.image = UIImage.init(named: "yxs_score_detailsHear_one")
         return imageV
+    }()
+    
+    lazy var headerView: YXSScoreParentHeaderView = {
+        let view = YXSScoreParentHeaderView.init()
+        return view
     }()
     
 }

@@ -34,6 +34,20 @@ class YXSScoreDetailsModel: NSObject, Mappable {
     var readNumber: Int?
     ///总人数统计报表
     var totalStatement: String?
+    ///孩子ID
+    var childrenId: Int?
+    ///孩子名称
+    var childrenName: Int?
+    ///小孩当前得分分段
+    var currentBranch: String?
+    ///小孩当前得分分段评语
+    var currentBranchComment: String?
+    ///老师评语
+    var comment: String?
+    /// 孩子头像
+    var avatar: String?
+    
+    var childrenSubjects: YXSScoreChildrenSubjectsModel?
     
     required init?(map: Map){}
 
@@ -51,5 +65,30 @@ class YXSScoreDetailsModel: NSObject, Mappable {
         number <- map["number"]
         readNumber <- map["readNumber"]
         totalStatement <- map["totalStatement"]
+        childrenId <- map["childrenId"]
+        childrenName <- map["childrenName"]
+        currentBranch <- map["currentBranch"]
+        currentBranchComment <- map["currentBranchComment"]
+        comment <- map["comment"]
+        avatar <- map["avatar"]
+    }
+}
+
+class YXSScoreChildrenSubjectsModel: NSObject, Mappable {
+    /// 小孩当前得分分段
+    var branch: String?
+    /// 得分
+    var score: Int?
+    /// 科目ID
+    var subjectsId: Int?
+    /// 科目名
+    var subjectsName: String?
+    
+    required init?(map: Map){}
+    func mapping(map: Map) {
+        branch <- map["branch"]
+        score <- map["score"]
+        subjectsId <- map["subjectsId"]
+        subjectsName <- map["subjectsName"]
     }
 }

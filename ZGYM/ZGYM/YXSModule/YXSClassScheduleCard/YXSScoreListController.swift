@@ -62,26 +62,28 @@ class YXSScoreListController: YXSBaseTableViewController{
     }
     
     func loadData(){
-        var request: YXSBaseRequset!
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-            request = YXSEducationScoreTeacherListRequest.init(currentPage: currentPage, classId: currentClassId)
-        }else{
-            request = YXSEducationScoreParentListRequest.init(currentPage: currentPage, childrenId: currentChildrenId, classId: currentClassId)
-        }
-        request.request({ [weak self](json) in
-            guard let weakSelf = self else {return}
-            weakSelf.yxs_endingRefresh()
-            let joinList = Mapper<YXSScoreListModel>().mapArray(JSONObject: json["list"].object) ?? [YXSScoreListModel]()
-            if weakSelf.currentPage == 1{
-                weakSelf.dataSource.removeAll()
-            }
-            weakSelf.dataSource += joinList
-            weakSelf.loadMore = json["hasNext"].boolValue
-            weakSelf.tableView.reloadData()
-        }) { (msg, code) in
-            self.yxs_endingRefresh()
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
+        self.yxs_endingRefresh()
+        self.tableView.reloadData()
+//        var request: YXSBaseRequset!
+//        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+//            request = YXSEducationScoreTeacherListRequest.init(currentPage: currentPage, classId: currentClassId)
+//        }else{
+//            request = YXSEducationScoreParentListRequest.init(currentPage: currentPage, childrenId: currentChildrenId, classId: currentClassId)
+//        }
+//        request.request({ [weak self](json) in
+//            guard let weakSelf = self else {return}
+//            weakSelf.yxs_endingRefresh()
+//            let joinList = Mapper<YXSScoreListModel>().mapArray(JSONObject: json["list"].object) ?? [YXSScoreListModel]()
+//            if weakSelf.currentPage == 1{
+//                weakSelf.dataSource.removeAll()
+//            }
+//            weakSelf.dataSource += joinList
+//            weakSelf.loadMore = json["hasNext"].boolValue
+//            weakSelf.tableView.reloadData()
+//        }) { (msg, code) in
+//            self.yxs_endingRefresh()
+//            MBProgressHUD.yxs_showMessage(message: msg)
+//        }
     }
     
     // MARK: - Action
@@ -128,10 +130,11 @@ class YXSScoreListController: YXSBaseTableViewController{
         if dataSource.count > indexPath.row {
             let model = dataSource[indexPath.row]
             if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-                 let detail = YXSScoreNumTeacherDetailsVC.init(model: model)
+                let detail = YXSScoreNumTeacherDetailsVC.init(model: model)
                 self.navigationController?.pushViewController(detail)
             } else {
-                
+                let detail = YXSScoreNumParentDetailsVC.init(model: model)
+                self.navigationController?.pushViewController(detail)
             }
             
         }
