@@ -12,6 +12,7 @@ import NightNight
 import Photos
 import MediaPlayer
 import SDWebImage
+import YBImageBrowser
 
 enum YXSOperationPosition{
     ///首页操作
@@ -38,7 +39,7 @@ private class YXSEducationUserDetailRequest: YXSBaseRequset {
 }
 
 class UIUtil: NSObject {
-
+    
     
     /// 根试图控制器
     @objc static func RootController() -> UIViewController{
@@ -145,7 +146,7 @@ extension UIUtil{
         let dic = NSDictionary(object: font, forKey : kCTFontAttributeName as! NSCopying)
         return yxs_getTextHeigh(textStr: textStr, attributes:  dic as? [NSAttributedString.Key:Any], width: width)
     }
- 
+    
     /// 获取文字高度
     /// - Parameter textStr: 文本
     /// - Parameter font: 字体
@@ -258,21 +259,9 @@ extension UIUtil{
     ///   - asset: asset
     ///   - resultBlock: 获取完成回调
     static func PHAssetToImage(_ asset:PHAsset, resultBlock:((_ image: UIImage) ->())?){
-        // 新建一个默认类型的图像管理器imageManager
-        let imageManager = PHImageManager.default()
-        // 新建一个PHImageRequestOptions对象
-        let imageRequestOption = PHImageRequestOptions()
-        // PHImageRequestOptions是否有效
-        imageRequestOption.isSynchronous = true
-        // 缩略图的压缩模式设置为无
-        imageRequestOption.resizeMode = .none
-        // 缩略图的质量为高质量，不管加载时间花多少
-        imageRequestOption.deliveryMode = .highQualityFormat
-        // 按照PHImageRequestOptions指定的规则取出图片
-        imageManager.requestImage(for: asset, targetSize: CGSize.init(width: 1080, height: 1920), contentMode: .aspectFill, options: imageRequestOption, resultHandler: {
-            (result, _) -> Void in
-            resultBlock?(result ?? UIImage())
-        })
+        YBIBPhotoAlbumManager.getImageData(with: asset) { (data) in
+            resultBlock?( UIImage.init(data: data ?? Data()) ?? UIImage())
+        }
     }
 }
 
@@ -506,12 +495,12 @@ extension UIUtil{
     }
     
     static func yxs_loadUserDetailRequest(_ completion: ((_ model:YXSEducationUserModel) -> ())?,
-                                         failureHandler: ((String, String) -> ())?){
+                                          failureHandler: ((String, String) -> ())?){
         yxs_loadUserDetailRequest(completion, failureHandler: failureHandler,IMLoginSucess: nil)
     }
     
     static func yxs_loadUserDetailRequest(_ completion: ((_ model:YXSEducationUserModel) -> ())?,
-                                         failureHandler: ((String, String) -> ())?,IMLoginSucess:(() -> ())? = nil){
+                                          failureHandler: ((String, String) -> ())?,IMLoginSucess:(() -> ())? = nil){
         YXSEducationUserDetailRequest().request({ (resultModel:YXSEducationUserModel) in
             resultModel.accessToken = YXSPersonDataModel.sharePerson.userModel.accessToken
             resultModel.hasSetPassword = YXSPersonDataModel.sharePerson.userModel.hasSetPassword
@@ -824,7 +813,7 @@ extension UIUtil{
         info[MPMediaItemPropertyArtwork] = artwork
         //完成设置
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
-
+        
     }
     
     static func configNowPlayingIsPause(isPlaying: Bool){
