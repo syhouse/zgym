@@ -159,6 +159,10 @@ class YXSPublishModel: NSObject, NSCoding {
         templateListModel = aDecoder.decodeObject(forKey: "templateListModel") as? YXSTemplateListModel
         
         solitaireQuestions = aDecoder.decodeObject(forKey: "solitaireQuestions") as? [YXSSolitaireQuestionModel] ?? [YXSSolitaireQuestionModel]()
+        
+        publishFileLists = aDecoder.decodeObject(forKey: "publishFileLists") as? [YXSFileModel] ?? [YXSFileModel]()
+        
+        isSynClassFile = aDecoder.decodeBool(forKey: "isSynClassFile")
     }
     
     /**
@@ -226,6 +230,10 @@ class YXSPublishModel: NSObject, NSCoding {
         }
         
         aCoder.encode(solitaireQuestions, forKey: "solitaireQuestions")
+        
+        aCoder.encode(publishFileLists, forKey: "publishFileLists")
+        
+        aCoder.encode(isSynClassFile, forKey: "isSynClassFile")
     }
 }
 
