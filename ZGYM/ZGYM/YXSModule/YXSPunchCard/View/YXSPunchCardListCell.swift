@@ -262,7 +262,7 @@ extension YXSPunchCardListCell{
             childrenId = punchCardModel.childrenId
             isTop = punchCardModel.isTop
             
-            currentClockInDayNo = punchCardModel.currentClockInDayNo
+            currentClockInDayNo = (punchCardModel.totalDay ?? 0) - (punchCardModel.surplusClockInDayCount ?? 0)
             totalDay = punchCardModel.totalDay
         }
         
