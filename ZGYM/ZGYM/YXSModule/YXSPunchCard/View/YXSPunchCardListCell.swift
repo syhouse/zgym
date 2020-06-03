@@ -277,7 +277,7 @@ extension YXSPunchCardListCell{
         classLabel.text = className
         topTimeLabel.text = createTime?.date(withFormat: kCommonDateFormatString)?.yxs_homeTimeWeek()
         
-        punchTaskLabel.text = "剩余:\(currentClockInDayNo ?? 0)/\(totalDay ?? 0)  \(self.yxs_weakText(periodList: periodList))"
+        punchTaskLabel.text = "剩余:\(totalDay ?? 0)/\(currentClockInDayNo ?? 0)  \(self.yxs_weakText(periodList: periodList))"
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
             let showGoToPunch = hasNeedPunch && !hasPunch
             if showGoToPunch{
