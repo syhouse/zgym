@@ -15,7 +15,8 @@ class YXSHomeSourceView: UIImageView{
         addSubview(yxs_bgView)
         yxs_bgView.addSubview(yxs_iconImage)
         yxs_bgView.addSubview(yxs_label)
-
+        addSubview(vedioImage)
+        
         yxs_bgView.snp.makeConstraints { (make) in
             make.left.bottom.right.equalTo(0)
             make.height.equalTo(20)
@@ -25,11 +26,16 @@ class YXSHomeSourceView: UIImageView{
             make.size.equalTo(CGSize.init(width: 16, height: 16))
             make.centerY.equalTo(yxs_bgView)
         }
-
+        
+        vedioImage.snp.makeConstraints { (make) in
+            make.center.equalTo(self)
+            make.size.equalTo(CGSize.init(width: 30, height: 30))
+        }
         yxs_label.snp.makeConstraints { (make) in
             make.center.equalTo(yxs_bgView)
         }
         yxs_bgView.isHidden = true
+        vedioImage.isHidden = true
     }
     
     required init?(coder: NSCoder) {
@@ -46,6 +52,11 @@ class YXSHomeSourceView: UIImageView{
     lazy var yxs_iconImage: UIImageView = {
         let iconImage = UIImageView.init(image: UIImage.init(named: "audio"))
         return iconImage
+    }()
+    
+    lazy var vedioImage: UIImageView = {
+        let vedioImage = UIImageView.init(image: UIImage.init(named: "vedio"))
+        return vedioImage
     }()
     
     lazy var yxs_label: UILabel = {
