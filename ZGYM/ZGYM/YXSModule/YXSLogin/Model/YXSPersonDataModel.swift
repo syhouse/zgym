@@ -155,6 +155,14 @@ enum StageType: String {
     
     /// 退出登录
     @objc public func userLogout(){
+        YXSEducationUserLogoutRequest().request({ (json) in
+            
+        }) { (msg, code) in
+            
+        }
+        
+        
+        
         self.token = ""
         self.userModel = YXSEducationUserModel.init(JSON: ["": ""])
         YXSChatHelper.sharedInstance.logout()

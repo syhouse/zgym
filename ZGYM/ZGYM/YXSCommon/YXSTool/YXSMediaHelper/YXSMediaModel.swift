@@ -86,29 +86,13 @@ class YXSMediaModel: NSObject, NSCoding {
     
     private func getImage(isThumbnail: Bool ,completHandle: @escaping((_ image: UIImage?) ->())){
         DispatchQueue.global().async {
-            if self.type == .video{
-                PHCachingImageManager().requestAVAsset(forVideo: self.asset, options:nil, resultHandler: { (asset, audioMix, info)in
-                    let avAsset = asset as? AVURLAsset
-                    self.videoUrl = avAsset?.url
-                    self.assetImage = UIImage.yxs_getScreenShotImage(fromVideoUrl: avAsset?.url)
-                    if let assetImage = self.assetImage{
-                        let newSize = assetImage.yxs_scaleImage(image: assetImage , imageLength: 500)
-                        self.thumbnailImage = assetImage.yxs_resizeImage(image: assetImage, newSize: newSize)
-                        DispatchQueue.main.async {
-                            completHandle(isThumbnail ? self.thumbnailImage : assetImage)
-                        }
-                    }
-                })
-            }else{
-                UIUtil.PHAssetToImage(self.asset){
-                    (result) in
-                    self.assetImage = result
-                    
-                    let newSize = result.yxs_scaleImage(image: result, imageLength: 500)
-                    self.thumbnailImage = result.yxs_resizeImage(image: result, newSize: newSize)
-                    DispatchQueue.main.async {
-                        completHandle(isThumbnail ? self.thumbnailImage : self.assetImage)
-                    }
+            UIUtil.PHAssetToImage(self.asset){
+                (result) in
+                self.assetImage = result
+                let newSize = result.yxs_scaleImage(image: result, imageLength: 500)
+                self.thumbnailImage = result.yxs_resizeImage(image: result, newSize: newSize)
+                DispatchQueue.main.async {
+                    completHandle(isThumbnail ? self.thumbnailImage : self.assetImage)
                 }
             }
         }
