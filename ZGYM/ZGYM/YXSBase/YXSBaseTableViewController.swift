@@ -234,15 +234,18 @@ extension YXSBaseScrollViewController{
             self.navigationController?.pushViewController(vc)
         }
         else if event == .solitaire{
-            if isDebug{
-                let vc = YXSSolitaireSelectTypeController()
-                vc.singlePublishClassId = classId
-                self.navigationController?.pushViewController(vc)
-            }else{
-                let vc = YXSSolitairePublishController()
-                vc.singlePublishClassId = classId
-                self.navigationController?.pushViewController(vc)
-            }
+//            if isDebug{
+//                let vc = YXSSolitaireSelectTypeController()
+//                vc.singlePublishClassId = classId
+//                self.navigationController?.pushViewController(vc)
+//            }else{
+//                let vc = YXSSolitairePublishController()
+//                vc.singlePublishClassId = classId
+//                self.navigationController?.pushViewController(vc)
+//            }
+            let vc = YXSSolitairePublishController()
+            vc.singlePublishClassId = classId
+            self.navigationController?.pushViewController(vc)
         }
         else if event == .friendCicle{
             let vc = YXSFriendPublishController()

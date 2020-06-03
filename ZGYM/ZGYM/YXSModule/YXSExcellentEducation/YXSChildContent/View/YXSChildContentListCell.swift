@@ -44,7 +44,7 @@ class YXSChildContentListCell: UITableViewCell {
     func setModel(model:YXSChildContentHomeListModel) {
         coverImgV.sd_setImage(with: URL(string: model.cover ?? ""), placeholderImage: UIImage.init(named: "yxs_synclass_foldercell_default"), options: .refreshCached, completed: nil)
         titleLbl.text = model.title
-        timeLbl.text = model.publishTime?.yxs_Time()
+        timeLbl.text = model.publishTime?.yxs_Date(format: "yyyy-MM-dd HH:mm").toString(format: DateFormatType.custom("MM.dd HH:mm"))
     }
     
     

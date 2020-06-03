@@ -68,7 +68,7 @@ enum StageType: String {
             }
         }
         
-        NotificationCenter.default.addObserver(instance, selector: #selector(userLogout), name: NSNotification.Name(rawValue: kChatCallChangeRoleLoginOutNotification), object: nil)
+        NotificationCenter.default.addObserver(instance, selector: #selector(notificationLogout), name: NSNotification.Name(rawValue: kChatCallChangeRoleLoginOutNotification), object: nil)
         return instance
     }()
     /*
@@ -146,6 +146,11 @@ enum StageType: String {
                 return yxs_user.currentChild?.stage ?? .PRIMARY_SCHOOL
             }
         }
+    }
+    
+    @objc private func notificationLogout(){
+        userLogout()
+        YXSCommonAlertView.showAlert(title: "下线通知", message: "您的账户于小程序端切换身份")
     }
     
     /// 退出登录

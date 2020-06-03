@@ -115,8 +115,12 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
         return theCopyObj
     }
     
-    var clockInId: Int?      /// 打卡任务id
-    var clockInCommitId: Int?      /// 家长打卡id
+    /// 打卡任务id
+    var clockInId: Int?
+    /// 家长打卡id
+    var clockInCommitId: Int?
+    var timeStamp: Int?
+    var userType: String?
     
     private override init(){}
     required init?(map: Map){}
@@ -125,6 +129,8 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
     {
         clockInId <- map["clockInId"]
         clockInCommitId <- map["clockInCommitId"]
+        timeStamp <- map["timeStamp"]
+        userType <- map["userType"]
     }
     
     /**
@@ -135,6 +141,8 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
     {
         clockInId = aDecoder.decodeObject(forKey: "clockInId") as? Int
         clockInCommitId = aDecoder.decodeObject(forKey: "clockInCommitId") as? Int
+        timeStamp = aDecoder.decodeObject(forKey: "timeStamp") as? Int
+        userType = aDecoder.decodeObject(forKey: "userType") as? String
     }
     
     /**
@@ -148,6 +156,12 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
         }
         if clockInId != nil{
             aCoder.encode(clockInId, forKey: "clockInId")
+        }
+        if timeStamp != nil{
+            aCoder.encode(timeStamp, forKey: "timeStamp")
+        }
+        if userType != nil{
+            aCoder.encode(userType, forKey: "userType")
         }
     }
 }

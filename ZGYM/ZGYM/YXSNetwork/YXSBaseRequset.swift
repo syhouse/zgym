@@ -56,7 +56,7 @@ public enum ServiceType: String {
 
 
 //接口环境
-public let sericeType:ServiceType = .ServiceProduct
+public let sericeType:ServiceType = .ServiceTest
 
 let defaultBaseTimeOutInterval: TimeInterval = 10
 //host 首页相关业务
@@ -158,6 +158,10 @@ class YXSBaseRequset: NSObject {
             switch response.result {
             case .success:
                 
+                if self.path == userLoginSmsSend || self.path == userRegister || self.path == userLoginPassword || self.path == userSwitchType{
+                    UserDefaults.standard.set(Date(), forKey: "localLoginTime")
+                }
+                
                 let resutlValue = response.result.value
                 let resultJson = JSON(resutlValue ?? "");
                 let code = resultJson["code"].stringValue
@@ -198,6 +202,11 @@ class YXSBaseRequset: NSObject {
         let complete: (DataResponse<Any>) -> Void = { response in
             switch response.result {
             case .success:
+                
+                if self.path == userLoginSmsSend || self.path == userRegister || self.path == userLoginPassword || self.path == userSwitchType{
+                    UserDefaults.standard.set(Date(), forKey: "localLoginTime")
+                }
+                
                 let resutlValue = response.result.value
                 let resultJson = JSON(resutlValue ?? "")
                 var resultJsonModel = resultJson["data"]
@@ -243,6 +252,11 @@ class YXSBaseRequset: NSObject {
         let complete: (DataResponse<Any>) -> Void = { response in
             switch response.result {
             case .success:
+                
+                if self.path == userLoginSmsSend || self.path == userRegister || self.path == userLoginPassword || self.path == userSwitchType{
+                    UserDefaults.standard.set(Date(), forKey: "localLoginTime")
+                }
+                
                 let resutlValue = response.result.value
                 let resultJson = JSON(resutlValue ?? "")
                 var resultJsonModels = resultJson["data"]

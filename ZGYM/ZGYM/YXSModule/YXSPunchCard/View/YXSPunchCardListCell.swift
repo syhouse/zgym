@@ -211,6 +211,9 @@ extension YXSPunchCardListCell{
         var currentClockInTotalCount: Int?
         var teacherId: Int?
         
+        var currentClockInDayNo: Int?
+        var totalDay: Int?
+        
         var hasNeedPunch: Bool = false
         var hasPunch: Bool = false
         var hasPunchAll: Bool = false
@@ -237,6 +240,9 @@ extension YXSPunchCardListCell{
             serviceId = model.serviceId
             childrenId = model.childrenId
             isTop = model.isTop
+            
+            currentClockInDayNo = (model.totalDay ?? 0) - (model.surplusClockInDayCount ?? 0)
+            totalDay = model.totalDay
         }else{
             content = punchCardModel.title?.listReplaceSpaceAndReturn() ?? ""
             createTime = punchCardModel.createTime ?? ""
@@ -255,6 +261,9 @@ extension YXSPunchCardListCell{
             serviceId = punchCardModel.clockInId
             childrenId = punchCardModel.childrenId
             isTop = punchCardModel.isTop
+            
+            currentClockInDayNo = punchCardModel.currentClockInDayNo
+            totalDay = punchCardModel.totalDay
         }
         
         self.isTop = isTop == 1
@@ -268,8 +277,7 @@ extension YXSPunchCardListCell{
         classLabel.text = className
         topTimeLabel.text = createTime?.date(withFormat: kCommonDateFormatString)?.yxs_homeTimeWeek()
         
-
-        punchTaskLabel.text = "剩余:\(surplusClockInDayCount ?? 0)天  \(self.yxs_weakText(periodList: periodList))"
+        punchTaskLabel.text = "剩余:\(currentClockInDayNo ?? 0)/\(totalDay ?? 0)  \(self.yxs_weakText(periodList: periodList))"
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
             let showGoToPunch = hasNeedPunch && !hasPunch
             if showGoToPunch{
