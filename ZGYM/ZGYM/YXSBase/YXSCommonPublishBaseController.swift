@@ -281,6 +281,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     
     lazy var selectClassView : YXSSelectClassView = {
         let selectClassView = YXSSelectClassView()
+        selectClassView.selectLabel.text = "请选择"
         selectClassView.addTaget(target: self, selctor: #selector(yxs_selectClassClick))
         return selectClassView
     }()
