@@ -1,5 +1,5 @@
 1.查看YXSBaseRequset接口环境ServiceType  是否为.ServiceProduct
 2.Appstore打包appstore的时候注意 Share Extension版本 buildid和当前app的一致
 3.打包发布时，需要设置为false  UMConfigure.setLogEnabled(false)
-4.打包发布时，需要移除 YXSSDK/UMVisualSDK/UMVisual/UMVisualConfig.framework 友盟的config库
+4.打包发布时，需要移除 YXSSDK/UMVisualSDK/UMVisual/UMVisualConfig.framework 友盟的config库   移除UMVisual.bundle
 

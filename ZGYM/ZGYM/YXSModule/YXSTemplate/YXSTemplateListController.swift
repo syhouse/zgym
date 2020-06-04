@@ -241,6 +241,7 @@ class YXSTemplateListCell: UICollectionViewCell{
         button.setTitleColor(kBlueColor, for: .selected)
         button.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#696C73"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        button.titleLabel?.lineBreakMode = .byTruncatingTail
         button.cornerRadius = 14.5
         button.titleLabel?.textAlignment = .center
         button.isUserInteractionEnabled = false

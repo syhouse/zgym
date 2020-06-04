@@ -36,14 +36,15 @@ class YXSScoreListController: YXSBaseTableViewController{
         }
         tableView.register(YXSScoreListCell.self, forCellReuseIdentifier: "YXSScoreListCell")
         
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-            view.addSubview(publishButton)
-            publishButton.snp.makeConstraints { (make) in
-                make.right.equalTo(-15)
-                make.bottom.equalTo(-kTabBottomHeight - 15)
-                make.size.equalTo(CGSize.init(width: 51.5, height: 51.5))
-            }
-        }
+        ///发布按钮先隐藏  下个版本开出来
+//        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+//            view.addSubview(publishButton)
+//            publishButton.snp.makeConstraints { (make) in
+//                make.right.equalTo(-15)
+//                make.bottom.equalTo(-kTabBottomHeight - 15)
+//                make.size.equalTo(CGSize.init(width: 51.5, height: 51.5))
+//            }
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -114,7 +114,7 @@ class YXSPeriodicalDetialCell : UITableViewCell {
     
     func yxs_setCellModel(_ model: YXSChildContentHomeListModel){
         yxs_nameLabel.text = model.title
-        timeLabel.text = model.uploadTime?.yxs_Date().toString(format: DateFormatType.custom("MM.dd HH:mm"))
+        timeLabel.text = model.uploadTime?.yxs_Date(format: "yyyy-MM-dd HH:mm").toString(format: DateFormatType.custom("MM.dd HH:mm"))
         rightImageView.sd_setImage(with: URL.init(string: model.cover?.yxs_getImageThumbnail() ?? ""), placeholderImage: kImageDefualtImage)
     }
     

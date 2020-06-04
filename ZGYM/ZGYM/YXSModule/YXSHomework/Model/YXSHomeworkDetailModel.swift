@@ -11,7 +11,7 @@ import ObjectMapper
 import SwiftyJSON
 
 class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
-
+    var title: String?
     var audioDuration : Int?
     var audioUrl : String?
     var bgUrl : String?
@@ -56,6 +56,8 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
 //            fileList = list
         }
     }
+    ///1普通(old) 2普通(new) 3调查卷 接龙类型
+    var type: Int?
     
     var fileList: [YXSFileModel] = [YXSFileModel]()
     var endTimeIsUnlimited: Bool {
@@ -584,6 +586,8 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         homeworkCreateTime <- map["homeworkCreateTime"]
         homeworkEndTime <- map["homeworkEndTime"]
         custodianId <- map["custodianId"]
+        type <- map["type"]
+        title <- map["title"]
     }
 
     /**
@@ -646,6 +650,8 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         selectChildrenId = aDecoder.decodeObject(forKey: "selectChildrenId") as? Int
         custodianId = aDecoder.decodeObject(forKey: "custodianId") as? Int
         currentIsGood = aDecoder.decodeObject(forKey: "currentIsGood") as? Int
+        type = aDecoder.decodeObject(forKey: "type") as? Int
+        title = aDecoder.decodeObject(forKey: "title") as? String
     }
 
     /**
@@ -815,6 +821,12 @@ class YXSHomeworkDetailModel : NSObject, NSCoding, Mappable{
         }
         if currentIsGood != nil {
             aCoder.encode(currentIsGood, forKey: "currentIsGood")
+        }
+        if type != nil {
+            aCoder.encode(type, forKey: "type")
+        }
+        if title != nil {
+            aCoder.encode(title, forKey: "title")
         }
     }
 }

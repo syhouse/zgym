@@ -24,7 +24,7 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
     }
     
     
-    /// 重新s初始化本地红点数据
+    /// 重新初始化本地红点数据
     public func yxs_changeListData(){
         yxs_initListData(fileList: localMessageLists)
     }

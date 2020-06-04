@@ -246,10 +246,10 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
     lazy var contentField: YXSPlaceholderTextView = {
         let textView = YXSPlaceholderTextView()
         textView.limitCount = 50
+        textView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.placeholderMixColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), night: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"))
-        let textColor = NightNight.theme == .night ? UIColor.white : kTextMainBodyColor
-        //               textView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight20232F)
+        textView.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         textView.placeholder = "请输入选项内容"
         textView.textContainerInset = UIEdgeInsets.init(top: 0, left: 5, bottom: 0, right: 0)
         textView.textDidChangeBlock = {
@@ -320,6 +320,8 @@ class SolitairePublishNewSelectModel: NSObject, NSCoding{
     
     var mediaModel: SLPublishMediaModel?
     
+    var isSelected: Bool = false
+    
     override init() {
     }
     
@@ -328,6 +330,7 @@ class SolitairePublishNewSelectModel: NSObject, NSCoding{
         index = aDecoder.decodeInteger(forKey: "index")
         leftText = aDecoder.decodeObject(forKey: "leftText") as? String
         mediaModel = aDecoder.decodeObject(forKey: "mediaModel") as? SLPublishMediaModel
+        isSelected = aDecoder.decodeBool(forKey: "isSelected")
     }
     @objc func encode(with aCoder: NSCoder)
     {
@@ -345,6 +348,6 @@ class SolitairePublishNewSelectModel: NSObject, NSCoding{
         }
         
         aCoder.encode(index, forKey: "index")
-        
+        aCoder.encode(isSelected, forKey: "isSelected")
     }
 }

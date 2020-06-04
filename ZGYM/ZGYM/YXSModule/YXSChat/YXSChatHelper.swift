@@ -88,13 +88,15 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
 
     }
     
-    @objc func logout() {
+    @objc func logout(showError: Bool = false,completionHandler:(()->())? = nil) {
         TIMManager.sharedInstance()?.logout({ [weak self] in
             guard let weakSelf = self else {return}
             weakSelf.refreshApplicationIconBadgeNum()
-            
+            completionHandler?()
         }, fail: { (code, msg) in
-            
+            if showError{
+                MBProgressHUD.yxs_showMessage(message: msg ?? "IM退出登录错误")
+            }
         })
     }
     
@@ -203,7 +205,13 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
                 }else if model.serviceType == 101 {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallRefreshHomeworkNotification), object: model)
                 }else if model.serviceType == 108 {//身份变更通知
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallChangeRoleLoginOutNotification), object: model)
+                    let loaclDate: Date = UserDefaults.standard.value(forKey: "localLoginTime") as? Date ?? Date()
+                    let localTime = loaclDate.timeIntervalSince1970 * 1000
+                    ///切换时间大于登录时间
+                    if TimeInterval((model.createTime ?? "0").int ?? 0) > localTime{
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallChangeRoleLoginOutNotification), object: model)
+                    }
+                    
                 }
                 else {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallRefreshNotification), object: model)

@@ -20,6 +20,18 @@ class YXSEducationVersionManageLatestRequest: YXSBaseRequset {
     }
 }
 
+
+
+// MARK: - 腾讯IM用户签名
+let userLogout = "/user/logout"
+class YXSEducationUserLogoutRequest: YXSBaseRequset {
+    override init() {
+        super.init()
+        method = .post
+        path = userLogout
+    }
+}
+
 // MARK: - 腾讯IM用户签名
 let tencentImUserSign = "/tencent/im/user/sign"
 class YXSEducationTencentImUserSignRequest: YXSBaseRequset {

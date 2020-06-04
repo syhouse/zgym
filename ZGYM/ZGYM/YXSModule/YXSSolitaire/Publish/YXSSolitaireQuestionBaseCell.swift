@@ -86,6 +86,7 @@ class YXSSolitaireQuestionBaseCell : UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
+        contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         contentView.addSubview(questionTitleView)
         contentView.addSubview(dealBtn)
         layout()
@@ -187,7 +188,7 @@ class YXSSolitaireQuestionTitleView : UIView {
         let label = YXSLabel()
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 15)
-        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kTextMainBodyColor)
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         return label
     }()
     
@@ -213,6 +214,7 @@ class YXSSolitaireQuestionTitleView : UIView {
 
 
 class YXSSolitaireLabelImageView : UIView {
+    var titleRightGap: CGFloat = 0
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(titleLabel)
@@ -246,7 +248,8 @@ class YXSSolitaireLabelImageView : UIView {
         if let mediaModel = model.mediaModel{
             meidaItem.model = mediaModel
             titleLabel.snp.remakeConstraints { (make) in
-                make.left.right.top.equalTo(0)
+                make.left.top.equalTo(0)
+                make.right.equalTo(-titleRightGap)
             }
             
             meidaItem.snp.remakeConstraints { (make) in
@@ -284,7 +287,7 @@ class YXSSolitaireLabelImageView : UIView {
         let label = YXSLabel()
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 15)
-        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kTextMainBodyColor)
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         return label
     }()
     
@@ -292,5 +295,71 @@ class YXSSolitaireLabelImageView : UIView {
         let meidaItem = YXSSinglImage(frame: CGRect.init(x: 0, y: 0, width: 84, height: 84))
         meidaItem.addTaget(target: self, selctor: #selector(itemClick))
         return meidaItem
+    }()
+}
+
+
+
+class YXSSolitaireAnswerControl : UIControl {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(answerView)
+        answerView.snp.makeConstraints { (make) in
+            make.left.equalTo(11)
+            make.top.equalTo(13)
+            make.bottom.equalTo(-13)
+            make.right.equalTo(-11)
+        }
+        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD"), night: UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD"))
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    var model: SolitairePublishNewSelectModel!
+    func setModel(_ model: SolitairePublishNewSelectModel, index: Int){
+        self.model = model
+        answerView.setModel(model, index: index)
+    }
+
+    
+    // MARK: -getter&setter
+    lazy var answerView: YXSSolitaireAnswerView = {
+        let answerView = YXSSolitaireAnswerView()
+        answerView.isUserInteractionEnabled = false
+        return answerView
+    }()
+}
+
+
+class YXSSolitaireAnswerView : YXSSolitaireLabelImageView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(selectBtn)
+        selectBtn.snp.makeConstraints { (make) in
+            make.centerY.equalTo(self)
+            make.right.equalTo(-8.5)
+            make.size.equalTo(CGSize(width: 27, height: 27))
+        }
+        titleRightGap = 40
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func setModel(_ model: SolitairePublishNewSelectModel, index: Int){
+        super.setModel(model, index: index)
+        selectBtn.isSelected = model.isSelected
+    }
+
+    
+    // MARK: -getter&setter
+    lazy var selectBtn: UIButton = {
+        let selectBtn = UIButton()
+        selectBtn.setImage(UIImage(named: "yxs_solitaire_answer_normal"), for: .normal)
+        selectBtn.setImage(UIImage(named: "yxs_solitaire_answer_select"), for: .selected)
+        selectBtn.isUserInteractionEnabled = false
+        return selectBtn
     }()
 }

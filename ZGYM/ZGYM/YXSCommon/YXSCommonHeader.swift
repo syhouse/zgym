@@ -172,6 +172,9 @@ public let kOperationStudentWorkNotification = "OperationStudentWorkNotification
 /// 打卡家长撤销   (通知带打卡id  后期优化 自己处理数据) 
 public let kOperationStudentCancelPunchCardNotification = "OperationStudentCancelPunchCardNotification"
 
+/// 接龙家长撤销   (通知带接龙id  后期优化 自己处理数据)
+public let kOperationStudentCancelSolitaireNotification = "kOperationStudentCancelSolitaireNotification"
+
 /// 打卡家长修改(object 为修改后的model)
 public let kOperationStudentChangePunchCardNotification = "OperationStudentChangePunchCardNotification"
 

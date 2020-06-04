@@ -198,7 +198,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = solitaireLists[indexPath.row]
-        let vc = YXSSolitaireDetailController(censusId: model.censusId ?? 0, childrenId: model.childrenId ?? 0, classId: model.classId ?? 0)
+        let vc = YXSSolitaireNewDetailController(censusId: model.censusId ?? 0, childrenId: model.childrenId ?? 0, classId: model.classId ?? 0)
         self.navigationController?.pushViewController(vc)
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             UIUtil.yxs_reduceAgenda(serviceId: model.censusId ?? 0, info: [kEventKey:YXSHomeType.solitaire])

@@ -243,6 +243,9 @@ extension YXSBaseScrollViewController{
                 vc.singlePublishClassId = classId
                 self.navigationController?.pushViewController(vc)
             }
+//            let vc = YXSSolitairePublishController()
+//            vc.singlePublishClassId = classId
+//            self.navigationController?.pushViewController(vc)
         }
         else if event == .friendCicle{
             let vc = YXSFriendPublishController()

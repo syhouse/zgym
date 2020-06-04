@@ -52,7 +52,7 @@ class YXSPeriodicalCell : UITableViewCell {
     func yxs_setCellModel(_ model: YXSPeriodicalListModel){
         yxs_nameLabel.text = "优期刊第\(model.numPeriods ?? 1)期"
         yxs_desLabel.text = model.theme
-        timeLabel.text = model.publishTime?.yxs_Date().toString(format: DateFormatType.custom("MM.dd HH:mm"))
+        timeLabel.text = model.publishTime?.yxs_Date(format: "yyyy-MM-dd HH:mm").toString(format: DateFormatType.custom("MM.dd HH:mm"))
         rightImageView.sd_setImage(with: URL.init(string: model.cover?.yxs_getImageThumbnail() ?? ""), placeholderImage: kImageDefualtImage)
     }
 

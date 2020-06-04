@@ -107,7 +107,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     /// 接龙提交人数上限
     var commitUpperLimit: Int?
     var surplusClockInDayCount: Int?
-    
+    ///打卡总数
+    var totalDay: Int?
     var periodList : [Int]?
     
     ///孩子姓名  需要塞进去 班级之星用到
@@ -337,7 +338,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         }
     }
     
-    ///接龙已完成
+    ///已完成
     var isFinish: Bool{
         get{
             return commitState == 2 && onlineCommit == 1
@@ -525,7 +526,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var frameModel:YXSFriendsCircleFrameModel!
     
     var contentLabelWidth : CGFloat{
-        return SCREEN_WIDTH - 30 - (hasSource ? (15 + 107) : (15 + 18))
+        return SCREEN_WIDTH - 30 - ((hasSource && (type == .homework || type == .notice)) ? (15 + 107) : (15 + 18))
     }
     
     required init?(map: Map){}
@@ -568,6 +569,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         startTime <- map["startTime"]
         
         currentTime <- map["currentTime"]
+        
+        totalDay <- map["totalDay"]
         
         confingHeight()
     }
@@ -619,6 +622,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         currentTime = aDecoder.decodeObject(forKey: "currentTime") as? String
         
         periodicalListModel = aDecoder.decodeObject(forKey: "periodicalListModel") as? YXSPeriodicalListModel
+        totalDay = aDecoder.decodeObject(forKey: "totalDay") as? Int
     }
     
     /**
@@ -742,6 +746,9 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         
         if periodicalListModel != nil{
             aCoder.encode(periodicalListModel, forKey: "periodicalListModel")
+        }
+        if totalDay != nil{
+            aCoder.encode(totalDay, forKey: "totalDay")
         }
     }
 }

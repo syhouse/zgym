@@ -40,15 +40,27 @@ let censusParentCommit = "/census/parentCommit"
 // MARK: - 提交(家长)
 class YXSEducationCensusParentCommitRequest: YXSBaseRequset {
     //接龙状态（0 全部 10 正在接龙 100 已结束:按照接龙的结束时间 ）
-    init(censusId: Int, childrenId: Int, option: String) {
+    init(censusId: Int, childrenId: Int, option: String, remark: String = "") {
         super.init()
         host = homeHost
         method = .post
         path = censusParentCommit
-        param = ["censusId":censusId, "childrenId":childrenId, "option":option]
+        param = ["censusId":censusId, "childrenId":childrenId, "option":option, "remark": remark]
     }
 }
 
+let censusParentPartakeCommit = "/census/parentPartakeCommit"
+// MARK: - 重新提交(家长)
+class YXSEducationCensusParentPartakeCommitRequest: YXSBaseRequset {
+    //接龙状态（0 全部 10 正在接龙 100 已结束:按照接龙的结束时间 ）
+    init(censusId: Int, childrenId: Int, option: String, remark: String = "") {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusParentPartakeCommit
+        param = ["censusId":censusId, "childrenId":childrenId, "option":option, "remark": remark]
+    }
+}
 
 let censusTeacherStaffList = "/census/teacherStaffList"
 // MARK: - 参与人员列表（老师）
@@ -62,6 +74,7 @@ class YXSEducationCensusTeacherStaffListRequest: YXSBaseRequset {
         param = ["censusId":censusId]
     }
 }
+
 
 // MARK: -发布(老师)
 let censusTeacherPublish = "/census/teacherPublish"
@@ -283,5 +296,42 @@ class YXSCensusV1TeacherPublishEnterRequest: YXSBaseRequset {
             "endTime":endTime,
             "isTop": isTop,
             "commitUpperLimit":commitUpperLimit]
+    }
+}
+
+
+// MARK: - 参加与不参加（家长,老师）
+let censusPartakeOrNoPartake = "/census/partakeOrNoPartake"
+class YXSEducationCensusPartakeOrNoPartakeRequest: YXSBaseRequset {
+    init(censusId: Int) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusPartakeOrNoPartake
+        param = ["censusId":censusId]
+    }
+}
+
+// MARK: - 撤销提交报名or调查表(家长)
+let censusParentWithdrawCommit = "/census/parentWithdrawCommit"
+class YXSEducationCensusParentWithdrawCommitRequest: YXSBaseRequset {
+    init(censusId: Int, censusCommitId: Int, childrenId: Int) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusParentWithdrawCommit
+        param = ["censusId":censusId,"censusCommitId": censusCommitId, "childrenId": childrenId]
+    }
+}
+
+// MARK: - 调查表详情(家长)
+let censusParentGatherDetail = "/census/parentGatherDetail"
+class YXSEducationCensusParentGatherDetailRequest: YXSBaseRequset {
+    init(censusId: Int, childrenId: Int) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusParentGatherDetail
+        param = ["censusId":censusId, "childrenId": childrenId]
     }
 }

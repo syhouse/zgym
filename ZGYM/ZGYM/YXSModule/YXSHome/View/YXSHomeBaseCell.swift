@@ -145,13 +145,12 @@ class YXSHomeBaseCell: UITableViewCell {
     
     public func setSourceViewData(){
         sourceView.yxs_bgView.isHidden = true
+        sourceView.vedioImage.isHidden = true
         if model.sourceType == 0{
             return
         }
         if model.sourceType == 4{
-            sourceView.yxs_bgView.isHidden = false
-            sourceView.yxs_iconImage.image = UIImage.init(named: "vedio")
-            sourceView.yxs_label.text = "视频"
+            sourceView.vedioImage.isHidden = false
             sourceView.yxs_setImageWithURL(url: URL.init(string: (model.bgUrl ?? "").yxs_getImageThumbnail()), placeholder: kImageDefualtMixedImage)
         }else if model.sourceType == 1{
             sourceView.image = UIImage.init(named: "audio_defult")

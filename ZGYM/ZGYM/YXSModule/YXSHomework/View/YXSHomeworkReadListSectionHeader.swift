@@ -204,3 +204,32 @@ class YXSHomeworkReadListSectionHeader: UITableViewHeaderFooterView {
         return lb
     }()
 }
+
+
+class YXSSolitaireCollectorSectionHeader: UITableViewHeaderFooterView {
+
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        self.contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight20232F)
+        self.contentView.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#F2F5F9"), leftMargin: 0, rightMargin: 0, lineHeight: 1)
+        contentView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints({ (make) in
+            make.top.equalTo(17)
+            make.left.equalTo(15)
+            make.bottom.equalTo(-16.5).priorityHigh()
+        })
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - LazyLoad
+    lazy var titleLabel: YXSLabel = {
+        let label = YXSLabel()
+        label.font = UIFont.systemFont(ofSize: 17)
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        label.text = "采集结果"
+        return label
+    }()
+}

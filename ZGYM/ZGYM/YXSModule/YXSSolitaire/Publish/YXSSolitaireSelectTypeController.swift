@@ -145,7 +145,7 @@ class YXSSolitaireTemplateCell: UITableViewCell{
     
     lazy var bgView: UIView = {
         let bgView = UIView()
-        bgView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD")
+        bgView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD"), night: kNightForegroundColor)
         bgView.cornerRadius = 2.5
         return bgView
     }()
@@ -158,7 +158,7 @@ class YXSSolitaireTemplateCell: UITableViewCell{
     
     lazy var title: UILabel = {
         let label = UILabel()
-        label.textColor = kTextMainBodyColor
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
@@ -174,7 +174,7 @@ class YXSSolitaireSelectTypeTabelView: UIView{
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9")
+        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9"), night: kNight282C3B)
         addSubview(topSectionView)
         addSubview(secendSectionView)
         topSectionView.yxs_addLine(position: .bottom, color: kLineColor, leftMargin: 15, rightMargin: 15, lineHeight: 0.5)
@@ -182,7 +182,7 @@ class YXSSolitaireSelectTypeTabelView: UIView{
         addSubview(secendSectionView)
         
         let bottomView = UIView()
-        bottomView.backgroundColor = UIColor.white
+        bottomView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         addSubview(bottomView)
         bottomView.addSubview(titleL)
         bottomView.addSubview(lookMore)
@@ -246,7 +246,7 @@ class YXSSolitaireSelectTypeTabelView: UIView{
     lazy var lookMore: YXSCustomImageControl = {
         let lookMore = YXSCustomImageControl.init(imageSize: CGSize.init(width: 13.4, height: 13.4), position: YXSImagePositionType.right, padding: 9.5)
         lookMore.font = UIFont.boldSystemFont(ofSize: 14)
-        lookMore.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
+        lookMore.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))
         lookMore.locailImage = "arrow_gray"
         lookMore.title = "查看更多"
         lookMore.addTarget(self, action: #selector(lookMoreClick), for: .touchUpInside)
@@ -256,7 +256,7 @@ class YXSSolitaireSelectTypeTabelView: UIView{
     lazy var titleL: UILabel = {
         let label = UILabel()
         label.text = "常用模版"
-        label.textColor = kTextMainBodyColor
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }()
@@ -265,7 +265,7 @@ class YXSSolitaireSelectTypeTabelView: UIView{
 class YXSSolitaireSelectionView: UIControl{
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.white
+        self.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         addSubview(icon)
         addSubview(title)
         addSubview(desLabel)
@@ -296,14 +296,14 @@ class YXSSolitaireSelectionView: UIControl{
     
     lazy var title: UILabel = {
         let label = UILabel()
-        label.textColor = kTextMainBodyColor
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }()
     
     lazy var desLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#696C73")
+        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#696C73"), night: kNightBCC6D4)
         label.font = UIFont.systemFont(ofSize: 14)
         label.numberOfLines = 0
         return label

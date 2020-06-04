@@ -133,28 +133,30 @@ class YXSSettingViewController: YXSBaseViewController, UITableViewDelegate, UITa
     
     @objc func changeRole() {
         MBProgressHUD.yxs_showLoading()
-        let type = YXSPersonDataModel.sharePerson.personRole == .PARENT ? PersonRole.TEACHER : PersonRole.PARENT
-        YXSEducationUserSwitchTypeRequest.init(userType: type).request({ [weak self](model: YXSClassQueryResultModel) in
-            guard let weakSelf = self else {return}
-            MBProgressHUD.yxs_hideHUD()
+        YXSChatHelper.sharedInstance.logout(showError: true) {
+            let type = YXSPersonDataModel.sharePerson.personRole == .PARENT ? PersonRole.TEACHER : PersonRole.PARENT
+            YXSEducationUserSwitchTypeRequest.init(userType: type).request({ [weak self](model: YXSClassQueryResultModel) in
+                guard let weakSelf = self else {return}
+                MBProgressHUD.yxs_hideHUD()
 
-            UIUtil.yxs_loadUserDetailRequest({ (user) in
-                /// 身份切换发通知
-                NotificationCenter.default.post(name: Notification.Name(kMineChangeRoleNotification), object: nil)
-                weakSelf.yxs_showTabRoot()
+                UIUtil.yxs_loadUserDetailRequest({ (user) in
+                    /// 身份切换发通知
+                    NotificationCenter.default.post(name: Notification.Name(kMineChangeRoleNotification), object: nil)
+                    weakSelf.yxs_showTabRoot()
+                    
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
                 
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
-            
-        }) { [weak self](msg, code) in
-            guard let weakSelf = self else {return}
-            MBProgressHUD.yxs_hideHUD()
-            if code == "205" {
-                /// 用户切换身份后没有填写信息跳转填写信息
-                weakSelf.pushToChoseNameStage(role: type)
-            } else {
-                MBProgressHUD.yxs_showMessage(message: msg)
+            }) { [weak self](msg, code) in
+                guard let weakSelf = self else {return}
+                MBProgressHUD.yxs_hideHUD()
+                if code == "205" {
+                    /// 用户切换身份后没有填写信息跳转填写信息
+                    weakSelf.pushToChoseNameStage(role: type)
+                } else {
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
             }
         }
     }
