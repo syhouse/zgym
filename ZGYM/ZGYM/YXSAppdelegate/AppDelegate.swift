@@ -337,7 +337,7 @@ extension AppDelegate{
         }
         window?.rootViewController = currentRootVc
         // MARK: - 友盟   打包发布时，需要设置为false
-        UMConfigure.setLogEnabled(true)
+//        UMConfigure.setLogEnabled(false)
         UMConfigure.initWithAppkey(KUMAPPKEY, channel: "App Store")
 //        UMVisual.setVisualEnabled(true)
         
