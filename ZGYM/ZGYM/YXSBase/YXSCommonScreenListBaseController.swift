@@ -154,6 +154,9 @@ class YXSCommonScreenListBaseController: YXSBaseTableViewController{
         
         //家长打卡撤销
         NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kOperationStudentCancelPunchCardNotification), object: nil)
+        
+        //家长接龙撤销
+        NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kOperationStudentCancelSolitaireNotification), object: nil)
     }
     deinit {
         NotificationCenter.default.removeObserver(self)

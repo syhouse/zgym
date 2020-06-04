@@ -92,6 +92,73 @@ class YXSDetailAllTitleCell: YXSBaseDetailViewCell {
     }
 }
 
+
+/// 头像+标题 副标题位于底部
+class YXSDetailSubTitleBottomCell: YXSBaseDetailViewCell {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
+
+        contentView.addSubview(lbSubTitle)
+        contentView.addSubview(recallView)
+        
+        contentView.yxs_addLine(position: .bottom)
+        
+        imgAvatar.snp.remakeConstraints({ (make) in
+            make.top.equalTo(17)
+            make.left.equalTo(15)
+            make.width.height.equalTo(40)
+        })
+        
+        lbTitle.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(imgAvatar)
+            make.left.equalTo(imgAvatar.snp_right).offset(13)
+        })
+        
+        lbSubTitle.numberOfLines = 0
+        lbSubTitle.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#696C73"), night: UIColor.yxs_hexToAdecimalColor(hex: "#696C73"))
+        
+        lbSubTitle.snp.makeConstraints({ (make) in
+            make.top.equalTo(imgAvatar.snp_bottom).offset(14)
+            make.bottom.equalTo(-15.5)
+            make.left.equalTo(imgAvatar)
+        })
+        
+        recallView.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(lbTitle)
+            make.right.equalTo(-8)
+            make.size.equalTo(CGSize.init(width: 30, height: 30))
+        })
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setRemarkTitle(remark: String?){
+        lbSubTitle.isHidden = true
+        if let remark = remark, !remark.isEmpty{
+            imgAvatar.snp.remakeConstraints({ (make) in
+                make.top.equalTo(17)
+                make.left.equalTo(15)
+                make.width.height.equalTo(40)
+            })
+            lbSubTitle.text = "备注:\(remark)"
+            lbSubTitle.isHidden = false
+        }else{
+            imgAvatar.snp.remakeConstraints({ (make) in
+                make.top.equalTo(17)
+                make.left.equalTo(15)
+                make.width.height.equalTo(40)
+                make.bottom.equalTo(-17)
+            })
+        }
+    }
+}
+
+
+
 /// 头像+居中标题+右标题
 class YXSDetailCenterTitleCell: YXSBaseDetailViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -181,6 +248,42 @@ class YXSDetailRightArrowCell: YXSDetailNormalCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+
+class YXSDetailNormalRecallCell: YXSBaseDetailViewCell {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
+        self.contentView.addSubview(imgAvatar)
+        self.contentView.addSubview(lbTitle)
+        self.contentView.addSubview(recallView)
+        
+        imgAvatar.snp.remakeConstraints({ (make) in
+            make.top.equalTo(10)
+            make.left.equalTo(15)
+            make.width.height.equalTo(40)
+            make.bottom.equalTo(-10)
+        })
+        
+        lbTitle.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(self.contentView.snp_centerY)
+            make.left.equalTo(imgAvatar.snp_right).offset(13)
+        })
+        
+        recallView.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(lbTitle)
+            make.right.equalTo(-8)
+            make.size.equalTo(CGSize.init(width: 30, height: 30))
+        })
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+}
+
 
 /// 头像和居中标题
 class YXSDetailNormalCell: YXSBaseDetailViewCell {
@@ -276,16 +379,9 @@ class YXSBaseDetailViewCell: YXSBaseTableViewCell {
         return btn
     }()
     
-    
-    // MARK: -
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
+    lazy var recallView: YXSButton = {
+        let button = YXSButton()
+        button.setImage(UIImage.init(named: "recall"), for: .normal)
+        return button
+    }()
 }

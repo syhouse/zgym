@@ -338,7 +338,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         }
     }
     
-    ///接龙已完成
+    ///已完成
     var isFinish: Bool{
         get{
             return commitState == 2 && onlineCommit == 1

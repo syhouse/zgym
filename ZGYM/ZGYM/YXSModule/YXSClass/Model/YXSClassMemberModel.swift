@@ -17,7 +17,7 @@ class YXSClassMemberModel : NSObject, NSCoding, Mappable{
     var relationship : String?
     var userId : Int?
     var subject : String?
-
+    
     /// 接龙模块用
     var censusCommitId : Int?
     var censusId : Int?
@@ -29,11 +29,14 @@ class YXSClassMemberModel : NSObject, NSCoding, Mappable{
     var option : String?
     
     var studentId : String?
-
+    
     var isRemark : Bool?
-
+    
     //发布作业的老师id
     var teacherId : Int?
+    
+    ///接龙参加备注
+    var remark: String?
     
     func mapping(map: Map)
     {
@@ -55,22 +58,23 @@ class YXSClassMemberModel : NSObject, NSCoding, Mappable{
         option <- map["option"]
         studentId <- map["studentId"]
         isRemark <- map["isRemark"]
+        remark <- map["remark"]
     }
-
+    
     /**
-    * NSCoding required initializer.
-    * Fills the data from the passed decoder
-    */
+     * NSCoding required initializer.
+     * Fills the data from the passed decoder
+     */
     @objc required init(coder aDecoder: NSCoder)
     {
-         avatar = aDecoder.decodeObject(forKey: "avatar") as? String
-         childrenId = aDecoder.decodeObject(forKey: "childrenId") as? Int
-         name = aDecoder.decodeObject(forKey: "name") as? String
-         position = aDecoder.decodeObject(forKey: "position") as? String
-         realName = aDecoder.decodeObject(forKey: "realName") as? String
-         relationship = aDecoder.decodeObject(forKey: "relationship") as? String
-         userId = aDecoder.decodeObject(forKey: "userId") as? Int
-         subject = aDecoder.decodeObject(forKey: "subject") as? String
+        avatar = aDecoder.decodeObject(forKey: "avatar") as? String
+        childrenId = aDecoder.decodeObject(forKey: "childrenId") as? Int
+        name = aDecoder.decodeObject(forKey: "name") as? String
+        position = aDecoder.decodeObject(forKey: "position") as? String
+        realName = aDecoder.decodeObject(forKey: "realName") as? String
+        relationship = aDecoder.decodeObject(forKey: "relationship") as? String
+        userId = aDecoder.decodeObject(forKey: "userId") as? Int
+        subject = aDecoder.decodeObject(forKey: "subject") as? String
         
         censusCommitId = aDecoder.decodeObject(forKey: "censusCommitId") as? Int
         censusId = aDecoder.decodeObject(forKey: "censusId") as? Int
@@ -81,12 +85,13 @@ class YXSClassMemberModel : NSObject, NSCoding, Mappable{
         option = aDecoder.decodeObject(forKey: "option") as? String
         studentId = aDecoder.decodeObject(forKey: "studentId") as? String
         isRemark = aDecoder.decodeObject(forKey: "isRemark") as? Bool
+        remark = aDecoder.decodeObject(forKey: "remark") as? String
     }
-
+    
     /**
-    * NSCoding required method.
-    * Encodes mode properties into the decoder
-    */
+     * NSCoding required method.
+     * Encodes mode properties into the decoder
+     */
     @objc func encode(with aCoder: NSCoder)
     {
         if avatar != nil{
@@ -142,7 +147,9 @@ class YXSClassMemberModel : NSObject, NSCoding, Mappable{
         if isRemark != nil{
             aCoder.encode(isRemark, forKey: "isRemark")
         }
-
+        if remark != nil{
+            aCoder.encode(remark, forKey: "remark")
+        }
     }
-
+    
 }

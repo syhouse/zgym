@@ -270,7 +270,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             let vc = YXSPunchCardDetialController.init(clockInId: model.serviceId ?? 0, childId: childModel?.id,classId: model.classId ?? 0)
             navigationController?.pushViewController(vc)
         case .solitaire:
-            let vc = YXSSolitaireDetailController.init(censusId: model.serviceId ?? 0, childrenId: childId ?? 0, classId: model.classId ?? 0)
+            let vc = YXSSolitaireNewDetailController.init(censusId: model.serviceId ?? 0, childrenId: childId ?? 0, classId: model.classId ?? 0)
             navigationController?.pushViewController(vc)
         case .notice:
             let vc = YXSNoticeDetailViewController.init(model: model)
@@ -514,6 +514,9 @@ extension YXSHomeBaseController{
         //家长打卡撤销
         NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kOperationStudentCancelPunchCardNotification), object: nil)
         
+        
+        //家长接龙撤销
+        NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kOperationStudentCancelSolitaireNotification), object: nil)
     }
     
     ///点赞刷新

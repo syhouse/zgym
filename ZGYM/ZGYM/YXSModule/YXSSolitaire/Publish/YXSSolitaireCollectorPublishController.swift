@@ -271,7 +271,6 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
         YXSCensusV1TeacherPublishGatherRequest.init(classIdList: classIdList, content: publishView.getTextContent(), title:        subjectField.text ?? ""
           , audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "",commitUpperLimit: publishModel.commitUpperLimit ?? 0, endTime: publishModel.solitaireDate!.toString(format: DateFormatType.custom("yyyy-MM-dd HH:mm:ss")), isTop: publishModel.isTop ? 1 : 0, optionList: optionList).request({ (result) in
-            MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
             MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
             self.yxs_remove()
             NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherPublishSucessNotification), object: nil)

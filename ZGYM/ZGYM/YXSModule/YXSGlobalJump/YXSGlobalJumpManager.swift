@@ -99,7 +99,7 @@ class YXSGlobalJumpManager: NSObject {
             break
         case 3:
             /// 接龙
-            let vc = YXSSolitaireDetailController(censusId: serviceId, childrenId: childrenId, classId: classId, serviceCreateTime: createTime)
+            let vc = YXSSolitaireNewDetailController(censusId: serviceId, childrenId: childrenId, classId: classId, serviceCreateTime: createTime)
             let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
             visibleVC?.navigationController?.pushViewController(vc)
             hasJumpEnd = true

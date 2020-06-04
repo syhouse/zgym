@@ -303,9 +303,11 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
     func yxs_cheackCanSetUp() -> Bool{
         //主题不能为空
         if questionModel.type == .single || questionModel.type == .checkbox{
-            if selectView.selectModels.first?.title?.isBlank ?? true {
-                yxs_showAlert(title: "请添加选项内容")
-                return false
+            for model in selectView.selectModels{
+                if model.title?.isBlank ?? true {
+                    yxs_showAlert(title: "请添加选项内容")
+                    return false
+                }
             }
         }
         

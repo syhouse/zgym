@@ -13,7 +13,7 @@ class YXSSolitaireSettingBar: UIView{
     var pickUpClickBlock: (() -> ())?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD")
+        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD"), night: kNight282C3B)
         self.addSubview(settingButton)
         settingButton.snp.makeConstraints { (make) in
             make.right.equalTo(-15.5)
@@ -44,7 +44,7 @@ class YXSSolitaireSettingBar: UIView{
     lazy var settingButton: YXSCustomImageControl = {
         let settingButton = YXSCustomImageControl.init(imageSize: CGSize.init(width: 26, height: 26), position: YXSImagePositionType.top, padding: 7)
         settingButton.font = UIFont.systemFont(ofSize: 12)
-        settingButton.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
+        settingButton.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightBCC6D4)
         settingButton.locailImage = "yxs_solitaire_setting"
         settingButton.title = "设置"
         settingButton.addTarget(self, action: #selector(settingClick), for: .touchUpInside)
@@ -54,7 +54,7 @@ class YXSSolitaireSettingBar: UIView{
     lazy var pickUpButton: YXSCustomImageControl = {
         let settingButton = YXSCustomImageControl.init(imageSize: CGSize.init(width: 14.5, height: 9.5), position: YXSImagePositionType.top, padding: 12)
         settingButton.font = UIFont.systemFont(ofSize: 12)
-        settingButton.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
+        settingButton.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightBCC6D4)
         settingButton.locailImage = "yxs_solitaire_packUp"
         settingButton.title = "收起"
         settingButton.addTarget(self, action: #selector(pickUpClick), for: .touchUpInside)
@@ -76,7 +76,7 @@ class YXSSolitaireToolWindow: UIView{
         self.publishModel = publishModel
         self.inView = inView
         super.init(frame: CGRect.zero)
-        self.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD")
+        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD"), night: kNight282C3B)
         self.addSubview(settingView)
         self.addSubview(dateSection)
         self.addSubview(topSwitch)

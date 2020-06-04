@@ -21,6 +21,12 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
     
     var solitaireSelects:[SolitairePublishNewSelectModel]?
     
+    ///回答内容
+    var answerContent: String?
+    
+    ///回答图片
+    var answerMedias = [SLPublishMediaModel]()
+    
     init(questionType: YXSQuestionType){
         self.type = questionType
         super.init()
@@ -34,6 +40,10 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
         solitaireSelects = aDecoder.decodeObject(forKey: "solitaireSelects") as? [SolitairePublishNewSelectModel]
         
         type = YXSQuestionType.init(rawValue: aDecoder.decodeObject(forKey: "type") as? String  ?? "") ?? .single
+        
+        answerContent = aDecoder.decodeObject(forKey: "answerContent") as? String
+        
+        answerMedias = aDecoder.decodeObject(forKey: "answerMedias") as? [SLPublishMediaModel] ?? [SLPublishMediaModel]()
     }
     @objc func encode(with aCoder: NSCoder)
     {
@@ -50,7 +60,10 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
         if solitaireSelects != nil{
             aCoder.encode(solitaireSelects, forKey: "solitaireSelects")
         }
+        if answerContent != nil{
+            aCoder.encode(answerContent, forKey: "answerContent")
+        }
         aCoder.encode(isNecessary, forKey: "isNecessary")
-        
+        aCoder.encode(answerMedias, forKey: "answerMedias")
     }
 }
