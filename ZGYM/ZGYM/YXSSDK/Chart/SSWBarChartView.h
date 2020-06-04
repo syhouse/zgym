@@ -17,4 +17,11 @@
 @property(nonatomic,assign)int          yAxisCount;//y轴刻度的个数
 @property(nonatomic,copy)NSString       *unit;//单位
 @property(nonatomic)UIColor             *barCorlor;//设置柱形图的颜色
+@property(nonatomic,assign)int          signIndexY;//y轴需要特意标注的柱状图下标
+@property(nonatomic)UIColor             *signIndexCorlor;//标注柱状图的颜色
+@property(nonatomic,copy)NSString       *signDescribe;//标注的描述
+@property(nonatomic,copy)NSString       *signValues;//标注的值
+
+- (void)reloadData;
+
 @end

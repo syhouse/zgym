@@ -63,6 +63,21 @@ class YXSEducationReadingScoreRequest: YXSBaseRequset {
 // MARK: -成绩详情报表(老师)
 let ScoreParentDetails = "/achievement/parent/childScoreReport"
 class YXSEducationScoreParentDetailsRequest: YXSBaseRequset {
+    init(examId: Int,childrenId: Int) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = ScoreParentDetails
+        param = [
+            "examId":examId,
+            "childrenId":childrenId]
+    }
+}
+
+
+// MARK: -成绩详情报表(老师)
+let ScoreTeacherDetails = "/achievement/childScoreDetails"
+class YXSEducationScoreTeacherDetailsRequest: YXSBaseRequset {
     init(examId: Int) {
         super.init()
         method = .post
@@ -73,16 +88,17 @@ class YXSEducationScoreParentDetailsRequest: YXSBaseRequset {
     }
 }
 
-
-// MARK: -成绩详情报表(家长)
-let ScoreTeacherDetails = "/achievement/childScoreDetails"
-class YXSEducationScoreTeacherDetailsRequest: YXSBaseRequset {
-    init(examId: Int) {
+// MARK: -班级全班人员成绩列表(老师)
+let ClassMemberListScore = "/achievement/classMemberListScore"
+class YXSEducationClassMemberListScoreRequest: YXSBaseRequset {
+    init(examId: Int, currentPage: Int = 1, pageSize: Int = 20) {
         super.init()
         method = .post
         host = homeHost
-        path = ScoreTeacherDetails
+        path = ClassMemberListScore
         param = [
-            "examId":examId]
+            "examId":examId,
+            "currentPage":currentPage,
+            "pageSize":pageSize]
     }
 }

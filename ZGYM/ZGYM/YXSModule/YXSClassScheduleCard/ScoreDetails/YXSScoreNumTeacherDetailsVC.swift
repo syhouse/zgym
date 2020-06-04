@@ -95,7 +95,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         }
     }
     
-    // MARK: -loadData
+    // MARK: - loadData
     func loadData(){
         YXSEducationScoreTeacherDetailsRequest.init(examId: listModel?.examId ?? 0).request({ (json) in
             let model = Mapper<YXSScoreDetailsModel>().map(JSONObject:json.object) ?? YXSScoreDetailsModel.init(JSON: ["": ""])!
@@ -106,7 +106,8 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
             }
             self.highestScoreLbl.text = "\(String(model.highestScore ?? 0))分"
             self.averageScoreLbl.text = "\(String(model.averageScore ?? 0))分"
-            self.maxNumberLbl.text = "999-999分，共99人"
+            
+            self.setBarChartData(list: model.totalStatement ?? [YXSScoreTotalStatementModel]())
             UIUtil.yxs_setLabelAttributed(self.visibleView.textLabel, text: [String(model.readNumber ?? 0), "/\(model.number ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF")])
 //            self.barChartView.xValuesArr = ["0-60","61-70","71-80","81-90","91-100"]
 //            self.barChartView.yValuesArr = ["3人","10人","15人","9人","4人"]
@@ -116,6 +117,46 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     
+    }
+    
+    func setBarChartData(list:[YXSScoreTotalStatementModel]) {
+        let xArr: NSMutableArray = NSMutableArray.init()
+        let yArr: NSMutableArray = NSMutableArray.init()
+        var maxY: Int = 0
+        var maxNumStr: String = ""
+        var maxAllNum: Int = 0
+        for model in list {
+            xArr.add(model.branch ?? "")
+            yArr.add("\(String(model.quantity ?? 0))人")
+            if let quantity = model.quantity, quantity > maxY {
+                maxY = quantity
+            }
+        }
+        for model in list {
+            if let quantity = model.quantity, quantity == maxY {
+                if maxNumStr.count > 0 {
+                    maxNumStr.append("和")
+                }
+                maxNumStr.append("\(model.branch ?? "")分")
+                maxAllNum += quantity
+            }
+        }
+        UIUtil.yxs_setLabelAttributed(self.maxNumberLbl, text: ["人数最多的分段是:", "\(maxNumStr),共\(String(maxAllNum))人"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")])
+//        self.maxNumberLbl.text = "人数最多的分段是:\(maxNumStr),共\(String(maxAllNum))人"
+        barChartView.xValuesArr = xArr
+        barChartView.yValuesArr = yArr
+        barChartView.yScaleValue = CGFloat(maxY / 5 + 1)
+        let count: Int = xArr.count
+        let gapWidth = ((Int(SCREEN_WIDTH) - 90 - 15) - 24 * count) / (count+1)
+        barChartView.gapWidth = CGFloat(gapWidth)
+        barChartView.reloadData()
+    }
+    
+    // MARK: - Action
+    @objc func lookAllScoreClick() {
+        let vc = YXSScoreAllChildListVC.init(detailsModel: self.detailsModel ?? YXSScoreDetailsModel.init(JSON: ["": ""])!)
+        self.navigationController?.pushViewController(vc)
+        
     }
     
     // MARK: - getter&stter
@@ -221,6 +262,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         view.locailImage = "yxs_score_rightarrow_white"
         view.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), night: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"))
         view.font = UIFont.systemFont(ofSize: 15)
+        view.addTarget(self, action: #selector(lookAllScoreClick), for: .touchUpInside)
         view.title = "查看全班得分情况"
         return view
     }()
@@ -240,22 +282,16 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         let lblOne = UILabel()
         lblOne.text = "班级最高分:"
         lblOne.font = UIFont.systemFont(ofSize: 15)
-        lblOne.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#222222")
+        lblOne.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
         view.addSubview(lblOne)
         view.addSubview(self.highestScoreLbl)
         
         let lblTwo = UILabel()
         lblTwo.text = "平均分:"
         lblTwo.font = UIFont.systemFont(ofSize: 15)
-        lblTwo.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#222222")
+        lblTwo.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
         view.addSubview(lblTwo)
         view.addSubview(self.averageScoreLbl)
-        
-        let lblThree = UILabel()
-        lblThree.text = "人数最多的分段是:"
-        lblThree.font = UIFont.systemFont(ofSize: 15)
-        lblThree.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#222222")
-        view.addSubview(lblThree)
         view.addSubview(self.maxNumberLbl)
         
         lblOne.snp.makeConstraints { (make) in
@@ -281,17 +317,12 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
             make.width.equalTo(55)
             make.height.equalTo(17)
         }
-        lblThree.snp.makeConstraints { (make) in
-            make.left.equalTo(15)
-            make.bottom.equalTo(-20)
-            make.width.equalTo(130)
-            make.height.equalTo(17)
-        }
+
         self.maxNumberLbl.snp.makeConstraints { (make) in
-            make.left.equalTo(lblThree.snp_right)
-            make.centerY.equalTo(lblThree)
+            make.left.equalTo(15)
+            make.top.equalTo(self.highestScoreLbl.snp_bottom).offset(10)
             make.right.equalTo(-20)
-            make.height.equalTo(17)
+            make.height.equalTo(40)
         }
         
         return view
@@ -314,6 +345,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
     lazy var maxNumberLbl: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.systemFont(ofSize: 15)
+        lbl.numberOfLines = 2
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#222222")
         return lbl
     }()
@@ -322,11 +354,11 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         let chartView = SSWBarChartView.init(chartType: SSWChartsType.bar)
         chartView?.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9")
         chartView?.barCorlor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
-        chartView?.xValuesArr = ["0-60","61-70","71-80","81-90","91-100"]
-        chartView?.yValuesArr = ["3人","10人","15人","9人","4人"]
         chartView?.yAxisCount = 5
         chartView?.yScaleValue = 4
-        chartView?.gapWidth = 30*SCREEN_SCALE
+        chartView?.barWidth = 24
+        let gapWidth = ((SCREEN_WIDTH - 90 - 15) - 24 * 5) / 6
+        chartView?.gapWidth = gapWidth  //30*SCREEN_SCALE
         return chartView!
     }()
 }

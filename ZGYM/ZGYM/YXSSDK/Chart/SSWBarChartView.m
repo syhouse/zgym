@@ -27,6 +27,11 @@
     }
     return self;
 }
+
+- (void)reloadData {
+    [self layoutSubviews];
+}
+
 -(void)setUp{
     [self.contentView addSubview:self.bubbleLab];
     self.xValuesArr = [@[] mutableCopy];
@@ -196,7 +201,12 @@
         CGPoint   endPoint = CGPointMake(startPoint.x, startPoint.y-barHeight);
         [self.barsEndPointsArr addObject:[NSValue valueWithCGPoint:endPoint]];
         CAShapeLayer *barLayer = [CAShapeLayer layer];
-        barLayer.strokeColor =self.barCorlor.CGColor;
+        if (self.signIndexY == i + 1) {
+            barLayer.strokeColor = self.signIndexCorlor.CGColor;
+        } else {
+            barLayer.strokeColor =self.barCorlor.CGColor;
+        }
+        
         barLayer.lineWidth = self.barWidth;
         [self.contentView.layer addSublayer:barLayer];
      

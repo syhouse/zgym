@@ -53,6 +53,8 @@ class YXSScoreNumParentDetailsVC: YXSBaseViewController {
     func initUI() {
         self.scrollView.addSubview(headerBgImageView)
         self.scrollView.addSubview(headerView)
+        self.scrollView.addSubview(chartView)
+        self.scrollView.addSubview(commentView)
         headerBgImageView.snp.makeConstraints { (make) in
             make.left.top.right.equalTo(0)
             make.height.equalTo(242*SCREEN_SCALE)
@@ -63,21 +65,30 @@ class YXSScoreNumParentDetailsVC: YXSBaseViewController {
             make.right.equalTo(-15)
             make.top.equalTo(64)
         }
+        chartView.snp.makeConstraints { (make) in
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.top.equalTo(headerView.snp_bottom).offset(15)
+        }
+        commentView.snp.makeConstraints { (make) in
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.top.equalTo(chartView.snp_bottom).offset(15)
+            make.bottom.equalTo(-30)
+        }
         
+        chartView.formHeaderTitle.text = "得分分布情况"
     }
     
     // MARK: -loadData
     func loadData(){
-        YXSEducationScoreTeacherDetailsRequest.init(examId: listModel?.examId ?? 0).request({ (json) in
+        YXSEducationScoreParentDetailsRequest.init(examId: listModel?.examId ?? 0, childrenId: NSObject.init().yxs_user.currentChild?.id ?? 0).request({ (json) in
+            print("12321")
             let model = Mapper<YXSScoreDetailsModel>().map(JSONObject:json.object) ?? YXSScoreDetailsModel.init(JSON: ["": ""])!
             self.detailsModel = model
             self.headerView.setModel(model: model)
-//            self.barChartView.xValuesArr = ["0-60","61-70","71-80","81-90","91-100"]
-//            self.barChartView.yValuesArr = ["3人","10人","15人","9人","4人"]
-//            self.barChartView.yAxisCount = 6
-//            self.barChartView.yScaleValue = 4
         }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
+             MBProgressHUD.yxs_showMessage(message: msg)
         }
     
     }
@@ -106,6 +117,16 @@ class YXSScoreNumParentDetailsVC: YXSBaseViewController {
     
     lazy var headerView: YXSScoreParentHeaderView = {
         let view = YXSScoreParentHeaderView.init()
+        return view
+    }()
+    
+    lazy var chartView: YXSScoreChildBarChartView = {
+        let chartView = YXSScoreChildBarChartView.init(isHaveComment: true,isShowLookSubjects: true)
+        return chartView
+    }()
+    
+    lazy var commentView: YXSScoreTeacherCommentView = {
+        let view = YXSScoreTeacherCommentView.init()
         return view
     }()
     

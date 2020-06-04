@@ -33,11 +33,11 @@ class YXSScoreDetailsModel: NSObject, Mappable {
     ///阅读人数
     var readNumber: Int?
     ///总人数统计报表
-    var totalStatement: String?
+    var totalStatement: [YXSScoreTotalStatementModel]?
     ///孩子ID
     var childrenId: Int?
     ///孩子名称
-    var childrenName: Int?
+    var childrenName: String?
     ///小孩当前得分分段
     var currentBranch: String?
     ///小孩当前得分分段评语
@@ -47,7 +47,15 @@ class YXSScoreDetailsModel: NSObject, Mappable {
     /// 孩子头像
     var avatar: String?
     
-    var childrenSubjects: YXSScoreChildrenSubjectsModel?
+    var achievementChildrenSubjectsResponseList: [[String: Any]]? {
+        didSet {
+            childrenSubjects.removeAll()
+            let joinList = Mapper<YXSScoreChildrenSubjectsModel>().mapArray(JSONArray: achievementChildrenSubjectsResponseList ?? [[String: Any]]()) ?? [YXSScoreChildrenSubjectsModel]()
+            childrenSubjects = joinList
+        }
+    }
+    
+    var childrenSubjects: [YXSScoreChildrenSubjectsModel] = [YXSScoreChildrenSubjectsModel]()
     
     required init?(map: Map){}
 
@@ -71,6 +79,7 @@ class YXSScoreDetailsModel: NSObject, Mappable {
         currentBranchComment <- map["currentBranchComment"]
         comment <- map["comment"]
         avatar <- map["avatar"]
+        achievementChildrenSubjectsResponseList <- map["achievementChildrenSubjectsResponseList"]
     }
 }
 
@@ -91,4 +100,17 @@ class YXSScoreChildrenSubjectsModel: NSObject, Mappable {
         subjectsId <- map["subjectsId"]
         subjectsName <- map["subjectsName"]
     }
+}
+
+class YXSScoreTotalStatementModel: NSObject, Mappable {
+    /// 小孩当前得分分段
+    var branch: String?
+    /// 分段人数
+    var quantity: Int?
+    required init?(map: Map){}
+    func mapping(map: Map) {
+        branch <- map["branch"]
+        quantity <- map["quantity"]
+    }
+    
 }

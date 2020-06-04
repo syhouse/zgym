@@ -16,6 +16,7 @@ class YXSScoreParentHeaderView: UIView {
         super.init(frame: CGRect.zero)
         addSubview(contentView)
         addSubview(avatarView)
+        
         avatarView.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.snp_centerX)
             make.top.equalTo(10)
@@ -25,7 +26,29 @@ class YXSScoreParentHeaderView: UIView {
             make.left.right.equalTo(0)
             make.top.equalTo(avatarView.snp_top).offset(35)
             make.bottom.equalTo(0)
-            make.height.equalTo(250)
+            make.height.equalTo(175)
+        }
+        contentView.addSubview(headerChildNameLbl)
+        contentView.addSubview(headerExmTimeLbl)
+        contentView.addSubview(formTable)
+//        formTable.frame = CGRect(x: 15, y: 90, width: SCREEN_WIDTH - 60, height: 70)
+        headerChildNameLbl.snp.makeConstraints { (make) in
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.top.equalTo(40)
+            make.height.equalTo(20)
+        }
+        headerExmTimeLbl.snp.makeConstraints { (make) in
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.top.equalTo(headerChildNameLbl.snp_bottom).offset(4)
+            make.height.equalTo(20)
+        }
+        formTable.snp.makeConstraints { (make) in
+            make.left.equalTo(15)
+            make.right.equalTo(-15)
+            make.top.equalTo(headerExmTimeLbl.snp_bottom).offset(5)
+            make.bottom.equalTo(contentView.snp_bottom).offset(-15)
         }
     }
     
@@ -35,7 +58,12 @@ class YXSScoreParentHeaderView: UIView {
     
     func setModel(model: YXSScoreDetailsModel) {
         self.detailsModel = model
-        avatarImageV.sd_setImage(with: URL(string: ""), placeholderImage: kImageUserIconStudentDefualtImage)
+        avatarImageV.sd_setImage(with: URL(string: model.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
+        headerChildNameLbl.text = model.childrenName
+        if let dateStr = model.creationTime, dateStr.count > 0 {
+            headerExmTimeLbl.text =  "考试时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
+        }
+        formTable.wzb_drawList(with: formTable.bounds, line: 2, columns: 2, datas: ["语文","总分","98","98"])
     }
     
     lazy var avatarView: UIView = {
@@ -73,8 +101,13 @@ class YXSScoreParentHeaderView: UIView {
         return view
     }()
     
+    lazy var formTable: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     /// 孩子名称
-    lazy var headerClassNameLbl: UILabel = {
+    lazy var headerChildNameLbl: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.systemFont(ofSize: 17)
         lbl.textAlignment = NSTextAlignment.center

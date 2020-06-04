@@ -857,6 +857,11 @@
 		E5AC9B80246BD49F000B47BB /* YXSCollectArticleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7F246BD49F000B47BB /* YXSCollectArticleCell.swift */; };
 		E5AE0C912485DE4800073657 /* YXSFormTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C902485DE4800073657 /* YXSFormTableView.swift */; };
 		E5AE0C942485EF2500073657 /* UIView+WZB.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C922485EF2500073657 /* UIView+WZB.m */; };
+		E5AE0C962486516200073657 /* YXSScoreChildBarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C952486516200073657 /* YXSScoreChildBarChartView.swift */; };
+		E5AE0C9824873CB200073657 /* YXSScoreTeacherCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C9724873CB200073657 /* YXSScoreTeacherCommentView.swift */; };
+		E5AE0C9A2487757600073657 /* YXSScoreAllChildListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C992487757600073657 /* YXSScoreAllChildListVC.swift */; };
+		E5AE0C9C248776A100073657 /* YXSScoreAllChildListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C9B248776A100073657 /* YXSScoreAllChildListCell.swift */; };
+		E5AE0C9E24878E6500073657 /* YXSScoreChildListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C9D24878E6500073657 /* YXSScoreChildListModel.swift */; };
 		E5DD271D247B5712000BB1A9 /* UMCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD271C247B5712000BB1A9 /* UMCommon.framework */; };
 		E5DD271F247B5A71000BB1A9 /* UMAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD271E247B5A71000BB1A9 /* UMAnalytics.framework */; };
 		E5DD2723247B5A7A000BB1A9 /* UMVisualConfig.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD2720247B5A79000BB1A9 /* UMVisualConfig.framework */; };
@@ -2192,6 +2197,11 @@
 		E5AE0C902485DE4800073657 /* YXSFormTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSFormTableView.swift; sourceTree = "<group>"; };
 		E5AE0C922485EF2500073657 /* UIView+WZB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WZB.m"; sourceTree = "<group>"; };
 		E5AE0C932485EF2500073657 /* UIView+WZB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+WZB.h"; sourceTree = "<group>"; };
+		E5AE0C952486516200073657 /* YXSScoreChildBarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreChildBarChartView.swift; sourceTree = "<group>"; };
+		E5AE0C9724873CB200073657 /* YXSScoreTeacherCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreTeacherCommentView.swift; sourceTree = "<group>"; };
+		E5AE0C992487757600073657 /* YXSScoreAllChildListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreAllChildListVC.swift; sourceTree = "<group>"; };
+		E5AE0C9B248776A100073657 /* YXSScoreAllChildListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreAllChildListCell.swift; sourceTree = "<group>"; };
+		E5AE0C9D24878E6500073657 /* YXSScoreChildListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreChildListModel.swift; sourceTree = "<group>"; };
 		E5DD271C247B5712000BB1A9 /* UMCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMCommon.framework; sourceTree = "<group>"; };
 		E5DD271E247B5A71000BB1A9 /* UMAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMAnalytics.framework; sourceTree = "<group>"; };
 		E5DD2720247B5A79000BB1A9 /* UMVisualConfig.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMVisualConfig.framework; sourceTree = "<group>"; };
@@ -5550,6 +5560,7 @@
 			children = (
 				E5DD2741247E4714000BB1A9 /* YXSScoreNumTeacherDetailsVC.swift */,
 				E5AA445424849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift */,
+				E5AE0C992487757600073657 /* YXSScoreAllChildListVC.swift */,
 			);
 			path = ScoreDetails;
 			sourceTree = "<group>";
@@ -5606,6 +5617,9 @@
 				E5DD2733247CEE8E000BB1A9 /* YXSScoreListCell.swift */,
 				E5DD273F247E1835000BB1A9 /* YXSScorePublishView.swift */,
 				E5AA44562484A3040032C2CF /* YXSScoreParentHeaderView.swift */,
+				E5AE0C952486516200073657 /* YXSScoreChildBarChartView.swift */,
+				E5AE0C9724873CB200073657 /* YXSScoreTeacherCommentView.swift */,
+				E5AE0C9B248776A100073657 /* YXSScoreAllChildListCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -5615,6 +5629,7 @@
 			children = (
 				E5DD273D247D1B26000BB1A9 /* YXSScoreListModel.swift */,
 				E528ABBF2481107A0035E69B /* YXSScoreDetailsModel.swift */,
+				E5AE0C9D24878E6500073657 /* YXSScoreChildListModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -6152,6 +6167,7 @@
 				6F0703542445D8030090975B /* TUILocalStorage.m in Sources */,
 				6F0704852445D8040090975B /* YXSSystemConfigController.swift in Sources */,
 				6F0705332445D8050090975B /* YXSHomeworkReadListCell.swift in Sources */,
+				E5AE0C9E24878E6500073657 /* YXSScoreChildListModel.swift in Sources */,
 				6F0705672445D8060090975B /* LBXScanLineAnimation.swift in Sources */,
 				6F07049F2445D8040090975B /* YXSClassMembersTableViewCell.swift in Sources */,
 				6F0705462445D8050090975B /* YXSFriendsCircleInfoController.swift in Sources */,
@@ -6466,6 +6482,7 @@
 				6F0703982445D8030090975B /* TUIMenuView.m in Sources */,
 				6F0704BA2445D8040090975B /* YXSPunchCardModel.swift in Sources */,
 				6F0703642445D8030090975B /* TCommonCell.m in Sources */,
+				E5AE0C962486516200073657 /* YXSScoreChildBarChartView.swift in Sources */,
 				6F0704E22445D8050090975B /* YXSSearchView.swift in Sources */,
 				6FEA7C522452990F0017C9CA /* LFVideoPlayer.m in Sources */,
 				6F0703F02445D8030090975B /* YXSRequset.swift in Sources */,
@@ -6548,6 +6565,7 @@
 				6FEA7C4A2452990E0017C9CA /* LFMEWeakSelectorTarget.m in Sources */,
 				6F0704BE2445D8040090975B /* YXSBaseSelectView.swift in Sources */,
 				6FEA7C2D2452990E0017C9CA /* LFMECancelBlock.m in Sources */,
+				E5AE0C9C248776A100073657 /* YXSScoreAllChildListCell.swift in Sources */,
 				6FEA7C302452990E0017C9CA /* LFGridView.m in Sources */,
 				6F0705E22445D8060090975B /* LFVideoEditManager.m in Sources */,
 				6F0704812445D8040090975B /* YXSScoreListController.swift in Sources */,
@@ -6728,6 +6746,7 @@
 				6F0705CD2445D8060090975B /* LFImagePickerHeader.m in Sources */,
 				6F0705092445D8050090975B /* YXSClassStartTeacherModel.swift in Sources */,
 				6F0703422445D8020090975B /* UIView+YXSCommon.swift in Sources */,
+				E5AE0C9A2487757600073657 /* YXSScoreAllChildListVC.swift in Sources */,
 				6F0704F32445D8050090975B /* YXSHomeSourceView.swift in Sources */,
 				6F07051D2445D8050090975B /* YXSHomeworkCommentController.swift in Sources */,
 				6FEA7C272452990D0017C9CA /* UIView+LFMECommon.m in Sources */,
@@ -6736,6 +6755,7 @@
 				6F966CB32463B72A00BB073A /* YXSPeriodicalListController.swift in Sources */,
 				E58F1701245149D500A6AC18 /* YXSShowBrowserHelper.swift in Sources */,
 				6F0703AD2445D8030090975B /* TUIUserProfileDataProviderService.m in Sources */,
+				E5AE0C9824873CB200073657 /* YXSScoreTeacherCommentView.swift in Sources */,
 				E5AA44522484901C0032C2CF /* SSWMutipleBarChartView.m in Sources */,
 				560B20B1244995A9003D8A19 /* YXSFileUploadHelper.swift in Sources */,
 				6F07037C2445D8030090975B /* TContactListPickerCell.m in Sources */,

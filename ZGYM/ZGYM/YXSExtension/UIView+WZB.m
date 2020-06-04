@@ -101,7 +101,12 @@
                 [self wzb_drawRectWithRect:frame];
             } else {
                 if (i == 1) {
-                    [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:YES];
+                    if (i == columns - 1) {
+                        [self wzb_drawRectWithRect:frame];
+                    } else {
+                        [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:YES];
+                    }
+                    
                 } else if (i == columns - 1) {
                     [self wzb_drawRectWithRect:frame isHorizontalBottom:YES isHorizontalTop:NO];
                 } else {
