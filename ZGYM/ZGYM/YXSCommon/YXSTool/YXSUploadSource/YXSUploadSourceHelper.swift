@@ -115,6 +115,7 @@ class SLUploadDataSourceModel: NSObject{
     ///上传多个资源排序时使用
     var index: Int = 0
     
+    
     init(data: Data?, path: String, type: SourceNameType) {
         self.data = data
         self.path = path
@@ -197,7 +198,7 @@ class YXSUploadSourceHelper: NSObject {
         let queue = DispatchQueue.global()
         let group = DispatchGroup()
         var newUploadModels: [SLUploadDataSourceModel] = [SLUploadDataSourceModel]()
-        for uploadModel in uploadModels{
+        for (index, uploadModel) in uploadModels.enumerated(){
             let sourceType: SourceNameType = uploadModel.type
             switch sourceType {
             case .image,.firstVideo:
@@ -207,7 +208,9 @@ class YXSUploadSourceHelper: NSObject {
                         model.getAssetImage { (assetImage) in
                             if let assetImage = assetImage{
                                 let data = assetImage.yxs_compressImage(image: assetImage, maxLength: imageMax)
-                                newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
+                                let uploadSourceModel = SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type)
+                                uploadSourceModel.index = index
+                                newUploadModels.append(uploadSourceModel)
                             }
                             group.leave()
                         }
@@ -232,14 +235,14 @@ class YXSUploadSourceHelper: NSObject {
                             HMVideoCompression().compressVideo(exportSession) { (data) in
                                 if data.count > 0 {//做判断,判断是否转化成功
                                     //进行视频上传
-                                    newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
+                                    let uploadSourceModel = SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type)
+                                    uploadSourceModel.index = index
+                                    newUploadModels.append(uploadSourceModel)
                                 }else{
                                     failureHandlerMsg = "视频资源错误"
                                     
                                 }
                                 group.leave()
-                                
-                                
                             }
                         }
                     }
@@ -247,7 +250,9 @@ class YXSUploadSourceHelper: NSObject {
             case .voice:
                 if let audioModel = (uploadModel.model as? SLAudioModel){
                     let url = URL.init(fileURLWithPath: audioModel.path ?? "")
-                    newUploadModels.append(SLUploadDataSourceModel.init(data: try? Data.init(contentsOf: url), path: uploadModel.path, type: uploadModel.type))
+                    let uploadSourceModel = SLUploadDataSourceModel.init(data: try? Data.init(contentsOf: url), path: uploadModel.path, type: uploadModel.type)
+                    uploadSourceModel.index = index
+                    newUploadModels.append(uploadSourceModel)
                 }
                 
             }
@@ -301,9 +306,8 @@ class YXSUploadSourceHelper: NSObject {
         
         /// 上传数量
         let count = uploadModels.count
-        for (index,uploadModel) in uploadModels.enumerated(){
+        for uploadModel in uploadModels{
             group.enter()
-            uploadModel.index = index
             
             ///上一次上传进度
             var lastProgress: CGFloat = 0.0
@@ -316,7 +320,7 @@ class YXSUploadSourceHelper: NSObject {
                         progress = 1.0
                     }
                     progressBlock?(progress)
-                    SLLog("totalprogress = \(progress)")
+//                    SLLog("totalprogress = \(progress)")
                 }, sucess: { (url) in
                     uploadModel.aliYunUploadBackUrl = url
                     group.leave()
@@ -335,6 +339,10 @@ class YXSUploadSourceHelper: NSObject {
                     let sortModels = uploadModels.sorted(by: {(a,b) -> Bool in
                         return (a.index) < (b.index)
                     })
+                    
+                    for model in sortModels{
+                        SLLog(model.index)
+                    }
                     sucess?(sortModels)
                 }
             }

@@ -231,7 +231,6 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
                  MBProgressHUD.yxs_updateUploadProgess(progess: progress, inView: self.navigationController!.view)
             }
         }, sucess: { (listModels) in
-            SLLog(listModels)
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             for model in listModels{
                 commintMediaInfos.append([typeKey: model.type,urlKey: model.aliYunUploadBackUrl ?? ""])

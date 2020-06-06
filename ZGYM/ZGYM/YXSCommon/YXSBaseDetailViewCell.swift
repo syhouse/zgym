@@ -119,8 +119,8 @@ class YXSDetailSubTitleBottomCell: YXSBaseDetailViewCell {
         lbSubTitle.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#696C73"), night: UIColor.yxs_hexToAdecimalColor(hex: "#696C73"))
         
         lbSubTitle.snp.makeConstraints({ (make) in
-            make.top.equalTo(imgAvatar.snp_bottom).offset(14)
-            make.bottom.equalTo(-15.5)
+            make.top.equalTo(imgAvatar.snp_bottom).offset(13.5)
+            make.right.equalTo(-15)
             make.left.equalTo(imgAvatar)
         })
         
@@ -129,6 +129,23 @@ class YXSDetailSubTitleBottomCell: YXSBaseDetailViewCell {
             make.right.equalTo(-8)
             make.size.equalTo(CGSize.init(width: 30, height: 30))
         })
+        
+        
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            contentView.addSubview(btnChat)
+            contentView.addSubview(btnPhone)
+            
+            btnPhone.snp.makeConstraints({ (make) in
+                make.centerY.equalTo(self.contentView.snp_centerY)
+                make.right.equalTo(-15)
+                make.width.height.equalTo(22)
+            })
+            
+            btnChat.snp.makeConstraints({ (make) in
+                make.centerY.equalTo(self.contentView.snp_centerY)
+                make.right.equalTo(btnPhone.snp_left).offset(-20)
+            })
+        }
         
     }
     
@@ -139,20 +156,8 @@ class YXSDetailSubTitleBottomCell: YXSBaseDetailViewCell {
     func setRemarkTitle(remark: String?){
         lbSubTitle.isHidden = true
         if let remark = remark, !remark.isEmpty{
-            imgAvatar.snp.remakeConstraints({ (make) in
-                make.top.equalTo(17)
-                make.left.equalTo(15)
-                make.width.height.equalTo(40)
-            })
             lbSubTitle.text = "备注:\(remark)"
             lbSubTitle.isHidden = false
-        }else{
-            imgAvatar.snp.remakeConstraints({ (make) in
-                make.top.equalTo(17)
-                make.left.equalTo(15)
-                make.width.height.equalTo(40)
-                make.bottom.equalTo(-17)
-            })
         }
     }
 }
@@ -258,11 +263,12 @@ class YXSDetailNormalRecallCell: YXSBaseDetailViewCell {
         self.contentView.addSubview(lbTitle)
         self.contentView.addSubview(recallView)
         
+        contentView.yxs_addLine(position: .bottom)
+        
         imgAvatar.snp.remakeConstraints({ (make) in
             make.top.equalTo(10)
             make.left.equalTo(15)
             make.width.height.equalTo(40)
-            make.bottom.equalTo(-10)
         })
         
         lbTitle.snp.makeConstraints({ (make) in
@@ -275,6 +281,22 @@ class YXSDetailNormalRecallCell: YXSBaseDetailViewCell {
             make.right.equalTo(-8)
             make.size.equalTo(CGSize.init(width: 30, height: 30))
         })
+        
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            contentView.addSubview(btnChat)
+            contentView.addSubview(btnPhone)
+            
+            btnPhone.snp.makeConstraints({ (make) in
+                make.centerY.equalTo(self.contentView.snp_centerY)
+                make.right.equalTo(-15)
+                make.width.height.equalTo(22)
+            })
+            
+            btnChat.snp.makeConstraints({ (make) in
+                make.centerY.equalTo(self.contentView.snp_centerY)
+                make.right.equalTo(btnPhone.snp_left).offset(-20)
+            })
+        }
     }
     
     required init?(coder: NSCoder) {

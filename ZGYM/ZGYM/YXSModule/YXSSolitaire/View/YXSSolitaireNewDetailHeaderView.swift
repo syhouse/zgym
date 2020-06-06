@@ -21,6 +21,7 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
 
     var videoTouchedBlock:((_ videoUlr: String)->())?
 
+    var pushToContainerBlock: (()->())?
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         self.contentView.mixedBackgroundColor = MixedColor(normal: kNightFFFFFF, night: kNightForegroundColor)
@@ -109,6 +110,65 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    var detailModel: YXSSolitaireDetailModel?
+    func setHeaderViewModel(detailModel: YXSSolitaireDetailModel?){
+        self.detailModel = detailModel
+        avatarView.imgAvatar.sd_setImage(with: URL(string: detailModel?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
+        titleLabel.text = detailModel?.title
+        avatarView.lbTitle.text = detailModel?.teacherName//"王老师"
+        avatarView.lbSubTitle.text = detailModel?.createTime?.yxs_Time()//"1小时前"
+        dateView.title = "截止日期：\(detailModel?.endTime ?? "")"
+        let mModel = YXSMediaViewModel()
+        mModel.content = detailModel?.content
+        mModel.voiceUrl = detailModel?.audioUrl
+        mModel.voiceDuration = detailModel?.audioDuration
+        var imgs:[String]? = nil
+        if detailModel?.imageUrl?.count ?? 0 > 0 {
+            imgs = detailModel?.imageUrl?.components(separatedBy: ",")
+        }
+        mModel.images = imgs
+        mModel.videoUrl = detailModel?.videoUrl
+        mModel.bgUrl = detailModel?.bgUrl
+        mediaView.model = mModel
+
+        readCommitPanel.firstValue = String(detailModel?.readCount ?? 0)
+        readCommitPanel.firstTotal = String(detailModel?.classChildrenCount ?? 0)
+        
+        readCommitPanel.secondValue = String(detailModel?.commitCount ?? 0)
+        readCommitPanel.secondTotal = String(detailModel?.classChildrenCount ?? 0)
+        
+        linkView.strLink = detailModel?.link ?? ""
+        if detailModel?.link == nil || detailModel?.link?.count == 0 {
+            linkView.isHidden = true
+            linkView.snp.updateConstraints({ (make) in
+                make.height.equalTo(0)
+            })
+            
+        } else {
+            linkView.isHidden = false
+            linkView.snp.updateConstraints({ (make) in
+                make.height.equalTo(44)
+            })
+        }
+        linkView.block = { (url) in
+            if url.count > 0 {
+                let tmpStr = YXSObjcTool.shareInstance().getCompleteWebsite(url)
+                if tmpStr.count > 0 {
+                    var charSet = CharacterSet.urlQueryAllowed
+                    charSet.insert(charactersIn: "#")
+                    charSet.insert(charactersIn: "%")
+                    let newUrl = tmpStr.addingPercentEncoding(withAllowedCharacters: charSet)!
+                    UIApplication.shared.openURL(URL(string: newUrl)!)
+                } else {
+                    MBProgressHUD.yxs_showMessage(message: "无法打开该链接")
+                }
+            } else {
+                MBProgressHUD.yxs_showMessage(message: "无法打开该链接")
+            }
+        }
+    }
+    
+    // MARK: - action
     
     @objc func alertClick(sender: YXSButton) {
         pushToContainer()
@@ -125,16 +185,10 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
     }
     
     @objc func pushToContainer() {
-//        let vc = YXSNoticeContainerViewController()
-//        vc.detailModel = homeModel
-//        vc.detailModel?.onlineCommit = model?.onlineCommit
-//        vc.backClickBlock = { [weak self]()in
-//            guard let weakSelf = self else {return}
-//            weakSelf.refreshData()
-//        }
-//        self.navigationController?.pushViewController(vc)
+        pushToContainerBlock?()
     }
     
+    // MARK: - getter&setter
     lazy var avatarView: YXSAvatarView = {
         let view = YXSAvatarView()
         return view

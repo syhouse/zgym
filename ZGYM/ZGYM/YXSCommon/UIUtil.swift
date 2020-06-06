@@ -252,17 +252,6 @@ extension UIUtil{
         shapeLayer.path = path
         lineView.layer.addSublayer(shapeLayer)
     }
-    
-    
-    /// 从相册资源获取image
-    /// - Parameters:
-    ///   - asset: asset
-    ///   - resultBlock: 获取完成回调
-    static func PHAssetToImage(_ asset:PHAsset, resultBlock:((_ image: UIImage) ->())?){
-        YBIBPhotoAlbumManager.getImageData(with: asset) { (data) in
-            resultBlock?( UIImage.init(data: data ?? Data()) ?? UIImage())
-        }
-    }
 }
 
 // MARK: - loadData  通用的抽出来的请求

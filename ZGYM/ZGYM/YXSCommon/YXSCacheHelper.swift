@@ -288,13 +288,26 @@ extension YXSCacheHelper {
 
 // MARK: - 接龙详情
 extension YXSCacheHelper {
-    /// 获取接龙详情数据
+    /// 获取接龙详情数据(new)
+    public static func yxs_getCacheSolitaireDetailTask(censusId: Int, childrenId: Int) -> YXSSolitaireDetailModel{
+        let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SolitaireDetailTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)\(childrenId)".MD5())) as? YXSSolitaireDetailModel ?? YXSSolitaireDetailModel.init(JSON: ["" : ""])!
+        return model
+    }
+    
+    /// 缓存接龙详情数据(new)
+    public static func yxs_cacheSolitaireDetailTask(model: YXSSolitaireDetailModel,censusId: Int, childrenId: Int){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(model, toFile: NSUtil.yxs_archiveFile(file: "SolitaireDetailTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)\(childrenId)".MD5()))
+        }
+    }
+    
+    /// 获取接龙详情数据(old)
     public static func yxs_getCacheSolitaireDetailTask(censusId: Int, childrenId: Int) -> YXSHomeworkDetailModel{
         let model = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SolitaireDetailTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)\(childrenId)".MD5())) as? YXSHomeworkDetailModel ?? YXSHomeworkDetailModel.init(JSON: ["" : ""])!
         return model
     }
     
-    /// 缓存接龙详情数据
+    /// 缓存接龙详情数据(old)
     public static func yxs_cacheSolitaireDetailTask(model: YXSHomeworkDetailModel,censusId: Int, childrenId: Int){
         DispatchQueue.global().async {
             NSKeyedArchiver.archiveRootObject(model, toFile: NSUtil.yxs_archiveFile(file: "SolitaireDetailTask\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)\(childrenId)".MD5()))

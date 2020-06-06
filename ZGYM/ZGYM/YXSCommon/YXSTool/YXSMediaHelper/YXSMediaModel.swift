@@ -76,8 +76,8 @@ class YXSMediaModel: NSObject, NSCoding {
     }
     
     public func getAssetImage(completHandle: @escaping((_ image: UIImage?) ->())){
-        if let thumbnailImage = thumbnailImage{
-            completHandle(thumbnailImage)
+        if let assetImage = assetImage{
+            completHandle(assetImage)
         }else{
             getImage(isThumbnail: false, completHandle: completHandle)
             
@@ -85,8 +85,8 @@ class YXSMediaModel: NSObject, NSCoding {
     }
     
     private func getImage(isThumbnail: Bool ,completHandle: @escaping((_ image: UIImage?) ->())){
-        DispatchQueue.global().async {
-            UIUtil.PHAssetToImage(self.asset){
+        if self.asset != nil{
+            YXSMediaHelper.PHAssetToImage(self.asset){
                 (result) in
                 self.assetImage = result
                 let newSize = result.yxs_scaleImage(image: result, imageLength: 500)
@@ -97,7 +97,6 @@ class YXSMediaModel: NSObject, NSCoding {
             }
         }
     }
-    
     
     static func getMediaModels(assets: [PHAsset]) -> [YXSMediaModel]{
         var models = [YXSMediaModel]()
@@ -180,5 +179,33 @@ class SLPublishMediaModel: YXSMediaModel {
         if serviceUrl != nil{
             aCoder.encode(serviceUrl, forKey: "serviceUrl")
         }
+    }
+}
+
+
+class SLPublishEditMediaModel: SLPublishMediaModel {
+    /// 是否是添加按钮
+    var isAddItem: Bool = false
+    
+    init(isAddItem: Bool = false) {
+        self.isAddItem = isAddItem
+        super.init()
+    }
+    
+    @objc required init(coder aDecoder: NSCoder)
+    {
+        super.init(coder: aDecoder)
+        isAddItem = aDecoder.decodeBool(forKey: "isAddItem")
+    }
+    
+    /**
+     * NSCoding required method.
+     * Encodes mode properties into the decoder
+     */
+    @objc override func encode(with aCoder: NSCoder)
+    {
+        super.encode(with: aCoder)
+        
+        aCoder.encode(isAddItem, forKey: "isAddItem")
     }
 }

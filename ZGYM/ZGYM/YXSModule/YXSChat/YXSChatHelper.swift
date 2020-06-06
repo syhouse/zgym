@@ -211,7 +211,7 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
                     if TimeInterval((model.createTime ?? "0").int ?? 0) > localTime{
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallChangeRoleLoginOutNotification), object: model)
                     }
-                    
+                    print(">>>>>>>>>>IM \(model.callbackRequestParameter?.userType ?? "") \(model.createTime ?? "") 身份 =\(YXSPersonDataModel.sharePerson.personRole.rawValue) 登录时间 =\(localTime)")
                 }
                 else {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallRefreshNotification), object: model)
@@ -316,6 +316,7 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
         if elem is TIMCustomElem {
             let customElem: TIMCustomElem = elem as! TIMCustomElem
             let json = try? JSON(data: customElem.data)
+            let str = String.init(data: customElem.data ?? Data(), encoding: .utf8)
             SLLog(json)
             let resultModel = Mapper<IMCustomMessageModel>().map(JSONObject:json?.object) ?? IMCustomMessageModel.init(JSON: ["": ""])!
             return resultModel

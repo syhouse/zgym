@@ -12,7 +12,7 @@ import NightNight
 
 extension UIImageView{
     func yxs_setImageWithURL(url: URL?,placeholder: MixedImage?){
-        self.sd_setImage(with: url, placeholderImage: nil, options: .retryFailed) { (image, error, type, url) in
+        self.sd_setImage(with: url, placeholderImage: nil) { (image, error, type, url) in
             if let image = image{
                 self.mixedImage = MixedImage(normal: image, night: image)
             }else{
