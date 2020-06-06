@@ -38,7 +38,7 @@ class YXSSolitaireCollectorPartentDetialSelectItemsCell : YXSSolitaireCollectorP
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        for index in 0..<maxLabel{
+        for index in 0..<maxQuestionCount{
             let answerControl = YXSSolitaireAnswerControl()
             answerControl.tag = index + labelOrginTag
             answerControl.isHidden = true
@@ -77,7 +77,7 @@ class YXSSolitaireCollectorPartentDetialSelectItemsCell : YXSSolitaireCollectorP
         self.model = model
         super.setCellModel(model, index: index)
         
-        for index in 0..<maxLabel{
+        for index in 0..<maxQuestionCount{
             let answerControl = contentView.viewWithTag(index + labelOrginTag) as? YXSSolitaireAnswerControl
             answerControl?.isHidden = true
             answerControl?.isUserInteractionEnabled = canEdit

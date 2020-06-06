@@ -111,6 +111,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var totalDay: Int?
     var periodList : [Int]?
     
+    var solitaireType: Int?
+    
     ///孩子姓名  需要塞进去 班级之星用到
     var childrenRealName : String?
     
@@ -279,11 +281,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var shouldShowMore: Bool = false
     
     ///(是否需要展示展开按钮)首页列表使用
-    var needShowAllButton: Bool = false{
-        didSet{
-            //            SLLog("needShowAllButton=\(needShowAllButton) content=\(content ?? "")")
-        }
-    }
+    var needShowAllButton: Bool = false
     
     /// 业务类型  通过 serviceId 获取的枚举
     var type: YXSHomeType{
@@ -571,6 +569,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         currentTime <- map["currentTime"]
         
         totalDay <- map["totalDay"]
+        solitaireType <- map["type"]
         
         confingHeight()
     }
@@ -623,6 +622,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         
         periodicalListModel = aDecoder.decodeObject(forKey: "periodicalListModel") as? YXSPeriodicalListModel
         totalDay = aDecoder.decodeObject(forKey: "totalDay") as? Int
+        solitaireType = aDecoder.decodeObject(forKey: "solitaireType") as? Int
     }
     
     /**
@@ -749,6 +749,10 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         }
         if totalDay != nil{
             aCoder.encode(totalDay, forKey: "totalDay")
+        }
+        
+        if solitaireType != nil{
+            aCoder.encode(solitaireType, forKey: "solitaireType")
         }
     }
 }

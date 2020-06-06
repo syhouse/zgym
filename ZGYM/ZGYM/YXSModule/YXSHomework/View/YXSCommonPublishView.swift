@@ -33,7 +33,7 @@ class YXSCommonPublishView: UIView{
     
     ///设置模版内容
     public func setTemplateText(_ text: String){
-        publishModel.publishText = text
+        publishModel.publishContent = text
         textView.text = text
         textCountlabel.text = "\(text.count)/\(self.limitTextLength)"
         updateUI(updateOffSet: false)
@@ -99,7 +99,7 @@ class YXSCommonPublishView: UIView{
             addSubview(voiceView)
         }
         
-        textView.text = publishModel.publishText
+        textView.text = publishModel.publishContent
         textCountlabel.text = "\(textView.text.count)/\(self.limitTextLength)"
         
         initListViewUI()
@@ -477,7 +477,7 @@ class YXSCommonPublishView: UIView{
             [weak self](text: String) in
             guard let strongSelf = self else { return }
             strongSelf.textCountlabel.text = "\(text.count)/\(strongSelf.limitTextLength)"
-            strongSelf.publishModel.publishText = text
+            strongSelf.publishModel.publishContent = text
             strongSelf.updateUI()
         }
         

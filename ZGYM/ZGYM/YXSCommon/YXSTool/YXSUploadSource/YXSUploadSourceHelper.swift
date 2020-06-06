@@ -207,7 +207,7 @@ class YXSUploadSourceHelper: NSObject {
                     queue.async{
                         model.getAssetImage { (assetImage) in
                             if let assetImage = assetImage{
-                                let data = assetImage.yxs_compressImage(image: assetImage, maxLength: imageMax)
+                                let data = YXSCompressionImageHelper.yxs_compressImage(image: assetImage, maxLength: imageMax)
                                 let uploadSourceModel = SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type)
                                 uploadSourceModel.index = index
                                 newUploadModels.append(uploadSourceModel)
@@ -432,8 +432,13 @@ class YXSUploadDataHepler: NSObject{
     var oSSAuth: YXSOSSAuthModel?
     static let shareHelper = YXSUploadDataHepler()
     private override init(){
-        
+        self.queue = {
+            let operationQueue = OperationQueue()
+            operationQueue.maxConcurrentOperationCount = 6
+            return operationQueue
+        }()
     }
+    private let queue: OperationQueue
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -486,39 +491,43 @@ class YXSUploadDataHepler: NSObject{
     ///   - sucess: 成功回调 返回model 里面带有上传成功路径
     ///   - failureHandler: 失败回调
     fileprivate func uploadData(uploadModel: SLUploadDataSourceModel, ossClient: OSSClient?, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
-        
-        let ossPutObj: OSSPutObjectRequest = OSSPutObjectRequest()
-        ossPutObj.uploadingData = uploadModel.data
-        ossPutObj.bucketName = oSSAuth?.bucket
-        ossPutObj.objectKey = uploadModel.path
-        
-        ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
-            progress?(CGFloat(totalBytesSent)/CGFloat(totalBytesExpectedToSend))
-        }
-        
-        let uploadTask = ossClient?.putObject(ossPutObj)
-        uploadTask?.continue({ (uploadTask) -> Any? in
-            if let _err = uploadTask.error {
-                DispatchQueue.main.async {
-                    failureHandler?(_err.localizedDescription, "1001")
-                }
-                
-            } else {
-                if  let _:OSSPutObjectResult  = uploadTask.result as? OSSPutObjectResult {
-                    var point: NSString = (self.oSSAuth?.endpoint ?? "") as NSString
-                    point = point.replacingOccurrences(of: "http://", with: "") as NSString
-                    point = point.replacingOccurrences(of: "https://", with: "") as NSString
-                    let picUrlStr = "http://\(self.oSSAuth?.bucket ?? "").\(point)/\(uploadModel.path)"
-                    DispatchQueue.main.async {
-                        sucess?(picUrlStr)
-                    }
-                }else{
-                    DispatchQueue.main.async {
-                        failureHandler?("链接拼接失败", "1001")
-                    }
-                }
+        let semaphore = DispatchSemaphore(value: 0)
+        queue.addOperation {
+            let ossPutObj: OSSPutObjectRequest = OSSPutObjectRequest()
+            ossPutObj.uploadingData = uploadModel.data
+            ossPutObj.bucketName = self.oSSAuth?.bucket
+            ossPutObj.objectKey = uploadModel.path
+            
+            ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
+                progress?(CGFloat(totalBytesSent)/CGFloat(totalBytesExpectedToSend))
             }
-            return uploadTask
-        })
+            
+            let uploadTask = ossClient?.putObject(ossPutObj)
+            uploadTask?.continue({ (uploadTask) -> Any? in
+                if let _err = uploadTask.error {
+                    DispatchQueue.main.async {
+                        failureHandler?(_err.localizedDescription, "1001")
+                    }
+                    
+                } else {
+                    if  let _:OSSPutObjectResult  = uploadTask.result as? OSSPutObjectResult {
+                        var point: NSString = (self.oSSAuth?.endpoint ?? "") as NSString
+                        point = point.replacingOccurrences(of: "http://", with: "") as NSString
+                        point = point.replacingOccurrences(of: "https://", with: "") as NSString
+                        let picUrlStr = "http://\(self.oSSAuth?.bucket ?? "").\(point)/\(uploadModel.path)"
+                        DispatchQueue.main.async {
+                            sucess?(picUrlStr)
+                        }
+                    }else{
+                        DispatchQueue.main.async {
+                            failureHandler?("链接拼接失败", "1001")
+                        }
+                    }
+                }
+                semaphore.signal()
+                return uploadTask
+            })
+            semaphore.wait()
+        }
     }
 }

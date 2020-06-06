@@ -95,7 +95,7 @@ class YXSSolitaireCollectorTeacherDetiaSelectItemsCell : YXSSolitaireCollectorTe
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        for index in 0..<maxLabel{
+        for index in 0..<maxQuestionCount{
             let answerStatisticsView = YXSSolitaireAnswerStatisticsView()
             answerStatisticsView.tag = index + labelOrginTag
             answerStatisticsView.isHidden = true
@@ -120,7 +120,7 @@ class YXSSolitaireCollectorTeacherDetiaSelectItemsCell : YXSSolitaireCollectorTe
         self.model = model
         super.setCellModel(model, index: index)
         
-        for index in 0..<maxLabel{
+        for index in 0..<maxQuestionCount{
             let answerStatisticsView = contentView.viewWithTag(index + labelOrginTag) as? YXSSolitaireAnswerStatisticsView
             answerStatisticsView?.isHidden = true
             answerStatisticsView?.snp_removeConstraints()

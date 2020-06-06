@@ -90,6 +90,9 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
             make.top.equalTo(60)
             make.size.equalTo(CGSize.init(width: 146.5, height: 31))
         }
+        
+        publishView.setTemplateText(publishModel.publishContent ?? "")
+        subjectField.text =  publishModel.subjectText
     }
     
     
@@ -275,12 +278,14 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
             MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
             self.yxs_remove()
             NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherPublishSucessNotification), object: nil)
-            self.navigationController?.popViewController()
+            self.publishSucessPop()
         }) { (msg, code) in
             MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
+    
+
     
     // MARK: - action
     @objc func addQuestion(){

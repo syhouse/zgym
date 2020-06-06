@@ -8,14 +8,14 @@
 
 import NightNight
 
-let maxLabel: Int = 6
+let maxQuestionCount: Int = 6
 let labelOrginTag = 1001
 
 
 class YXSSolitaireQuestionItemsCell : YXSSolitaireQuestionBaseCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        for index in 0..<maxLabel{
+        for index in 0..<maxQuestionCount{
             let labelImageView = YXSSolitaireLabelImageView()
             labelImageView.tag = index + labelOrginTag
             labelImageView.isHidden = true
@@ -34,7 +34,7 @@ class YXSSolitaireQuestionItemsCell : YXSSolitaireQuestionBaseCell {
     override func setCellModel(_ model: YXSSolitaireQuestionModel, index: Int){
         super.setCellModel(model, index: index)
         
-        for index in 0..<maxLabel{
+        for index in 0..<maxQuestionCount{
             let labelImageView = contentView.viewWithTag(index + labelOrginTag) as? YXSSolitaireLabelImageView
             labelImageView?.isHidden = true
             labelImageView?.snp_removeConstraints()
@@ -46,7 +46,9 @@ class YXSSolitaireQuestionItemsCell : YXSSolitaireQuestionBaseCell {
                 make.top.equalTo(17)
             }
             var lastView: UIView = questionTitleView
-            for (index, model) in solitaireSelects.enumerated(){
+            let maxCount = solitaireSelects.count > maxQuestionCount ? maxQuestionCount :  solitaireSelects.count
+            for index in 0..<maxCount{
+                let model = solitaireSelects[index]
                 let labelImageView = contentView.viewWithTag(index + labelOrginTag) as? YXSSolitaireLabelImageView
                 if let labelImageView = labelImageView{
                     labelImageView.isHidden = false
@@ -55,7 +57,7 @@ class YXSSolitaireQuestionItemsCell : YXSSolitaireQuestionBaseCell {
                         make.top.equalTo(lastView.snp_bottom).offset(17)
                         make.left.equalTo(15)
                         make.right.equalTo(-15)
-                        if index == solitaireSelects.count - 1{
+                        if index == maxCount - 1{
                             make.bottom.equalTo(-17).priorityHigh()
                         }
                     }

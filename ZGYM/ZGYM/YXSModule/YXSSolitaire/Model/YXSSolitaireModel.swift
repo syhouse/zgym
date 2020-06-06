@@ -21,6 +21,7 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
     var className : String?
     var committedSum : Int?
     var content : String?
+    var title : String?
     var endTime : String?
     var isTop : Int?
     // 老师 接龙状态（0 全部 10 正在接龙 100 已结束:按照接龙的结束时间 ）
@@ -35,6 +36,7 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
     var commitUpperLimit : Int?
     var isShowAll: Bool = false
     
+    var type : Int?
     var needShowAllButton: Bool = false
     // MARK: - 高度缓存
      ///缓存高度
@@ -86,8 +88,8 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
         paragraphStye.lineSpacing = kMainContentLineHeight
         paragraphStye.lineBreakMode = .byWordWrapping
         let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
-        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content?.listReplaceSpaceAndReturn() ?? "", attributes: attributes , width: contentLabelWidth)
-        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: content?.listReplaceSpaceAndReturn() ?? "", attributes: attributes,width: contentLabelWidth, numberOfLines: 2) + 1
+        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: title?.listReplaceSpaceAndReturn() ?? "", attributes: attributes , width: contentLabelWidth)
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: title?.listReplaceSpaceAndReturn() ?? "", attributes: attributes,width: contentLabelWidth, numberOfLines: 2) + 1
         needShowAllButton = frameModel.contentIsShowAllHeight > 50  ? true : false
     }
     
@@ -110,7 +112,8 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
         childrenId <- map["childrenId"]
         commitUpperLimit <- map["commitUpperLimit"]
         createTime <- map["createTime"]
-        
+        title <- map["title"]
+        type <- map["type"]
         confingHeight()
         
     }
@@ -131,6 +134,8 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
         teacherName = aDecoder.decodeObject(forKey: "teacherName") as? String
         commitUpperLimit = aDecoder.decodeObject(forKey: "commitUpperLimit") as? Int
         frameModel = aDecoder.decodeObject(forKey: "frameModel") as? YXSFriendsCircleFrameModel
+        title = aDecoder.decodeObject(forKey: "title") as? String
+        type = aDecoder.decodeObject(forKey: "type") as? Int
     }
     
     /**
@@ -180,6 +185,12 @@ class YXSSolitaireModel : NSObject,NSCopying, NSCoding, Mappable{
         }
         if frameModel != nil{
             aCoder.encode(frameModel, forKey: "frameModel")
+        }
+        if title != nil{
+            aCoder.encode(title, forKey: "title")
+        }
+        if type != nil{
+            aCoder.encode(type, forKey: "type")
         }
 
     }

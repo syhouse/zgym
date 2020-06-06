@@ -12,7 +12,7 @@ import Photos
 class YXSPublishModel: NSObject, NSCoding {
     var classs:[YXSClassModel]!
     //发布内容文本
-    var publishText: String?
+    var publishContent: String?
     //主题文本
     var subjectText: String?
     
@@ -125,7 +125,7 @@ class YXSPublishModel: NSObject, NSCoding {
     @objc required init(coder aDecoder: NSCoder)
     {
         classs = aDecoder.decodeObject(forKey: "classs") as? [YXSClassModel]
-        publishText = aDecoder.decodeObject(forKey: "publishText") as? String
+        publishContent = aDecoder.decodeObject(forKey: "publishText") as? String
         subjectText = aDecoder.decodeObject(forKey: "subjectText") as? String
         isTop = aDecoder.decodeBool(forKey: "isTop")
         isPartentSetUp = aDecoder.decodeBool(forKey: "isPartentSetUp")
@@ -174,8 +174,8 @@ class YXSPublishModel: NSObject, NSCoding {
         if classs != nil{
             aCoder.encode(classs, forKey: "classs")
         }
-        if publishText != nil{
-            aCoder.encode(publishText, forKey: "publishText")
+        if publishContent != nil{
+            aCoder.encode(publishContent, forKey: "publishText")
         }
         if subjectText != nil{
             aCoder.encode(subjectText, forKey: "subjectText")

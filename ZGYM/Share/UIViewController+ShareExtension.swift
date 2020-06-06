@@ -41,7 +41,6 @@ extension UIViewController {
                                           
                             listUrl.append(url)
                             group.leave()
-//                            print(">>>>>>>>1:Count:\(listUrl.count)>>>\(url)")
                                   
                         }) { (errMsg) in
                             group.leave()
@@ -53,7 +52,7 @@ extension UIViewController {
         
         group.notify(queue: .main) {
             DispatchQueue.main.async {
-//                print(">>>>>>>>2:Count:\(listUrl.count)")
+
                 completionHandler(listUrl)
             }
         }

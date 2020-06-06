@@ -7,6 +7,8 @@
 //
 
 import Foundation
+
+///接龙详情组装的采集问题model
 class YXSSolitaireQuestionModel: NSObject, NSCoding{
     ///是否必答
     var isNecessary: Bool = false
@@ -49,14 +51,16 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
             switch type {
             case .single, .checkbox:
                 if let solitaireSelects = solitaireSelects{
-                    for model in solitaireSelects{
+                    let maxCount = solitaireSelects.count > maxQuestionCount ? maxQuestionCount : solitaireSelects.count
+                    for index in 0..<maxCount {
+                        let model = solitaireSelects[index]
                         height += 13 //顶部
                         height += 15// 选项
                         height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
                         if model.mediaModel != nil{
                             height += 84 + 12.5
                         }
-            
+                        
                         height += 13//底部
                     }
                 }
@@ -84,7 +88,9 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
             switch type {
             case .single, .checkbox:
                 if let solitaireSelects = solitaireSelects{
-                    for model in solitaireSelects{
+                    let maxCount = solitaireSelects.count > maxQuestionCount ? maxQuestionCount : solitaireSelects.count
+                    for index in 0..<maxCount {
+                        let model = solitaireSelects[index]
                         height += 26
                         height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
                         if model.mediaModel != nil{
@@ -123,6 +129,8 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
         gatherTopicId = aDecoder.decodeObject(forKey: "gatherTopicId") as? Int
         gatherTopicCount = aDecoder.decodeObject(forKey: "gatherTopicCount") as? Int
         ratio = aDecoder.decodeObject(forKey: "ratio") as? Int
+        
+        type = YXSQuestionType.init(rawValue: (aDecoder.decodeObject(forKey: "type") as? String) ?? "") ?? YXSQuestionType.single
     }
     @objc func encode(with aCoder: NSCoder)
     {
@@ -153,6 +161,7 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
         }
         aCoder.encode(isNecessary, forKey: "isNecessary")
         aCoder.encode(answerMedias, forKey: "answerMedias")
+        aCoder.encode(type.rawValue, forKey: "type")
     }
 }
 

@@ -178,7 +178,7 @@ extension YXSSolitaireListCell{
             solitaireView.setHomeModel(model)
             needShowAllButton = model.needShowAllButton
         }else{
-            content = solitaireModel.content?.listReplaceSpaceAndReturn() ?? ""
+            content = solitaireModel.title?.listReplaceSpaceAndReturn() ?? ""
             isShowAll = solitaireModel.isShowAll
             teacherId = solitaireModel.teacherId
             createTime = solitaireModel.createTime

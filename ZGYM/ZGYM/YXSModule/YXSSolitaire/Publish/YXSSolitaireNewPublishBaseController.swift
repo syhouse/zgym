@@ -55,6 +55,8 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
     // MARK: - override
     override func initPublish() {
         if let solitaireTemplateModel = solitaireTemplateModel{
+            publishModel.publishContent = solitaireTemplateModel.content
+            publishModel.subjectText = solitaireTemplateModel.title
             if let holders = solitaireTemplateModel.gatherHoldersModel?.gatherHolders{
                 var solitaireQuestions = [YXSSolitaireQuestionModel]()
                 for holder in holders{
@@ -77,10 +79,7 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
                     solitaireQuestions.append(questionModel)
                 }
                 publishModel.solitaireQuestions = solitaireQuestions
-                publishModel.publishText = solitaireTemplateModel.title
             }
-            
-            
         }else{
             if let publishModel = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive")) as? YXSPublishModel{
                 self.publishModel = publishModel
@@ -154,6 +153,33 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
             return true
         }
         return false
+    }
+    
+    func publishSucessPop(){
+        var isPop = false
+        
+        self.navigationController?.yxs_existViewController(existClass: YXSSolitaireListController.self, complete: { (listVc) in
+            self.navigationController?.popToViewController(listVc, animated: true)
+            isPop = true
+        })
+        if !isPop{
+            self.navigationController?.yxs_existViewController(existClass: YXSClassDetialListController.self, complete: { (detialVc) in
+                self.navigationController?.popToViewController(detialVc, animated: true)
+                isPop = true
+            })
+        }
+        
+        if !isPop{
+            self.navigationController?.yxs_existViewController(existClass: YXSHomeController.self, complete: { (homeVc) in
+                self.navigationController?.popToViewController(homeVc, animated: true)
+                isPop = true
+            })
+        }
+        
+        if !isPop{
+            self.navigationController?.popViewController()
+        }
+        
     }
     
     // MARK: - getter&setter

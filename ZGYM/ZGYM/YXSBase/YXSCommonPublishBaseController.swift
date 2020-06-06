@@ -264,7 +264,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     // MARK: -tool
     func yxs_cheackCanSetUp() -> Bool{
         //主题不能为空
-        let publishText: String = publishModel.publishText?.removeSpace() ?? ""
+        let publishText: String = publishModel.publishContent?.removeSpace() ?? ""
         if publishText.count == 0{
             yxs_showAlert(title: "正文不能为空")
             return false

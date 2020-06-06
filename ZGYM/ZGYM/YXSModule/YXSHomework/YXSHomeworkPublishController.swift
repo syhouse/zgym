@@ -104,7 +104,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
                 }
                 
                 //                audioUrl  audioDuration
-                publishModel.publishText = mySubmitModel?.content
+                publishModel.publishContent = mySubmitModel?.content
             }
         }else{
             if let publishModel = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive")) as? YXSPublishModel{
@@ -230,7 +230,7 @@ class YXSHomeworkPublishController: YXSCommonPublishBaseController {
     override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
         var fileList = [[String: Any]]()
         var classIdList = [Int]()
-        let content:String = publishModel.publishText!
+        let content:String = publishModel.publishContent!
         var picture: String = ""
         var video: String = ""
         var audioUrl: String = ""

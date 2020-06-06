@@ -69,7 +69,7 @@ class YXSSolitaireApplyPublishController: YXSSolitaireNewPublishBaseController {
         contentView.addSubview(lineView1)
         lineView1.snp.makeConstraints { (make) in
             make.top.equalTo(selectClassView.snp_bottom)
-            make.left.right.equalTo(0)
+            make.left.right.equalTo(0) 
             make.height.equalTo(10)
         }
         
@@ -87,6 +87,8 @@ class YXSSolitaireApplyPublishController: YXSSolitaireNewPublishBaseController {
         }
         publishView.yxs_addLine()
         
+        publishView.setTemplateText(publishModel.publishContent ?? "")
+        subjectField.text =  publishModel.subjectText
     }
     
     
@@ -139,7 +141,7 @@ class YXSSolitaireApplyPublishController: YXSSolitaireNewPublishBaseController {
             MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
             self.yxs_remove()
             NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherPublishSucessNotification), object: nil)
-            self.navigationController?.popViewController()
+            self.publishSucessPop()
         }) { (msg, code) in
             MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
             MBProgressHUD.yxs_showMessage(message: msg)

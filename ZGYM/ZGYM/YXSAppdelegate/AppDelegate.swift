@@ -71,7 +71,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         //        UIApplication.shared.cancelAllLocalNotifications()
         // MARK: -Bugly
         Bugly.start(withAppId: "366980be21")
-        
         // MARK: -WXApi
         WXApi.registerApp(KWXAPPID, universalLink: KWXUNIVERSAL_LINK)
         // MARK: -TencentOAuth
