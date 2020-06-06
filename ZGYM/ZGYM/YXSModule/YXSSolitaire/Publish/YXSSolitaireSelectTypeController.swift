@@ -89,8 +89,8 @@ class YXSSolitaireSelectTypeController: YXSBaseTableViewController {
     }
     
     
-    lazy var headerView: YXSSolitaireSelectTypeTabelView = {
-        let headerView = YXSSolitaireSelectTypeTabelView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 359))
+    lazy var headerView: YXSSolitaireSelectTypeHeaderView = {
+        let headerView = YXSSolitaireSelectTypeHeaderView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 359))
         headerView.lookMoreClickBlock = {
             [weak self] in
             guard let strongSelf = self else { return }
@@ -167,7 +167,7 @@ class YXSSolitaireTemplateCell: UITableViewCell{
     
 }
 
-class YXSSolitaireSelectTypeTabelView: UIView{
+class YXSSolitaireSelectTypeHeaderView: UIView{
     var lookMoreClickBlock: (()->())?
     ///0报名接龙 1信息采集
     var selectSectionBlock: ((_ index: Int)->())?
@@ -225,8 +225,8 @@ class YXSSolitaireSelectTypeTabelView: UIView{
         lookMoreClickBlock?()
     }
     
-    lazy var topSectionView: YXSSolitaireSelectionView = {
-        let topSectionView = YXSSolitaireSelectionView()
+    lazy var topSectionView: YXSSolitaireTypeSelectionView = {
+        let topSectionView = YXSSolitaireTypeSelectionView()
         topSectionView.icon.image = UIImage(named: "yxs_solitaire_apply")
         topSectionView.title.text = "发起报名接龙"
         topSectionView.desLabel.text = "支持家长选择参加或不参加，可备注说明"
@@ -234,8 +234,8 @@ class YXSSolitaireSelectTypeTabelView: UIView{
         return topSectionView
     }()
     
-    lazy var secendSectionView: YXSSolitaireSelectionView = {
-        let secendSectionView = YXSSolitaireSelectionView()
+    lazy var secendSectionView: YXSSolitaireTypeSelectionView = {
+        let secendSectionView = YXSSolitaireTypeSelectionView()
         secendSectionView.icon.image = UIImage(named: "yxs_solitaire_collector")
         secendSectionView.title.text = "发起信息采集/投票选举"
         secendSectionView.desLabel.text = "支持自定义投票选项，可以单选、多选"
@@ -262,7 +262,7 @@ class YXSSolitaireSelectTypeTabelView: UIView{
     }()
 }
 
-class YXSSolitaireSelectionView: UIControl{
+class YXSSolitaireTypeSelectionView: UIControl{
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)

@@ -12,8 +12,6 @@ import NightNight
 
 class YXSHomeworkListController: YXSCommonScreenListBaseController {
     
-    /// 是否待办事项列表
-    var isAgenda: Bool = false
     override init(classId: Int?, childId: Int?) {
         super.init(classId: classId, childId: childId)
         actionEvent = .homework

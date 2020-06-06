@@ -193,12 +193,7 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
         }
         return footerSettingView
     }()
-    
-    lazy var selectView: SolitairePublishSelectView = {
-        let selectView = SolitairePublishSelectView(selectModels: publishModel.solitaireSelects)
-        return selectView
-    }()
-    
+
     lazy var subjectField: YXSQSTextField = {
         let classField = UIUtil.yxs_getTextField(UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 0), placeholder: "输入接龙标题 （20字以内）", placeholderColor: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), mixedTextColor:MixedColor(normal: kTextMainBodyColor, night: UIColor.white))
         classField.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)

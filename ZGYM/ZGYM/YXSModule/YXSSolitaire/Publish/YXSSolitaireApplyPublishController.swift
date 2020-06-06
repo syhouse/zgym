@@ -69,7 +69,7 @@ class YXSSolitaireApplyPublishController: YXSSolitaireNewPublishBaseController {
         contentView.addSubview(lineView1)
         lineView1.snp.makeConstraints { (make) in
             make.top.equalTo(selectClassView.snp_bottom)
-            make.left.right.equalTo(0) 
+            make.left.right.equalTo(0)
             make.height.equalTo(10)
         }
         
@@ -104,16 +104,11 @@ class YXSSolitaireApplyPublishController: YXSSolitaireNewPublishBaseController {
         var audioUrl: String = ""
         var pictures = [String]()
         var bgUrl: String = ""
-        var options = [String]()
         
         if let classs = publishModel.classs{
             for model in classs{
                 classIdList.append(model.id ?? 0)
             }
-        }
-        
-        for model in selectView.selectModels{
-            options.append(model.title ?? "")
         }
         
         if let mediaInfos = mediaInfos{

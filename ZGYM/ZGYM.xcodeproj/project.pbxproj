@@ -401,7 +401,6 @@
 		6F0704CE2445D8050090975B /* YXSPunchCardMessageTipsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700F92445D7FF0090975B /* YXSPunchCardMessageTipsModel.swift */; };
 		6F0704CF2445D8050090975B /* YXSPunchCardSingleStudentListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FA2445D7FF0090975B /* YXSPunchCardSingleStudentListController.swift */; };
 		6F0704D02445D8050090975B /* YXSPunchCardDetialTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FB2445D7FF0090975B /* YXSPunchCardDetialTableHeaderView.swift */; };
-		6F0704D12445D8050090975B /* YXSSolitairePublishController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FD2445D7FF0090975B /* YXSSolitairePublishController.swift */; };
 		6F0704D22445D8050090975B /* YXSSolitaireModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FE2445D7FF0090975B /* YXSSolitaireModel.swift */; };
 		6F0704D32445D8050090975B /* YXSSolitaireListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FF2445D7FF0090975B /* YXSSolitaireListController.swift */; };
 		6F0704D42445D8050090975B /* YXSSolitaireDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701002445D7FF0090975B /* YXSSolitaireDetailController.swift */; };
@@ -1140,7 +1139,6 @@
 		6F0700F92445D7FF0090975B /* YXSPunchCardMessageTipsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPunchCardMessageTipsModel.swift; sourceTree = "<group>"; };
 		6F0700FA2445D7FF0090975B /* YXSPunchCardSingleStudentListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPunchCardSingleStudentListController.swift; sourceTree = "<group>"; };
 		6F0700FB2445D7FF0090975B /* YXSPunchCardDetialTableHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPunchCardDetialTableHeaderView.swift; sourceTree = "<group>"; };
-		6F0700FD2445D7FF0090975B /* YXSSolitairePublishController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSolitairePublishController.swift; sourceTree = "<group>"; };
 		6F0700FE2445D7FF0090975B /* YXSSolitaireModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSolitaireModel.swift; sourceTree = "<group>"; };
 		6F0700FF2445D7FF0090975B /* YXSSolitaireListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSolitaireListController.swift; sourceTree = "<group>"; };
 		6F0701002445D7FF0090975B /* YXSSolitaireDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSolitaireDetailController.swift; sourceTree = "<group>"; };
@@ -4416,7 +4414,6 @@
 				6F5677A4247E5B6500B523ED /* YXSSolitaireToolWindow.swift */,
 				6F5677A0247E430400B523ED /* YXSSolitaireTemplateListController.swift */,
 				6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */,
-				6F0700FD2445D7FF0090975B /* YXSSolitairePublishController.swift */,
 				6FF2C0AA2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift */,
 				6F5677A2247E527B00B523ED /* YXSSolitaireNewPublishBaseController.swift */,
 				6F5677A6247F4FA700B523ED /* YXSSolitaireCollectorPublishController.swift */,
@@ -6411,7 +6408,6 @@
 				6F0704642445D8040090975B /* YXSRegistViewController.swift in Sources */,
 				6F0704C52445D8040090975B /* YXSPunchCardCommintListModel.swift in Sources */,
 				E53D8B02244E8BA600590B5A /* YXSSynClassModel.swift in Sources */,
-				6F0704D12445D8050090975B /* YXSSolitairePublishController.swift in Sources */,
 				6F0704822445D8040090975B /* YXSClassScheduleCardListController.swift in Sources */,
 				E58F1700245149D500A6AC18 /* UIUtil.swift in Sources */,
 				E58F16E3245149D400A6AC18 /* YXSCommonSection.swift in Sources */,

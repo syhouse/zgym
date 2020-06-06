@@ -96,7 +96,7 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
     }
     
     
-    // MARK: -loadData
+    // MARK: - override
     override func yxs_loadClassDataSucess(){
         loadClassCountData()
     }
@@ -210,16 +210,11 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         var audioUrl: String = ""
         var pictures = [String]()
         var bgUrl: String = ""
-        var options = [String]()
         
         if let classs = publishModel.classs{
             for model in classs{
                 classIdList.append(model.id ?? 0)
             }
-        }
-        
-        for model in selectView.selectModels{
-            options.append(model.title ?? "")
         }
         
         if let mediaInfos = mediaInfos{
@@ -285,8 +280,6 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         }
     }
     
-
-    
     // MARK: - action
     @objc func addQuestion(){
         YXSSolitaireQuestionWindow.showWindow {
@@ -296,6 +289,7 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         }
     }
     
+    // MARK: - private
     func pushQuestionSetVC(questionModel: YXSSolitaireQuestionModel?, editIndex: Int? = nil, type: YXSQuestionType){
         let vc = YXSSolitaireQuestionSetController(questionModel, type: type)
         vc.completeHandler = {
@@ -311,7 +305,6 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         self.navigationController?.pushViewController(vc)
     }
     
-    // MARK: - private
     private func updateHeaderView(){
         let headerHeight = self.tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         self.tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: headerHeight)

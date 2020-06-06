@@ -7,10 +7,10 @@
 //
 
 import NightNight
-
+///问题最大选项数
 let maxQuestionCount: Int = 6
-let labelOrginTag = 1001
 
+let labelOrginTag = 1001
 
 class YXSSolitaireQuestionItemsCell : YXSSolitaireQuestionBaseCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

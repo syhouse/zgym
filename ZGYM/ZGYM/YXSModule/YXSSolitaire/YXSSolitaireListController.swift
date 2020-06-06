@@ -10,8 +10,7 @@ import UIKit
 import NightNight
 
 class YXSSolitaireListController: YXSCommonScreenListBaseController {
-    /// 是否今日事项列表
-    var isAgenda: Bool = false
+    
     override init(classId: Int?, childId: Int?) {
         super.init(classId: classId, childId: childId)
         actionEvent = .solitaire

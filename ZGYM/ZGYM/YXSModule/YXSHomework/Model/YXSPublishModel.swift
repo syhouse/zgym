@@ -67,8 +67,6 @@ class YXSPublishModel: NSObject, NSCoding {
         }
     }
     
-    var solitaireSelects:[SolitairePublishSelectModel]?
-    
     ///新版本接龙
     var solitaireQuestions: [YXSSolitaireQuestionModel] = [YXSSolitaireQuestionModel]()
     
@@ -146,7 +144,6 @@ class YXSPublishModel: NSObject, NSCoding {
         punchCardDay = aDecoder.decodeObject(forKey: "punchCardDay") as? YXSPunchCardDay
         localIdentifiers = aDecoder.decodeObject(forKey: "localIdentifiers") as? [String]
         punchCardWeaks = aDecoder.decodeObject(forKey: "punchCardWeaks") as? [YXSPunchCardWeak]
-        solitaireSelects = aDecoder.decodeObject(forKey: "solitaireSelects") as? [SolitairePublishSelectModel]
         solitaireDate = aDecoder.decodeObject(forKey: "solitaireDate") as? Date
         medias = aDecoder.decodeObject(forKey: "medias") as? [SLPublishMediaModel] ?? [SLPublishMediaModel]()
         remindPanchCardTime = aDecoder.decodeObject(forKey: "remindPanchCardTime") as? String ?? "18:00"
@@ -208,9 +205,8 @@ class YXSPublishModel: NSObject, NSCoding {
         if solitaireDate != nil{
             aCoder.encode(solitaireDate, forKey: "solitaireDate")
         }
-        if solitaireSelects != nil{
-            aCoder.encode(solitaireSelects, forKey: "solitaireSelects")
-        }
+
+        
         if medias != nil{
             aCoder.encode(medias, forKey: "medias")
         }
@@ -249,9 +245,6 @@ class SLPublishEditModel: YXSPublishModel {
     @objc required init(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
-        //        solitaireDate = aDecoder.decodeObject(forKey: "solitaireDate") as? Date
-        
-        
     }
     
     /**
@@ -261,9 +254,6 @@ class SLPublishEditModel: YXSPublishModel {
     @objc override func encode(with aCoder: NSCoder)
     {
         super.encode(with: aCoder)
-        //        if solitaireSelects != nil{
-        //            aCoder.encode(solitaireSelects, forKey: "solitaireSelects")
-        //        }
     }
 }
 

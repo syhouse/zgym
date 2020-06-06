@@ -134,7 +134,7 @@ class YXSSolitaireTemplateDetialModel : NSObject, NSCoding, Mappable{
 }
 
 
-
+///信息采集使用的model
 class YXSSolitaireGatherHoldersModel : NSObject, NSCoding, Mappable{
     var gatherHolders : [YXSGatherHolder]?
     var gatherId : Int?
