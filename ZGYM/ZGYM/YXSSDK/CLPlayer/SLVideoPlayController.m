@@ -124,13 +124,13 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.navigationController.navigationBar.hidden = NO;
-    [[YXSPlayerMediaSingleControlTool share] resumeCompetitionPlayer];
+    [[YXSXMPlayerGlobalControlTool share] resumeCompetitionPlayer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
-    [[YXSPlayerMediaSingleControlTool share] pauseCompetitionPlayer];
+    [[YXSXMPlayerGlobalControlTool share] pauseCompetitionPlayer];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

@@ -42,12 +42,12 @@ class YXSPlayerVC: YXSBaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
 //        UIApplication.shared.isStatusBarHidden = true
-        YXSPlayerMediaSingleControlTool.share.pauseCompetitionPlayer()
+        YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
 //        UIApplication.shared.isStatusBarHidden = false
-        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
+        YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
     }
     
     lazy var playerVC: AVPlayerViewController = {

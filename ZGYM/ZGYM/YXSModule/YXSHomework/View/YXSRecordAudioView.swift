@@ -360,12 +360,12 @@ class YXSRecordAudioView: UIView {
             status = .Recording
             startRecord()
             setRecordingUI()
-            YXSPlayerMediaSingleControlTool.share.pauseCompetitionPlayer()
+            YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
         case .Recording:
             status = .redayShow
             stopRecord()
             setRedayShowUI()
-            YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
+            YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
         case .redayShow:
             status = .Showing
             play()

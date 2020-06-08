@@ -93,7 +93,7 @@ class YXSPlayingViewController: YXSBaseViewController {
             make.edges.equalTo(0)
         })
         
-        YXSPlayerMediaSingleControlTool.share.playerDelegate = self
+        YXSXMPlayerGlobalControlTool.share.playerDelegate = self
         
         view.addSubview(controlPanel)
         controlPanel.addSubview(btnPlayPause)
@@ -124,15 +124,15 @@ class YXSPlayingViewController: YXSBaseViewController {
             stop()
             play()
         }else{//根据喜马拉雅当前播放器设置播放UI
-            track = YXSPlayerMediaSingleControlTool.share.currentTrack
-            trackList = YXSPlayerMediaSingleControlTool.share.playList
+            track = YXSXMPlayerGlobalControlTool.share.currentTrack
+            trackList = YXSXMPlayerGlobalControlTool.share.playList
             xmTrackPlayerDidStart()
             updatePlayerModelUI()
             
-            progressView.value = Float(currentTime)/Float(YXSPlayerMediaSingleControlTool.share.currentTrack?.duration ?? 1)
+            progressView.value = Float(currentTime)/Float(YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 1)
             lbCurrentDuration.text = stringWithDuration(duration: UInt(currentTime))
-            btnPlayPause.isSelected = !YXSPlayerMediaSingleControlTool.share.isPlayerIsPaused()
-            if YXSPlayerMediaSingleControlTool.share.isPlayerPlaying(){
+            btnPlayPause.isSelected = !YXSXMPlayerGlobalControlTool.share.isPlayerIsPaused()
+            if YXSXMPlayerGlobalControlTool.share.isPlayerPlaying(){
                 self.imgCover.resumeRotate()
             }
         }
@@ -208,7 +208,7 @@ class YXSPlayingViewController: YXSBaseViewController {
     
     // MARK: - public
     public func cheakPlayerUI(){
-        if YXSPlayerMediaSingleControlTool.share.isPlayerPlaying(){
+        if YXSXMPlayerGlobalControlTool.share.isPlayerPlaying(){
             btnPlayPause.isSelected = true
         }else{
             btnPlayPause.isSelected = false
@@ -246,28 +246,28 @@ class YXSPlayingViewController: YXSBaseViewController {
         if trackList.count > 0 {
             btnPlayPause.isSelected = true
             progressView.value = 0.0
-            YXSPlayerMediaSingleControlTool.share.playXMPlay(track: track, trackList: trackList)
+            YXSXMPlayerGlobalControlTool.share.playXMPlay(track: track, trackList: trackList)
             updatePlayerModelUI()
         }
     }
     
     @objc func pause() {
         if trackList.count > 0 {
-            YXSPlayerMediaSingleControlTool.share.pauseXMPlay()
+            YXSXMPlayerGlobalControlTool.share.pauseXMPlay()
             
         }
     }
     
     @objc func resume() {
         if trackList.count > 0 {
-            YXSPlayerMediaSingleControlTool.share.resumeXMPlay()
+            YXSXMPlayerGlobalControlTool.share.resumeXMPlay()
             
         }
     }
     
     @objc func stop() {
         if trackList.count > 0 {
-            YXSPlayerMediaSingleControlTool.share.stopXMPlay()
+            YXSXMPlayerGlobalControlTool.share.stopXMPlay()
         }
         progressView.value = 0.0;
     }
@@ -276,7 +276,7 @@ class YXSPlayingViewController: YXSBaseViewController {
         progressView.value = 0.0
         btnPlayPause.isSelected = true
         if trackList.count > 0 {
-            YXSPlayerMediaSingleControlTool.share.playXMPrev()
+            YXSXMPlayerGlobalControlTool.share.playXMPrev()
             
         }
     }
@@ -285,15 +285,15 @@ class YXSPlayingViewController: YXSBaseViewController {
         progressView.value = 0.0
         btnPlayPause.isSelected = true
         if trackList.count > 0 {
-            YXSPlayerMediaSingleControlTool.share.playXMNext()
+            YXSXMPlayerGlobalControlTool.share.playXMNext()
         }
     }
     
     @objc func sliderValueChanged(sender: UISlider) {
         if(sender == progressView) {
             if(trackList.count > 0){
-                let second = Float(YXSPlayerMediaSingleControlTool.share.currentTrack?.duration ?? 0) * progressView.value
-                YXSPlayerMediaSingleControlTool.share.playXMSeek(second: CGFloat(second))
+                let second = Float(YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 0) * progressView.value
+                YXSXMPlayerGlobalControlTool.share.playXMSeek(second: CGFloat(second))
             }
         }
     }
@@ -308,7 +308,7 @@ class YXSPlayingViewController: YXSBaseViewController {
     }
     
     @objc func collectClick(sender: YXSButton) {
-        let track = YXSPlayerMediaSingleControlTool.share.currentTrack
+        let track = YXSXMPlayerGlobalControlTool.share.currentTrack
         
         if sender.isSelected {
             /// 取消
@@ -335,18 +335,18 @@ class YXSPlayingViewController: YXSBaseViewController {
     }
     
     @objc func changePlayerModel(){
-        switch YXSPlayerMediaSingleControlTool.share.playMode {
+        switch YXSXMPlayerGlobalControlTool.share.playMode {
         case .XMTrackModeCycle:
             MBProgressHUD.yxs_showMessage(message: "随机播放")
-            YXSPlayerMediaSingleControlTool.share.setXMPlayModel(.XMTrackModeRandom)
+            YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeRandom)
         case .XMTrackModeRandom:
             MBProgressHUD.yxs_showMessage(message: "单曲循环")
-            YXSPlayerMediaSingleControlTool.share.setXMPlayModel(.XMTrackModeSingle)
+            YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeSingle)
         case .XMTrackModeSingle:
             MBProgressHUD.yxs_showMessage(message: "顺序播放")
-            YXSPlayerMediaSingleControlTool.share.setXMPlayModel(.XMTrackModeCycle)
+            YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeCycle)
         default:
-            YXSPlayerMediaSingleControlTool.share.setXMPlayModel(.XMTrackModeCycle)
+            YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeCycle)
         }
         updatePlayerModelUI()
     }
@@ -355,7 +355,7 @@ class YXSPlayingViewController: YXSBaseViewController {
     
     ///切换模式更新UI
     func updatePlayerModelUI(){
-        switch YXSPlayerMediaSingleControlTool.share.playMode{
+        switch YXSXMPlayerGlobalControlTool.share.playMode{
         case .XMTrackModeCycle:
             btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
         case .XMTrackModeRandom:
@@ -543,14 +543,14 @@ extension YXSPlayingViewController: YXSXMPlayerDelegate{
     }
     
     func xmTrackPlayerDidStart() {
-        let track = YXSPlayerMediaSingleControlTool.share.currentTrack
+        let track = YXSXMPlayerGlobalControlTool.share.currentTrack
         requestJudge(voiceId: track?.trackId ?? 0)
         
-        customNav.title = YXSPlayerMediaSingleControlTool.share.currentTrack?.trackTitle
-        lbTotalDuration.text = stringWithDuration(duration: UInt(YXSPlayerMediaSingleControlTool.share.currentTrack?.duration ?? 0))
+        customNav.title = YXSXMPlayerGlobalControlTool.share.currentTrack?.trackTitle
+        lbTotalDuration.text = stringWithDuration(duration: UInt(YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 0))
         
-        imgCover.sd_setImage(with: URL(string: YXSPlayerMediaSingleControlTool.share.currentTrack?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"))
-        imgBgView.sd_setImage(with: URL(string: YXSPlayerMediaSingleControlTool.share.currentTrack?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"), completed: nil)
+        imgCover.sd_setImage(with: URL(string: YXSXMPlayerGlobalControlTool.share.currentTrack?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"))
+        imgBgView.sd_setImage(with: URL(string: YXSXMPlayerGlobalControlTool.share.currentTrack?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"), completed: nil)
         UIUtil.configNowPlayingCenterUI()
     }
 }

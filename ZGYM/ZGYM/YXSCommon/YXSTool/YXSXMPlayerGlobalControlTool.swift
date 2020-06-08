@@ -9,8 +9,8 @@
 import UIKit
 
 ///喜马拉雅播放器功能 抽出 方便统一控制 和后期如果替换播放器
-@objc class YXSPlayerMediaSingleControlTool: NSObject{
-    @objc static let share: YXSPlayerMediaSingleControlTool = YXSPlayerMediaSingleControlTool()
+@objc class YXSXMPlayerGlobalControlTool: NSObject{
+    @objc static let share: YXSXMPlayerGlobalControlTool = YXSXMPlayerGlobalControlTool()
     
     ///刚启动播放器默认停止状态
     var isPlayerStatusIsStop: Bool = true
@@ -145,7 +145,7 @@ import UIKit
 }
 
 
-extension YXSPlayerMediaSingleControlTool: XMTrackPlayerDelegate{
+extension YXSXMPlayerGlobalControlTool: XMTrackPlayerDelegate{
     // MARK: - Delegate
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
         playerDelegate?.xmTrackPlayNotifyProcess(percent, currentSecond: currentSecond)

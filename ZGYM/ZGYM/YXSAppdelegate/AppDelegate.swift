@@ -339,7 +339,7 @@ extension AppDelegate{
         UMConfigure.initWithAppkey(KUMAPPKEY, channel: "App Store")
 //        UMVisual.setVisualEnabled(true)
         
-        if !YXSPlayerMediaSingleControlTool.share.isPlayerStop(){
+        if !YXSXMPlayerGlobalControlTool.share.isPlayerStop(){
             YXSMusicPlayerWindowView.updateSuperView()
         }
         

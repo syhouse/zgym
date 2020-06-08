@@ -99,7 +99,7 @@ class YXSSSAudioListPlayer: NSObject {
         }
         removerPlayer()
         
-        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
+        YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
     }
     
     ///移除播放player
