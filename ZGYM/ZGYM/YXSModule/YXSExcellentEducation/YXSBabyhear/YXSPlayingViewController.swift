@@ -23,6 +23,8 @@ class YXSPlayingViewController: YXSBaseViewController {
     /// 播放列表菜单
     var playListVC: YXSPlayListViewController?
     
+    private var isOnDragProgress: Bool = false
+    
     // MARK: - init
     
     
@@ -60,10 +62,11 @@ class YXSPlayingViewController: YXSBaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        UIApplication.shared.endReceivingRemoteControlEvents()
-        
-        YXSMusicPlayerWindowView.showPlayerWindow(currentTime: currentTime)
+        ///判断是否是当前播放器present出去
+        if self.navigationController?.viewControllers.last != self{
+            UIApplication.shared.endReceivingRemoteControlEvents()
+            YXSMusicPlayerWindowView.showPlayerWindow(currentTime: currentTime)
+        }
     }
     
     override func viewDidLoad() {
@@ -117,6 +120,7 @@ class YXSPlayingViewController: YXSBaseViewController {
         btnPrevious.addTarget(self, action: #selector(playPreTrack(sender:)), for: .touchUpInside)
         btnNext.addTarget(self, action: #selector(playNextTrack(sender:)), for: .touchUpInside)
         progressView.addTarget(self, action: #selector(sliderValueChanged(sender:)), for: .valueChanged)
+        progressView.addTarget(self, action: #selector(sliderTouchUpInside(sender:)), for: .touchUpInside)
         btnMenu.addTarget(self, action: #selector(menuClick(sender:)), for: .touchUpInside)
         btnCollect.addTarget(self, action: #selector(collectClick(sender:)), for: .touchUpInside)
         
@@ -290,13 +294,18 @@ class YXSPlayingViewController: YXSBaseViewController {
     }
     
     @objc func sliderValueChanged(sender: UISlider) {
-        if(sender == progressView) {
-            if(trackList.count > 0){
-                let second = Float(YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 0) * progressView.value
-                YXSXMPlayerGlobalControlTool.share.playXMSeek(second: CGFloat(second))
-            }
-        }
+        isOnDragProgress = true
     }
+    
+    @objc func sliderTouchUpInside(sender: UISlider) {
+        if(trackList.count > 0){
+            let second = Float(YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 0) * progressView.value
+            YXSXMPlayerGlobalControlTool.share.playXMSeek(second: CGFloat(second))
+        }
+        isOnDragProgress = false
+    }
+    
+    
     
     @objc func menuClick(sender: YXSButton) {
         playListVC = YXSPlayListViewController(trackList: trackList as! [XMTrack]) { [weak self](index) in
@@ -516,7 +525,9 @@ extension YXSPlayingViewController: YXSXMPlayerDelegate{
     }
     
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
-        progressView.value = Float(percent)
+        if !isOnDragProgress{
+            progressView.value = Float(percent)
+        }
         lbCurrentDuration.text = stringWithDuration(duration: currentSecond)
         
         YXSRemoteControlInfoHelper.currentTime = currentSecond

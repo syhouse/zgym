@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class YXSSSAudioPlayer: NSObject {
     static let sharedInstance: YXSSSAudioPlayer = {
         let instance = YXSSSAudioPlayer()
