@@ -441,7 +441,7 @@ extension YXSSolitaireNewDetailController{
                                             for selectOption in selectOptions{
                                                 if solitaireSelect.leftText == selectOption{
                                                     solitaireSelect.isSelected = true
-                                                    break
+                                                    break	
                                                 }
                                             }
                                         }
