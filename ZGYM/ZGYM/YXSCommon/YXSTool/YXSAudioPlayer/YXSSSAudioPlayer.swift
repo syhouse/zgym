@@ -64,7 +64,7 @@ class YXSSSAudioPlayer: NSObject {
          isFinish = false
          
          NotificationCenter.default.addObserver(self, selector: #selector(videoPlayEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        YXSPlayerMediaSingleControlTool.share.pausePlayer()
+        YXSPlayerMediaSingleControlTool.share.pauseCompetitionPlayer()
     }
     
     
@@ -92,7 +92,7 @@ class YXSSSAudioPlayer: NSObject {
         player = nil
         isFinish = true
         
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
     }
     
     
@@ -100,7 +100,7 @@ class YXSSSAudioPlayer: NSObject {
     public func pauseVoice(){
         player?.pause()
         isPause = true
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
     }
     
     /// 恢复
@@ -112,7 +112,7 @@ class YXSSSAudioPlayer: NSObject {
             }
             player.play()
             isPause = false
-            YXSPlayerMediaSingleControlTool.share.pausePlayer()
+            YXSPlayerMediaSingleControlTool.share.pauseCompetitionPlayer()
         }
     }
     
@@ -122,7 +122,7 @@ class YXSSSAudioPlayer: NSObject {
         isPause = true
         finish?()
         
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
     }
         
     // MARK: - Setter

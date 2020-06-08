@@ -109,7 +109,7 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
                 imagePickerVc.sourceType = .camera
                 imagePickerVc.modalPresentationStyle = .overCurrentContext
                 UIUtil.RootController().present(self.imagePickerVc, animated: true, completion: nil)
-                YXSPlayerMediaSingleControlTool.share.pausePlayer()
+                YXSPlayerMediaSingleControlTool.share.pauseCompetitionPlayer()
             } else {
                 print("模拟器中无法打开照相机,请在真机中使用")
             }
@@ -209,7 +209,7 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
         imagePickerVc!.modalPresentationStyle = .fullScreen
         presentVc.present(imagePickerVc!, animated: true, completion: nil)
         
-        YXSPlayerMediaSingleControlTool.share.pausePlayer()
+        YXSPlayerMediaSingleControlTool.share.pauseCompetitionPlayer()
     }
     
     
@@ -242,7 +242,7 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
     func tz_imagePickerControllerDidCancel(_ picker: TZImagePickerController!) {
         print("cancel")
         
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
     }
     
     // photos数组里的UIImage对象，默认是828像素宽，你可以通过设置photoWidth属性的值来改变它
@@ -252,7 +252,7 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
         
         delegate?.didSelectImages(images: photos ?? [UIImage]())
         
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
     }
     
     func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingVideo coverImage: UIImage!, sourceAssets asset: PHAsset!) {
@@ -274,7 +274,7 @@ class YXSSelectMediaHelper: NSObject,TZImagePickerControllerDelegate {
         self.delegate.didSelectMedia(asset: model)
 
         
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
     }
     
     
@@ -322,12 +322,12 @@ extension YXSSelectMediaHelper: (UIImagePickerControllerDelegate & UINavigationC
             
         }
         
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
         
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSPlayerMediaSingleControlTool.share.resumeCompetitionPlayer()
     }
 }
 

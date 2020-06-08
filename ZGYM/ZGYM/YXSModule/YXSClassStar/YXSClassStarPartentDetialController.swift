@@ -12,7 +12,7 @@ import NightNight
 
 
 /// 班级之星家长
-class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonController {
+class YXSClassStarPartentDetialController: YXSClassStarSignleClassBaseController {
     var selectTypeModels:[YXSSelectModel] = [YXSSelectModel.init(text: "全部", isSelect: true, paramsKey: ""),YXSSelectModel.init(text: "表扬", isSelect: false, paramsKey: "10"),YXSSelectModel.init(text: "待改进", isSelect: false, paramsKey: "20")]
     var selectTypeModel:YXSSelectModel = YXSSelectModel.init(text: "全部", isSelect: true, paramsKey: "")
     
@@ -99,7 +99,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
         }
     }
     
-    // MARK: -UI
+    // MARK: - UI
     func updateUI(){
         if isEmptyUI{
             tableView.rowHeight = 64
@@ -153,7 +153,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
         }
     }
     
-    // MARK: -loadData
+    // MARK: - loadData
     
     override func yxs_loadNextPage() {
         loadListData()
@@ -230,7 +230,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     
     // MARK: -public
     
-    // MARK: -tableViewDelegate
+    // MARK: - tableViewDelegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return isEmptyUI ? teacherLists.count :  dataSource.count
     }
@@ -282,7 +282,7 @@ class YXSClassStarPartentDetialController: YXSClassStarSignleClassCommonControll
     }()
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > kSafeTopHeight + 64{
+        if scrollView.contentOffset.y > 0{
             customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.white)
             customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "back"), forState: .normal)
             customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kTextMainBodyColor)

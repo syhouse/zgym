@@ -757,8 +757,7 @@ extension UIUtil{
 // MARK: - 锁屏播放控制
 extension UIUtil{
     static func configNowPlayingCenterUI(){
-        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
-        if isPlayerStop{
+        if YXSPlayerMediaSingleControlTool.share.isPlayerStop(){
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             return
         }
@@ -784,7 +783,7 @@ extension UIUtil{
         info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
         
         //音乐的播放速度
-        if XMSDKPlayer.shared()?.isPlaying() ?? false{
+        if YXSPlayerMediaSingleControlTool.share.isPlayerPlaying(){
             info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 1)
         }else{
             info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 0)

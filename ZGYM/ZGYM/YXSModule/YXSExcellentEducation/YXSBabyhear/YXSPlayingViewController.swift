@@ -10,7 +10,7 @@ import UIKit
 import NightNight
 import SDWebImage
 
-class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XMLivePlayerDelegate {
+class YXSPlayingViewController: YXSBaseViewController {
     
     private var track: XMTrack?
     private var trackList: [Any] = []
@@ -93,9 +93,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             make.edges.equalTo(0)
         })
         
-        XMSDKPlayer.shared()?.setAutoNexTrack(true)
-        XMSDKPlayer.shared()?.trackPlayDelegate = self
-        XMSDKPlayer.shared()?.livePlayDelegate = self
+        YXSPlayerMediaSingleControlTool.share.playerDelegate = self
         
         view.addSubview(controlPanel)
         controlPanel.addSubview(btnPlayPause)
@@ -126,18 +124,16 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
             stop()
             play()
         }else{//根据喜马拉雅当前播放器设置播放UI
-            track = XMSDKPlayer.shared()?.currentTrack()
-            trackList = XMSDKPlayer.shared()?.playList() ?? [Any]()
+            track = YXSPlayerMediaSingleControlTool.share.currentTrack
+            trackList = YXSPlayerMediaSingleControlTool.share.playList
             xmTrackPlayerDidStart()
             updatePlayerModelUI()
-            if let shared = XMSDKPlayer.shared(){
-                progressView.value = Float(currentTime)/Float(shared.currentTrack()?.duration ?? 1)
-                lbCurrentDuration.text = stringWithDuration(duration: UInt(currentTime))
-                btnPlayPause.isSelected = !shared.isPaused()
-                
-                if shared.isPlaying(){
-                    self.imgCover.resumeRotate()
-                }
+            
+            progressView.value = Float(currentTime)/Float(YXSPlayerMediaSingleControlTool.share.currentTrack?.duration ?? 1)
+            lbCurrentDuration.text = stringWithDuration(duration: UInt(currentTime))
+            btnPlayPause.isSelected = !YXSPlayerMediaSingleControlTool.share.isPlayerIsPaused()
+            if YXSPlayerMediaSingleControlTool.share.isPlayerPlaying(){
+                self.imgCover.resumeRotate()
             }
         }
     }
@@ -212,7 +208,7 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     
     // MARK: - public
     public func cheakPlayerUI(){
-        if XMSDKPlayer.shared()?.isPlaying() ?? false{
+        if YXSPlayerMediaSingleControlTool.share.isPlayerPlaying(){
             btnPlayPause.isSelected = true
         }else{
             btnPlayPause.isSelected = false
@@ -250,51 +246,28 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         if trackList.count > 0 {
             btnPlayPause.isSelected = true
             progressView.value = 0.0
-            XMSDKPlayer.shared()?.setPlayMode(.track)
-            XMSDKPlayer.shared()?.setTrackPlayMode(.XMTrackModeCycle)
-            XMSDKPlayer.shared()?.play(with: track, playlist: trackList)
-            XMSDKPlayer.shared()?.setAutoNexTrack(true)
-            
+            YXSPlayerMediaSingleControlTool.share.playXMPlay(track: track, trackList: trackList)
             updatePlayerModelUI()
-        } else if radio != nil {
-            btnPlayPause.isSelected = true
-            XMSDKPlayer.shared()?.setPlayMode(.live)
-            XMSDKPlayer.shared()?.startLivePlay(with: radio)
-            
-        } else if radioSchedule != nil {
-            btnPlayPause.isSelected = true
-            XMSDKPlayer.shared()?.setPlayMode(.live)
-            XMSDKPlayer.shared()?.startHistoryLivePlay(with: nil, withProgram: radioSchedule, inProgramList: programList)
         }
     }
     
     @objc func pause() {
         if trackList.count > 0 {
-            XMSDKPlayer.shared()?.pauseTrackPlay()
+            YXSPlayerMediaSingleControlTool.share.pauseXMPlay()
             
-        } else if radio != nil {
-            XMSDKPlayer.shared()?.pauseLivePlay()
-            
-        } else if radioSchedule != nil {
-            XMSDKPlayer.shared()?.pauseLivePlay()
         }
     }
     
     @objc func resume() {
         if trackList.count > 0 {
-            XMSDKPlayer.shared()?.resumeTrackPlay()
+            YXSPlayerMediaSingleControlTool.share.resumeXMPlay()
             
-        } else if radio != nil || radioSchedule != nil {
-            XMSDKPlayer.shared()?.resumeLivePlay()
         }
     }
     
     @objc func stop() {
         if trackList.count > 0 {
-            XMSDKPlayer.shared()?.stopTrackPlay()
-            
-        } else if radio != nil || radioSchedule != nil {
-            XMSDKPlayer.shared()?.stopLivePlay()
+            YXSPlayerMediaSingleControlTool.share.stopXMPlay()
         }
         progressView.value = 0.0;
     }
@@ -303,13 +276,8 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         progressView.value = 0.0
         btnPlayPause.isSelected = true
         if trackList.count > 0 {
-            XMSDKPlayer.shared()?.playPrevTrack()
+            YXSPlayerMediaSingleControlTool.share.playXMPrev()
             
-        } else if radio != nil {
-            //[[XMSDKPlayer sharedPlayer] pauseLivePlay];
-            
-        } else if radioSchedule != nil {
-            XMSDKPlayer.shared()?.playPreProgram()
         }
     }
     
@@ -317,25 +285,15 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
         progressView.value = 0.0
         btnPlayPause.isSelected = true
         if trackList.count > 0 {
-            XMSDKPlayer.shared()?.playNextTrack()
-            
-        } else if radio != nil {
-            //[[XMSDKPlayer sharedPlayer] pauseLivePlay];
-            
-        } else if radioSchedule != nil {
-            XMSDKPlayer.shared()?.playNextProgram()
+            YXSPlayerMediaSingleControlTool.share.playXMNext()
         }
     }
     
     @objc func sliderValueChanged(sender: UISlider) {
         if(sender == progressView) {
             if(trackList.count > 0){
-                let second = Float(XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0) * progressView.value
-                XMSDKPlayer.shared()?.seek(toTime: CGFloat(second))
-                
-            } else if radioSchedule != nil {
-                let second = Float(XMSDKPlayer.shared()?.currentPlayingProgram()?.duration ?? 0) * progressView.value
-                XMSDKPlayer.shared()?.seek(toTime: CGFloat(second))
+                let second = Float(YXSPlayerMediaSingleControlTool.share.currentTrack?.duration ?? 0) * progressView.value
+                YXSPlayerMediaSingleControlTool.share.playXMSeek(second: CGFloat(second))
             }
         }
     }
@@ -343,14 +301,14 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     @objc func menuClick(sender: YXSButton) {
         playListVC = YXSPlayListViewController(trackList: trackList as! [XMTrack]) { [weak self](index) in
             guard let weakSelf = self else {return}
-            weakSelf.track = weakSelf.trackList[index] as! XMTrack
+            weakSelf.track = weakSelf.trackList[index] as? XMTrack
             weakSelf.play()
         }
         navigationController?.present(playListVC!, animated: true, completion: nil)
     }
     
     @objc func collectClick(sender: YXSButton) {
-        let track = XMSDKPlayer.shared()?.currentTrack()
+        let track = YXSPlayerMediaSingleControlTool.share.currentTrack
         
         if sender.isSelected {
             /// 取消
@@ -377,114 +335,35 @@ class YXSPlayingViewController: YXSBaseViewController, XMTrackPlayerDelegate,XML
     }
     
     @objc func changePlayerModel(){
-        if let share = XMSDKPlayer.shared(){
-            switch share.getTrackPlayMode() {
-            case .XMTrackModeCycle:
-                MBProgressHUD.yxs_showMessage(message: "随机播放")
-                share.setTrackPlayMode(.XMTrackModeRandom)
-            case .XMTrackModeRandom:
-                MBProgressHUD.yxs_showMessage(message: "单曲循环")
-                share.setTrackPlayMode(.XMTrackModeSingle)
-            case .XMTrackModeSingle:
-                MBProgressHUD.yxs_showMessage(message: "顺序播放")
-                share.setTrackPlayMode(.XMTrackModeCycle)
-            default:
-                share.setTrackPlayMode(.XMTrackModeCycle)
-            }
+        switch YXSPlayerMediaSingleControlTool.share.playMode {
+        case .XMTrackModeCycle:
+            MBProgressHUD.yxs_showMessage(message: "随机播放")
+            YXSPlayerMediaSingleControlTool.share.setXMPlayModel(.XMTrackModeRandom)
+        case .XMTrackModeRandom:
+            MBProgressHUD.yxs_showMessage(message: "单曲循环")
+            YXSPlayerMediaSingleControlTool.share.setXMPlayModel(.XMTrackModeSingle)
+        case .XMTrackModeSingle:
+            MBProgressHUD.yxs_showMessage(message: "顺序播放")
+            YXSPlayerMediaSingleControlTool.share.setXMPlayModel(.XMTrackModeCycle)
+        default:
+            YXSPlayerMediaSingleControlTool.share.setXMPlayModel(.XMTrackModeCycle)
         }
         updatePlayerModelUI()
     }
     
-    // MARK: - Delegate
-    func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
-        progressView.value = Float(percent)
-        lbCurrentDuration.text = stringWithDuration(duration: currentSecond)
-        
-        YXSRemoteControlInfoHelper.currentTime = currentSecond
-        currentTime = currentSecond
-        
-        UIUtil.configNowPlayingCenterUI()
-    }
-    
-    func xmTrackPlayNotifyCacheProcess(_ percent: CGFloat) {
-        ///
-        //        SLLog("CacheProcess:\(percent)")
-    }
-    
-    func xmTrackPlayerWillPlaying() {
-        playListVC?.tableView.reloadData()
-    }
-    
-    func xmTrackPlayerDidPlaying() {
-        self.imgCover.resumeRotate()
-    }
-    
-    func xmTrackPlayerDidPaused() {
-        self.imgCover.stopRotating()
-    }
-    
-    func xmTrackPlayerDidStart() {
-        let track = XMSDKPlayer.shared()?.currentTrack()
-        requestJudge(voiceId: track?.trackId ?? 0)
-        
-        customNav.title = XMSDKPlayer.shared()?.currentTrack()?.trackTitle
-        lbTotalDuration.text = stringWithDuration(duration: UInt(XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0))
-        
-        imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"))
-        imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"), completed: nil)
-        UIUtil.configNowPlayingCenterUI()
-    }
-    
-    // MARK: - Live Radio
-    func xmLiveRadioPlayerNotifyPlayProgress(_ percent: CGFloat, currentTime: Int) {
-        progressView.value = Float(percent)
-        lbCurrentDuration.text = stringWithDuration(duration: UInt(currentTime))
-    }
-    
-    func xmLiveRadioPlayerNotifyCacheProgress(_ percent: CGFloat) {
-        //        SLLog("CacheProcess:\(percent)")
-    }
-    
-    
-    
-    func xmLiveRadioPlayerDidStart() {
-        playListVC?.tableView.reloadData()
-        setPlayerDidStartUI()
-    }
-    
     // MARK: -Tool
-    /// 秒 转(分：秒)
-    
-    func setPlayerDidStartUI(){
-        if radio != nil {
-            customNav.title = XMSDKPlayer.shared()?.currentPlayingRadio()?.radioName
-            let totalDuration = Int(XMSDKPlayer.shared()?.currentPlayingRadio()?.radioDesc ?? "0")
-            lbTotalDuration.text = stringWithDuration(duration: UInt(totalDuration ?? 0))
-            imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingRadio()?.coverUrlLarge ?? ""), completed: nil)
-            imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingRadio()?.coverUrlLarge ?? ""), completed: nil)
-            
-        } else {
-            customNav.title = XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.programName
-            let totalDuration = XMSDKPlayer.shared()?.currentPlayingProgram()?.totalPlayedTime
-            lbTotalDuration.text = String.init(format: "%02d:%02d", ((totalDuration ?? 0)/60),((totalDuration ?? 0)%60))
-            imgCover.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.backPicUrl ?? ""), completed: nil)
-            imgBgView.sd_setImage(with: URL(string: XMSDKPlayer.shared()?.currentPlayingProgram()?.relatedProgram.backPicUrl ?? ""), completed: nil)
-        }
-    }
     
     ///切换模式更新UI
     func updatePlayerModelUI(){
-        if let share = XMSDKPlayer.shared(){
-            switch share.getTrackPlayMode() {
-            case .XMTrackModeCycle:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
-            case .XMTrackModeRandom:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_random", night: "yxs_player_random"), forState: .normal)
-            case .XMTrackModeSingle:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_single", night: "yxs_player_single"), forState: .normal)
-            default:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
-            }
+        switch YXSPlayerMediaSingleControlTool.share.playMode{
+        case .XMTrackModeCycle:
+            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+        case .XMTrackModeRandom:
+            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_random", night: "yxs_player_random"), forState: .normal)
+        case .XMTrackModeSingle:
+            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_single", night: "yxs_player_single"), forState: .normal)
+        default:
+            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
         }
     }
     
@@ -629,3 +508,50 @@ extension YXSPlayingViewController: CAAnimationDelegate{
         
     }
 }
+
+// MARK: - YXSXMPlayerDelegate
+extension YXSPlayingViewController: YXSXMPlayerDelegate{
+    func xmTrackPlayerDidPlaylistEnd() {
+        
+    }
+    
+    func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
+        progressView.value = Float(percent)
+        lbCurrentDuration.text = stringWithDuration(duration: currentSecond)
+        
+        YXSRemoteControlInfoHelper.currentTime = currentSecond
+        currentTime = currentSecond
+        
+        UIUtil.configNowPlayingCenterUI()
+    }
+    
+    func xmTrackPlayNotifyCacheProcess(_ percent: CGFloat) {
+        ///
+        //        SLLog("CacheProcess:\(percent)")
+    }
+    
+    func xmTrackPlayerWillPlaying() {
+        playListVC?.tableView.reloadData()
+    }
+    
+    func xmTrackPlayerDidPlaying() {
+        self.imgCover.resumeRotate()
+    }
+    
+    func xmTrackPlayerDidPaused() {
+        self.imgCover.stopRotating()
+    }
+    
+    func xmTrackPlayerDidStart() {
+        let track = YXSPlayerMediaSingleControlTool.share.currentTrack
+        requestJudge(voiceId: track?.trackId ?? 0)
+        
+        customNav.title = YXSPlayerMediaSingleControlTool.share.currentTrack?.trackTitle
+        lbTotalDuration.text = stringWithDuration(duration: UInt(YXSPlayerMediaSingleControlTool.share.currentTrack?.duration ?? 0))
+        
+        imgCover.sd_setImage(with: URL(string: YXSPlayerMediaSingleControlTool.share.currentTrack?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"))
+        imgBgView.sd_setImage(with: URL(string: YXSPlayerMediaSingleControlTool.share.currentTrack?.coverUrlLarge ?? ""), placeholderImage: UIImage.init(named: "yxs_player_defualt_bg"), completed: nil)
+        UIUtil.configNowPlayingCenterUI()
+    }
+}
+

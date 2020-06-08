@@ -456,7 +456,7 @@
 		6F0705072445D8050090975B /* YXSClassStartClassModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701452445D7FF0090975B /* YXSClassStartClassModel.swift */; };
 		6F0705082445D8050090975B /* YXSClassStarChildrenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701462445D7FF0090975B /* YXSClassStarChildrenModel.swift */; };
 		6F0705092445D8050090975B /* YXSClassStartTeacherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701472445D7FF0090975B /* YXSClassStartTeacherModel.swift */; };
-		6F07050A2445D8050090975B /* YXSClassStarSignleClassCommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701482445D7FF0090975B /* YXSClassStarSignleClassCommonController.swift */; };
+		6F07050A2445D8050090975B /* YXSClassStarSignleClassBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701482445D7FF0090975B /* YXSClassStarSignleClassBaseController.swift */; };
 		6F07050B2445D8050090975B /* YXSClassStarTeacherDetialHeaderMidView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07014A2445D7FF0090975B /* YXSClassStarTeacherDetialHeaderMidView.swift */; };
 		6F07050C2445D8050090975B /* YXSClassStartTeacherDetailStudentEmptyHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07014B2445D7FF0090975B /* YXSClassStartTeacherDetailStudentEmptyHeaderView.swift */; };
 		6F07050D2445D8050090975B /* YXSClassStarApposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07014C2445D7FF0090975B /* YXSClassStarApposeView.swift */; };
@@ -472,7 +472,7 @@
 		6F0705172445D8050090975B /* YXSClassStartTeacherDetailStudentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701562445D7FF0090975B /* YXSClassStartTeacherDetailStudentHeaderView.swift */; };
 		6F0705182445D8050090975B /* YXSClassStarSignleClassStudentDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701572445D7FF0090975B /* YXSClassStarSignleClassStudentDetialController.swift */; };
 		6F0705192445D8050090975B /* YXSClassStartTeacherClassListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701582445D7FF0090975B /* YXSClassStartTeacherClassListController.swift */; };
-		6F07051A2445D8050090975B /* YXSClassStarSignleClassDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701592445D7FF0090975B /* YXSClassStarSignleClassDetialController.swift */; };
+		6F07051A2445D8050090975B /* YXSClassStarTeacherSignleClassDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701592445D7FF0090975B /* YXSClassStarTeacherSignleClassDetialController.swift */; };
 		6F07051B2445D8050090975B /* YXSClassStarPartentDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07015A2445D7FF0090975B /* YXSClassStarPartentDetialController.swift */; };
 		6F07051C2445D8050090975B /* YXSHomeworkMessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07015C2445D7FF0090975B /* YXSHomeworkMessageVC.swift */; };
 		6F07051D2445D8050090975B /* YXSHomeworkCommentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07015D2445D7FF0090975B /* YXSHomeworkCommentController.swift */; };
@@ -1199,7 +1199,7 @@
 		6F0701452445D7FF0090975B /* YXSClassStartClassModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartClassModel.swift; sourceTree = "<group>"; };
 		6F0701462445D7FF0090975B /* YXSClassStarChildrenModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarChildrenModel.swift; sourceTree = "<group>"; };
 		6F0701472445D7FF0090975B /* YXSClassStartTeacherModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartTeacherModel.swift; sourceTree = "<group>"; };
-		6F0701482445D7FF0090975B /* YXSClassStarSignleClassCommonController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarSignleClassCommonController.swift; sourceTree = "<group>"; };
+		6F0701482445D7FF0090975B /* YXSClassStarSignleClassBaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarSignleClassBaseController.swift; sourceTree = "<group>"; };
 		6F07014A2445D7FF0090975B /* YXSClassStarTeacherDetialHeaderMidView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarTeacherDetialHeaderMidView.swift; sourceTree = "<group>"; };
 		6F07014B2445D7FF0090975B /* YXSClassStartTeacherDetailStudentEmptyHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartTeacherDetailStudentEmptyHeaderView.swift; sourceTree = "<group>"; };
 		6F07014C2445D7FF0090975B /* YXSClassStarApposeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarApposeView.swift; sourceTree = "<group>"; };
@@ -1215,7 +1215,7 @@
 		6F0701562445D7FF0090975B /* YXSClassStartTeacherDetailStudentHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartTeacherDetailStudentHeaderView.swift; sourceTree = "<group>"; };
 		6F0701572445D7FF0090975B /* YXSClassStarSignleClassStudentDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarSignleClassStudentDetialController.swift; sourceTree = "<group>"; };
 		6F0701582445D7FF0090975B /* YXSClassStartTeacherClassListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartTeacherClassListController.swift; sourceTree = "<group>"; };
-		6F0701592445D7FF0090975B /* YXSClassStarSignleClassDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarSignleClassDetialController.swift; sourceTree = "<group>"; };
+		6F0701592445D7FF0090975B /* YXSClassStarTeacherSignleClassDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarTeacherSignleClassDetialController.swift; sourceTree = "<group>"; };
 		6F07015A2445D7FF0090975B /* YXSClassStarPartentDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarPartentDetialController.swift; sourceTree = "<group>"; };
 		6F07015C2445D7FF0090975B /* YXSHomeworkMessageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkMessageVC.swift; sourceTree = "<group>"; };
 		6F07015D2445D7FF0090975B /* YXSHomeworkCommentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkCommentController.swift; sourceTree = "<group>"; };
@@ -2986,8 +2986,8 @@
 				6F0701492445D7FF0090975B /* View */,
 				6F0701572445D7FF0090975B /* YXSClassStarSignleClassStudentDetialController.swift */,
 				6F0701582445D7FF0090975B /* YXSClassStartTeacherClassListController.swift */,
-				6F0701592445D7FF0090975B /* YXSClassStarSignleClassDetialController.swift */,
-				6F0701482445D7FF0090975B /* YXSClassStarSignleClassCommonController.swift */,
+				6F0701592445D7FF0090975B /* YXSClassStarTeacherSignleClassDetialController.swift */,
+				6F0701482445D7FF0090975B /* YXSClassStarSignleClassBaseController.swift */,
 				6F07015A2445D7FF0090975B /* YXSClassStarPartentDetialController.swift */,
 				6F8272B4245171C900918757 /* YXSClassStarCommentItemController.swift */,
 			);
@@ -6550,7 +6550,7 @@
 				6F0703B22445D8030090975B /* TUIConversationListController.m in Sources */,
 				6F07046D2445D8040090975B /* YXSLoginViewController.swift in Sources */,
 				6F07FE0A2445D7C70090975B /* YXSButton.swift in Sources */,
-				6F07051A2445D8050090975B /* YXSClassStarSignleClassDetialController.swift in Sources */,
+				6F07051A2445D8050090975B /* YXSClassStarTeacherSignleClassDetialController.swift in Sources */,
 				6F5677A3247E527B00B523ED /* YXSSolitaireNewPublishBaseController.swift in Sources */,
 				6F07044C2445D8040090975B /* YXSInviteViewController.swift in Sources */,
 				6F0703E22445D8030090975B /* AFImageDownloader.m in Sources */,
@@ -6822,7 +6822,7 @@
 				6F0703B42445D8030090975B /* TUIConversationCellData.m in Sources */,
 				6F0703CB2445D8030090975B /* AILoadingView.m in Sources */,
 				56FCE28D2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift in Sources */,
-				6F07050A2445D8050090975B /* YXSClassStarSignleClassCommonController.swift in Sources */,
+				6F07050A2445D8050090975B /* YXSClassStarSignleClassBaseController.swift in Sources */,
 				6F0705192445D8050090975B /* YXSClassStartTeacherClassListController.swift in Sources */,
 				6F0704F92445D8050090975B /* YXSAgendaListModel.swift in Sources */,
 				6F0703B32445D8030090975B /* TUIConversationCell.m in Sources */,

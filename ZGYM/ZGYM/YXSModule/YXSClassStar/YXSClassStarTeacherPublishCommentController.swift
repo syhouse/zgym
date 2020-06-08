@@ -8,6 +8,7 @@
 
 import UIKit
 
+///老师发布班级之星
 class YXSClassStarTeacherPublishCommentController: YXSBaseViewController {
     var model: YXSClassStartClassModel!
     var isPublish: Bool = false

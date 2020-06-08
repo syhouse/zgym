@@ -8,18 +8,18 @@
 
 class YXSRemoteControlInfoHelper: NSObject {
     static var title: String{
-        return XMSDKPlayer.shared()?.currentTrack()?.trackTitle ?? ""
+        return YXSPlayerMediaSingleControlTool.share.currentTrack?.trackTitle ?? ""
     }
     
     static var author: String{
-        return XMSDKPlayer.shared()?.currentTrack()?.announcer.nickname ?? ""
+        return YXSPlayerMediaSingleControlTool.share.currentTrack?.announcer.nickname ?? ""
     }
     
     static var currentTime: UInt = 0
     
-    static var totalTime: Int = XMSDKPlayer.shared()?.currentTrack()?.duration ?? 0
+    static var totalTime: Int = YXSPlayerMediaSingleControlTool.share.currentTrack?.duration ?? 0
     
     static var imageUrl: String{
-        return XMSDKPlayer.shared()?.currentTrack()?.coverUrlLarge ?? ""
+        return YXSPlayerMediaSingleControlTool.share.currentTrack?.coverUrlLarge ?? ""
     }
 }
