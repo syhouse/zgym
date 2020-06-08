@@ -60,7 +60,7 @@ import UIKit
         if isPlayerStatusIsStop{
             return true
         }else{
-            let isXMPlayerStop = self.isPlayerPlaying() == false && self.isPlayerIsPaused()
+            let isXMPlayerStop = self.isPlayerPlaying() == false && self.isPlayerIsPaused() == false
             if isXMPlayerStop{
                 return true
             }
