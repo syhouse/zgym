@@ -123,8 +123,8 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         isNecessarySwitch.swt.isOn = questionModel.isNecessary
         
         switch questionModel.type {
-        case .single:
-            self.title = "添加单选题"
+        case .single,.checkbox:
+            self.title = questionModel.type == .single ? "添加单选题" : "添加多选题"
             
             lineView1.snp.makeConstraints { (make) in
                 make.top.equalTo(isNecessarySwitch.snp_bottom)
@@ -186,44 +186,44 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
             scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
             contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
             
-            self.questionItemCountSection.rightLabel.text = "\(questionModel.imageLimint)"
-            self.questionItemCountSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
-        case .checkbox:
-            self.title = "添加多选题"
-            contentView.addSubview(questionItemCountSection)
-            questionItemCountSection.snp.makeConstraints { (make) in
-                make.top.equalTo(isNecessarySwitch.snp_bottom)
-                make.left.right.equalTo(0)
-                make.height.equalTo(49)
-            }
-            lineView1.snp.makeConstraints { (make) in
-                make.top.equalTo(questionItemCountSection.snp_bottom)
-                make.left.right.equalTo(0)
-                make.height.equalTo(10)
-            }
-            
-            textBgView.snp.remakeConstraints { (make) in
-                make.left.right.equalTo(0)
-                make.right.equalTo(0)
-                make.top.equalTo(questionItemCountSection.snp_bottom).offset(10)
-                make.bottom.equalTo(0).priorityHigh()
-            }
-            
-            contentView.addSubview(questionNameLabel)
-            questionNameLabel.snp.makeConstraints { (make) in
-                make.top.equalTo(textBgView.snp_bottom).offset(19)
-                make.left.equalTo(15)
-            }
-            contentView.addSubview(selectView)
-            selectView.snp.makeConstraints { (make) in
-                make.left.right.equalTo(0)
-                make.top.equalTo(questionNameLabel.snp_bottom).offset(13)
-                make.bottom.equalTo(-40)
-            }
-            scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
-            contentView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
-            
-            resetQuestionItemCount()
+//            self.questionItemCountSection.rightLabel.text = "\(questionModel.imageLimint)"
+//            self.questionItemCountSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+//        case .checkbox:
+//            self.title = "添加多选题"
+////            contentView.addSubview(questionItemCountSection)
+////            questionItemCountSection.snp.makeConstraints { (make) in
+////                make.top.equalTo(isNecessarySwitch.snp_bottom)
+////                make.left.right.equalTo(0)
+////                make.height.equalTo(49)
+////            }
+//            lineView1.snp.makeConstraints { (make) in
+//                make.top.equalTo(isNecessarySwitch.snp_bottom)
+//                make.left.right.equalTo(0)
+//                make.height.equalTo(10)
+//            }
+//
+//            textBgView.snp.remakeConstraints { (make) in
+//                make.left.right.equalTo(0)
+//                make.right.equalTo(0)
+//                make.top.equalTo(isNecessarySwitch.snp_bottom).offset(10)
+//                make.bottom.equalTo(0).priorityHigh()
+//            }
+//
+//            contentView.addSubview(questionNameLabel)
+//            questionNameLabel.snp.makeConstraints { (make) in
+//                make.top.equalTo(textBgView.snp_bottom).offset(19)
+//                make.left.equalTo(15)
+//            }
+//            contentView.addSubview(selectView)
+//            selectView.snp.makeConstraints { (make) in
+//                make.left.right.equalTo(0)
+//                make.top.equalTo(questionNameLabel.snp_bottom).offset(13)
+//                make.bottom.equalTo(-40)
+//            }
+//            scrollView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
+//            contentView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "F2F5F9"), night: kNightBackgroundColor)
+//
+//            resetQuestionItemCount()
         }
         
     }
@@ -236,10 +236,9 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         })
     }
     
-    ///更新图片上线数
     func resetQuestionItemCount(){
-        self.questionItemCountSection.rightLabel.text = "\(questionModel.maxSelect ?? (questionModel.solitaireSelects?.count ?? 1))"
-        self.questionItemCountSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+//        self.questionItemCountSection.rightLabel.text = "\(questionModel.maxSelect ?? (questionModel.solitaireSelects?.count ?? 1))"
+//        self.questionItemCountSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
     }
     
     /// 保存
@@ -272,32 +271,33 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         if !yxs_cheackCanSetUp(){
             return
         }
+        try? FileManager.default.removeItem(atPath: NSUtil.yxs_cachePath(file: "question_\(self.questionModel.type.rawValue)", directory: "archive"))
         completeHandler?(questionModel)
         self.navigationController?.popViewController()
     }
     
-    @objc func questionItemCountClick(){
-        self.view.endEditing(true)
-        let maxImageCount: Int = questionModel.solitaireSelects?.count ?? 1
-        var dataSource = [YXSPunchCardDay]()
-        
-        let curruntIndex: Int = questionItemCountSection.rightLabel.text?.int ?? 1
-        var selectModel: YXSPunchCardDay!
-        
-        for index in 1...maxImageCount{
-            let model = YXSPunchCardDay.init("\(maxImageCount - index + 1)", index)
-            dataSource.append(model)
-            if index == curruntIndex{
-                selectModel = model
-            }
-        }
-        YXSPunchCardSelectDaysView.showAlert(selectModel,yxs_dataSource: dataSource,title: "最多可选择项数", compelect: {  [weak self] (modle, _) in
-            guard let strongSelf = self else { return }
-            strongSelf.questionModel.maxSelect = modle.text.int
-            strongSelf.resetQuestionItemCount()
-            
-        })
-    }
+//    @objc func questionItemCountClick(){
+//        self.view.endEditing(true)
+//        let maxImageCount: Int = questionModel.solitaireSelects?.count ?? 1
+//        var dataSource = [YXSPunchCardDay]()
+//
+//        let curruntIndex: Int = questionItemCountSection.rightLabel.text?.int ?? 1
+//        var selectModel: YXSPunchCardDay!
+//
+//        for index in 1...maxImageCount{
+//            let model = YXSPunchCardDay.init("\(maxImageCount - index + 1)", index)
+//            dataSource.append(model)
+//            if index == curruntIndex{
+//                selectModel = model
+//            }
+//        }
+//        YXSPunchCardSelectDaysView.showAlert(selectModel,yxs_dataSource: dataSource,title: "最多可选择项数", compelect: {  [weak self] (modle, _) in
+//            guard let strongSelf = self else { return }
+//            strongSelf.questionModel.maxSelect = modle.text.int
+//            strongSelf.resetQuestionItemCount()
+//
+//        })
+//    }
     
     // MARK: -tool
     func yxs_cheackCanSetUp() -> Bool{
@@ -348,7 +348,7 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
             [weak self] (selectModels) in
             guard let strongSelf = self else { return }
             strongSelf.questionModel.solitaireSelects = selectModels
-            strongSelf.resetQuestionItemCount()
+//            strongSelf.resetQuestionItemCount()
         }
         return selectView
     }()
@@ -372,16 +372,16 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         return imageSelectSection
     }()
     
-    lazy var questionItemCountSection: SLTipsRightLabelSection = {
-        let imageSelectSection = SLTipsRightLabelSection()
-        imageSelectSection.leftlabel.text = "最多可选择项数"
-        imageSelectSection.addTarget(self, action: #selector(questionItemCountClick), for: .touchUpInside)
-        imageSelectSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
-        imageSelectSection.arrowImage.snp.updateConstraints { (make) in
-            make.right.equalTo(-17.5)
-        }
-        return imageSelectSection
-    }()
+//    lazy var questionItemCountSection: SLTipsRightLabelSection = {
+//        let imageSelectSection = SLTipsRightLabelSection()
+//        imageSelectSection.leftlabel.text = "最多可选择项数"
+//        imageSelectSection.addTarget(self, action: #selector(questionItemCountClick), for: .touchUpInside)
+//        imageSelectSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+//        imageSelectSection.arrowImage.snp.updateConstraints { (make) in
+//            make.right.equalTo(-17.5)
+//        }
+//        return imageSelectSection
+//    }()
     
     lazy var textView : YXSPlaceholderTextView = {
         let textView = YXSPlaceholderTextView()

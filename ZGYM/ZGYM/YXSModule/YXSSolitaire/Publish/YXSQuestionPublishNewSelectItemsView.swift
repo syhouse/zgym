@@ -63,7 +63,7 @@ class YXSQuestionPublishNewSelectItemsView: UIView{
                     make.top.equalTo(last.snp_bottom)
                 }
                 
-                if !showMore && index == 3{
+                if !showMore && index == self.selectModels.count - 1{
                     make.bottom.equalTo(0)
                 }
             }
