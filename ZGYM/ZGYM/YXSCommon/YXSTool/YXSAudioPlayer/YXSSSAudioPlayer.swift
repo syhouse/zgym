@@ -68,7 +68,6 @@ class YXSSSAudioPlayer: NSObject {
         YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
     }
     
-    
     ///播放音频并缓存
     @objc public func play(url:URL, loop: Int = 1,cacheAudio: Bool,finish: (() -> ())? = nil) {
         var localUrl: URL = url
@@ -82,9 +81,6 @@ class YXSSSAudioPlayer: NSObject {
         }
         
         play(url: localUrl, loop: loop, finish: finish)
-
-        
- 
     }
     
     /// 停止播放
@@ -117,13 +113,15 @@ class YXSSSAudioPlayer: NSObject {
         }
     }
     
-    @objc func videoPlayEnd(){
-        try? AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
-        isFinish = true
-        isPause = true
-        finish?()
-        
-        YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
+    @objc func videoPlayEnd(notification: Notification){
+        if player != nil{
+            try? AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
+            isFinish = true
+            isPause = true
+            finish?()
+            player = nil
+            YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
+        }
     }
         
     // MARK: - Setter

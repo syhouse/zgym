@@ -64,7 +64,7 @@ class YXSPlayListViewController: YXSBaseTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "YXSPlayListCell") as! YXSPlayListCell
         cell.yxs_setCellModel(model, row: indexPath.row)
         /// 设置选中颜色
-        if YXSXMPlayerGlobalControlTool.share.currentTrack == model {
+        if YXSXMPlayerGlobalControlTool.share.currentTrack?.trackId == model.trackId {
             cell.yxs_nameLabel.textColor = kNight5E88F7
         } else {
             cell.yxs_nameLabel.textColor = kTextMainBodyColor

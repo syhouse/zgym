@@ -89,15 +89,20 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
     }
     
     @objc func logout(showError: Bool = false,completionHandler:(()->())? = nil) {
-        TIMManager.sharedInstance()?.logout({ [weak self] in
-            guard let weakSelf = self else {return}
-            weakSelf.refreshApplicationIconBadgeNum()
+        if isLogin(){
+            TIMManager.sharedInstance()?.logout({ [weak self] in
+                guard let weakSelf = self else {return}
+                weakSelf.refreshApplicationIconBadgeNum()
+                completionHandler?()
+            }, fail: { (code, msg) in
+                if showError{
+                    MBProgressHUD.yxs_showMessage(message: msg ?? "IM退出登录错误")
+                }
+            })
+        }else{
             completionHandler?()
-        }, fail: { (code, msg) in
-            if showError{
-                MBProgressHUD.yxs_showMessage(message: msg ?? "IM退出登录错误")
-            }
-        })
+        }
+        
     }
     
     // MARK: - Request

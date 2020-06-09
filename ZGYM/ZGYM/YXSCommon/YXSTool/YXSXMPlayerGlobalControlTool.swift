@@ -9,7 +9,7 @@
 import UIKit
 
 
-private var isUserXMLYPlayer = true
+var isUserXMLYPlayer = false
 
 ///喜马拉雅播放器功能 抽出 方便统一控制 和后期如果替换播放器
 @objc class YXSXMPlayerGlobalControlTool: NSObject{
@@ -29,7 +29,7 @@ private var isUserXMLYPlayer = true
             if isUserXMLYPlayer{
                 return XMSDKPlayer.shared()?.currentTrack()
             }else{
-                return YXSAVPlayer.share.curruntTrack
+                return YXSAVPlayer.share.getCurruntTrack()
             }
             
         }
@@ -40,7 +40,7 @@ private var isUserXMLYPlayer = true
             if isUserXMLYPlayer{
                 return XMSDKPlayer.shared()?.playList() as? [XMTrack] ?? [XMTrack]()
             }else{
-                return YXSAVPlayer.share.trackList
+                return YXSAVPlayer.share.getTrackList()
             }
             
         }
@@ -48,11 +48,14 @@ private var isUserXMLYPlayer = true
     ///当前播放模式
     var playMode: XMSDKTrackPlayMode{
         get{
-            if isUserXMLYPlayer{
-                return XMSDKPlayer.shared()?.getTrackPlayMode() ?? .XMTrackModeCycle
-            }else{
-                return YXSAVPlayer.share.playListModel
-            }
+            return XMSDKPlayer.shared()?.getTrackPlayMode() ?? .XMTrackModeCycle
+            
+        }
+    }
+    
+    var avPlayMode: YXSPlayerListModel{
+        get{
+            return YXSAVPlayer.share.playListModel
             
         }
     }
@@ -143,7 +146,6 @@ private var isUserXMLYPlayer = true
     }
     ///XM播放器播放下一首
     public func playXMNext(){
-        
         if isUserXMLYPlayer{
             XMSDKPlayer.shared()?.playNextTrack()
             isPlayerStatusIsStop = false
@@ -171,11 +173,12 @@ private var isUserXMLYPlayer = true
     }
     ///XM播放器设置播放模式
     public func setXMPlayModel(_ playModel: XMSDKTrackPlayMode){
-        if isUserXMLYPlayer{
-            XMSDKPlayer.shared()?.setTrackPlayMode(playMode)
-        }else{
-            YXSAVPlayer.share.setPlayModel(playMode)
-        }
+        XMSDKPlayer.shared()?.setTrackPlayMode(playMode)
+    }
+    
+    ///播放器设置播放模式
+    public func setAVPlayModel(_ listModel: YXSPlayerListModel){
+         YXSAVPlayer.share.playListModel = listModel
     }
     
     ///启动喜马拉雅播放

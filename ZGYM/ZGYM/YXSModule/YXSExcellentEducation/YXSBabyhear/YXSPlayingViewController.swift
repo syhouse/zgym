@@ -344,19 +344,36 @@ class YXSPlayingViewController: YXSBaseViewController {
     }
     
     @objc func changePlayerModel(){
-        switch YXSXMPlayerGlobalControlTool.share.playMode {
-        case .XMTrackModeCycle:
-            MBProgressHUD.yxs_showMessage(message: "随机播放")
-            YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeRandom)
-        case .XMTrackModeRandom:
-            MBProgressHUD.yxs_showMessage(message: "单曲循环")
-            YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeSingle)
-        case .XMTrackModeSingle:
-            MBProgressHUD.yxs_showMessage(message: "顺序播放")
-            YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeCycle)
-        default:
-            YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeCycle)
+        if isUserXMLYPlayer{
+            switch YXSXMPlayerGlobalControlTool.share.playMode {
+            case .XMTrackModeCycle:
+                MBProgressHUD.yxs_showMessage(message: "随机播放")
+                YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeRandom)
+            case .XMTrackModeRandom:
+                MBProgressHUD.yxs_showMessage(message: "单曲循环")
+                YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeSingle)
+            case .XMTrackModeSingle:
+                MBProgressHUD.yxs_showMessage(message: "顺序播放")
+                YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeCycle)
+            default:
+                YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeCycle)
+            }
+        }else{
+            switch YXSXMPlayerGlobalControlTool.share.avPlayMode {
+            case .modelCycle:
+                MBProgressHUD.yxs_showMessage(message: "随机播放")
+                YXSXMPlayerGlobalControlTool.share.setAVPlayModel(.modelRandow)
+            case .modelRandow:
+                MBProgressHUD.yxs_showMessage(message: "单曲循环")
+                YXSXMPlayerGlobalControlTool.share.setAVPlayModel(.modelSingle)
+            case .modelSingle:
+                MBProgressHUD.yxs_showMessage(message: "顺序播放")
+                YXSXMPlayerGlobalControlTool.share.setAVPlayModel(.modelCycle)
+            default:
+                break
+            }
         }
+        
         updatePlayerModelUI()
     }
     
@@ -364,16 +381,31 @@ class YXSPlayingViewController: YXSBaseViewController {
     
     ///切换模式更新UI
     func updatePlayerModelUI(){
-        switch YXSXMPlayerGlobalControlTool.share.playMode{
-        case .XMTrackModeCycle:
-            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
-        case .XMTrackModeRandom:
-            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_random", night: "yxs_player_random"), forState: .normal)
-        case .XMTrackModeSingle:
-            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_single", night: "yxs_player_single"), forState: .normal)
-        default:
-            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+        if isUserXMLYPlayer{
+            switch YXSXMPlayerGlobalControlTool.share.playMode{
+            case .XMTrackModeCycle:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+            case .XMTrackModeRandom:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_random", night: "yxs_player_random"), forState: .normal)
+            case .XMTrackModeSingle:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_single", night: "yxs_player_single"), forState: .normal)
+            default:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+            }
+        }else{
+            switch YXSXMPlayerGlobalControlTool.share.avPlayMode {
+            case .modelCycle:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+            case .modelRandow:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_random", night: "yxs_player_random"), forState: .normal)
+            case .modelSingle:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_single", night: "yxs_player_single"), forState: .normal)
+            default:
+                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+                break
+            }
         }
+        
     }
     
     @objc func stringWithDuration(duration: UInt) -> String {

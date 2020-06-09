@@ -17,7 +17,11 @@ class YXSRemoteControlInfoHelper: NSObject {
     
     static var currentTime: UInt = 0
     
-    static var totalTime: Int = YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 0
+    static var totalTime: Int{
+        get{
+            YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 0
+        }
+    }
     
     static var imageUrl: String{
         return YXSXMPlayerGlobalControlTool.share.currentTrack?.coverUrlLarge ?? ""
