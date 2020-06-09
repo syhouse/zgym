@@ -57,6 +57,7 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
         if let solitaireTemplateModel = solitaireTemplateModel{
             publishModel.publishContent = solitaireTemplateModel.content
             publishModel.subjectText = solitaireTemplateModel.title
+            publishModel.solitaireDate = Date().addingTimeInterval(7*24*60*60)
             if let holders = solitaireTemplateModel.gatherHoldersModel?.gatherHolders{
                 var solitaireQuestions = [YXSSolitaireQuestionModel]()
                 for holder in holders{
@@ -85,6 +86,7 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
                 self.publishModel = publishModel
             }else{
                 initEmptyModel()
+                publishModel.solitaireDate = Date().addingTimeInterval(7*24*60*60)
             }
         }
     }

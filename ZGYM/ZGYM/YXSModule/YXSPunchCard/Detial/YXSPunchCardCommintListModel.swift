@@ -230,12 +230,10 @@ class YXSPunchCardCommintListModel : NSObject, NSCoding, Mappable{
         paragraphStye.lineSpacing = kMainContentLineHeight
         paragraphStye.lineBreakMode = .byWordWrapping
         let attributes = [NSAttributedString.Key.paragraphStyle:paragraphStye, NSAttributedString.Key.font: kTextMainBodyFont]
-        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content ?? "", attributes: attributes, width: SCREEN_WIDTH - 30) + 1
-        let text: String = content ?? ""
-        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: text, attributes: attributes,width: SCREEN_WIDTH - 30, numberOfLines: 3) + 1
-        needShowAllButton = frameModel.contentIsShowAllHeight > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 2)  ? true : false
-        SLLog(frameModel.contentHeight)
-        SLLog(frameModel.contentIsShowAllHeight)
+        frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: content?.listReplaceSpaceAndReturn() ?? "", attributes: attributes, width: SCREEN_WIDTH - 30) + 1
+        frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: content?.listReplaceSpaceAndReturn() ?? "", attributes: attributes,width: SCREEN_WIDTH - 30, numberOfLines: 3) + 1
+        ///大于等于4行高度
+        needShowAllButton = frameModel.contentIsShowAllHeight >= (kTextMainBodyFont.pointSize * 4 + kMainContentLineHeight * 3)  ? true : false
     }
     
     required init?(map: Map){}

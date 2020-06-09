@@ -213,7 +213,8 @@ class YXSFriendCircleModel : NSObject, NSCoding, Mappable{
         }
         frameModel.contentIsShowAllHeight = UIUtil.yxs_getTextHeigh(textStr: spreadContent, attributes: attributes, width: helper.contentWidth - contentAdjustWidth) + 1
         frameModel.contentHeight = UIUtil.yxs_getTextHeigh(textStr: shrinkContent , attributes: attributes,width: helper.contentWidth, numberOfLines: 3) + 1
-        needShowAllButton = frameModel.contentIsShowAllHeight > (kTextMainBodyFont.pointSize * 3 + kMainContentLineHeight * 2)  ? true : false
+        ///大于等于4行高度
+        needShowAllButton = frameModel.contentIsShowAllHeight >= (kTextMainBodyFont.pointSize * 4 + kMainContentLineHeight * 3)  ? true : false
     }
     
     required init?(map: Map){}
