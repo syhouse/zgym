@@ -12,7 +12,7 @@ import SDWebImage
 class YXSMusicPlayerWindowView: UIControl {
     
     /// 展示播放窗 当前播放时间
-    public static func showPlayerWindow(currentTime: UInt){
+    public static func showPlayerWindow(){
         let instanceView = YXSMusicPlayerWindowView.instanceView
         UIUtil.RootController().view.addSubview(instanceView)
         instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT, width: SCREEN_WIDTH - 30, height: 49)
@@ -27,8 +27,6 @@ class YXSMusicPlayerWindowView: UIControl {
         }else{
             instanceView.isPlayingMusic = false
         }
-        
-        instanceView.currentTime = currentTime
         instanceView.isHidden = false
         YXSXMPlayerGlobalControlTool.share.playerDelegate = instanceView
         
@@ -97,7 +95,6 @@ class YXSMusicPlayerWindowView: UIControl {
     }
     
     private static let instanceView: YXSMusicPlayerWindowView = YXSMusicPlayerWindowView()
-    private var currentTime: UInt = 0
     
     private init() {
         super.init(frame: CGRect.zero)
@@ -224,7 +221,7 @@ class YXSMusicPlayerWindowView: UIControl {
     }
     
     @objc func showPlayerView(){
-        let vc = YXSPlayingViewController(currentTime: currentTime)
+        let vc = YXSPlayingViewController()
         UIUtil.currentNav().pushViewController(vc)
     }
     
@@ -298,9 +295,6 @@ extension YXSMusicPlayerWindowView{
 extension YXSMusicPlayerWindowView: YXSXMPlayerDelegate{
     // MARK: - Delegate
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
-        YXSRemoteControlInfoHelper.currentTime = currentSecond
-        currentTime = currentSecond
-        
         UIUtil.configNowPlayingCenterUI()
     }
     

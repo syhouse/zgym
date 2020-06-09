@@ -17,21 +17,13 @@ class YXSPlayingViewController: YXSBaseViewController {
     private var radio: XMRadio?
     private var programList: [Any] = []
     private var radioSchedule: XMRadioSchedule?
-    
-    ///当前播放时间
-    private var currentTime: UInt
     /// 播放列表菜单
     var playListVC: YXSPlayListViewController?
     
     private var isOnDragProgress: Bool = false
     
     // MARK: - init
-    
-    
-    /// 展示当前喜马拉雅专辑播放UI
-    /// - Parameter currentTime: 当前播放进度时间
-    init(currentTime: UInt) {
-        self.currentTime = currentTime
+    override init() {
         super.init()
     }
     
@@ -41,7 +33,7 @@ class YXSPlayingViewController: YXSBaseViewController {
     ///   - track: 当前声音
     ///   - trackList: 声音列表
     convenience init(track: XMTrack, trackList: [Any] = []){
-        self.init(currentTime: 0)
+        self.init()
         self.track = track
         self.trackList = trackList
     }
@@ -65,7 +57,7 @@ class YXSPlayingViewController: YXSBaseViewController {
         ///判断是否是当前播放器present出去
         if self.navigationController?.viewControllers.last != self{
             UIApplication.shared.endReceivingRemoteControlEvents()
-            YXSMusicPlayerWindowView.showPlayerWindow(currentTime: currentTime)
+            YXSMusicPlayerWindowView.showPlayerWindow()
         }
     }
     
@@ -133,8 +125,8 @@ class YXSPlayingViewController: YXSBaseViewController {
             xmTrackPlayerDidStart()
             updatePlayerModelUI()
             
-            progressView.value = Float(currentTime)/Float(YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 1)
-            lbCurrentDuration.text = stringWithDuration(duration: UInt(currentTime))
+            progressView.value = Float(YXSRemoteControlInfoHelper.currentTime)/Float(YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 1)
+            lbCurrentDuration.text = stringWithDuration(duration: YXSRemoteControlInfoHelper.currentTime)
             btnPlayPause.isSelected = !YXSXMPlayerGlobalControlTool.share.isPlayerIsPaused()
             if YXSXMPlayerGlobalControlTool.share.isPlayerPlaying(){
                 self.imgCover.resumeRotate()
@@ -344,34 +336,18 @@ class YXSPlayingViewController: YXSBaseViewController {
     }
     
     @objc func changePlayerModel(){
-        if isUserXMLYPlayer{
-            switch YXSXMPlayerGlobalControlTool.share.playMode {
-            case .XMTrackModeCycle:
-                MBProgressHUD.yxs_showMessage(message: "随机播放")
-                YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeRandom)
-            case .XMTrackModeRandom:
-                MBProgressHUD.yxs_showMessage(message: "单曲循环")
-                YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeSingle)
-            case .XMTrackModeSingle:
-                MBProgressHUD.yxs_showMessage(message: "顺序播放")
-                YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeCycle)
-            default:
-                YXSXMPlayerGlobalControlTool.share.setXMPlayModel(.XMTrackModeCycle)
-            }
-        }else{
-            switch YXSXMPlayerGlobalControlTool.share.avPlayMode {
-            case .modelCycle:
-                MBProgressHUD.yxs_showMessage(message: "随机播放")
-                YXSXMPlayerGlobalControlTool.share.setAVPlayModel(.modelRandow)
-            case .modelRandow:
-                MBProgressHUD.yxs_showMessage(message: "单曲循环")
-                YXSXMPlayerGlobalControlTool.share.setAVPlayModel(.modelSingle)
-            case .modelSingle:
-                MBProgressHUD.yxs_showMessage(message: "顺序播放")
-                YXSXMPlayerGlobalControlTool.share.setAVPlayModel(.modelCycle)
-            default:
-                break
-            }
+        switch YXSXMPlayerGlobalControlTool.share.avPlayMode {
+        case .modelCycle:
+            MBProgressHUD.yxs_showMessage(message: "随机播放")
+            YXSXMPlayerGlobalControlTool.share.setAVPlayModel(.modelRandow)
+        case .modelRandow:
+            MBProgressHUD.yxs_showMessage(message: "单曲循环")
+            YXSXMPlayerGlobalControlTool.share.setAVPlayModel(.modelSingle)
+        case .modelSingle:
+            MBProgressHUD.yxs_showMessage(message: "顺序播放")
+            YXSXMPlayerGlobalControlTool.share.setAVPlayModel(.modelCycle)
+        default:
+            break
         }
         
         updatePlayerModelUI()
@@ -381,31 +357,17 @@ class YXSPlayingViewController: YXSBaseViewController {
     
     ///切换模式更新UI
     func updatePlayerModelUI(){
-        if isUserXMLYPlayer{
-            switch YXSXMPlayerGlobalControlTool.share.playMode{
-            case .XMTrackModeCycle:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
-            case .XMTrackModeRandom:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_random", night: "yxs_player_random"), forState: .normal)
-            case .XMTrackModeSingle:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_single", night: "yxs_player_single"), forState: .normal)
-            default:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
-            }
-        }else{
-            switch YXSXMPlayerGlobalControlTool.share.avPlayMode {
-            case .modelCycle:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
-            case .modelRandow:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_random", night: "yxs_player_random"), forState: .normal)
-            case .modelSingle:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_single", night: "yxs_player_single"), forState: .normal)
-            default:
-                btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
-                break
-            }
+        switch YXSXMPlayerGlobalControlTool.share.avPlayMode {
+        case .modelCycle:
+            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+        case .modelRandow:
+            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_random", night: "yxs_player_random"), forState: .normal)
+        case .modelSingle:
+            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_single", night: "yxs_player_single"), forState: .normal)
+        default:
+            btnPlayerMode.setMixedImage(MixedImage.init(normal: "yxs_player_cycle", night: "yxs_player_cycle"), forState: .normal)
+            break
         }
-        
     }
     
     @objc func stringWithDuration(duration: UInt) -> String {
@@ -561,10 +523,6 @@ extension YXSPlayingViewController: YXSXMPlayerDelegate{
             progressView.value = Float(percent)
         }
         lbCurrentDuration.text = stringWithDuration(duration: currentSecond)
-        
-        YXSRemoteControlInfoHelper.currentTime = currentSecond
-        currentTime = currentSecond
-        
         UIUtil.configNowPlayingCenterUI()
     }
     

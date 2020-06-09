@@ -7,33 +7,43 @@
 //
 
 import Foundation
-
+///播放状态
 enum YXSPlayerStatus: Int{
+    ///播放中
     case playing
+    ///暂停中
     case paused
+    ///停止
     case stop
-    case unKonwer
+//    未知
+//    case unKonwer
 }
 
+///播放模式
 enum YXSPlayerListModel: Int{
+    ///列表
     case modelList
+    ///单曲循环
     case modelSingle
+    ///随机播放
     case modelRandow
+    ///循环播放
     case modelCycle
 }
 
-
+///播放回调
 protocol YXSAVPlayerDelegate {
+    ///播放进度 当前时间
     func avPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt)
-    
+    ///播放器将要开始播放
     func avPlayerWillPlaying()
-    
+    ///播放列表完成 结束播放
     func avPlayerDidPlaylistEnd()
-    
+    ///播放器正在播放
     func avPlayerDidPlaying()
-    
+    ///播放器暂停播放
     func avPlayerDidPaused()
-    
+    ///播放器缓冲完成 开始播放
     func avPlayerDidStart()
 }
 
@@ -49,18 +59,18 @@ class YXSAVPlayer: NSObject{
     public var playListModel: YXSPlayerListModel = .modelCycle
     public var avPlayerDelegate: YXSAVPlayerDelegate?
     
-    
+    ///是否自动播放下一首
     private var isAutoNexTrack: Bool = false
     
     private var timeObser: Any?
     
     private var player: AVPlayer?
-    
+    ///进度跳转时间
     private var seekTime: Int?
     ///进度前进
     private var isseekforword: Bool = false
     ///当前播放时间
-    private var curruntTime: Int?
+    var curruntTime: Int = 0
     
     // MARK: - setter func
     
@@ -69,10 +79,11 @@ class YXSAVPlayer: NSObject{
     }
     
     // MARK: - getter func
+    ///获取当前播放model
     public func getCurruntTrack() -> XMTrack?{
         return curruntTrack
     }
-    
+    ///获取当前播放列表
     public func getTrackList() -> [XMTrack]{
         return trackList
     }
@@ -91,7 +102,7 @@ class YXSAVPlayer: NSObject{
         self.player = nil
         playerStatus = .stop
         curruntTrack = nil
-        curruntTime = nil
+        curruntTime = 0
         seekTime = nil
         trackList.removeAll()
     }
@@ -125,7 +136,7 @@ class YXSAVPlayer: NSObject{
     
     public func playSeek(second: CGFloat){
         seekTime = Int(second)
-        isseekforword = seekTime ?? 0 > curruntTime ?? 0
+        isseekforword = seekTime ?? 0 > curruntTime
         self.player?.seek(to: CMTime(seconds: Double(seekTime ?? 0), preferredTimescale: CMTimeScale(1.0)))
     }
     

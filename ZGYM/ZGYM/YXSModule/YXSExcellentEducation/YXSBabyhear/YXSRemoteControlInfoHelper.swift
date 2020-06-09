@@ -15,7 +15,9 @@ class YXSRemoteControlInfoHelper: NSObject {
         return YXSXMPlayerGlobalControlTool.share.currentTrack?.announcer.nickname ?? ""
     }
     
-    static var currentTime: UInt = 0
+    static var currentTime: UInt{
+        return UInt(YXSAVPlayer.share.curruntTime)
+    }
     
     static var totalTime: Int{
         get{

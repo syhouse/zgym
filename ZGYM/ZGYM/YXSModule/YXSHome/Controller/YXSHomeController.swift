@@ -360,7 +360,7 @@ extension YXSHomeController: YXSRouterEventProtocol{
             let vc:UIViewController = YXSPersonDataModel.sharePerson.personRole == .PARENT ? YXSParentClassListViewController(): YXSTeacherClassListViewController()
             navigationController?.pushViewController(vc)
         case kYXSHomeTableHeaderViewScanEvent:
-            let vc = YXSScanViewController()
+            let vc = YXSScanViewController(scanType: .teacherWebLogin)
             navigationController?.pushViewController(vc)
         case kYXSHomeTableHeaderViewAgendaClassEvent:
             yxs_lookAgendaDetial()

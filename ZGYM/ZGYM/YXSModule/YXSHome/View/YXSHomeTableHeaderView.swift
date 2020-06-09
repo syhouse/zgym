@@ -64,8 +64,8 @@ class YXSHomeTableHeaderView: UIView {
         
         yxs_classButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(yxs_titleLabel)
-            make.right.equalTo(-3).priorityHigh()
-            make.size.equalTo(CGSize.init(width: 42, height: 42)).priorityHigh()
+            make.right.equalTo(-10).priorityHigh()
+            make.size.equalTo(CGSize.init(width: 28, height: 28)).priorityHigh()
         }
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             yxs_bgImageView.snp.makeConstraints { (make) in
@@ -79,6 +79,13 @@ class YXSHomeTableHeaderView: UIView {
                 }else{
                     make.height.equalTo(273)
                 }
+            }
+            
+            addSubview(scanButton)
+            scanButton.snp.makeConstraints { (make) in
+                make.centerY.equalTo(yxs_titleLabel)
+                make.right.equalTo(yxs_classButton.snp_left).offset(-13)
+                make.size.equalTo(CGSize.init(width: 28, height: 28))
             }
         }else{
             addSubview(yxs_childView)
@@ -172,6 +179,10 @@ class YXSHomeTableHeaderView: UIView {
         
     }
     
+    @objc func scanClick(){
+        yxs_routerEventWithName(eventName: kYXSHomeTableHeaderViewScanEvent)
+    }
+    
     @objc func agendaSectionClick(){
         yxs_routerEventWithName(eventName: kYXSHomeTableHeaderViewAgendaClassEvent)
     }
@@ -209,6 +220,7 @@ class YXSHomeTableHeaderView: UIView {
         let button = YXSButton.init()
         button.setMixedImage(MixedImage(normal: isOldUI ? "yxs_classlist_night" : "class_list_icon", night: "yxs_classlist_night"), forState: .normal)
         button.addTarget(self, action: #selector(yxs_classButtonCick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         return button
     }()
     
@@ -237,6 +249,14 @@ class YXSHomeTableHeaderView: UIView {
         let yxs_agendaView = YXSHomeAgendaView.init(false)
         yxs_agendaView.addTaget(target: self, selctor: #selector(agendaSectionClick))
         return yxs_agendaView
+    }()
+    
+    lazy var scanButton: YXSButton = {
+        let button = YXSButton.init()
+        button.setMixedImage(MixedImage(normal: "scan", night: "yxs_scan_night"), forState: .normal)
+        button.addTarget(self, action: #selector(scanClick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        return button
     }()
 }
 
