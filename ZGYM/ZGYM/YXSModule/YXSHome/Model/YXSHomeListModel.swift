@@ -369,7 +369,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var hasPunchFinish: Bool{
         get{
             if let state = state{
-                if state == 100{
+                if state == 100 || (endTime?.yxs_Date().timeIntervalSince1970 ?? 0) < Date().timeIntervalSince1970{
                     return true
                 }
             }

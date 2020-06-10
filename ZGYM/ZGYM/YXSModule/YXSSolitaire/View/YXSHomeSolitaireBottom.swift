@@ -101,71 +101,40 @@ class YXSHomeSolitaireBottom: UIView {
         
         statusButton.isHidden = true
         statusLabel.isHidden = true
-        if let state = model.state{
-            if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-                switch state {
-                case 10:
-                    statusButton.isHidden = false
-                case 20:
-                    setStatusText(status: 2)
-                    statusLabel.isHidden = false
-                case 100:
-                    setStatusText(status: 0)
-                    statusLabel.isHidden = false
-                default:
-                    break
-                }
-            }else{
-                switch state {
-                case 30:
-                    setStatusText(status: 1)
-                    statusLabel.isHidden = false
-                case 100:
-                    setStatusText(status: 0)
-                    statusLabel.isHidden = false
-                default:
-                    break
-                }
-            }
-        }
+        
+        setStatusText(state: model.state, endTime: model.endTime, memberCount: model.memberCount, commintCount: model.commitCount)
     }
     
     func setSolitaireModel(_ model: YXSSolitaireModel){
         statusButton.isHidden = true
         statusLabel.isHidden = true
         
-        if let state = model.state{
-            if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-                switch state {
-                case 10:
-                    statusButton.isHidden = false
-                case 20:
-                    setStatusText(status: 2)
-                    statusLabel.isHidden = false
-                case 100:
-                    setStatusText(status: 0)
-                    statusLabel.isHidden = false
-                default:
-                    break
-                }
-            }else{
-                switch state {
-                case 30:
-                    setStatusText(status: 1)
-                    statusLabel.isHidden = false
-                case 100:
-                    setStatusText(status: 0)
-                    statusLabel.isHidden = false
-                default:
-                    break
-                }
-            }
-        }
+        setStatusText(state: model.state, endTime: model.endTime, memberCount: nil, commintCount: nil)
         
         UIUtil.yxs_setLabelAttributed(countLabel, text: ["\(model.committedSum ?? 0)", "个人已经参与接龙"], colors: [kRedMainColor, UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")])
         classLabel.text = "接收班级：\(model.className ?? "")"
         deadlineLabel.text = "截止日期：\((model.endTime ?? "").dateTime?.toString(format: DateFormatType.custom("yyyy/MM/dd HH:mm")) ?? "")"
         UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(model.teacherName ?? "")", "  |  \(model.createTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
+    }
+    
+    private func setStatusText(state: Int?, endTime: String?, memberCount:Int? , commintCount: Int?){
+        if let state = state{
+            let isFinish = state == 100 || (endTime?.yxs_Date().timeIntervalSince1970 ?? 0) < Date().timeIntervalSince1970 || (memberCount ?? 0) == (commintCount ?? 1)
+            if isFinish {
+                setStatusText(status: 0)
+                statusLabel.isHidden = false
+            }else if state == 10{
+                statusButton.isHidden = false
+            }
+            else if state == 20{
+                setStatusText(status: 2)
+                statusLabel.isHidden = false
+            }
+            else if state == 30{
+                setStatusText(status: 1)
+                statusLabel.isHidden = false
+            }
+        }
     }
     
     

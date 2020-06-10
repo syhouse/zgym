@@ -20,7 +20,7 @@ extension UIImageView{
                 ///记录未加载出来图片链接
                 Bugly.setUserValue(url?.absoluteString ?? "", forKey: "YXSImageLoadError")
                 if let error = error{
-                    Bugly.reportError(NSError(domain: "图片加载失败", code: (error as NSError).code, userInfo: (error as NSError).userInfo) as Error)
+                    Bugly.reportError(NSError(domain: "图片加载失败:\((error as NSError).localizedDescription)", code: (error as NSError).code, userInfo: (error as NSError).userInfo) as Error)
                 }else{
                    Bugly.reportError(NSError(domain: "图片加载失败", code: 100, userInfo: nil) as Error)
                 }
