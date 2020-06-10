@@ -9,6 +9,8 @@
 import Foundation
 
 class YXSScoreTeacherCommentView: UIView {
+    var contactClickBlock:(() -> ())?
+    
     override init(frame: CGRect) {
         super.init(frame: CGRect.zero)
         initUI()
@@ -41,7 +43,6 @@ class YXSScoreTeacherCommentView: UIView {
             make.left.equalTo(15)
             make.right.equalTo(-15)
             make.top.equalTo(contactBtn.snp_bottom).offset(15)
-            make.height.equalTo(50)
             make.bottom.equalTo(-25)
         }
         
@@ -49,7 +50,7 @@ class YXSScoreTeacherCommentView: UIView {
     
     // MARK: - Action
     @objc func contactBtnClick() {
-        
+        contactClickBlock?()
     }
     
     // MARK: - getter&stter
@@ -85,9 +86,10 @@ class YXSScoreTeacherCommentView: UIView {
     
     lazy var contentLbl: UILabel = {
         let lbl = UILabel()
-        lbl.text = ""
+        lbl.text = "暂无评语"
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#575A60")
         lbl.font = UIFont.systemFont(ofSize: 16)
+        lbl.numberOfLines = 0
         return lbl
     }()
 }

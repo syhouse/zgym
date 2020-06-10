@@ -76,7 +76,7 @@ class YXSEducationScoreParentDetailsRequest: YXSBaseRequset {
 
 
 // MARK: -成绩详情报表(老师)
-let ScoreTeacherDetails = "/achievement/childScoreDetails"
+let ScoreTeacherDetails = "/achievement/achievementDetails"
 class YXSEducationScoreTeacherDetailsRequest: YXSBaseRequset {
     init(examId: Int) {
         super.init()
@@ -102,3 +102,61 @@ class YXSEducationClassMemberListScoreRequest: YXSBaseRequset {
             "pageSize":pageSize]
     }
 }
+
+// MARK: -单科成绩分布情况列表(家长)
+let ChildScoreSingleReport = "/achievement/parent/childScoreSingleReport"
+class YXSEducationChildScoreSingleReport: YXSBaseRequset {
+    init(examId: Int, childrenId: Int) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = ChildScoreSingleReport
+        param = [
+            "examId":examId,
+            "childrenId":childrenId]
+    }
+}
+
+
+// MARK: 等级制成绩详情-孩子成绩列表
+let ScoreLevelChildDetailsList = "/achievement/achievementHierarchyChildList"
+class YXSEducationScoreLevelChildDetailsListRequset: YXSBaseRequset {
+    init(examId: Int, currentPage: Int = 1, pageSize: Int = 20) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = ScoreLevelChildDetailsList
+        param = [
+            "examId":examId,
+            "currentPage":currentPage,
+            "pageSize":pageSize]
+    }
+}
+
+// MARK: 等级制成绩详情-单个孩子成绩详情
+let ScoreLevelSingleChildDetails = "/achievement/hierarchyChildAchievementDetails"
+class YXSEducationScoreLevelSingleChildDetailsRequset: YXSBaseRequset {
+    init(examId: Int, childrenId: Int) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = ScoreLevelSingleChildDetails
+        param = [
+            "examId":examId,
+            "childrenId":childrenId]
+    }
+}
+
+// MARK: 已阅未阅列表
+let ScoreReadingChildList = "/achievement/readAndNotReadList"
+class YXSEducationScoreReadingChildListRequset: YXSBaseRequset {
+    init(examId: Int) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = ScoreReadingChildList
+        param = [
+            "examId":examId]
+    }
+}
+

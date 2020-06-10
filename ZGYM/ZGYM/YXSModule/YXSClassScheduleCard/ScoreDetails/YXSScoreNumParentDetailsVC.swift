@@ -17,75 +17,112 @@ enum ParentScoreDisciplinaryType: String {
     case Singular_Disciplinary//单科成绩
 }
 
-class YXSScoreNumParentDetailsVC: YXSBaseViewController {
-    var listModel: YXSScoreListModel?
+class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
+
     var detailsModel: YXSScoreDetailsModel?
+    var childModel: YXSScoreChildListModel?
+    var listModel: YXSScoreListModel?
     init(model:YXSScoreListModel) {
         super.init()
         self.listModel = model
     }
+    
+    init(childModel: YXSScoreChildListModel) {
+        super.init()
+        self.childModel = childModel
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
     // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.yxs_gradualBackground(frame: view.frame, startColor: UIColor.yxs_hexToAdecimalColor(hex: "#B4C8FD"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#A9CDFD"), cornerRadius: 0,isRightOrientation: false)
-        self.fd_prefersNavigationBarHidden = true
-        self.view.addSubview(self.scrollView)
-        self.scrollView.snp.makeConstraints { (make) in
-            make.left.top.right.equalTo(0)
-            make.bottom.equalTo(-kSafeBottomHeight)
+        
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            customNav.title = "\(childModel?.childrenName ?? "")成绩详情"
+        } else {
+            customNav.title = listModel?.examName
         }
-        view.addSubview(customNav)
-        customNav.snp.makeConstraints { (make) in
-            make.left.right.top.equalTo(0)
-        }
-        if #available(iOS 11.0, *){
-            self.scrollView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
-        }
-        customNav.title = listModel?.examName
-        initUI()
-        loadData()
     }
     
-    func initUI() {
-        self.scrollView.addSubview(headerBgImageView)
+    override func initUI() {
+        super.initUI()
         self.scrollView.addSubview(headerView)
         self.scrollView.addSubview(chartView)
         self.scrollView.addSubview(commentView)
-        headerBgImageView.snp.makeConstraints { (make) in
-            make.left.top.right.equalTo(0)
-            make.height.equalTo(242*SCREEN_SCALE)
+        
+        commentView.contactClickBlock = {
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+//                UIUtil.yxs_chatImRequest(childrenId: weakSelf.homeModel.childrenId ?? 0, classId: weakSelf.model?.classId ?? 0)
+                self.yxs_pushChatVC(imId: self.detailsModel?.teacherImId ?? "")
+            }
+        }
+
+        
+        chartView.lookOneSubjectsBlock = {
+            let vc = YXSScoreSingleSubjectListVC.init(examId: self.detailsModel?.examId ?? 0, childId: self.detailsModel?.childrenId ?? 0)
+            self.navigationController?.pushViewController(vc)
         }
         
         headerView.snp.makeConstraints { (make) in
             make.left.equalTo(15)
-            make.right.equalTo(-15)
+            make.width.equalTo(SCREEN_WIDTH - 30)
             make.top.equalTo(64)
         }
-        chartView.snp.makeConstraints { (make) in
-            make.left.equalTo(15)
-            make.right.equalTo(-15)
-            make.top.equalTo(headerView.snp_bottom).offset(15)
-        }
-        commentView.snp.makeConstraints { (make) in
-            make.left.equalTo(15)
-            make.right.equalTo(-15)
-            make.top.equalTo(chartView.snp_bottom).offset(15)
-            make.bottom.equalTo(-30)
-        }
         
-        chartView.formHeaderTitle.text = "得分分布情况"
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+            commentView.isHidden = true
+            chartView.snp.makeConstraints { (make) in
+                make.left.equalTo(15)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.top.equalTo(headerView.snp_bottom).offset(15)
+                make.bottom.equalTo(-30)
+            }
+        } else {
+            chartView.snp.makeConstraints { (make) in
+                make.left.equalTo(15)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.top.equalTo(headerView.snp_bottom).offset(15)
+            }
+            commentView.isHidden = false
+            commentView.snp.makeConstraints { (make) in
+                make.left.equalTo(15)
+                make.width.equalTo(SCREEN_WIDTH - 30)
+                make.top.equalTo(chartView.snp_bottom).offset(15)
+                make.bottom.equalTo(-30)
+            }
+        }
     }
     
     // MARK: -loadData
-    func loadData(){
-        YXSEducationScoreParentDetailsRequest.init(examId: listModel?.examId ?? 0, childrenId: NSObject.init().yxs_user.currentChild?.id ?? 0).request({ (json) in
-            print("12321")
+    override func loadData(){
+        YXSEducationScoreParentDetailsRequest.init(examId: examId, childrenId: childrenId).request({ (json) in
             let model = Mapper<YXSScoreDetailsModel>().map(JSONObject:json.object) ?? YXSScoreDetailsModel.init(JSON: ["": ""])!
             self.detailsModel = model
+            
+            
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+                if model.achievementChildrenSubjectsResponseList?.count ?? 0 > 1 {
+                    self.chartView.setIsShowLookSubjects(isHaveComment: true, isShow: true)
+                }
+                if let comment = model.comment,comment.count > 0 {
+                    self.commentView.contentLbl.text = model.comment
+                } else {
+                    self.commentView.contentLbl.text = "暂无评语"
+                }
+            } else {
+                self.chartView.setIsShowLookSubjects(isHaveComment: true, isShow: false)
+            }
+            if model.achievementChildrenSubjectsResponseList?.count ?? 0 > 1 {
+                self.chartView.formHeaderTitle.text = "总分分布情况"
+            } else {
+                self.chartView.formHeaderTitle.text = "得分分布情况"
+            }
+            
+            self.chartView.setModel(model: model)
             self.headerView.setModel(model: model)
         }) { (msg, code) in
              MBProgressHUD.yxs_showMessage(message: msg)
@@ -94,27 +131,6 @@ class YXSScoreNumParentDetailsVC: YXSBaseViewController {
     }
     
     // MARK: - getter&stter
-    lazy var customNav: YXSCustomNav = {
-        let customNav = YXSCustomNav()
-        customNav.leftImage = "back"
-        customNav.titleLabel.textColor = kTextMainBodyColor
-        customNav.hasRightButton = false
-        customNav.backgroundColor = UIColor.clear
-        return customNav
-    }()
-    
-    lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView(frame: self.view.frame)
-        scrollView.delegate = self
-        return scrollView
-    }()
-    
-    lazy var headerBgImageView: UIImageView = {
-        let imageV = UIImageView()
-        imageV.image = UIImage.init(named: "yxs_score_detailsHear_one")
-        return imageV
-    }()
-    
     lazy var headerView: YXSScoreParentHeaderView = {
         let view = YXSScoreParentHeaderView.init()
         return view
@@ -127,34 +143,8 @@ class YXSScoreNumParentDetailsVC: YXSBaseViewController {
     
     lazy var commentView: YXSScoreTeacherCommentView = {
         let view = YXSScoreTeacherCommentView.init()
+        view.isHidden = true
         return view
     }()
     
-}
-
-extension YXSScoreNumParentDetailsVC: UIScrollViewDelegate{
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > kSafeTopHeight + 64{
-            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
-            customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "yxs_back_white"), forState: .normal)
-            customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
-        }else{
-            customNav.mixedBackgroundColor = MixedColor(normal: UIColor.clear, night: UIColor.clear)
-            customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "back"), forState: .normal)
-            customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kTextMainBodyColor)
-        }
-    }
-}
-
-
-// MARK: -HMRouterEventProtocol
-extension YXSScoreNumParentDetailsVC: YXSRouterEventProtocol{
-    func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
-        switch eventName {
-        case kYXSCustomNavBackEvent:
-            yxs_onBackClick()
-        default:
-            break
-        }
-    }
 }

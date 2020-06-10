@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, WZBLineType) {
  * columns：行数
  * data：数据
  */
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas;
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel;
 
 /**
  * 创建一个表格
@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, WZBLineType) {
  * data：数据
  * lineInfo：行信息，传入格式：@{@"0" : @"3"}意味着第一行创建3个格子
  */
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas lineInfo:(NSDictionary *)lineInfo;
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel lineInfo:(NSDictionary *)lineInfo;
 
 /**
  * 创建一个表格
@@ -39,7 +39,7 @@ typedef NS_ENUM(NSInteger, WZBLineType) {
  * data：数据
  * colorInfo：颜色信息，传入格式：@{@"0" : [UIColor redColor]}意味着第一个格子文字将会变成红色
  */
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas colorInfo:(NSDictionary *)colorInfo;
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel colorInfo:(NSDictionary *)colorInfo;
 /**
  * 创建一个表格
  * line：列数
@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, WZBLineType) {
  * colorInfo：颜色信息，传入格式：@{@"0" : [UIColor redColor]}意味着第一个格子文字将会变成红色
  * lineInfo：行信息，传入格式：@{@"0" : @"3"}意味着第一行创建3个格子
  */
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas colorInfo:(NSDictionary *)colorInfo lineInfo:(NSDictionary *)lineInfo;
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel colorInfo:(NSDictionary *)colorInfo lineInfo:(NSDictionary *)lineInfo;
 /**
  * 创建一个表格
  * line：列数
@@ -58,7 +58,7 @@ typedef NS_ENUM(NSInteger, WZBLineType) {
  * lineInfo：行信息，传入格式：@{@"0" : @"3"}意味着第一行创建3个格子
  * backgroundColorInfo：行信息，传入格式：@{@"0" : [UIColor redColor]}意味着第一个格子背景颜色变成红色
  */
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas colorInfo:(NSDictionary *)colorInfo lineInfo:(NSDictionary *)lineInfo backgroundColorInfo:(NSDictionary *)backgroundColorInfo;
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel colorInfo:(NSDictionary *)colorInfo lineInfo:(NSDictionary *)lineInfo backgroundColorInfo:(NSDictionary *)backgroundColorInfo;
 /**
  * 获取第index个格子的label
  */

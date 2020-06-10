@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F822DB2F8FEBE4193BA5026 /* Pods_ZGYM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */; };
 		560B20AE244706E4003D8A19 /* YXSXMLYNativeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */; };
 		560B20B1244995A9003D8A19 /* YXSFileUploadHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20B0244995A9003D8A19 /* YXSFileUploadHelper.swift */; };
 		560B20B324501597003D8A19 /* YXSFileClassListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B20B224501597003D8A19 /* YXSFileClassListViewController.swift */; };
@@ -32,6 +31,7 @@
 		56FCE289247F91A300890EA3 /* YXSPhotoPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FCE288247F91A300890EA3 /* YXSPhotoPreviewController.swift */; };
 		56FCE28B2484A02600890EA3 /* YXSPhotoPreviewCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FCE28A2484A02600890EA3 /* YXSPhotoPreviewCommentView.swift */; };
 		56FCE28D2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FCE28C2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift */; };
+		5DDFB41EC8BB316494E87FD4 /* Pods_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F40BAA93F7DE9C959044A39D /* Pods_Share.framework */; };
 		6F0703262445D8020090975B /* Date+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE102445D7F20090975B /* Date+YXSCategory.swift */; };
 		6F0703272445D8020090975B /* String+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE112445D7F20090975B /* String+YXSCategory.swift */; };
 		6F0703282445D8020090975B /* UITextField+YXSPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE122445D7F20090975B /* UITextField+YXSPlaceholder.swift */; };
@@ -777,7 +777,7 @@
 		6FEA7C6524553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */; };
 		6FEA7C67245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C66245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift */; };
 		6FF2C0AB2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2C0AA2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift */; };
-		96C37695CA743AAF4EA54F3F /* Pods_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D2807CC37D3F419340D76A2 /* Pods_Share.framework */; };
+		CF2ED8D61FB676F066605C1B /* Pods_ZGYM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB9B3F8A78785313004759F4 /* Pods_ZGYM.framework */; };
 		E528ABC02481107A0035E69B /* YXSScoreDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E528ABBF2481107A0035E69B /* YXSScoreDetailsModel.swift */; };
 		E53D8AF9244E80C400590B5A /* YXSContentHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */; };
 		E53D8AFB244E80C400590B5A /* YXSContentDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8AF4244E80C400590B5A /* YXSContentDetialController.swift */; };
@@ -857,6 +857,13 @@
 		E5AA44522484901C0032C2CF /* SSWMutipleBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AA444C2484901C0032C2CF /* SSWMutipleBarChartView.m */; };
 		E5AA445524849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AA445424849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift */; };
 		E5AA44572484A3040032C2CF /* YXSScoreParentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AA44562484A3040032C2CF /* YXSScoreParentHeaderView.swift */; };
+		E5AAF9D9248DDB1000D21EEB /* YXSScoreLevelParentDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9D8248DDB1000D21EEB /* YXSScoreLevelParentDetailsVC.swift */; };
+		E5AAF9DB248DDE6F00D21EEB /* YXSScoreBaseDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9DA248DDE6F00D21EEB /* YXSScoreBaseDetailsVC.swift */; };
+		E5AAF9DD248DEAD100D21EEB /* YXSScoreLevelChildHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9DC248DEAD100D21EEB /* YXSScoreLevelChildHeaderView.swift */; };
+		E5AAF9DF248E3C1300D21EEB /* YXSScoreLevelTeacherDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9DE248E3C1300D21EEB /* YXSScoreLevelTeacherDetailsVC.swift */; };
+		E5AAF9E1248F1FA900D21EEB /* YXSScoreLevelTeacherListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9E0248F1FA900D21EEB /* YXSScoreLevelTeacherListCell.swift */; };
+		E5AAF9E3248F826300D21EEB /* YXSScoreReadingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9E2248F826200D21EEB /* YXSScoreReadingListVC.swift */; };
+		E5AAF9E5248F83AA00D21EEB /* YXSScoreContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9E4248F83A900D21EEB /* YXSScoreContainerVC.swift */; };
 		E5AC9B7B246A849B000B47BB /* YXSCollectBabyhearListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7A246A849B000B47BB /* YXSCollectBabyhearListVC.swift */; };
 		E5AC9B7E246BD3AF000B47BB /* YXSCollectArticleListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7D246BD3AF000B47BB /* YXSCollectArticleListVC.swift */; };
 		E5AC9B80246BD49F000B47BB /* YXSCollectArticleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7F246BD49F000B47BB /* YXSCollectArticleCell.swift */; };
@@ -867,6 +874,8 @@
 		E5AE0C9A2487757600073657 /* YXSScoreAllChildListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C992487757600073657 /* YXSScoreAllChildListVC.swift */; };
 		E5AE0C9C248776A100073657 /* YXSScoreAllChildListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C9B248776A100073657 /* YXSScoreAllChildListCell.swift */; };
 		E5AE0C9E24878E6500073657 /* YXSScoreChildListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C9D24878E6500073657 /* YXSScoreChildListModel.swift */; };
+		E5AE0CA0248A1BCE00073657 /* YXSScoreSingleSubjectListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0C9F248A1BCE00073657 /* YXSScoreSingleSubjectListVC.swift */; };
+		E5AE0CA4248A351100073657 /* YXSScoreSingleSubjectListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AE0CA3248A351100073657 /* YXSScoreSingleSubjectListCell.swift */; };
 		E5DD271D247B5712000BB1A9 /* UMCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD271C247B5712000BB1A9 /* UMCommon.framework */; };
 		E5DD271F247B5A71000BB1A9 /* UMAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD271E247B5A71000BB1A9 /* UMAnalytics.framework */; };
 		E5DD2723247B5A7A000BB1A9 /* UMVisualConfig.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DD2720247B5A79000BB1A9 /* UMVisualConfig.framework */; };
@@ -939,10 +948,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.debug.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.debug.xcconfig"; sourceTree = "<group>"; };
-		338D34C9F988C3B57E623DF8 /* Pods-Share.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.release.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.release.xcconfig"; sourceTree = "<group>"; };
-		4D2807CC37D3F419340D76A2 /* Pods_Share.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Share.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.release.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.release.xcconfig"; sourceTree = "<group>"; };
+		3DF7B39298D4595E926A5BFD /* Pods-Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.debug.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.debug.xcconfig"; sourceTree = "<group>"; };
 		560B20AD244706E4003D8A19 /* YXSXMLYNativeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSXMLYNativeRequest.swift; sourceTree = "<group>"; };
 		560B20B0244995A9003D8A19 /* YXSFileUploadHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSFileUploadHelper.swift; sourceTree = "<group>"; };
 		560B20B224501597003D8A19 /* YXSFileClassListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSFileClassListViewController.swift; sourceTree = "<group>"; };
@@ -967,7 +973,6 @@
 		56FCE288247F91A300890EA3 /* YXSPhotoPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoPreviewController.swift; sourceTree = "<group>"; };
 		56FCE28A2484A02600890EA3 /* YXSPhotoPreviewCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoPreviewCommentView.swift; sourceTree = "<group>"; };
 		56FCE28C2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPhotoPreviewCommentModel.swift; sourceTree = "<group>"; };
-		6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0700302445D7FE0090975B /* YXSVersionUpdateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateView.swift; sourceTree = "<group>"; };
 		6F0700322445D7FE0090975B /* YXSVersionUpdateModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateModel.swift; sourceTree = "<group>"; };
 		6F0700332445D7FE0090975B /* YXSVersionUpdateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSVersionUpdateManager.swift; sourceTree = "<group>"; };
@@ -2109,7 +2114,9 @@
 		6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarEvaluationItemLogoViewController.swift; sourceTree = "<group>"; };
 		6FEA7C66245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPlayerMediaSingleControlTool.swift; sourceTree = "<group>"; };
 		6FF2C0AA2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireApplyPublishController.swift; sourceTree = "<group>"; };
-		78DA037DE3DFCFE843299175 /* Pods-Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.debug.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.debug.xcconfig"; sourceTree = "<group>"; };
+		99EBDA3F366413637E51734D /* Pods-ZGYM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.release.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.release.xcconfig"; sourceTree = "<group>"; };
+		A34AD99A6279B235D92743B7 /* Pods-Share.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.release.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.release.xcconfig"; sourceTree = "<group>"; };
+		AB9B3F8A78785313004759F4 /* Pods_ZGYM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZGYM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E528ABBF2481107A0035E69B /* YXSScoreDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreDetailsModel.swift; sourceTree = "<group>"; };
 		E53D8AF2244E80C300590B5A /* YXSContentHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentHomeController.swift; sourceTree = "<group>"; };
 		E53D8AF4244E80C400590B5A /* YXSContentDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSContentDetialController.swift; sourceTree = "<group>"; };
@@ -2201,6 +2208,13 @@
 		E5AA444C2484901C0032C2CF /* SSWMutipleBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSWMutipleBarChartView.m; sourceTree = "<group>"; };
 		E5AA445424849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreNumParentDetailsVC.swift; sourceTree = "<group>"; };
 		E5AA44562484A3040032C2CF /* YXSScoreParentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreParentHeaderView.swift; sourceTree = "<group>"; };
+		E5AAF9D8248DDB1000D21EEB /* YXSScoreLevelParentDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreLevelParentDetailsVC.swift; sourceTree = "<group>"; };
+		E5AAF9DA248DDE6F00D21EEB /* YXSScoreBaseDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreBaseDetailsVC.swift; sourceTree = "<group>"; };
+		E5AAF9DC248DEAD100D21EEB /* YXSScoreLevelChildHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreLevelChildHeaderView.swift; sourceTree = "<group>"; };
+		E5AAF9DE248E3C1300D21EEB /* YXSScoreLevelTeacherDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreLevelTeacherDetailsVC.swift; sourceTree = "<group>"; };
+		E5AAF9E0248F1FA900D21EEB /* YXSScoreLevelTeacherListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreLevelTeacherListCell.swift; sourceTree = "<group>"; };
+		E5AAF9E2248F826200D21EEB /* YXSScoreReadingListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreReadingListVC.swift; sourceTree = "<group>"; };
+		E5AAF9E4248F83A900D21EEB /* YXSScoreContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreContainerVC.swift; sourceTree = "<group>"; };
 		E5AC9B7A246A849B000B47BB /* YXSCollectBabyhearListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectBabyhearListVC.swift; sourceTree = "<group>"; };
 		E5AC9B7D246BD3AF000B47BB /* YXSCollectArticleListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectArticleListVC.swift; sourceTree = "<group>"; };
 		E5AC9B7F246BD49F000B47BB /* YXSCollectArticleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectArticleCell.swift; sourceTree = "<group>"; };
@@ -2212,6 +2226,8 @@
 		E5AE0C992487757600073657 /* YXSScoreAllChildListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreAllChildListVC.swift; sourceTree = "<group>"; };
 		E5AE0C9B248776A100073657 /* YXSScoreAllChildListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreAllChildListCell.swift; sourceTree = "<group>"; };
 		E5AE0C9D24878E6500073657 /* YXSScoreChildListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreChildListModel.swift; sourceTree = "<group>"; };
+		E5AE0C9F248A1BCE00073657 /* YXSScoreSingleSubjectListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreSingleSubjectListVC.swift; sourceTree = "<group>"; };
+		E5AE0CA3248A351100073657 /* YXSScoreSingleSubjectListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreSingleSubjectListCell.swift; sourceTree = "<group>"; };
 		E5DD271C247B5712000BB1A9 /* UMCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMCommon.framework; sourceTree = "<group>"; };
 		E5DD271E247B5A71000BB1A9 /* UMAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMAnalytics.framework; sourceTree = "<group>"; };
 		E5DD2720247B5A79000BB1A9 /* UMVisualConfig.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMVisualConfig.framework; sourceTree = "<group>"; };
@@ -2232,6 +2248,8 @@
 		E5F41C5E244D7CCF007F27AC /* YXSSynClassListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassListVC.swift; sourceTree = "<group>"; };
 		E5F41C60244DA320007F27AC /* YXSSynClassListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSynClassListCell.swift; sourceTree = "<group>"; };
 		E5F41C62244DA766007F27AC /* YXSExcellentEducationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSExcellentEducationRequest.swift; sourceTree = "<group>"; };
+		F40BAA93F7DE9C959044A39D /* Pods_Share.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Share.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFCE71FBC4EC06BA8351CC59 /* Pods-ZGYM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.debug.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2239,7 +2257,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96C37695CA743AAF4EA54F3F /* Pods_Share.framework in Frameworks */,
+				5DDFB41EC8BB316494E87FD4 /* Pods_Share.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2254,7 +2272,6 @@
 				6F0703D82445D8030090975B /* TencentOpenAPI.framework in Frameworks */,
 				E5DD2723247B5A7A000BB1A9 /* UMVisualConfig.framework in Frameworks */,
 				6F0705622445D8050090975B /* lame.framework in Frameworks */,
-				1F822DB2F8FEBE4193BA5026 /* Pods_ZGYM.framework in Frameworks */,
 				E5DD2724247B5A7A000BB1A9 /* UMVisual.framework in Frameworks */,
 				E5DD271F247B5A71000BB1A9 /* UMAnalytics.framework in Frameworks */,
 				E5DD271D247B5712000BB1A9 /* UMCommon.framework in Frameworks */,
@@ -2263,6 +2280,7 @@
 				6F0703BF2445D8030090975B /* libopencore-amrwb.a in Frameworks */,
 				6F0703E92445D8030090975B /* libXMOpenPlatform.a in Frameworks */,
 				6F0703D92445D8030090975B /* AliyunOSSiOS.framework in Frameworks */,
+				CF2ED8D61FB676F066605C1B /* Pods_ZGYM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2290,8 +2308,8 @@
 				E5DD272E247B5AB7000BB1A9 /* libz.tbd */,
 				E5DD272C247B5AAF000BB1A9 /* SystemConfiguration.framework */,
 				E5DD272A247B5AA7000BB1A9 /* CoreTelephony.framework */,
-				6DC1BF684360F8C881A1176D /* Pods_ZGYM.framework */,
-				4D2807CC37D3F419340D76A2 /* Pods_Share.framework */,
+				F40BAA93F7DE9C959044A39D /* Pods_Share.framework */,
+				AB9B3F8A78785313004759F4 /* Pods_ZGYM.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -5327,10 +5345,10 @@
 		8BB160F380F9924FFFFAF8B3 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */,
-				523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */,
-				78DA037DE3DFCFE843299175 /* Pods-Share.debug.xcconfig */,
-				338D34C9F988C3B57E623DF8 /* Pods-Share.release.xcconfig */,
+				3DF7B39298D4595E926A5BFD /* Pods-Share.debug.xcconfig */,
+				A34AD99A6279B235D92743B7 /* Pods-Share.release.xcconfig */,
+				FFCE71FBC4EC06BA8351CC59 /* Pods-ZGYM.debug.xcconfig */,
+				99EBDA3F366413637E51734D /* Pods-ZGYM.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -5575,7 +5593,13 @@
 			children = (
 				E5DD2741247E4714000BB1A9 /* YXSScoreNumTeacherDetailsVC.swift */,
 				E5AA445424849B6D0032C2CF /* YXSScoreNumParentDetailsVC.swift */,
+				E5AAF9DA248DDE6F00D21EEB /* YXSScoreBaseDetailsVC.swift */,
 				E5AE0C992487757600073657 /* YXSScoreAllChildListVC.swift */,
+				E5AE0C9F248A1BCE00073657 /* YXSScoreSingleSubjectListVC.swift */,
+				E5AAF9D8248DDB1000D21EEB /* YXSScoreLevelParentDetailsVC.swift */,
+				E5AAF9DE248E3C1300D21EEB /* YXSScoreLevelTeacherDetailsVC.swift */,
+				E5AAF9E2248F826200D21EEB /* YXSScoreReadingListVC.swift */,
+				E5AAF9E4248F83A900D21EEB /* YXSScoreContainerVC.swift */,
 			);
 			path = ScoreDetails;
 			sourceTree = "<group>";
@@ -5632,9 +5656,12 @@
 				E5DD2733247CEE8E000BB1A9 /* YXSScoreListCell.swift */,
 				E5DD273F247E1835000BB1A9 /* YXSScorePublishView.swift */,
 				E5AA44562484A3040032C2CF /* YXSScoreParentHeaderView.swift */,
+				E5AAF9DC248DEAD100D21EEB /* YXSScoreLevelChildHeaderView.swift */,
 				E5AE0C952486516200073657 /* YXSScoreChildBarChartView.swift */,
 				E5AE0C9724873CB200073657 /* YXSScoreTeacherCommentView.swift */,
 				E5AE0C9B248776A100073657 /* YXSScoreAllChildListCell.swift */,
+				E5AE0CA3248A351100073657 /* YXSScoreSingleSubjectListCell.swift */,
+				E5AAF9E0248F1FA900D21EEB /* YXSScoreLevelTeacherListCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -5693,7 +5720,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 560B20C824518AC3003D8A19 /* Build configuration list for PBXNativeTarget "Share" */;
 			buildPhases = (
-				D8E7C341236B0828A8D7A6E6 /* [CP] Check Pods Manifest.lock */,
+				A2B76780AAA2E6F0B9BC5936 /* [CP] Check Pods Manifest.lock */,
 				560B20B624518AC3003D8A19 /* Sources */,
 				560B20B724518AC3003D8A19 /* Frameworks */,
 				560B20B824518AC3003D8A19 /* Resources */,
@@ -5711,16 +5738,16 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6FA0F350242B451E00E2E035 /* Build configuration list for PBXNativeTarget "ZGYM" */;
 			buildPhases = (
-				89004E7B5EDD9263D6A6A862 /* [CP] Check Pods Manifest.lock */,
+				D711BDE995A2D36C7C9C4240 /* [CP] Check Pods Manifest.lock */,
 				6FA0F322242B451800E2E035 /* Sources */,
 				6FA0F323242B451800E2E035 /* Frameworks */,
 				6FA0F324242B451800E2E035 /* Resources */,
-				3A6F959F91D86A232965ED3C /* [CP] Embed Pods Frameworks */,
-				0D4E5DACA1C7BC1392BF2228 /* [CP] Copy Pods Resources */,
 				6FA0FA9E242B500200E2E035 /* Embed Frameworks */,
 				6FF7735D244AE5B500D3461E /* Run Script */,
 				6F87B88A244ECD4A0085CD3B /* ShellScript */,
 				560B20C524518AC3003D8A19 /* Embed App Extensions */,
+				EA256219CFE59EDDDCEBDAE1 /* [CP] Embed Pods Frameworks */,
+				308CCAB7ED79A9962F3ACC59 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5865,7 +5892,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0D4E5DACA1C7BC1392BF2228 /* [CP] Copy Pods Resources */ = {
+		308CCAB7ED79A9962F3ACC59 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -5880,23 +5907,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZGYM/Pods-ZGYM-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3A6F959F91D86A232965ED3C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ZGYM/Pods-ZGYM-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ZGYM/Pods-ZGYM-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZGYM/Pods-ZGYM-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6F87B88A244ECD4A0085CD3B /* ShellScript */ = {
@@ -5934,7 +5944,29 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script f ile from your workspace to insert its path.\n if [ $CONFIGURATION == Release ]; then\n     APP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\n    # This script loops through the frameworks embedded in the application and\n    # removes unused architectures.\n    find \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK\n    do\n    FRAMEWORK_EXECUTABLE_NAME=$(defaults read \"$FRAMEWORK/Info.plist\" CFBundleExecutable)\n    FRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\n    echo \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\n\n    EXTRACTED_ARCHS=()\n\n    for ARCH in $ARCHS\n    do\n    echo \"Extracting $ARCH from $FRAMEWORK_EXECUTABLE_NAME\"\n    lipo -extract \"$ARCH\" \"$FRAMEWORK_EXECUTABLE_PATH\" -o \"$FRAMEWORK_EXECUTABLE_PATH-$ARCH\"\n    EXTRACTED_ARCHS+=(\"$FRAMEWORK_EXECUTABLE_PATH-$ARCH\")\n    done\n\n    echo \"Merging extracted architectures: ${ARCHS}\"\n    lipo -o \"$FRAMEWORK_EXECUTABLE_PATH-merged\" -create \"${EXTRACTED_ARCHS[@]}\"\n    rm \"${EXTRACTED_ARCHS[@]}\"\n\n    echo \"Replacing original executable with thinned version\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_EXECUTABLE_PATH-merged\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n\n    done\n fi\n\n\n";
 		};
-		89004E7B5EDD9263D6A6A862 /* [CP] Check Pods Manifest.lock */ = {
+		A2B76780AAA2E6F0B9BC5936 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Share-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D711BDE995A2D36C7C9C4240 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -5956,26 +5988,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D8E7C341236B0828A8D7A6E6 /* [CP] Check Pods Manifest.lock */ = {
+		EA256219CFE59EDDDCEBDAE1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ZGYM/Pods-ZGYM-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Share-checkManifestLockResult.txt",
+				"${PODS_ROOT}/Target Support Files/Pods-ZGYM/Pods-ZGYM-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZGYM/Pods-ZGYM-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -6071,6 +6098,7 @@
 				6F0703942445D8030090975B /* TUIInputBar.m in Sources */,
 				6F0704A72445D8040090975B /* YXSPhotoClassPhotoAlbumListController.swift in Sources */,
 				6F0704FA2445D8050090975B /* YXSAgendaListController.swift in Sources */,
+				E5AAF9E1248F1FA900D21EEB /* YXSScoreLevelTeacherListCell.swift in Sources */,
 				6F0705F22445D8060090975B /* LFPreviewBar.m in Sources */,
 				6F0704982445D8040090975B /* YXSClassMemberModel.swift in Sources */,
 				E53D8AF9244E80C400590B5A /* YXSContentHomeController.swift in Sources */,
@@ -6345,6 +6373,7 @@
 				6F0704352445D8040090975B /* YXSSettingViewController.swift in Sources */,
 				6FEA7C1E2452990D0017C9CA /* LFWeakSelectorTarget.m in Sources */,
 				6F07049D2445D8040090975B /* YXSBaseClassListTableViewCell.swift in Sources */,
+				E5AAF9E3248F826300D21EEB /* YXSScoreReadingListVC.swift in Sources */,
 				6F07053F2445D8050090975B /* YXSHomeworkPublishController.swift in Sources */,
 				6F0705502445D8050090975B /* YXSFriendCircleModel.swift in Sources */,
 				6FEA7C552452990F0017C9CA /* LFVideoEditingView.m in Sources */,
@@ -6503,6 +6532,7 @@
 				6F0704BA2445D8040090975B /* YXSPunchCardModel.swift in Sources */,
 				6F0703642445D8030090975B /* TCommonCell.m in Sources */,
 				E5AE0C962486516200073657 /* YXSScoreChildBarChartView.swift in Sources */,
+				E5AAF9DF248E3C1300D21EEB /* YXSScoreLevelTeacherDetailsVC.swift in Sources */,
 				6F0704E22445D8050090975B /* YXSSearchView.swift in Sources */,
 				6FEA7C522452990F0017C9CA /* LFVideoPlayer.m in Sources */,
 				6F0703F02445D8030090975B /* YXSRequset.swift in Sources */,
@@ -6548,6 +6578,7 @@
 				6F0705DD2445D8060090975B /* LFPhotoPreviewGifCell.m in Sources */,
 				6FEA7C132452990D0017C9CA /* UIView+LFDownloadManager.m in Sources */,
 				6F0705D92445D8060090975B /* LFBaseViewController.m in Sources */,
+				E5AAF9DB248DDE6F00D21EEB /* YXSScoreBaseDetailsVC.swift in Sources */,
 				6F07035D2445D8030090975B /* TUIImageViewController.m in Sources */,
 				5615A7A6247E4CFC003A64FB /* YXSPhotoClassPhotoAlbumListHeader.swift in Sources */,
 				6F07FE012445D7C70090975B /* YXSBaseWebViewController.swift in Sources */,
@@ -6566,6 +6597,7 @@
 				6F0704C22445D8040090975B /* YXSPunchCardStatisticsCell.swift in Sources */,
 				6FEA7C0D2452990D0017C9CA /* SPDropMenu.m in Sources */,
 				6F0704C92445D8040090975B /* YXSPunchCardCommentModel.swift in Sources */,
+				E5AE0CA4248A351100073657 /* YXSScoreSingleSubjectListCell.swift in Sources */,
 				6FEA7C512452990F0017C9CA /* LFStickerView.m in Sources */,
 				6F0704912445D8040090975B /* YXSClassSelectRoleView.swift in Sources */,
 				6F0703B02445D8030090975B /* TNaviBarIndicatorView.m in Sources */,
@@ -6715,6 +6747,7 @@
 				6F0705402445D8050090975B /* YXSHomeworkContainerViewController.swift in Sources */,
 				6F0704D62445D8050090975B /* YXSSolitaireSelectReasonView.swift in Sources */,
 				6FEA7C392452990E0017C9CA /* LFScrollView.m in Sources */,
+				E5AE0CA0248A1BCE00073657 /* YXSScoreSingleSubjectListVC.swift in Sources */,
 				6F0704472445D8040090975B /* YXSMineMessageNoticeViewController.swift in Sources */,
 				6F5677AF247F66B700B523ED /* YXSSolitaireQuestionModel.swift in Sources */,
 				6F0705492445D8050090975B /* YXSFriendsMediaModel.swift in Sources */,
@@ -6772,6 +6805,7 @@
 				6FEA7C272452990D0017C9CA /* UIView+LFMECommon.m in Sources */,
 				E5AA44502484901C0032C2CF /* SSWPieChartView.m in Sources */,
 				6FEA7C002452990C0017C9CA /* LFSmearBrush.m in Sources */,
+				E5AAF9DD248DEAD100D21EEB /* YXSScoreLevelChildHeaderView.swift in Sources */,
 				6F966CB32463B72A00BB073A /* YXSPeriodicalListController.swift in Sources */,
 				E58F1701245149D500A6AC18 /* YXSShowBrowserHelper.swift in Sources */,
 				6F0703AD2445D8030090975B /* TUIUserProfileDataProviderService.m in Sources */,
@@ -6818,6 +6852,8 @@
 				E5F41C57244D529D007F27AC /* YXSExcellentEducationVC.swift in Sources */,
 				6F0703AE2445D8030090975B /* TUIConversationDataProviderService.m in Sources */,
 				6F0703532445D8030090975B /* TUnReadView.m in Sources */,
+				E5AAF9D9248DDB1000D21EEB /* YXSScoreLevelParentDetailsVC.swift in Sources */,
+				E5AAF9E5248F83AA00D21EEB /* YXSScoreContainerVC.swift in Sources */,
 				E58F1706245149D500A6AC18 /* YXSInputAlertView2.swift in Sources */,
 				E58F16EB245149D400A6AC18 /* YXSShareTool.swift in Sources */,
 				6F0703A12445D8030090975B /* TUIVoiceMessageCell.m in Sources */,
@@ -6902,7 +6938,7 @@
 /* Begin XCBuildConfiguration section */
 		560B20C624518AC3003D8A19 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 78DA037DE3DFCFE843299175 /* Pods-Share.debug.xcconfig */;
+			baseConfigurationReference = 3DF7B39298D4595E926A5BFD /* Pods-Share.debug.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
@@ -6926,7 +6962,7 @@
 		};
 		560B20C724518AC3003D8A19 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 338D34C9F988C3B57E623DF8 /* Pods-Share.release.xcconfig */;
+			baseConfigurationReference = A34AD99A6279B235D92743B7 /* Pods-Share.release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
@@ -7064,7 +7100,7 @@
 		};
 		6FA0F351242B451E00E2E035 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19E98CAED4F114876F074A76 /* Pods-ZGYM.debug.xcconfig */;
+			baseConfigurationReference = FFCE71FBC4EC06BA8351CC59 /* Pods-ZGYM.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -7108,7 +7144,7 @@
 		};
 		6FA0F352242B451E00E2E035 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 523AA451EFA9DC7A915C2496 /* Pods-ZGYM.release.xcconfig */;
+			baseConfigurationReference = 99EBDA3F366413637E51734D /* Pods-ZGYM.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

@@ -92,6 +92,13 @@ class YXSScoreAllChildListVC: YXSBaseTableViewController {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if dataSource.count > indexPath.row {
+            let model = dataSource[indexPath.row]
+            let vc = YXSScoreNumParentDetailsVC.init(childModel: model)
+            vc.examId = self.detailsModel?.examId ?? 0
+            vc.childrenId = model.childrenId ?? 0
+            self.navigationController?.pushViewController(vc)
+        }
         
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -92,6 +92,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         visibleView.snp.makeConstraints { (make) in
             make.centerY.equalTo(lookAllScoreBtn)
             make.right.equalTo(-15)
+            make.height.equalTo(20)
         }
     }
     
@@ -109,10 +110,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
             
             self.setBarChartData(list: model.totalStatement ?? [YXSScoreTotalStatementModel]())
             UIUtil.yxs_setLabelAttributed(self.visibleView.textLabel, text: [String(model.readNumber ?? 0), "/\(model.number ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF")])
-//            self.barChartView.xValuesArr = ["0-60","61-70","71-80","81-90","91-100"]
-//            self.barChartView.yValuesArr = ["3人","10人","15人","9人","4人"]
-//            self.barChartView.yAxisCount = 6
-//            self.barChartView.yScaleValue = 4
+
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
@@ -145,9 +143,13 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
 //        self.maxNumberLbl.text = "人数最多的分段是:\(maxNumStr),共\(String(maxAllNum))人"
         barChartView.xValuesArr = xArr
         barChartView.yValuesArr = yArr
-        barChartView.yScaleValue = CGFloat(maxY / 5 + 1)
+        if maxY < 4 {
+            barChartView.yScaleValue = CGFloat(1)
+        } else {
+            barChartView.yScaleValue = CGFloat(maxY / 4)
+        }
         let count: Int = xArr.count
-        let gapWidth = ((Int(SCREEN_WIDTH) - 90 - 15) - 24 * count) / (count+1)
+        let gapWidth = ((Int(SCREEN_WIDTH) - 90 - 15) - 35 * count) / (count+1)
         barChartView.gapWidth = CGFloat(gapWidth)
         barChartView.reloadData()
     }
@@ -157,6 +159,18 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         let vc = YXSScoreAllChildListVC.init(detailsModel: self.detailsModel ?? YXSScoreDetailsModel.init(JSON: ["": ""])!)
         self.navigationController?.pushViewController(vc)
         
+    }
+    
+    @objc func visibleClick() {
+        let vc = YXSScoreContainerVC()
+        vc.detailModel = self.listModel
+//        vc.detailModel = homeModel
+//        vc.detailModel?.onlineCommit = model?.onlineCommit
+//        vc.backClickBlock = { [weak self]()in
+//            guard let weakSelf = self else {return}
+//            weakSelf.refreshData()
+//        }
+        self.navigationController?.pushViewController(vc)
     }
     
     // MARK: - getter&stter
@@ -269,10 +283,10 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
     
     lazy var visibleView: YXSCustomImageControl = {
         let visibleView = YXSCustomImageControl.init(imageSize: CGSize.init(width: 18, height: 18), position: YXSImagePositionType.left, padding: 7)
-        visibleView.font = UIFont.systemFont(ofSize: 13)
-        visibleView.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), night: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"))
         visibleView.locailImage = "visible_white"
-        visibleView.isUserInteractionEnabled = false
+        visibleView.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), night: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"))
+        visibleView.font = UIFont.systemFont(ofSize: 13)
+        visibleView.addTarget(self, action: #selector(visibleClick), for: .touchUpInside)
         return visibleView
     }()
     
@@ -356,8 +370,8 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         chartView?.barCorlor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
         chartView?.yAxisCount = 5
         chartView?.yScaleValue = 4
-        chartView?.barWidth = 24
-        let gapWidth = ((SCREEN_WIDTH - 90 - 15) - 24 * 5) / 6
+        chartView?.barWidth = 35
+        let gapWidth = ((SCREEN_WIDTH - 90 - 15) - 35 * 5) / 6
         chartView?.gapWidth = gapWidth  //30*SCREEN_SCALE
         return chartView!
     }()

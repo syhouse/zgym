@@ -19,6 +19,18 @@ class YXSScoreChildListModel: NSObject, Mappable {
     /// 孩子总分数
     var sumScore: Int?
     
+    /// 等级
+    var rank: String?
+    
+    ///考试名称
+    var examName: String?
+    ///考试时间（yyyy-MM-dd HH:mm:ss）
+    var creationTime: String?
+    ///考试ID
+    var examId: Int?
+    
+    var statisticsParentChildScoreSingleReportResponseList: [YXSScoreChildSingleReportModel]?
+    
     required init?(map: Map){}
 
     func mapping(map: Map)
@@ -27,5 +39,33 @@ class YXSScoreChildListModel: NSObject, Mappable {
         childrenId <- map["childrenId"]
         childrenName <- map["childrenName"]
         sumScore <- map["sumScore"]
+        examName <- map["examName"]
+        creationTime <- map["creationTime"]
+        examId <- map["examId"]
+        rank <- map["rank"]
+        statisticsParentChildScoreSingleReportResponseList <- map["statisticsParentChildScoreSingleReportResponseList"]
+    }
+}
+
+class YXSScoreChildSingleReportModel: NSObject, Mappable {
+    /// 统计柱状图数据
+    var statisticsBranchSubjectsScoreNumberEntities: [YXSScoreTotalStatementModel]?
+    /// 孩子当前得分
+    var currentScore: Int?
+    /// 科目id
+    var subjectsId: Int?
+    /// 孩子当前分段
+    var currentBranch: String?
+    /// 科目名
+    var subjectsName: String?
+    required init?(map: Map){}
+
+    func mapping(map: Map)
+    {
+        statisticsBranchSubjectsScoreNumberEntities <- map["statisticsBranchSubjectsScoreNumberEntities"]
+        currentScore <- map["currentScore"]
+        subjectsId <- map["subjectsId"]
+        currentBranch <- map["currentBranch"]
+        subjectsName <- map["subjectsName"]
     }
 }

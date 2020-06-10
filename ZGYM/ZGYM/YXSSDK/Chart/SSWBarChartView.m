@@ -18,6 +18,9 @@
 @property(nonatomic)NSMutableArray      *barsEndPointsArr;
 @property(nonatomic)NSMutableArray      *barsLayersArr;
 @property(nonatomic)UILabel             *unitLab;
+@property(nonatomic)UIView              *signView;
+@property(nonatomic)UILabel             *signDescribeLbl;
+@property(nonatomic)UILabel             *signValueLbl;
 @end
 @implementation SSWBarChartView
 -(instancetype)initWithChartType:(SSWChartsType)type{
@@ -195,13 +198,13 @@
 //添加柱形图
 -(void)addBars{
     for (int i = 0 ; i<self.yValuesArr.count; i++) {
-        CGFloat   Y = [(NSString *)self.yValuesArr[i] floatValue];
+        CGFloat   Y = [(NSString *)self.yValuesArr[i] floatValue];  
         CGFloat   barHeight = (Y/(self.yAxisCount*self.yScaleValue))*_totalHeight;
         CGPoint   startPoint = [self.barsStartPointsArr[i] CGPointValue];
         CGPoint   endPoint = CGPointMake(startPoint.x, startPoint.y-barHeight);
         [self.barsEndPointsArr addObject:[NSValue valueWithCGPoint:endPoint]];
         CAShapeLayer *barLayer = [CAShapeLayer layer];
-        if (self.signIndexY == i + 1) {
+        if (self.signIndexY == i && self.signDescribe.length > 0) {
             barLayer.strokeColor = self.signIndexCorlor.CGColor;
         } else {
             barLayer.strokeColor =self.barCorlor.CGColor;
@@ -215,14 +218,19 @@
         [barPath moveToPoint:startPoint];
         [barPath addLineToPoint:endPoint];
         [barPath closePath];
-        barLayer.path=barPath.CGPath;
-        [barLayer addAnimation:[self animationWithDuration:0.3*(i+1)] forKey:nil];
+        barLayer.path = barPath.CGPath;
+        [barLayer addAnimation:[self animationWithDuration:0.6*(i+1)] forKey:nil];
         [self.barsLayersArr addObject:barLayer];
     }
 }
 //显示每个柱形图的值
 -(void)showBarChartYValus{
     if(!self.showEachYValus)return;
+    if (self.signDescribe.length > 0){
+        self.signView.hidden = NO;
+        self.signDescribeLbl.text = self.signDescribe;
+        self.signValueLbl.text = self.signValues;
+    }
     for (int i = 0; i<self.xValuesArr.count; i++) {
         CGPoint  point = [self.barsEndPointsArr[i] CGPointValue];
         UILabel  *lab = [[UILabel alloc]init];
@@ -233,6 +241,47 @@
         lab.bounds = CGRectMake(0, 0, self.barWidth+self.gapWidth*4/5, 20);
         lab.center = CGPointMake(point.x, point.y-10);
         [self.contentView addSubview:lab];
+        if (self.signIndexY == i){
+            self.signView.center = CGPointMake(point.x, point.y-40);
+            [self.contentView addSubview:self.signView];
+        }
     }
 }
+
+- (UIView *)signView {
+    if (!_signView) {
+        _signView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 60, 50)];
+        UIImageView *imgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 50)];
+        imgV.image = [UIImage imageNamed:@"yxs_score_bubbles"];
+        imgV.contentMode = UIViewContentModeScaleAspectFit;
+        [_signView addSubview:imgV];
+        [_signView addSubview:self.signDescribeLbl];
+        [_signView addSubview:self.signValueLbl];
+        self.signDescribeLbl.frame = CGRectMake(1, 1, 60, 20);
+        self.signValueLbl.frame = CGRectMake(1, 21, 60, 20);
+        _signView.hidden = YES;
+    }
+    return _signView;
+}
+
+- (UILabel *)signDescribeLbl {
+    if (!_signDescribeLbl) {
+        _signDescribeLbl = [[UILabel alloc] init];
+        _signDescribeLbl.textColor = [UIColor whiteColor];
+        _signDescribeLbl.font = [UIFont systemFontOfSize:13];
+        _signDescribeLbl.textAlignment = NSTextAlignmentCenter;
+    }
+    return _signDescribeLbl;
+}
+
+- (UILabel *)signValueLbl {
+    if (!_signValueLbl) {
+        _signValueLbl = [[UILabel alloc] init];
+        _signValueLbl.textColor = [UIColor whiteColor];
+        _signValueLbl.font = [UIFont systemFontOfSize:13];
+        _signValueLbl.textAlignment = NSTextAlignmentCenter;
+    }
+    return _signValueLbl;
+}
+
 @end

@@ -47,15 +47,14 @@ class YXSScoreDetailsModel: NSObject, Mappable {
     /// 孩子头像
     var avatar: String?
     
-    var achievementChildrenSubjectsResponseList: [[String: Any]]? {
-        didSet {
-            childrenSubjects.removeAll()
-            let joinList = Mapper<YXSScoreChildrenSubjectsModel>().mapArray(JSONArray: achievementChildrenSubjectsResponseList ?? [[String: Any]]()) ?? [YXSScoreChildrenSubjectsModel]()
-            childrenSubjects = joinList
-        }
-    }
+    /// 老师imid
+    var teacherImId: String?
     
+    var achievementChildrenSubjectsResponseList: [YXSScoreChildrenSubjectsModel]?
+    var achievementChildrenSubjectsResponseSum: YXSScoreChildrenSubjectsModel?
     var childrenSubjects: [YXSScoreChildrenSubjectsModel] = [YXSScoreChildrenSubjectsModel]()
+    
+    var hierarchySubjectsResponseList: [YXSScoreChildrenSubjectsModel]?
     
     required init?(map: Map){}
 
@@ -80,6 +79,9 @@ class YXSScoreDetailsModel: NSObject, Mappable {
         comment <- map["comment"]
         avatar <- map["avatar"]
         achievementChildrenSubjectsResponseList <- map["achievementChildrenSubjectsResponseList"]
+        achievementChildrenSubjectsResponseSum <- map["achievementChildrenSubjectsResponseSum"]
+        hierarchySubjectsResponseList <- map["hierarchySubjectsResponseList"]
+        teacherImId <- map["teacherImId"]
     }
 }
 
@@ -93,12 +95,16 @@ class YXSScoreChildrenSubjectsModel: NSObject, Mappable {
     /// 科目名
     var subjectsName: String?
     
+    /// 等级
+    var rank: String?
+    
     required init?(map: Map){}
     func mapping(map: Map) {
         branch <- map["branch"]
         score <- map["score"]
         subjectsId <- map["subjectsId"]
         subjectsName <- map["subjectsName"]
+        rank <- map["rank"]
     }
 }
 
@@ -107,10 +113,13 @@ class YXSScoreTotalStatementModel: NSObject, Mappable {
     var branch: String?
     /// 分段人数
     var quantity: Int?
+    /// 分段ID
+    var subjectsId: Int?
     required init?(map: Map){}
     func mapping(map: Map) {
         branch <- map["branch"]
         quantity <- map["quantity"]
+        subjectsId <- map["subjectsId"]
     }
     
 }

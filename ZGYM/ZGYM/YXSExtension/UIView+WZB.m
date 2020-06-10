@@ -14,12 +14,12 @@
 #define WZBTag 155158
 
 @implementation UIView (WZB)
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas colorInfo:(NSDictionary *)colorInfo{
-    [self wzb_drawListWithRect:rect line:line columns:columns datas:datas colorInfo:colorInfo lineInfo:nil];
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel colorInfo:(NSDictionary *)colorInfo{
+    [self wzb_drawListWithRect:rect line:line columns:columns keyDatas:keys valueDatas:values isLevel:isLevel colorInfo:colorInfo lineInfo:nil];
 }
 
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas colorInfo:(NSDictionary *)colorInfo lineInfo:(NSDictionary *)lineInfo {
-    [self wzb_drawListWithRect:rect line:line columns:columns datas:datas colorInfo:colorInfo lineInfo:lineInfo backgroundColorInfo:nil];
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel colorInfo:(NSDictionary *)colorInfo lineInfo:(NSDictionary *)lineInfo {
+    [self wzb_drawListWithRect:rect line:line columns:columns keyDatas:keys valueDatas:values isLevel:isLevel colorInfo:colorInfo lineInfo:lineInfo backgroundColorInfo:nil];
 }
 
 /**
@@ -31,13 +31,13 @@
  * lineInfo：行信息，传入格式：@{@"0" : @"3"}意味着第一行创建3个格子
  * backgroundColorInfo：行信息，传入格式：@{@"0" : [UIColor redColor]}意味着第一个格子背景颜色变成红色
  */
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas colorInfo:(NSDictionary *)colorInfo lineInfo:(NSDictionary *)lineInfo backgroundColorInfo:(NSDictionary *)backgroundColorInfo {
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel colorInfo:(NSDictionary *)colorInfo lineInfo:(NSDictionary *)lineInfo backgroundColorInfo:(NSDictionary *)backgroundColorInfo {
     NSInteger index = 0;
     CGFloat x = rect.origin.x;
     CGFloat y = rect.origin.y;
-    CGFloat h = (1.0) * rect.size.height / columns;
+    CGFloat h = (1.0) * rect.size.height / line;
     NSInteger newLine = 0;
-    for (NSInteger i = 0; i < columns; i++) {
+    for (NSInteger i = 0; i < line; i++) {
         
         // 判断合并单元格
         if (lineInfo) {
@@ -56,10 +56,10 @@
         }
         
         
-        for (NSInteger j = 0; j < newLine; j++) {
+        for (NSInteger j = 0; j < columns; j++) {
             
             // 线宽
-            CGFloat w = (1.0) * rect.size.width / newLine;
+            CGFloat w = (1.0) * rect.size.width / columns;
             CGRect frame = (CGRect){x + w * j, y + h * i, w, h};
             
             
@@ -86,34 +86,85 @@
 //            label.backgroundColor = backgroundColor;
             if (i % 2 == 0) {
                 label.textColor = [UIColor grayColor];
+                // label文字
+                if (isLevel) {
+                    NSInteger keyIndex = i / 2 * columns + j;
+                    if (keys.count > keyIndex) {
+                        label.text = keys[keyIndex];
+                    }
+                } else {
+                    if (j == columns -1) {
+                        //最后一列的数值
+                        if (i == 0) {
+                            label.text = keys.lastObject;
+                        } else if (i == line / 2){
+                            label.text = values.lastObject;
+                        } else {
+                            label.text = @"";
+                        }
+                        
+                    } else {
+                        NSInteger keyIndex = i / 2 * 3 + j;
+                        if (keys.count > keyIndex) {
+                            label.text = keys[keyIndex];
+                        }
+                    }
+                }
+                
+                
                [label setBackgroundColor:[UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1]];
             }else{
+                // label文字
+                if (isLevel) {
+                    NSInteger valueIndex = i / 2 * columns + j;
+                    if (values.count > valueIndex) {
+                        label.text = values[valueIndex];
+                    }
+                } else {
+                    if (j == columns -1) {
+                        if (i == line / 2){
+                            label.text = values.lastObject;
+                        } else {
+                            label.text = @"";
+                        }
+                    } else {
+                        NSInteger valueIndex = i / 2 * 3 + j;
+                        if (values.count > valueIndex) {
+                            label.text = values[valueIndex];
+                        }
+                    }
+                }
+                
                 label.textColor = [UIColor blackColor];
-               [label setBackgroundColor:[UIColor whiteColor]];
+                [label setBackgroundColor:[UIColor whiteColor]];
             }
             // 字体大小
             label.font = [UIFont systemFontOfSize:16];
             
-            // label文字
-            label.text = datas[index];
-            // 画线
-            if (j < newLine - 1 || i == 0) {
+            if (isLevel) {
                 [self wzb_drawRectWithRect:frame];
             } else {
-                if (i == 1) {
-                    if (i == columns - 1) {
-                        [self wzb_drawRectWithRect:frame];
-                    } else {
-                        [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:YES];
-                    }
-                    
-                } else if (i == columns - 1) {
-                    [self wzb_drawRectWithRect:frame isHorizontalBottom:YES isHorizontalTop:NO];
+                // 画线
+                if (j < newLine - 1 || i == 0) {
+                    [self wzb_drawRectWithRect:frame];
                 } else {
-                    [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:NO];
+                    if (i == 1) {
+                        if (i == columns - 1) {
+                            [self wzb_drawRectWithRect:frame];
+                        } else {
+                            [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:YES];
+                        }
+                        
+                    } else if (i == columns - 1) {
+                        [self wzb_drawRectWithRect:frame isHorizontalBottom:YES isHorizontalTop:NO];
+                    } else {
+                        [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:NO];
+                    }
+                    [label setBackgroundColor:[UIColor whiteColor]];
+                    label.textColor = [UIColor blackColor];
                 }
-                [label setBackgroundColor:[UIColor whiteColor]];
             }
+            
         
             
             // label的tag值
@@ -211,8 +262,8 @@
  * columns：行数
  * data：数据
  */
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas {
-    [self wzb_drawListWithRect:rect line:line columns:columns datas:datas colorInfo:nil];
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel{
+    [self wzb_drawListWithRect:rect line:line columns:columns keyDatas:keys valueDatas:values isLevel:isLevel colorInfo:nil];
 }
 
 /**
@@ -222,8 +273,8 @@
  * data：数据
  * lineInfo：行信息，传入格式：@{@"0" : @"3"}意味着第一行创建3个格子
  */
-- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns datas:(NSArray *)datas lineInfo:(NSDictionary *)lineInfo {
-    [self wzb_drawListWithRect:rect line:line columns:columns datas:datas colorInfo:nil lineInfo:lineInfo];
+- (void)wzb_drawListWithRect:(CGRect)rect line:(NSInteger)line columns:(NSInteger)columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:(BOOL)isLevel lineInfo:(NSDictionary *)lineInfo {
+    [self wzb_drawListWithRect:rect line:line columns:columns keyDatas:(NSArray *)keys valueDatas:(NSArray *)values isLevel:isLevel colorInfo:nil lineInfo:lineInfo];
 }
 
 // 根据tag拿到对应的label

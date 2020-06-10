@@ -130,13 +130,31 @@ class YXSScoreListController: YXSBaseTableViewController{
         tableView.deselectRow(at: indexPath, animated: true)
         if dataSource.count > indexPath.row {
             let model = dataSource[indexPath.row]
-            if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-                let detail = YXSScoreNumTeacherDetailsVC.init(model: model)
-                self.navigationController?.pushViewController(detail)
+            if let strategy = model.calculativeStrategy, strategy == 10 {
+                /// 分数制
+                if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                    let detail = YXSScoreNumTeacherDetailsVC.init(model: model)
+                    self.navigationController?.pushViewController(detail)
+                } else {
+                    let detail = YXSScoreNumParentDetailsVC.init(model: model)
+                    detail.examId = model.examId ?? 0
+                    detail.childrenId = NSObject.init().yxs_user.currentChild?.id ?? 0
+                    self.navigationController?.pushViewController(detail)
+                }
             } else {
-                let detail = YXSScoreNumParentDetailsVC.init(model: model)
-                self.navigationController?.pushViewController(detail)
+                /// 等级制
+                if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                    let detail = YXSScoreLevelTeacherDetailsVC.init(model: model)
+                    self.navigationController?.pushViewController(detail)
+                    
+                } else {
+                    let detail = YXSScoreLevelParentDetailsVC.init(model: model)
+                    detail.examId = model.examId ?? 0
+                    detail.childrenId = NSObject.init().yxs_user.currentChild?.id ?? 0
+                    self.navigationController?.pushViewController(detail)
+                }
             }
+            
             
         }
     }

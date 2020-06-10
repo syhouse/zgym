@@ -298,7 +298,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             case 3:
                 return .solitaire
             case 4:
-                return .classstart
+                return .score
             case 5:
                 return .friendCicle
             case 6:
