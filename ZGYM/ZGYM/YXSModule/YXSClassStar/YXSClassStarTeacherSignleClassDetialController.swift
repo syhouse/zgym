@@ -9,7 +9,7 @@
 import UIKit
 
 /// 教师单个班级之星页面
-class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonController {
+class YXSClassStarTeacherSignleClassDetialController: YXSClassStarSignleClassBaseController {
     var classId: Int = 0
     
     var classModel: YXSClassStartClassModel?
@@ -34,7 +34,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: -leftCycle
+    // MARK: - leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,7 +50,6 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
         tableView.register(YXSClassStarTeacherSingleHeaderView.self, forHeaderFooterViewReuseIdentifier: "YXSClassStarTeacherSingleHeaderView")
         tableView.register(YXSClassStarTeacherSingleFooterView.self, forHeaderFooterViewReuseIdentifier: "YXSClassStarTeacherSingleFooterView")
         tableView.tableFooterView = UIView(frame: CGRect.init(x: 0, y: 0, width: self.view.width, height: 20))
-        
         
         if let classModel = classModel{
             customNav.title = classModel.className ?? ""
@@ -95,7 +94,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
         loadClassTopData()
         MBProgressHUD.showAdded(to: self.view, animated: true)
     }
-    // MARK: -UI
+    // MARK: - UI
     func updateUI(){
         publishButton.isHidden = !(classModel?.hasComment ?? false)
         self.tableHeaderView.setHeaderModel(self.classModel)
@@ -115,7 +114,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
             showComment = true
         }
     }
-    // MARK: -loadData
+    // MARK: - loadData
     @objc func loadClassTopData() {
         YXSEducationClassStarTeacherClassTopRequest.init(classId: classId, dateType: classModel?.dateType ?? DateType.W).requestCollection({ (classs:[YXSClassStartClassModel]) in
             let model = classs.first
@@ -193,7 +192,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
             self.group.leave()
         }
     }
-    // MARK: -action
+    // MARK: - action
     @objc func yxs_publishClick(){
         let vc = YXSClassStarTeacherPublishCommentController.init(model: classModel!)
         navigationController?.pushViewController(vc)
@@ -203,7 +202,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
     
     // MARK: -public
     
-    // MARK: -tableViewDelegate
+    // MARK: - tableViewDelegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -249,7 +248,7 @@ class YXSClassStarSignleClassDetialController: YXSClassStarSignleClassCommonCont
 
 
 // MARK: -HMRouterEventProtocol
-extension YXSClassStarSignleClassDetialController{
+extension YXSClassStarTeacherSignleClassDetialController{
     override func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
         super.yxs_user_routerEventWithName(eventName: eventName, info: info)
         switch eventName {

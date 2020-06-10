@@ -185,7 +185,7 @@ class YXSClassStarEvaluationItemLogoViewController: YXSBaseCollectionViewControl
 extension YXSClassStarEvaluationItemLogoViewController: YXSSelectMediaHelperDelegate{
     func didSelectImages(images: [UIImage]) {
         if let image = images.first{
-            if let data = image.yxs_compressImage(image: image, maxLength: imageMax){
+            if let data = YXSCompressionImageHelper.yxs_compressImage(image: image, maxLength: imageMax){
                 MBProgressHUD.yxs_showLoading()
                 YXSUploadDataHepler.shareHelper.uploadData(uploadModel: SLUploadDataSourceModel.init(data: data, path: YXSFileUploadHelper.sharedInstance.getStarUrl(fullName: Date().toString().MD5() + ".jpg", classId: classId), type: .image), sucess: { (url) in
                     self.currentIconUrl = url

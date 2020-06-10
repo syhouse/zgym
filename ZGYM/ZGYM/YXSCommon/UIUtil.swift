@@ -252,17 +252,6 @@ extension UIUtil{
         shapeLayer.path = path
         lineView.layer.addSublayer(shapeLayer)
     }
-    
-    
-    /// 从相册资源获取image
-    /// - Parameters:
-    ///   - asset: asset
-    ///   - resultBlock: 获取完成回调
-    static func PHAssetToImage(_ asset:PHAsset, resultBlock:((_ image: UIImage) ->())?){
-        YBIBPhotoAlbumManager.getImageData(with: asset) { (data) in
-            resultBlock?( UIImage.init(data: data ?? Data()) ?? UIImage())
-        }
-    }
 }
 
 // MARK: - loadData  通用的抽出来的请求
@@ -768,8 +757,7 @@ extension UIUtil{
 // MARK: - 锁屏播放控制
 extension UIUtil{
     static func configNowPlayingCenterUI(){
-        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
-        if isPlayerStop{
+        if YXSXMPlayerGlobalControlTool.share.isPlayerStop(){
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             return
         }
@@ -795,7 +783,7 @@ extension UIUtil{
         info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
         
         //音乐的播放速度
-        if XMSDKPlayer.shared()?.isPlaying() ?? false{
+        if YXSXMPlayerGlobalControlTool.share.isPlayerPlaying(){
             info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 1)
         }else{
             info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 0)

@@ -117,7 +117,7 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
     ///查询模版详情
     func loadTemplateDetialData(id: Int){
         YXSEducationTemplateQueryTemplateByIdRequest(id: id).request({ (detialModel: YXSTemplateDetialModel) in
-            self.publishModel.publishText = detialModel.content
+            self.publishModel.publishContent = detialModel.content
             self.publishView.setTemplateText(detialModel.content ?? "")
         }, failureHandler: { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -127,7 +127,7 @@ class YXSNoticePublishController: YXSCommonPublishBaseController {
     override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
         var fileList = [[String: Any]]()
         var classIdList = [Int]()
-        let content:String = publishModel.publishText!
+        let content:String = publishModel.publishContent!
         var picture: String = ""
         var video: String = ""
         var audioUrl: String = ""

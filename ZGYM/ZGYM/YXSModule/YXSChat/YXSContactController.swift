@@ -359,7 +359,6 @@ class YXSContactController: YXSBaseTableViewController{
                     nonameList.append(sub)
                     continue
                 }
-                SLLog(">>>>>>>>>:\(firstString)")
 
                 /// 存
                 var list:[YXSContactModel]? = dataDict[firstString]

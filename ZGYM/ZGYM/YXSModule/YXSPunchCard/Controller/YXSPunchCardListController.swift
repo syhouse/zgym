@@ -11,9 +11,6 @@ import ObjectMapper
 import NightNight
 
 class YXSPunchCardListController: YXSCommonScreenListBaseController {
-    /// 是否今日事项列表
-    private var isAgenda: Bool = false
-    
     private var yxs_punchCardDataSource = [YXSPunchCardModel]()
     
     // MARK: - init

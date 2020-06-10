@@ -9,8 +9,12 @@
 import UIKit
 import FDFullscreenPopGesture_Bell
 
-class YXSScanViewController: YXSLBXScanViewController {
+enum ScanType: Int{
+    case addClass
+    case teacherWebLogin
+}
 
+class YXSScanViewController: YXSLBXScanViewController {
     /**
     @brief  扫码区域上方提示文字
     */
@@ -20,7 +24,18 @@ class YXSScanViewController: YXSLBXScanViewController {
      @brief  闪关灯开启状态
      */
     var isOpenedFlash: Bool = false
-
+    
+    var scanType: ScanType
+    
+    init(scanType: ScanType = .addClass){
+        self.scanType = scanType
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -90,9 +105,14 @@ class YXSScanViewController: YXSLBXScanViewController {
             parameter[item.name] = item.value
         }
         
-
-        let vc = YXSClassAddController.init(classText: parameter["gradeNum"] as? String ?? "")
-        self.navigationController?.pushViewController(vc)
+        switch scanType {
+        case .addClass:
+            let vc = YXSClassAddController.init(classText: parameter["gradeNum"] as? String ?? "")
+            self.navigationController?.pushViewController(vc)
+        default:
+            break
+        }
+        
     }
     
     //开关闪光灯

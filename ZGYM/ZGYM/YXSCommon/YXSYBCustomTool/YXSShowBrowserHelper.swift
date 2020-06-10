@@ -95,9 +95,9 @@ class YXSShowBrowserHelper: NSObject, YBImageBrowserDelegate{
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, beginTransitioningWithIsShow isShow: Bool) {
         UIApplication.shared.setStatusBarHidden(isShow, with: UIStatusBarAnimation.none)
         if isShow{
-            YXSPlayerMediaSingleControlTool.share.pausePlayer()
+            YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
         }else{
-            YXSPlayerMediaSingleControlTool.share.resumePlayer()
+            YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
         }
     }
 }

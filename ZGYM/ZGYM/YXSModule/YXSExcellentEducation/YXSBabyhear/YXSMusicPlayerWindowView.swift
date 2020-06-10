@@ -12,25 +12,23 @@ import SDWebImage
 class YXSMusicPlayerWindowView: UIControl {
     
     /// 展示播放窗 当前播放时间
-    public static func showPlayerWindow(currentTime: UInt){
+    public static func showPlayerWindow(){
         let instanceView = YXSMusicPlayerWindowView.instanceView
         UIUtil.RootController().view.addSubview(instanceView)
         instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT, width: SCREEN_WIDTH - 30, height: 49)
         UIView.animate(withDuration: 0.25, animations: {
             instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 5 - kSafeBottomHeight, width: SCREEN_WIDTH - 30, height: 49)
-            let track = XMSDKPlayer.shared()?.currentTrack()
+            let track = YXSXMPlayerGlobalControlTool.share.currentTrack
             instanceView.titleLabel.text = track?.trackTitle
             instanceView.startVoiceAnimation()
         })
-        if (XMSDKPlayer.shared()?.isPlaying())!{
+        if YXSXMPlayerGlobalControlTool.share.isPlayerPlaying(){
             instanceView.isPlayingMusic = true
         }else{
             instanceView.isPlayingMusic = false
         }
-        
-        instanceView.currentTime = currentTime
         instanceView.isHidden = false
-        XMSDKPlayer.shared()?.trackPlayDelegate = instanceView
+        YXSXMPlayerGlobalControlTool.share.playerDelegate = instanceView
         
         UIApplication.shared.beginReceivingRemoteControlEvents()
         
@@ -47,12 +45,11 @@ class YXSMusicPlayerWindowView: UIControl {
     
     ///更新播放窗口是否需要隐藏
     public static func setView(hide: Bool){
-        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
-        if isPlayerStop || hide{
+        if YXSXMPlayerGlobalControlTool.share.isPlayerStop() || hide{
             YXSMusicPlayerWindowView.instanceView.isHidden = true
         }else{
             YXSMusicPlayerWindowView.instanceView.isHidden = false
-            if (XMSDKPlayer.shared()?.isPlaying())!{
+            if YXSXMPlayerGlobalControlTool.share.isPlayerPlaying(){
                 instanceView.isPlayingMusic = true
             }else{
                 instanceView.isPlayingMusic = false
@@ -66,10 +63,9 @@ class YXSMusicPlayerWindowView: UIControl {
     ///更新播放窗口frame
     /// - Parameter isNavFirstVC: 是否是nav的第一个视图
     public static func setUpdateFrame(isNavFirstVC: Bool){
-        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
-        if !isPlayerStop && !(UIUtil.TopViewController() is YXSPlayingViewController){
+        if !YXSXMPlayerGlobalControlTool.share.isPlayerStop() && !(UIUtil.TopViewController() is YXSPlayingViewController){
             YXSMusicPlayerWindowView.instanceView.frame = CGRect(x: 15, y: SCREEN_HEIGHT - 49 - 5 - kSafeBottomHeight - (isNavFirstVC ? 49 : 0), width: SCREEN_WIDTH - 30, height: 49)
-            if (XMSDKPlayer.shared()?.isPlaying())!{
+            if YXSXMPlayerGlobalControlTool.share.isPlayerPlaying(){
                 instanceView.isPlayingMusic = true
             }else{
                 instanceView.isPlayingMusic = false
@@ -87,7 +83,7 @@ class YXSMusicPlayerWindowView: UIControl {
     }
     
     public static func cheakPlayerUI(){
-        if XMSDKPlayer.shared()?.isPlaying() ?? false{
+        if YXSXMPlayerGlobalControlTool.share.isPlayerPlaying(){
             instanceView.isPlayingMusic = true
         }else{
             instanceView.isPlayingMusic = false
@@ -99,7 +95,6 @@ class YXSMusicPlayerWindowView: UIControl {
     }
     
     private static let instanceView: YXSMusicPlayerWindowView = YXSMusicPlayerWindowView()
-    private var currentTime: UInt = 0
     
     private init() {
         super.init(frame: CGRect.zero)
@@ -203,7 +198,7 @@ class YXSMusicPlayerWindowView: UIControl {
     }
     
     @objc func closeClick(){
-        XMSDKPlayer.shared()?.stopTrackPlay()
+        YXSXMPlayerGlobalControlTool.share.stopXMPlay()
         YXSMusicPlayerWindowView.hidePlayerWindow()
         
         UIApplication.shared.endReceivingRemoteControlEvents()
@@ -212,21 +207,21 @@ class YXSMusicPlayerWindowView: UIControl {
     
     @objc func playerClick(){
         if isPlayingMusic{
-            XMSDKPlayer.shared()?.pauseTrackPlay()
+            YXSXMPlayerGlobalControlTool.share.pauseXMPlay()
             isPlayingMusic = false
         }else{
             isPlayingMusic = true
-            XMSDKPlayer.shared()?.resumeTrackPlay()
+            YXSXMPlayerGlobalControlTool.share.resumeXMPlay()
         }
     }
     
     @objc func playerNextClick(){
-        XMSDKPlayer.shared()?.playNextTrack()
+        YXSXMPlayerGlobalControlTool.share.playXMNext()
         isPlayingMusic = true
     }
     
     @objc func showPlayerView(){
-        let vc = YXSPlayingViewController(currentTime: currentTime)
+        let vc = YXSPlayingViewController()
         UIUtil.currentNav().pushViewController(vc)
     }
     
@@ -288,7 +283,7 @@ extension YXSMusicPlayerWindowView{
             case .remoteControlNextTrack:
                 playerNextClick()
             case .remoteControlPreviousTrack:
-                XMSDKPlayer.shared()?.playPrevTrack()
+                YXSXMPlayerGlobalControlTool.share.playXMPrev()
                 isPlayingMusic = true
             default:
                 break
@@ -297,17 +292,14 @@ extension YXSMusicPlayerWindowView{
     }
 }
 
-extension YXSMusicPlayerWindowView: XMTrackPlayerDelegate{
+extension YXSMusicPlayerWindowView: YXSXMPlayerDelegate{
     // MARK: - Delegate
     func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
-        YXSRemoteControlInfoHelper.currentTime = currentSecond
-        currentTime = currentSecond
-        
         UIUtil.configNowPlayingCenterUI()
     }
     
     func xmTrackPlayerWillPlaying() {
-        let track = XMSDKPlayer.shared()?.currentTrack()
+        let track = YXSXMPlayerGlobalControlTool.share.currentTrack
         titleLabel.text = track?.trackTitle
     }
     

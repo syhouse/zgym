@@ -9,15 +9,16 @@
 import UIKit
 import NightNight
 
-let kMaxImageCount = 9
 let kImageOrginTag = 10001
 let kHomeworkPictureGraffitiEvent = "HomeworkPictureGraffitiEvent"
 ///九宫格(图片+视频)
 class YXSNineMediaView: UIView{
-    override init(frame: CGRect) {
+    var imageMaxCount: Int
+    
+    init(frame: CGRect,imageMaxCount: Int = 9){
+        self.imageMaxCount = imageMaxCount
         super.init(frame: frame)
-        
-        for index in 0 ..< kMaxImageCount{
+        for index in 0 ..< imageMaxCount{
             let imageView = HMSingleMediaView()
             imageView.tag = kImageOrginTag + index
             imageView.addTaget(target: self, selctor: #selector(imageClick))
@@ -38,7 +39,7 @@ class YXSNineMediaView: UIView{
     
     public var medias: [YXSFriendsMediaModel]?{
         didSet{
-            for index in 0 ..< kMaxImageCount{
+            for index in 0 ..< imageMaxCount{
                 let imageView = viewWithTag(kImageOrginTag + index)!
                 imageView.isHidden = true
                 imageView.cornerRadius = 2.5
@@ -55,7 +56,9 @@ class YXSNineMediaView: UIView{
             var imageHeight = imageWidth
             if let imgs = medias{
                 var lastView: UIView?
-                for index in 0..<imgs.count{
+                
+                let maxCount = imgs.count > imageMaxCount ? imageMaxCount :  imgs.count
+                for index in 0..<maxCount{
                     let model = imgs[index]
                     let imageView = viewWithTag(kImageOrginTag + index) as! HMSingleMediaView
                     imageView.isGraffiti = isGraffiti
@@ -75,7 +78,7 @@ class YXSNineMediaView: UIView{
                         }else{
                              make.top.equalTo(lastView!)
                         }
-                        if index == imgs.count - 1{
+                        if index == maxCount - 1{
                             make.bottom.equalTo(0).priorityHigh()
                         }
                         
@@ -98,9 +101,11 @@ class YXSNineMediaView: UIView{
     @objc func imageClick(_ tap: UITapGestureRecognizer){
         let index = (tap.view?.tag ?? kImageOrginTag) - kImageOrginTag
         if let medias = medias{
+            let maxCount = medias.count > imageMaxCount ? imageMaxCount :  medias.count
             var urls = [URL]()
             var images = [UIImage?]()
-            for model in medias{
+            for index in 0..<maxCount{
+                let model = medias[index]
                 if model.type == .serviceVedio{
                     UIUtil.pushOpenVideo(url: model.url ?? "")
                     return
@@ -215,3 +220,5 @@ class HMSingleMediaView: UIView {
     }()
 
 }
+
+

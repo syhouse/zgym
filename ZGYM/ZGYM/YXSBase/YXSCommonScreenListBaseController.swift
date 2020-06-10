@@ -35,6 +35,10 @@ class YXSCommonScreenListBaseController: YXSBaseTableViewController{
     var childId: Int?
     var rightButton: YXSButton!
     var actionEvent: YXSHomeHeaderActionEvent = .homework
+    
+    /// 是否今日事项列表
+    var isAgenda: Bool = false
+    
     init(classId: Int?, childId: Int?) {
         self.classId = classId
         self.childId = childId
@@ -147,7 +151,10 @@ class YXSCommonScreenListBaseController: YXSBaseTableViewController{
     }
     
     func addNotification(){
-        NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kHomeAgendaReducNotification), object: nil)
+        if isAgenda{
+            NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kHomeAgendaReducNotification), object: nil)
+        }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(yxs_updateList), name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kTeacherPublishSucessNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(yxs_refreshData), name: NSNotification.Name.init(rawValue: kOperationUpdateToTopInItemDetailNotification), object: nil)

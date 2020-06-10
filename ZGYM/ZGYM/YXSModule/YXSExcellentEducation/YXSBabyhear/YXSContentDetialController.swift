@@ -38,6 +38,11 @@ class YXSContentDetialController: YXSBaseTableViewController {
         }
     }
     // MARK: - leftCycle
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(customNav)
@@ -160,6 +165,12 @@ class YXSContentDetialController: YXSBaseTableViewController {
         let model = listSource[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "YXSContentDetialCell") as! YXSContentDetialCell
         cell.yxs_setCellModel(model, row: indexPath.row)
+        /// 设置选中颜色
+        if YXSXMPlayerGlobalControlTool.share.currentTrack?.trackId == model.id {
+            cell.yxs_nameLabel.textColor = kBlueColor
+        } else {
+            cell.yxs_nameLabel.textColor = kTextMainBodyColor
+        }
         return cell
     }
     

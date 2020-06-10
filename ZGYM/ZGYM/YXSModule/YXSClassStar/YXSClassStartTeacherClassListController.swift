@@ -93,7 +93,7 @@ class YXSClassStartTeacherClassListController: YXSBaseTableViewController {
             let vc = YXSClassStarTeacherPublishCommentController.init(model: classModel)
             navigationController?.pushViewController(vc)
         }else{
-            let vc = YXSClassStarSignleClassDetialController.init(classModel: classModel)
+            let vc = YXSClassStarTeacherSignleClassDetialController.init(classModel: classModel)
             navigationController?.pushViewController(vc)
         }
     }

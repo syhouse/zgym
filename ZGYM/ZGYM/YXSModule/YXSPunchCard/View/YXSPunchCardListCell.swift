@@ -206,7 +206,6 @@ extension YXSPunchCardListCell{
         var teacherName: String?
         var className: String?
         var periodList:  [Int]?
-        var surplusClockInDayCount: Int?
         var currentClockInPeopleCount: Int?
         var currentClockInTotalCount: Int?
         var teacherId: Int?
@@ -227,7 +226,6 @@ extension YXSPunchCardListCell{
             createTime = model.createTime ?? ""
             teacherName = model.teacherName ?? ""
             className = model.className ?? ""
-            surplusClockInDayCount = model.surplusClockInDayCount
             periodList = model.periodList
             hasNeedPunch = model.hasNeedPunch
             hasPunch = model.hasPunch
@@ -248,7 +246,6 @@ extension YXSPunchCardListCell{
             createTime = punchCardModel.createTime ?? ""
             teacherName = punchCardModel.teacherName ?? ""
             className = punchCardModel.className ?? ""
-            surplusClockInDayCount = punchCardModel.surplusClockInDayCount
             periodList = punchCardModel.periodList
             hasNeedPunch = punchCardModel.hasNeedPunch
             hasPunch = punchCardModel.hasPunch
@@ -375,11 +372,6 @@ extension YXSPunchCardListCell{
             make.top.equalTo(contentLabel.snp_bottom).offset(isWaterfallCell ? 37 : 14)
              make.left.equalTo(contentLabel)
              make.right.equalTo(-80)
-//            if YXSPersonDataModel.sharePerson.personRole == .TEACHER || hasPunch || !hasNeedPunch{
-//                make.bottom.equalTo(-75)
-//            }else{
-//                make.bottom.equalTo(-50)
-//            }
         }
     }
 }

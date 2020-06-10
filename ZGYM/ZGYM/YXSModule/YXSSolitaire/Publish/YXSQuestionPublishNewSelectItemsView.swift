@@ -63,7 +63,7 @@ class YXSQuestionPublishNewSelectItemsView: UIView{
                     make.top.equalTo(last.snp_bottom)
                 }
                 
-                if !showMore && index == 3{
+                if !showMore && index == self.selectModels.count - 1{
                     make.bottom.equalTo(0)
                 }
             }
@@ -322,6 +322,12 @@ class SolitairePublishNewSelectModel: NSObject, NSCoding{
     
     var isSelected: Bool = false
     
+    ///家长选择人数
+    var gatherTopicCount: Int?
+    
+    ///家长选择百分比
+    var ratio: Int?
+    
     override init() {
     }
     
@@ -331,6 +337,9 @@ class SolitairePublishNewSelectModel: NSObject, NSCoding{
         leftText = aDecoder.decodeObject(forKey: "leftText") as? String
         mediaModel = aDecoder.decodeObject(forKey: "mediaModel") as? SLPublishMediaModel
         isSelected = aDecoder.decodeBool(forKey: "isSelected")
+        
+        ratio = aDecoder.decodeObject(forKey: "ratio") as? Int
+        gatherTopicCount = aDecoder.decodeObject(forKey: "gatherTopicCount") as? Int
     }
     @objc func encode(with aCoder: NSCoder)
     {
@@ -349,5 +358,12 @@ class SolitairePublishNewSelectModel: NSObject, NSCoding{
         
         aCoder.encode(index, forKey: "index")
         aCoder.encode(isSelected, forKey: "isSelected")
+        
+        if ratio != nil{
+            aCoder.encode(ratio, forKey: "ratio")
+        }
+        if gatherTopicCount != nil{
+            aCoder.encode(gatherTopicCount, forKey: "gatherTopicCount")
+        }
     }
 }

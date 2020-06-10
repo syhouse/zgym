@@ -7,6 +7,8 @@
 //
 
 import Foundation
+
+///接龙详情组装的采集问题model
 class YXSSolitaireQuestionModel: NSObject, NSCoding{
     ///是否必答
     var isNecessary: Bool = false
@@ -24,8 +26,88 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
     ///回答内容
     var answerContent: String?
     
+    ///题目的id
+    var gatherTopicId: Int?
+    
     ///回答图片
-    var answerMedias = [SLPublishMediaModel]()
+    var answerMedias = [SLPublishEditMediaModel]()
+    
+    ///家长回答人数
+    var gatherTopicCount: Int?
+    
+    ///家长回答百分比
+    var ratio: Int?
+    
+    ///详情页cell高度
+    func getCellDetialHeight(index: Int) -> CGFloat{
+        if YXSPersonDataModel.sharePerson.personRole == .PARENT{
+            var height: CGFloat = 17.0
+            
+            ///title rightGp 默认50
+            
+            height += UIUtil.yxs_getTextHeigh(textStr: "\(index + 1)、\(questionStemText ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
+            height += 30
+            
+            switch type {
+            case .single, .checkbox:
+                if let solitaireSelects = solitaireSelects{
+                    let maxCount = solitaireSelects.count > maxQuestionCount ? maxQuestionCount : solitaireSelects.count
+                    for index in 0..<maxCount {
+                        let model = solitaireSelects[index]
+                        height += 13 //顶部
+                        height += 15// 选项
+                        height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
+                        if model.mediaModel != nil{
+                            height += 84 + 12.5
+                        }
+                        
+                        height += 13//底部
+                    }
+                }
+                
+            case .image:
+                let itemW:CGFloat = CGFloat((SCREEN_WIDTH - 30 - 5*2)/3)
+                let row:CGFloat = CGFloat(answerMedias.count/3)
+                height += 17
+                height += itemW*(row + ((answerMedias.count%3 == 0) ? 0 : 1)) + row*5
+            case .gap:
+                
+                height += 17
+                
+                height += 135
+            }
+            ///底部距离
+            height += 17
+            return height
+        }else{
+            var height: CGFloat = 17.0
+            ///title rightGp 默认50
+            height += UIUtil.yxs_getTextHeigh(textStr: "\(index + 1)、\(questionStemText ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
+            height += 30
+            
+            switch type {
+            case .single, .checkbox:
+                if let solitaireSelects = solitaireSelects{
+                    let maxCount = solitaireSelects.count > maxQuestionCount ? maxQuestionCount : solitaireSelects.count
+                    for index in 0..<maxCount {
+                        let model = solitaireSelects[index]
+                        height += 26
+                        height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
+                        if model.mediaModel != nil{
+                            height += 84 + 12.5
+                        }
+                        height += 41
+                    }
+                }
+                
+            case .image, .gap:
+                height += 55.5
+            }
+            ///底部距离
+            height += 17
+            return height
+        }
+    }
     
     init(questionType: YXSQuestionType){
         self.type = questionType
@@ -43,7 +125,12 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
         
         answerContent = aDecoder.decodeObject(forKey: "answerContent") as? String
         
-        answerMedias = aDecoder.decodeObject(forKey: "answerMedias") as? [SLPublishMediaModel] ?? [SLPublishMediaModel]()
+        answerMedias = aDecoder.decodeObject(forKey: "answerMedias") as? [SLPublishEditMediaModel] ?? [SLPublishEditMediaModel]()
+        gatherTopicId = aDecoder.decodeObject(forKey: "gatherTopicId") as? Int
+        gatherTopicCount = aDecoder.decodeObject(forKey: "gatherTopicCount") as? Int
+        ratio = aDecoder.decodeObject(forKey: "ratio") as? Int
+        
+        type = YXSQuestionType.init(rawValue: (aDecoder.decodeObject(forKey: "type") as? String) ?? "") ?? YXSQuestionType.single
     }
     @objc func encode(with aCoder: NSCoder)
     {
@@ -63,7 +150,18 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
         if answerContent != nil{
             aCoder.encode(answerContent, forKey: "answerContent")
         }
+        if answerContent != nil{
+            aCoder.encode(gatherTopicId, forKey: "gatherTopicId")
+        }
+        if ratio != nil{
+            aCoder.encode(ratio, forKey: "ratio")
+        }
+        if gatherTopicCount != nil{
+            aCoder.encode(gatherTopicCount, forKey: "gatherTopicCount")
+        }
         aCoder.encode(isNecessary, forKey: "isNecessary")
         aCoder.encode(answerMedias, forKey: "answerMedias")
+        aCoder.encode(type.rawValue, forKey: "type")
     }
 }
+

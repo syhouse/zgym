@@ -231,7 +231,6 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
                  MBProgressHUD.yxs_updateUploadProgess(progess: progress, inView: self.navigationController!.view)
             }
         }, sucess: { (listModels) in
-            SLLog(listModels)
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             for model in listModels{
                 commintMediaInfos.append([typeKey: model.type,urlKey: model.aliYunUploadBackUrl ?? ""])
@@ -265,7 +264,7 @@ class YXSCommonPublishBaseController: YXSBaseViewController{
     // MARK: -tool
     func yxs_cheackCanSetUp() -> Bool{
         //主题不能为空
-        let publishText: String = publishModel.publishText?.removeSpace() ?? ""
+        let publishText: String = publishModel.publishContent?.removeSpace() ?? ""
         if publishText.count == 0{
             yxs_showAlert(title: "正文不能为空")
             return false

@@ -115,6 +115,7 @@ class SLUploadDataSourceModel: NSObject{
     ///上传多个资源排序时使用
     var index: Int = 0
     
+    
     init(data: Data?, path: String, type: SourceNameType) {
         self.data = data
         self.path = path
@@ -197,7 +198,7 @@ class YXSUploadSourceHelper: NSObject {
         let queue = DispatchQueue.global()
         let group = DispatchGroup()
         var newUploadModels: [SLUploadDataSourceModel] = [SLUploadDataSourceModel]()
-        for uploadModel in uploadModels{
+        for (index, uploadModel) in uploadModels.enumerated(){
             let sourceType: SourceNameType = uploadModel.type
             switch sourceType {
             case .image,.firstVideo:
@@ -206,8 +207,10 @@ class YXSUploadSourceHelper: NSObject {
                     queue.async{
                         model.getAssetImage { (assetImage) in
                             if let assetImage = assetImage{
-                                let data = assetImage.yxs_compressImage(image: assetImage, maxLength: imageMax)
-                                newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
+                                let data = YXSCompressionImageHelper.yxs_compressImage(image: assetImage, maxLength: imageMax)
+                                let uploadSourceModel = SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type)
+                                uploadSourceModel.index = index
+                                newUploadModels.append(uploadSourceModel)
                             }
                             group.leave()
                         }
@@ -232,14 +235,14 @@ class YXSUploadSourceHelper: NSObject {
                             HMVideoCompression().compressVideo(exportSession) { (data) in
                                 if data.count > 0 {//做判断,判断是否转化成功
                                     //进行视频上传
-                                    newUploadModels.append(SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type))
+                                    let uploadSourceModel = SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type)
+                                    uploadSourceModel.index = index
+                                    newUploadModels.append(uploadSourceModel)
                                 }else{
                                     failureHandlerMsg = "视频资源错误"
                                     
                                 }
                                 group.leave()
-                                
-                                
                             }
                         }
                     }
@@ -247,7 +250,9 @@ class YXSUploadSourceHelper: NSObject {
             case .voice:
                 if let audioModel = (uploadModel.model as? SLAudioModel){
                     let url = URL.init(fileURLWithPath: audioModel.path ?? "")
-                    newUploadModels.append(SLUploadDataSourceModel.init(data: try? Data.init(contentsOf: url), path: uploadModel.path, type: uploadModel.type))
+                    let uploadSourceModel = SLUploadDataSourceModel.init(data: try? Data.init(contentsOf: url), path: uploadModel.path, type: uploadModel.type)
+                    uploadSourceModel.index = index
+                    newUploadModels.append(uploadSourceModel)
                 }
                 
             }
@@ -301,9 +306,8 @@ class YXSUploadSourceHelper: NSObject {
         
         /// 上传数量
         let count = uploadModels.count
-        for (index,uploadModel) in uploadModels.enumerated(){
+        for uploadModel in uploadModels{
             group.enter()
-            uploadModel.index = index
             
             ///上一次上传进度
             var lastProgress: CGFloat = 0.0
@@ -316,7 +320,7 @@ class YXSUploadSourceHelper: NSObject {
                         progress = 1.0
                     }
                     progressBlock?(progress)
-                    SLLog("totalprogress = \(progress)")
+//                    SLLog("totalprogress = \(progress)")
                 }, sucess: { (url) in
                     uploadModel.aliYunUploadBackUrl = url
                     group.leave()
@@ -335,6 +339,10 @@ class YXSUploadSourceHelper: NSObject {
                     let sortModels = uploadModels.sorted(by: {(a,b) -> Bool in
                         return (a.index) < (b.index)
                     })
+                    
+                    for model in sortModels{
+                        SLLog(model.index)
+                    }
                     sucess?(sortModels)
                 }
             }
@@ -424,8 +432,13 @@ class YXSUploadDataHepler: NSObject{
     var oSSAuth: YXSOSSAuthModel?
     static let shareHelper = YXSUploadDataHepler()
     private override init(){
-        
+        self.queue = {
+            let operationQueue = OperationQueue()
+            operationQueue.maxConcurrentOperationCount = 6
+            return operationQueue
+        }()
     }
+    private let queue: OperationQueue
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -478,39 +491,43 @@ class YXSUploadDataHepler: NSObject{
     ///   - sucess: 成功回调 返回model 里面带有上传成功路径
     ///   - failureHandler: 失败回调
     fileprivate func uploadData(uploadModel: SLUploadDataSourceModel, ossClient: OSSClient?, progress : ((_ progress: CGFloat)->())? = nil, sucess:((String)->())?,failureHandler: ((String, String) -> ())?){
-        
-        let ossPutObj: OSSPutObjectRequest = OSSPutObjectRequest()
-        ossPutObj.uploadingData = uploadModel.data
-        ossPutObj.bucketName = oSSAuth?.bucket
-        ossPutObj.objectKey = uploadModel.path
-        
-        ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
-            progress?(CGFloat(totalBytesSent)/CGFloat(totalBytesExpectedToSend))
-        }
-        
-        let uploadTask = ossClient?.putObject(ossPutObj)
-        uploadTask?.continue({ (uploadTask) -> Any? in
-            if let _err = uploadTask.error {
-                DispatchQueue.main.async {
-                    failureHandler?(_err.localizedDescription, "1001")
-                }
-                
-            } else {
-                if  let _:OSSPutObjectResult  = uploadTask.result as? OSSPutObjectResult {
-                    var point: NSString = (self.oSSAuth?.endpoint ?? "") as NSString
-                    point = point.replacingOccurrences(of: "http://", with: "") as NSString
-                    point = point.replacingOccurrences(of: "https://", with: "") as NSString
-                    let picUrlStr = "http://\(self.oSSAuth?.bucket ?? "").\(point)/\(uploadModel.path)"
-                    DispatchQueue.main.async {
-                        sucess?(picUrlStr)
-                    }
-                }else{
-                    DispatchQueue.main.async {
-                        failureHandler?("链接拼接失败", "1001")
-                    }
-                }
+        let semaphore = DispatchSemaphore(value: 0)
+        queue.addOperation {
+            let ossPutObj: OSSPutObjectRequest = OSSPutObjectRequest()
+            ossPutObj.uploadingData = uploadModel.data
+            ossPutObj.bucketName = self.oSSAuth?.bucket
+            ossPutObj.objectKey = uploadModel.path
+            
+            ossPutObj.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
+                progress?(CGFloat(totalBytesSent)/CGFloat(totalBytesExpectedToSend))
             }
-            return uploadTask
-        })
+            
+            let uploadTask = ossClient?.putObject(ossPutObj)
+            uploadTask?.continue({ (uploadTask) -> Any? in
+                if let _err = uploadTask.error {
+                    DispatchQueue.main.async {
+                        failureHandler?(_err.localizedDescription, "1001")
+                    }
+                    
+                } else {
+                    if  let _:OSSPutObjectResult  = uploadTask.result as? OSSPutObjectResult {
+                        var point: NSString = (self.oSSAuth?.endpoint ?? "") as NSString
+                        point = point.replacingOccurrences(of: "http://", with: "") as NSString
+                        point = point.replacingOccurrences(of: "https://", with: "") as NSString
+                        let picUrlStr = "http://\(self.oSSAuth?.bucket ?? "").\(point)/\(uploadModel.path)"
+                        DispatchQueue.main.async {
+                            sucess?(picUrlStr)
+                        }
+                    }else{
+                        DispatchQueue.main.async {
+                            failureHandler?("链接拼接失败", "1001")
+                        }
+                    }
+                }
+                semaphore.signal()
+                return uploadTask
+            })
+            semaphore.wait()
+        }
     }
 }

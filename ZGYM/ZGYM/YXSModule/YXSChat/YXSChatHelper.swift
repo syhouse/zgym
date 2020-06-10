@@ -89,15 +89,20 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
     }
     
     @objc func logout(showError: Bool = false,completionHandler:(()->())? = nil) {
-        TIMManager.sharedInstance()?.logout({ [weak self] in
-            guard let weakSelf = self else {return}
-            weakSelf.refreshApplicationIconBadgeNum()
+        if isLogin(){
+            TIMManager.sharedInstance()?.logout({ [weak self] in
+                guard let weakSelf = self else {return}
+                weakSelf.refreshApplicationIconBadgeNum()
+                completionHandler?()
+            }, fail: { (code, msg) in
+                if showError{
+                    MBProgressHUD.yxs_showMessage(message: msg ?? "IM退出登录错误")
+                }
+            })
+        }else{
             completionHandler?()
-        }, fail: { (code, msg) in
-            if showError{
-                MBProgressHUD.yxs_showMessage(message: msg ?? "IM退出登录错误")
-            }
-        })
+        }
+        
     }
     
     // MARK: - Request
@@ -211,7 +216,6 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
                     if TimeInterval((model.createTime ?? "0").int ?? 0) > localTime{
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallChangeRoleLoginOutNotification), object: model)
                     }
-                    
                 }
                 else {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: kChatCallRefreshNotification), object: model)
@@ -316,7 +320,9 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
         if elem is TIMCustomElem {
             let customElem: TIMCustomElem = elem as! TIMCustomElem
             let json = try? JSON(data: customElem.data)
-            SLLog(json)
+            let str = String.init(data: customElem.data ?? Data(), encoding: .utf8)
+//            SLLog(json)
+            print("IM消息>>>>>>>:\(str)")
             let resultModel = Mapper<IMCustomMessageModel>().map(JSONObject:json?.object) ?? IMCustomMessageModel.init(JSON: ["": ""])!
             return resultModel
         }
@@ -361,9 +367,8 @@ class YXSChatHelper: NSObject, TIMMessageListener, TIMUserStatusListener{
                     if elem is TIMCustomElem {
                         let customElem: TIMCustomElem = elem as! TIMCustomElem
                         let json = try? JSON(data: customElem.data)
-                        SLLog("<<<<<<<<\(json)")
+                        SLLog("json")
                         let resultModel = Mapper<IMCustomMessageModel>().map(JSONObject:json?.object) ?? IMCustomMessageModel.init(JSON: ["": ""])!
-                        SLLog(">>>>>>>>\(resultModel.content ?? "")")
                     }
                 }
                 

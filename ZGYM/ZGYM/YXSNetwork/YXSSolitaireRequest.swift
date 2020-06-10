@@ -49,19 +49,6 @@ class YXSEducationCensusParentCommitRequest: YXSBaseRequset {
     }
 }
 
-let censusParentPartakeCommit = "/census/parentPartakeCommit"
-// MARK: - 重新提交(家长)
-class YXSEducationCensusParentPartakeCommitRequest: YXSBaseRequset {
-    //接龙状态（0 全部 10 正在接龙 100 已结束:按照接龙的结束时间 ）
-    init(censusId: Int, childrenId: Int, option: String, remark: String = "") {
-        super.init()
-        host = homeHost
-        method = .post
-        path = censusParentPartakeCommit
-        param = ["censusId":censusId, "childrenId":childrenId, "option":option, "remark": remark]
-    }
-}
-
 let censusTeacherStaffList = "/census/teacherStaffList"
 // MARK: - 参与人员列表（老师）
 class YXSEducationCensusTeacherStaffListRequest: YXSBaseRequset {
@@ -335,3 +322,74 @@ class YXSEducationCensusParentGatherDetailRequest: YXSBaseRequset {
         param = ["censusId":censusId, "childrenId": childrenId]
     }
 }
+
+
+// MARK: - 参与提交(家长)
+let censusParentPartakeCommit = "/census/parentPartakeCommit"
+class YXSEducationCensusParentPartakeCommitRequest: YXSBaseRequset {
+    init(censusId: Int, childrenId: Int, censusGatherHolderItemRequestList: [[String: Any]]) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusParentPartakeCommit
+        param = ["censusId":censusId, "childrenId": childrenId,
+                 "censusGatherHolderItemRequestList": censusGatherHolderItemRequestList]
+    }
+}
+
+// MARK: - 阅读与未阅读（家长,老师）
+let censusReadOrNoRead = "/census/readOrNoRead"
+class YXSEducationCensusReadOrNoReadRequest: YXSBaseRequset {
+    init(censusId: Int) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusReadOrNoRead
+        param = ["censusId":censusId]
+    }
+}
+
+// MARK: - 提交与未提交（家长,老师）
+let censusCommitOrNoCommit = "/census/commitOrNoCommit"
+class YXSEducationCensusCommitOrNoCommitRequest: YXSBaseRequset {
+    init(censusId: Int) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusCommitOrNoCommit
+        param = ["censusId":censusId]
+    }
+}
+
+// MARK: - 调查表详情(老师)
+let censusTeacherGatherDetail = "/census/teacherGatherDetail"
+class YXSEducationCensusTeacherGatherDetailRequest: YXSBaseRequset {
+    init(censusId: Int) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusTeacherGatherDetail
+        param = ["censusId":censusId]
+    }
+}
+
+// MARK: - 调查表详情(老师)
+let censusTeacherGatherItemPersonnelList = "/census/teacherGatherItemPersonnelList"
+class YXSEducationCensusTeacherGatherItemPersonnelListRequest: YXSBaseRequset {
+    init(currentPage: Int, pageSize: Int = kPageSize,gatherId: Int, censusId: Int,gatherTopicId: Int, option: String?) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusTeacherGatherItemPersonnelList
+        param = ["pageSize":pageSize,
+                 "gatherId": gatherId,
+                 "currentPage": currentPage,
+                 "gatherTopicId": gatherTopicId,
+                 "censusId": censusId
+        ]
+        if let option = option{
+            param?["option"] = option
+        }
+    }
+}
+

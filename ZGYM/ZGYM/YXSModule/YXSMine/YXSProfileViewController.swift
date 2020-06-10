@@ -256,7 +256,7 @@ class YXSProfileViewController: YXSBaseViewController, UITableViewDelegate, UITa
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
             section1 = [["title":"头像", "subTitle":"", "action":"editAvatarClick","avatar":self.yxs_user.avatar ?? ""],["title":"称呼", "subTitle": self.yxs_user.name ?? "", "action":"editNameClick"],["title":"所在学校", "subTitle":self.yxs_user.school ?? "", "action":"editSchoolClick"]]
         } else {
-            section1 = [["title":"名字", "subTitle": self.yxs_user.name ?? "", "action":"editNameClick"],["title":"所在地区", "subTitle":self.yxs_user.address ?? "", "action":"editAddressClick"],["title":"孩子信息", "subTitle":"", "action":"childrensInfoClick"]]
+            section1 = [["title":"称呼", "subTitle": self.yxs_user.name ?? "", "action":"editNameClick"],["title":"所在地区", "subTitle":self.yxs_user.address ?? "", "action":"editAddressClick"],["title":"孩子信息", "subTitle":"", "action":"childrensInfoClick"]]
         }
          
         let section2 = [["title":"我的账号", "subTitle":self.yxs_user.account ?? "", "action":"changeBindingPhoneClick"], ["title":"修改密码", "subTitle":"", "action":"editPasswordClick"]]

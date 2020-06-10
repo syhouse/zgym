@@ -160,7 +160,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
                 }
                 
                 //                audioUrl  audioDuration
-                publishModel.publishText = changePunchCardModel.content
+                publishModel.publishContent = changePunchCardModel.content
             }
         }else{
             if let publishModel = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_cachePath(file: fileName, directory: "archive")) as? YXSPublishModel{
@@ -512,7 +512,7 @@ class YXSPunchCardPublishController: YXSCommonPublishBaseController {
     func loadTemplateDetialData(id: Int){
         YXSEducationTemplateQueryTemplateByIdRequest(id: id).request({ (detialModel: YXSTemplateDetialModel) in
             self.publishModel.subjectText = detialModel.title
-            self.publishModel.publishText = detialModel.content
+            self.publishModel.publishContent = detialModel.content
             
             let jsonData:Data = (detialModel.period ?? "").data(using: .utf8)!
             let array = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)

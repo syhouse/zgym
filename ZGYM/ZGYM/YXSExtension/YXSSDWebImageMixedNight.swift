@@ -8,15 +8,23 @@
 
 import UIKit
 import NightNight
-
+import Bugly
 
 extension UIImageView{
     func yxs_setImageWithURL(url: URL?,placeholder: MixedImage?){
-        self.sd_setImage(with: url, placeholderImage: nil, options: .retryFailed) { (image, error, type, url) in
+        self.sd_setImage(with: url, placeholderImage: nil) { (image, error, type, url) in
             if let image = image{
                 self.mixedImage = MixedImage(normal: image, night: image)
             }else{
                 self.mixedImage = placeholder
+                ///记录未加载出来图片链接
+                Bugly.setUserValue(url?.absoluteString ?? "", forKey: "YXSImageLoadError")
+                if let error = error{
+                    Bugly.reportError(NSError(domain: "图片加载失败", code: (error as NSError).code, userInfo: (error as NSError).userInfo) as Error)
+                }else{
+                   Bugly.reportError(NSError(domain: "图片加载失败", code: 100, userInfo: nil) as Error)
+                }
+                
             }
         }
     }
@@ -31,6 +39,12 @@ extension UIButton{
 
             }else{
                 self.setMixedImage(placeholderImage, forState: state)
+                Bugly.setUserValue(url?.absoluteString ?? "", forKey: "YXSImageLoadError")
+                if let error = error{
+                    Bugly.reportError(NSError(domain: "图片加载失败", code: (error as NSError).code, userInfo: (error as NSError).userInfo) as Error)
+                }else{
+                   Bugly.reportError(NSError(domain: "图片加载失败", code: 100, userInfo: nil) as Error)
+                }
             }
         }
     }

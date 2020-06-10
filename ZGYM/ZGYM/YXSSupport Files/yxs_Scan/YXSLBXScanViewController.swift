@@ -157,7 +157,7 @@ extension YXSLBXScanViewController: YXSSelectMediaHelperDelegate{
         if assets.count == 0{
             return
         }
-        UIUtil.PHAssetToImage(assets.first!.asset){
+        YXSMediaHelper.PHAssetToImage(assets.first!.asset){
             (result) in
             let arrayResult = LBXScanWrapper.recognizeQRImage(image: result)
             if !arrayResult.isEmpty {

@@ -62,7 +62,7 @@ extension AppDelegate{
                 if let playerVc = UIUtil.TopViewController() as? YXSPlayingViewController{
                     playerVc.playNextTrack(sender: YXSButton())
                 }else{
-                    XMSDKPlayer.shared()?.playPrevTrack()
+                    YXSXMPlayerGlobalControlTool.share.playXMPrev()
                     YXSMusicPlayerWindowView.currentWindowView().isPlayingMusic = true
                 }
             default:

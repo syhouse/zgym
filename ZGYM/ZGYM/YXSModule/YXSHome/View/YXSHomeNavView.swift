@@ -17,7 +17,6 @@ class YXSHomeNavView: UIView {
         
         addSubview(titleLabel)
         addSubview(classButton)
-//        addSubview(scanButton)
         titleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(20 + kSafeTopHeight)
             make.left.equalTo(15)
@@ -30,15 +29,17 @@ class YXSHomeNavView: UIView {
         classButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(titleLabel)
             make.right.equalTo(-10)
-//            make.right.equalTo(scanButton.snp_left).offset(-13)
             make.size.equalTo(CGSize.init(width: 28, height: 28))
         }
         
-//        scanButton.snp.makeConstraints { (make) in
-//            make.centerY.equalTo(titleLabel)
-//            make.right.equalTo(-10)
-//            make.size.equalTo(CGSize.init(width: 28, height: 28))
-//        }
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            addSubview(scanButton)
+            scanButton.snp.makeConstraints { (make) in
+                make.centerY.equalTo(titleLabel)
+                make.right.equalTo(classButton.snp_left).offset(-13)
+                make.size.equalTo(CGSize.init(width: 28, height: 28))
+            }
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -67,13 +68,15 @@ class YXSHomeNavView: UIView {
         let button = YXSButton.init()
         button.setMixedImage(MixedImage(normal: "class_list_icon", night: "yxs_classlist_night"), forState: .normal)
         button.addTarget(self, action: #selector(classButtonCick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         return button
     }()
     
-//    lazy var scanButton: YXSButton = {
-//        let button = YXSButton.init()
-//        button.setMixedImage(MixedImage(normal: "scan", night: "yxs_scan_night"), forState: .normal)
-//        button.addTarget(self, action: #selector(scanClick), for: .touchUpInside)
-//        return button
-//    }()
+    lazy var scanButton: YXSButton = {
+        let button = YXSButton.init()
+        button.setMixedImage(MixedImage(normal: "scan", night: "yxs_scan_night"), forState: .normal)
+        button.addTarget(self, action: #selector(scanClick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        return button
+    }()
 }

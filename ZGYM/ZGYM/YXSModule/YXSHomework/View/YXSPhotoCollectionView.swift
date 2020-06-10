@@ -391,7 +391,7 @@ class YXSPhotoCollectionView: UIView {
         recordingStyle = .Recording
         changeUI()
         
-        YXSPlayerMediaSingleControlTool.share.pausePlayer()
+        YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
     }
     
     fileprivate func stopCapture(){
@@ -402,7 +402,7 @@ class YXSPhotoCollectionView: UIView {
         timerTool.yxs_cancelTimer()
         changeUI()
     
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
     }
     
     //  切换动画

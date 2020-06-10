@@ -89,35 +89,6 @@ extension UIImage {
     }
     
     /**
-     *  压缩上传图片到指定字节
-     *
-     *  image     压缩的图片
-     *  maxLength 压缩后最大字节大小(byte)
-     *
-     *  return 压缩后图片的二进制
-     */
-    func yxs_compressImage(image: UIImage, maxLength: Int) -> Data? {
-        var data = image.jpegData(compressionQuality: 1.0)
-        //检查原图
-        if data?.count ?? 0 <= maxLength{
-            return data
-        }
-        
-        let newSize = self.yxs_scaleImage(image: image, imageLength: 1920)
-        let newImage = self.yxs_resizeImage(image: image, newSize: newSize)
-        
-        var compress:CGFloat = 0.9
-        data = newImage.jpegData(compressionQuality: compress)
-        
-        while (data?.count ?? 0) > maxLength && compress > 0.01 {
-            compress -= 0.02
-            data = image.jpegData(compressionQuality: compress)
-        }
-        
-        return data
-    }
-    
-    /**
      *  通过指定图片最长边，获得等比例的图片size
      *
      *  image       原始图片

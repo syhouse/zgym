@@ -9,7 +9,7 @@
 import UIKit
 
 ///班级之星光荣榜
-class YXSClassStarDetailListController: YXSClassStarSignleClassCommonController {
+class YXSClassStarDetailListController: YXSClassStarSignleClassBaseController {
     var classId: Int = 0
     var classModel: YXSClassStartClassModel
     var dataSource: [YXSClassStarChildrenModel] = [YXSClassStarChildrenModel]()

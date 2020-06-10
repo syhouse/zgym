@@ -134,7 +134,7 @@ class YXSSolitaireTemplateDetialModel : NSObject, NSCoding, Mappable{
 }
 
 
-
+///信息采集使用的model
 class YXSSolitaireGatherHoldersModel : NSObject, NSCoding, Mappable{
     var gatherHolders : [YXSGatherHolder]?
     var gatherId : Int?
@@ -241,7 +241,11 @@ class YXSGatherHolderItem : NSObject, NSCoding, Mappable{
     var gatherType : String?
     var isRequired : Bool?
     var topicTitle : String?
+    var gatherTopicId: Int?
     
+    var gatherTopicCount: Int?
+    
+    var ratio: Int?
     
     required init?(map: Map){}
     private override init(){}
@@ -252,7 +256,11 @@ class YXSGatherHolderItem : NSObject, NSCoding, Mappable{
         gatherType <- map["gatherType"]
         isRequired <- map["isRequired"]
         topicTitle <- map["topicTitle"]
+        gatherTopicId <- map["gatherTopicId"]
         
+        
+        gatherTopicCount <- map["gatherTopicCount"]
+        ratio <- map["ratio"]
     }
     
     /**
@@ -265,7 +273,9 @@ class YXSGatherHolderItem : NSObject, NSCoding, Mappable{
         gatherType = aDecoder.decodeObject(forKey: "gatherType") as? String
         isRequired = aDecoder.decodeObject(forKey: "isRequired") as? Bool
         topicTitle = aDecoder.decodeObject(forKey: "topicTitle") as? String
-        
+        gatherTopicId = aDecoder.decodeObject(forKey: "gatherTopicId") as? Int
+        gatherTopicCount = aDecoder.decodeObject(forKey: "gatherTopicCount") as? Int
+        ratio = aDecoder.decodeObject(forKey: "ratio") as? Int
     }
     
     /**
@@ -287,6 +297,17 @@ class YXSGatherHolderItem : NSObject, NSCoding, Mappable{
             aCoder.encode(topicTitle, forKey: "topicTitle")
         }
         
+        if gatherTopicId != nil{
+            aCoder.encode(gatherTopicId, forKey: "gatherTopicId")
+        }
+        
+        if gatherTopicCount != nil{
+            aCoder.encode(gatherTopicCount, forKey: "gatherTopicCount")
+        }
+        
+        if ratio != nil{
+            aCoder.encode(ratio, forKey: "ratio")
+        }
     }
     
 }
@@ -300,6 +321,10 @@ class YXSGatherHolderOptionItem : NSObject, NSCoding, Mappable{
     
     var optionName: String?
     
+    var gatherTopicCount: Int?
+    
+    var ratio: Int?
+    
     required init?(map: Map){}
     private override init(){}
     
@@ -309,6 +334,8 @@ class YXSGatherHolderOptionItem : NSObject, NSCoding, Mappable{
         optionContext <- map["optionContext"]
         optionImage <- map["optionImage"]
         optionName <- map["optionName"]
+        gatherTopicCount <- map["gatherTopicCount"]
+        ratio <- map["ratio"]
     }
     
     /**
@@ -321,6 +348,9 @@ class YXSGatherHolderOptionItem : NSObject, NSCoding, Mappable{
         optionContext = aDecoder.decodeObject(forKey: "optionContext") as? String
         gatherType = aDecoder.decodeObject(forKey: "gatherType") as? String
         optionImage = aDecoder.decodeObject(forKey: "optionImage") as? String
+        
+        gatherTopicCount = aDecoder.decodeObject(forKey: "gatherTopicCount") as? Int
+        ratio = aDecoder.decodeObject(forKey: "ratio") as? Int
     }
     
     /**
@@ -341,7 +371,96 @@ class YXSGatherHolderOptionItem : NSObject, NSCoding, Mappable{
         if gatherType != nil{
             aCoder.encode(gatherType, forKey: "gatherType")
         }
-        
+        if gatherTopicCount != nil{
+            aCoder.encode(gatherTopicCount, forKey: "gatherTopicCount")
+        }
+        if ratio != nil{
+            aCoder.encode(ratio, forKey: "ratio")
+        }
     }
     
+}
+
+class YXSSolitaireAnswerHolderItemModel : NSObject, NSCoding, Mappable{
+    var censusId : Int?
+    var childrenId : Int?
+    var classId : Int?
+    var createTime : String?
+    var custodianId : Int?
+    var gatherId : Int?
+    var gatherTopicId : Int?
+    var id : Int?
+    var option : String?
+
+    required init?(map: Map){}
+    private override init(){}
+
+    func mapping(map: Map)
+    {
+        censusId <- map["censusId"]
+        childrenId <- map["childrenId"]
+        classId <- map["classId"]
+        createTime <- map["createTime"]
+        custodianId <- map["custodianId"]
+        gatherId <- map["gatherId"]
+        gatherTopicId <- map["gatherTopicId"]
+        id <- map["id"]
+        option <- map["option"]
+        
+    }
+
+    /**
+    * NSCoding required initializer.
+    * Fills the data from the passed decoder
+    */
+    @objc required init(coder aDecoder: NSCoder)
+    {
+         censusId = aDecoder.decodeObject(forKey: "censusId") as? Int
+         childrenId = aDecoder.decodeObject(forKey: "childrenId") as? Int
+         classId = aDecoder.decodeObject(forKey: "classId") as? Int
+         createTime = aDecoder.decodeObject(forKey: "createTime") as? String
+         custodianId = aDecoder.decodeObject(forKey: "custodianId") as? Int
+         gatherId = aDecoder.decodeObject(forKey: "gatherId") as? Int
+         gatherTopicId = aDecoder.decodeObject(forKey: "gatherTopicId") as? Int
+         id = aDecoder.decodeObject(forKey: "id") as? Int
+         option = aDecoder.decodeObject(forKey: "option") as? String
+
+    }
+
+    /**
+    * NSCoding required method.
+    * Encodes mode properties into the decoder
+    */
+    @objc func encode(with aCoder: NSCoder)
+    {
+        if censusId != nil{
+            aCoder.encode(censusId, forKey: "censusId")
+        }
+        if childrenId != nil{
+            aCoder.encode(childrenId, forKey: "childrenId")
+        }
+        if classId != nil{
+            aCoder.encode(classId, forKey: "classId")
+        }
+        if createTime != nil{
+            aCoder.encode(createTime, forKey: "createTime")
+        }
+        if custodianId != nil{
+            aCoder.encode(custodianId, forKey: "custodianId")
+        }
+        if gatherId != nil{
+            aCoder.encode(gatherId, forKey: "gatherId")
+        }
+        if gatherTopicId != nil{
+            aCoder.encode(gatherTopicId, forKey: "gatherTopicId")
+        }
+        if id != nil{
+            aCoder.encode(id, forKey: "id")
+        }
+        if option != nil{
+            aCoder.encode(option, forKey: "option")
+        }
+
+    }
+
 }

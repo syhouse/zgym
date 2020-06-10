@@ -401,7 +401,6 @@
 		6F0704CE2445D8050090975B /* YXSPunchCardMessageTipsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700F92445D7FF0090975B /* YXSPunchCardMessageTipsModel.swift */; };
 		6F0704CF2445D8050090975B /* YXSPunchCardSingleStudentListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FA2445D7FF0090975B /* YXSPunchCardSingleStudentListController.swift */; };
 		6F0704D02445D8050090975B /* YXSPunchCardDetialTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FB2445D7FF0090975B /* YXSPunchCardDetialTableHeaderView.swift */; };
-		6F0704D12445D8050090975B /* YXSSolitairePublishController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FD2445D7FF0090975B /* YXSSolitairePublishController.swift */; };
 		6F0704D22445D8050090975B /* YXSSolitaireModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FE2445D7FF0090975B /* YXSSolitaireModel.swift */; };
 		6F0704D32445D8050090975B /* YXSSolitaireListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0700FF2445D7FF0090975B /* YXSSolitaireListController.swift */; };
 		6F0704D42445D8050090975B /* YXSSolitaireDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701002445D7FF0090975B /* YXSSolitaireDetailController.swift */; };
@@ -457,7 +456,7 @@
 		6F0705072445D8050090975B /* YXSClassStartClassModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701452445D7FF0090975B /* YXSClassStartClassModel.swift */; };
 		6F0705082445D8050090975B /* YXSClassStarChildrenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701462445D7FF0090975B /* YXSClassStarChildrenModel.swift */; };
 		6F0705092445D8050090975B /* YXSClassStartTeacherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701472445D7FF0090975B /* YXSClassStartTeacherModel.swift */; };
-		6F07050A2445D8050090975B /* YXSClassStarSignleClassCommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701482445D7FF0090975B /* YXSClassStarSignleClassCommonController.swift */; };
+		6F07050A2445D8050090975B /* YXSClassStarSignleClassBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701482445D7FF0090975B /* YXSClassStarSignleClassBaseController.swift */; };
 		6F07050B2445D8050090975B /* YXSClassStarTeacherDetialHeaderMidView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07014A2445D7FF0090975B /* YXSClassStarTeacherDetialHeaderMidView.swift */; };
 		6F07050C2445D8050090975B /* YXSClassStartTeacherDetailStudentEmptyHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07014B2445D7FF0090975B /* YXSClassStartTeacherDetailStudentEmptyHeaderView.swift */; };
 		6F07050D2445D8050090975B /* YXSClassStarApposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07014C2445D7FF0090975B /* YXSClassStarApposeView.swift */; };
@@ -473,7 +472,7 @@
 		6F0705172445D8050090975B /* YXSClassStartTeacherDetailStudentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701562445D7FF0090975B /* YXSClassStartTeacherDetailStudentHeaderView.swift */; };
 		6F0705182445D8050090975B /* YXSClassStarSignleClassStudentDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701572445D7FF0090975B /* YXSClassStarSignleClassStudentDetialController.swift */; };
 		6F0705192445D8050090975B /* YXSClassStartTeacherClassListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701582445D7FF0090975B /* YXSClassStartTeacherClassListController.swift */; };
-		6F07051A2445D8050090975B /* YXSClassStarSignleClassDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701592445D7FF0090975B /* YXSClassStarSignleClassDetialController.swift */; };
+		6F07051A2445D8050090975B /* YXSClassStarTeacherSignleClassDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0701592445D7FF0090975B /* YXSClassStarTeacherSignleClassDetialController.swift */; };
 		6F07051B2445D8050090975B /* YXSClassStarPartentDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07015A2445D7FF0090975B /* YXSClassStarPartentDetialController.swift */; };
 		6F07051C2445D8050090975B /* YXSHomeworkMessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07015C2445D7FF0090975B /* YXSHomeworkMessageVC.swift */; };
 		6F07051D2445D8050090975B /* YXSHomeworkCommentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07015D2445D7FF0090975B /* YXSHomeworkCommentController.swift */; };
@@ -616,7 +615,8 @@
 		6F07FE0B2445D7C70090975B /* YXSTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FDFE2445D7C70090975B /* YXSTableView.swift */; };
 		6F07FE0C2445D7C70090975B /* YXSCommonPublishBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FDFF2445D7C70090975B /* YXSCommonPublishBaseController.swift */; };
 		6F07FE0E2445D7E80090975B /* YXSBaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07FE0D2445D7E80090975B /* YXSBaseTabBarController.swift */; };
-		6F3426C12487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3426C02487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialCell.swift */; };
+		6F3426C12487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialBaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3426C02487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialBaseCell.swift */; };
+		6F3426C3248889E30006C2D5 /* YXSEditNineMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3426C2248889E30006C2D5 /* YXSEditNineMediaView.swift */; };
 		6F4918FE242B591A00DCA713 /* ZGYMREADME.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */; };
 		6F56779B247DFF5300B523ED /* YXSTemplateTabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56779A247DFF5300B523ED /* YXSTemplateTabModel.swift */; };
 		6F56779D247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */; };
@@ -646,17 +646,27 @@
 		6F903461247CA976000E1D85 /* YXSTemplateListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F903460247CA976000E1D85 /* YXSTemplateListController.swift */; };
 		6F903464247CAE9A000E1D85 /* YXSTemplateListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F903463247CAE9A000E1D85 /* YXSTemplateListModel.swift */; };
 		6F903466247CF30E000E1D85 /* YXSTemplateDetialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F903465247CF30D000E1D85 /* YXSTemplateDetialModel.swift */; };
+		6F944A472489E0B60078E008 /* YXSSolitaireDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F944A462489E0B60078E008 /* YXSSolitaireDetailModel.swift */; };
+		6F944A492489E3630078E008 /* YXSSolitaireContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F944A482489E3630078E008 /* YXSSolitaireContainerController.swift */; };
+		6F944A4B2489E52F0078E008 /* YXSSolitaireReadListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F944A4A2489E52F0078E008 /* YXSSolitaireReadListController.swift */; };
+		6F944A4D2489E6040078E008 /* YXSSolitaireReplyListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F944A4C2489E6040078E008 /* YXSSolitaireReplyListController.swift */; };
+		6F944A4F2489F21B0078E008 /* YXSSolitaireCollectorTeacherDetialCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F944A4E2489F21B0078E008 /* YXSSolitaireCollectorTeacherDetialCell.swift */; };
+		6F944A51248A21190078E008 /* YXSSolitaireCollectorSetupDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F944A50248A21190078E008 /* YXSSolitaireCollectorSetupDetailController.swift */; };
+		6F944A53248A270B0078E008 /* YXSSolitaireCollectorSetupDetailBaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F944A52248A270B0078E008 /* YXSSolitaireCollectorSetupDetailBaseCell.swift */; };
 		6F966CB32463B72A00BB073A /* YXSPeriodicalListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F966CB22463B72A00BB073A /* YXSPeriodicalListController.swift */; };
 		6F966CB52463F0E500BB073A /* UIView+Animal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F966CB42463F0E500BB073A /* UIView+Animal.swift */; };
 		6FA0F331242B451800E2E035 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F32F242B451800E2E035 /* Main.storyboard */; };
 		6FA0F336242B451E00E2E035 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA0F334242B451E00E2E035 /* LaunchScreen.storyboard */; };
 		6FA0F341242B451E00E2E035 /* ZGYMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F340242B451E00E2E035 /* ZGYMTests.swift */; };
 		6FA0F34C242B451E00E2E035 /* ZGYMUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */; };
+		6FA1CB26248B2AFA009C7191 /* YXSMediaHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA1CB25248B2AFA009C7191 /* YXSMediaHelper.swift */; };
+		6FA1CB28248B3A09009C7191 /* YXSCompressionImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA1CB27248B3A09009C7191 /* YXSCompressionImageHelper.swift */; };
 		6FA2556C2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA2556B2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift */; };
 		6FA849682473E0110021A57F /* YXSYBRotationToolViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA849672473E0110021A57F /* YXSYBRotationToolViewHandler.swift */; };
 		6FB0DA13246D18D1009E46F1 /* UIControl+YXSTapRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA12246D18D1009E46F1 /* UIControl+YXSTapRange.swift */; };
 		6FB0DA15246E31AF009E46F1 /* YXSPeriodicalListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA14246E31AE009E46F1 /* YXSPeriodicalListModel.swift */; };
 		6FB0DA17247230AC009E46F1 /* YXSHomePeriodicalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA16247230AC009E46F1 /* YXSHomePeriodicalCell.swift */; };
+		6FC61E58248E221F005138B1 /* YXSAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC61E57248E221F005138B1 /* YXSAVPlayer.swift */; };
 		6FE88D542465342300DA376F /* YXSPeriodicalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE88D532465342300DA376F /* YXSPeriodicalCell.swift */; };
 		6FE88D5624653F5900DA376F /* YXSPeriodicalListDetialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE88D5524653F5900DA376F /* YXSPeriodicalListDetialController.swift */; };
 		6FEA7BF12452990C0017C9CA /* LFBaseEditingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7AB92452990A0017C9CA /* LFBaseEditingController.m */; };
@@ -775,7 +785,7 @@
 		6FEA7C622452990F0017C9CA /* LFZoomingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7BEB2452990C0017C9CA /* LFZoomingView.m */; };
 		6FEA7C632452990F0017C9CA /* LFDataFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7BEF2452990C0017C9CA /* LFDataFilterImageView.m */; };
 		6FEA7C6524553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */; };
-		6FEA7C67245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C66245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift */; };
+		6FEA7C67245668B00017C9CA /* YXSXMPlayerGlobalControlTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA7C66245668B00017C9CA /* YXSXMPlayerGlobalControlTool.swift */; };
 		6FF2C0AB2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2C0AA2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift */; };
 		CF2ED8D61FB676F066605C1B /* Pods_ZGYM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB9B3F8A78785313004759F4 /* Pods_ZGYM.framework */; };
 		E528ABC02481107A0035E69B /* YXSScoreDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E528ABBF2481107A0035E69B /* YXSScoreDetailsModel.swift */; };
@@ -1135,7 +1145,6 @@
 		6F0700F92445D7FF0090975B /* YXSPunchCardMessageTipsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPunchCardMessageTipsModel.swift; sourceTree = "<group>"; };
 		6F0700FA2445D7FF0090975B /* YXSPunchCardSingleStudentListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPunchCardSingleStudentListController.swift; sourceTree = "<group>"; };
 		6F0700FB2445D7FF0090975B /* YXSPunchCardDetialTableHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSPunchCardDetialTableHeaderView.swift; sourceTree = "<group>"; };
-		6F0700FD2445D7FF0090975B /* YXSSolitairePublishController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSolitairePublishController.swift; sourceTree = "<group>"; };
 		6F0700FE2445D7FF0090975B /* YXSSolitaireModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSolitaireModel.swift; sourceTree = "<group>"; };
 		6F0700FF2445D7FF0090975B /* YXSSolitaireListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSolitaireListController.swift; sourceTree = "<group>"; };
 		6F0701002445D7FF0090975B /* YXSSolitaireDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSolitaireDetailController.swift; sourceTree = "<group>"; };
@@ -1196,7 +1205,7 @@
 		6F0701452445D7FF0090975B /* YXSClassStartClassModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartClassModel.swift; sourceTree = "<group>"; };
 		6F0701462445D7FF0090975B /* YXSClassStarChildrenModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarChildrenModel.swift; sourceTree = "<group>"; };
 		6F0701472445D7FF0090975B /* YXSClassStartTeacherModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartTeacherModel.swift; sourceTree = "<group>"; };
-		6F0701482445D7FF0090975B /* YXSClassStarSignleClassCommonController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarSignleClassCommonController.swift; sourceTree = "<group>"; };
+		6F0701482445D7FF0090975B /* YXSClassStarSignleClassBaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarSignleClassBaseController.swift; sourceTree = "<group>"; };
 		6F07014A2445D7FF0090975B /* YXSClassStarTeacherDetialHeaderMidView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarTeacherDetialHeaderMidView.swift; sourceTree = "<group>"; };
 		6F07014B2445D7FF0090975B /* YXSClassStartTeacherDetailStudentEmptyHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartTeacherDetailStudentEmptyHeaderView.swift; sourceTree = "<group>"; };
 		6F07014C2445D7FF0090975B /* YXSClassStarApposeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarApposeView.swift; sourceTree = "<group>"; };
@@ -1212,7 +1221,7 @@
 		6F0701562445D7FF0090975B /* YXSClassStartTeacherDetailStudentHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartTeacherDetailStudentHeaderView.swift; sourceTree = "<group>"; };
 		6F0701572445D7FF0090975B /* YXSClassStarSignleClassStudentDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarSignleClassStudentDetialController.swift; sourceTree = "<group>"; };
 		6F0701582445D7FF0090975B /* YXSClassStartTeacherClassListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStartTeacherClassListController.swift; sourceTree = "<group>"; };
-		6F0701592445D7FF0090975B /* YXSClassStarSignleClassDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarSignleClassDetialController.swift; sourceTree = "<group>"; };
+		6F0701592445D7FF0090975B /* YXSClassStarTeacherSignleClassDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarTeacherSignleClassDetialController.swift; sourceTree = "<group>"; };
 		6F07015A2445D7FF0090975B /* YXSClassStarPartentDetialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSClassStarPartentDetialController.swift; sourceTree = "<group>"; };
 		6F07015C2445D7FF0090975B /* YXSHomeworkMessageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkMessageVC.swift; sourceTree = "<group>"; };
 		6F07015D2445D7FF0090975B /* YXSHomeworkCommentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSHomeworkCommentController.swift; sourceTree = "<group>"; };
@@ -1823,7 +1832,8 @@
 		6F07FFE72445D7FC0090975B /* YXSXMLYRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSXMLYRequest.swift; sourceTree = "<group>"; };
 		6F07FFE82445D7FC0090975B /* YXSNoticeRequset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSNoticeRequset.swift; sourceTree = "<group>"; };
 		6F07FFE92445D7FC0090975B /* YXSSatchelRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSSatchelRequest.swift; sourceTree = "<group>"; };
-		6F3426C02487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireCollectorPartentDetialCell.swift; sourceTree = "<group>"; };
+		6F3426C02487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialBaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireCollectorPartentDetialBaseCell.swift; sourceTree = "<group>"; };
+		6F3426C2248889E30006C2D5 /* YXSEditNineMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSEditNineMediaView.swift; sourceTree = "<group>"; };
 		6F4918FD242B591A00DCA713 /* ZGYMREADME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZGYMREADME.swift; sourceTree = "<group>"; };
 		6F56779A247DFF5300B523ED /* YXSTemplateTabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateTabModel.swift; sourceTree = "<group>"; };
 		6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireSelectTypeController.swift; sourceTree = "<group>"; };
@@ -1851,6 +1861,13 @@
 		6F903460247CA976000E1D85 /* YXSTemplateListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateListController.swift; sourceTree = "<group>"; };
 		6F903463247CAE9A000E1D85 /* YXSTemplateListModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YXSTemplateListModel.swift; sourceTree = "<group>"; };
 		6F903465247CF30D000E1D85 /* YXSTemplateDetialModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTemplateDetialModel.swift; sourceTree = "<group>"; };
+		6F944A462489E0B60078E008 /* YXSSolitaireDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireDetailModel.swift; sourceTree = "<group>"; };
+		6F944A482489E3630078E008 /* YXSSolitaireContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireContainerController.swift; sourceTree = "<group>"; };
+		6F944A4A2489E52F0078E008 /* YXSSolitaireReadListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireReadListController.swift; sourceTree = "<group>"; };
+		6F944A4C2489E6040078E008 /* YXSSolitaireReplyListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireReplyListController.swift; sourceTree = "<group>"; };
+		6F944A4E2489F21B0078E008 /* YXSSolitaireCollectorTeacherDetialCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireCollectorTeacherDetialCell.swift; sourceTree = "<group>"; };
+		6F944A50248A21190078E008 /* YXSSolitaireCollectorSetupDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireCollectorSetupDetailController.swift; sourceTree = "<group>"; };
+		6F944A52248A270B0078E008 /* YXSSolitaireCollectorSetupDetailBaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireCollectorSetupDetailBaseCell.swift; sourceTree = "<group>"; };
 		6F966CB22463B72A00BB073A /* YXSPeriodicalListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPeriodicalListController.swift; sourceTree = "<group>"; };
 		6F966CB42463F0E500BB073A /* UIView+Animal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Animal.swift"; sourceTree = "<group>"; };
 		6FA0F326242B451800E2E035 /* 优学业.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "优学业.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1864,11 +1881,14 @@
 		6FA0F34B242B451E00E2E035 /* ZGYMUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZGYMUITests.swift; sourceTree = "<group>"; };
 		6FA0F34D242B451E00E2E035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA0FA97242B460700E2E035 /* ZGYM-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZGYM-Bridging-Header.h"; sourceTree = "<group>"; };
+		6FA1CB25248B2AFA009C7191 /* YXSMediaHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSMediaHelper.swift; sourceTree = "<group>"; };
+		6FA1CB27248B3A09009C7191 /* YXSCompressionImageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCompressionImageHelper.swift; sourceTree = "<group>"; };
 		6FA2556B2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireTemplateDetialModel.swift; sourceTree = "<group>"; };
 		6FA849672473E0110021A57F /* YXSYBRotationToolViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSYBRotationToolViewHandler.swift; sourceTree = "<group>"; };
 		6FB0DA12246D18D1009E46F1 /* UIControl+YXSTapRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+YXSTapRange.swift"; sourceTree = "<group>"; };
 		6FB0DA14246E31AE009E46F1 /* YXSPeriodicalListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPeriodicalListModel.swift; sourceTree = "<group>"; };
 		6FB0DA16247230AC009E46F1 /* YXSHomePeriodicalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSHomePeriodicalCell.swift; sourceTree = "<group>"; };
+		6FC61E57248E221F005138B1 /* YXSAVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSAVPlayer.swift; sourceTree = "<group>"; };
 		6FE88D532465342300DA376F /* YXSPeriodicalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPeriodicalCell.swift; sourceTree = "<group>"; };
 		6FE88D5524653F5900DA376F /* YXSPeriodicalListDetialController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPeriodicalListDetialController.swift; sourceTree = "<group>"; };
 		6FEA7AB92452990A0017C9CA /* LFBaseEditingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFBaseEditingController.m; sourceTree = "<group>"; };
@@ -2112,7 +2132,7 @@
 		6FEA7BEF2452990C0017C9CA /* LFDataFilterImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFDataFilterImageView.m; sourceTree = "<group>"; };
 		6FEA7BF02452990C0017C9CA /* LFDataFilterImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFDataFilterImageView.h; sourceTree = "<group>"; };
 		6FEA7C6424553A760017C9CA /* YXSClassStarEvaluationItemLogoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarEvaluationItemLogoViewController.swift; sourceTree = "<group>"; };
-		6FEA7C66245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPlayerMediaSingleControlTool.swift; sourceTree = "<group>"; };
+		6FEA7C66245668B00017C9CA /* YXSXMPlayerGlobalControlTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSXMPlayerGlobalControlTool.swift; sourceTree = "<group>"; };
 		6FF2C0AA2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireApplyPublishController.swift; sourceTree = "<group>"; };
 		99EBDA3F366413637E51734D /* Pods-ZGYM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZGYM.release.xcconfig"; path = "Target Support Files/Pods-ZGYM/Pods-ZGYM.release.xcconfig"; sourceTree = "<group>"; };
 		A34AD99A6279B235D92743B7 /* Pods-Share.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.release.xcconfig"; path = "Target Support Files/Pods-Share/Pods-Share.release.xcconfig"; sourceTree = "<group>"; };
@@ -2838,6 +2858,10 @@
 				6F0700FF2445D7FF0090975B /* YXSSolitaireListController.swift */,
 				6F0701002445D7FF0090975B /* YXSSolitaireDetailController.swift */,
 				6F7348F224863EE400AB789E /* YXSSolitaireNewDetailController.swift */,
+				6F944A50248A21190078E008 /* YXSSolitaireCollectorSetupDetailController.swift */,
+				6F944A482489E3630078E008 /* YXSSolitaireContainerController.swift */,
+				6F944A4A2489E52F0078E008 /* YXSSolitaireReadListController.swift */,
+				6F944A4C2489E6040078E008 /* YXSSolitaireReplyListController.swift */,
 				6F0701012445D7FF0090975B /* View */,
 			);
 			path = YXSSolitaire;
@@ -2852,7 +2876,9 @@
 				6F8084092485EB5600BAAE6E /* YXSSolitaireDetailHeaderView.swift */,
 				6F80840B2485EF7700BAAE6E /* YXSSolitaireSelectApplyView.swift */,
 				6F7348F424863F2400AB789E /* YXSSolitaireNewDetailHeaderView.swift */,
-				6F3426C02487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialCell.swift */,
+				6F3426C02487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialBaseCell.swift */,
+				6F944A4E2489F21B0078E008 /* YXSSolitaireCollectorTeacherDetialCell.swift */,
+				6F944A52248A270B0078E008 /* YXSSolitaireCollectorSetupDetailBaseCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2980,8 +3006,8 @@
 				6F0701492445D7FF0090975B /* View */,
 				6F0701572445D7FF0090975B /* YXSClassStarSignleClassStudentDetialController.swift */,
 				6F0701582445D7FF0090975B /* YXSClassStartTeacherClassListController.swift */,
-				6F0701592445D7FF0090975B /* YXSClassStarSignleClassDetialController.swift */,
-				6F0701482445D7FF0090975B /* YXSClassStarSignleClassCommonController.swift */,
+				6F0701592445D7FF0090975B /* YXSClassStarTeacherSignleClassDetialController.swift */,
+				6F0701482445D7FF0090975B /* YXSClassStarSignleClassBaseController.swift */,
 				6F07015A2445D7FF0090975B /* YXSClassStarPartentDetialController.swift */,
 				6F8272B4245171C900918757 /* YXSClassStarCommentItemController.swift */,
 			);
@@ -4397,6 +4423,7 @@
 			isa = PBXGroup;
 			children = (
 				6F0700FE2445D7FF0090975B /* YXSSolitaireModel.swift */,
+				6F944A462489E0B60078E008 /* YXSSolitaireDetailModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4407,7 +4434,6 @@
 				6F5677A4247E5B6500B523ED /* YXSSolitaireToolWindow.swift */,
 				6F5677A0247E430400B523ED /* YXSSolitaireTemplateListController.swift */,
 				6F56779C247E0C9A00B523ED /* YXSSolitaireSelectTypeController.swift */,
-				6F0700FD2445D7FF0090975B /* YXSSolitairePublishController.swift */,
 				6FF2C0AA2484ED68008DC183 /* YXSSolitaireApplyPublishController.swift */,
 				6F5677A2247E527B00B523ED /* YXSSolitaireNewPublishBaseController.swift */,
 				6F5677A6247F4FA700B523ED /* YXSSolitaireCollectorPublishController.swift */,
@@ -5410,6 +5436,7 @@
 				E58F16D5245149D400A6AC18 /* YXSListVoiceView.swift */,
 				E58F16D6245149D400A6AC18 /* YXSInputAlertView.swift */,
 				E58F16D7245149D400A6AC18 /* FPS */,
+				6F3426C2248889E30006C2D5 /* YXSEditNineMediaView.swift */,
 			);
 			path = YXSCommon;
 			sourceTree = "<group>";
@@ -5426,7 +5453,7 @@
 		E58F16A3245149D400A6AC18 /* YXSTool */ = {
 			isa = PBXGroup;
 			children = (
-				6FEA7C66245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift */,
+				6FEA7C66245668B00017C9CA /* YXSXMPlayerGlobalControlTool.swift */,
 				E58F16A4245149D400A6AC18 /* YXSShare */,
 				E58F16A8245149D400A6AC18 /* YXSMediaHelper */,
 				E58F16AB245149D400A6AC18 /* YXSDownloaderTool */,
@@ -5454,6 +5481,8 @@
 			children = (
 				E58F16A9245149D400A6AC18 /* YXSMediaModel.swift */,
 				E58F16AA245149D400A6AC18 /* YXSSelectMediaHelper.swift */,
+				6FA1CB25248B2AFA009C7191 /* YXSMediaHelper.swift */,
+				6FA1CB27248B3A09009C7191 /* YXSCompressionImageHelper.swift */,
 			);
 			path = YXSMediaHelper;
 			sourceTree = "<group>";
@@ -5470,6 +5499,7 @@
 			isa = PBXGroup;
 			children = (
 				E58F16AE245149D400A6AC18 /* YXSSSAudioPlayer.swift */,
+				6FC61E57248E221F005138B1 /* YXSAVPlayer.swift */,
 				E58F16AF245149D400A6AC18 /* message.wav */,
 			);
 			path = YXSAudioPlayer;
@@ -6065,6 +6095,7 @@
 				6F07035E2445D8030090975B /* TResponderTextView.m in Sources */,
 				6F07039C2445D8030090975B /* TUITextMessageCell.m in Sources */,
 				6F0705542445D8050090975B /* SLFriendsCommentView.swift in Sources */,
+				6FC61E58248E221F005138B1 /* YXSAVPlayer.swift in Sources */,
 				6F0704D52445D8050090975B /* YXSSolitaireListCell.swift in Sources */,
 				6F0705E02445D8060090975B /* LFPhotoPreviewVideoCell.m in Sources */,
 				6F07FE052445D7C70090975B /* YXSBaseViewController.swift in Sources */,
@@ -6161,6 +6192,7 @@
 				6FEA7C562452990F0017C9CA /* LFVideoClipToolbar.m in Sources */,
 				6F07042D2445D8040090975B /* YXSVersionUpdateManager.swift in Sources */,
 				6FEA7BF72452990C0017C9CA /* LFEraserBrush.m in Sources */,
+				6F944A492489E3630078E008 /* YXSSolitaireContainerController.swift in Sources */,
 				6F56779B247DFF5300B523ED /* YXSTemplateTabModel.swift in Sources */,
 				6F0703BE2445D8030090975B /* TCAnnotation.m in Sources */,
 				6F0705EF2445D8060090975B /* LFAsset.m in Sources */,
@@ -6181,7 +6213,7 @@
 				6F0705642445D8050090975B /* YXSLBXScanNetAnimation.swift in Sources */,
 				6F0703AB2445D8030090975B /* TUIGroupMemberController.m in Sources */,
 				6F0703A72445D8030090975B /* TUIGroupInfoController.m in Sources */,
-				6F3426C12487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialCell.swift in Sources */,
+				6F3426C12487900D0006C2D5 /* YXSSolitaireCollectorPartentDetialBaseCell.swift in Sources */,
 				6F07053E2445D8050090975B /* YXSHomeworkBatchRemarkController.swift in Sources */,
 				6F0704DA2445D8050090975B /* YXSChatViewController.swift in Sources */,
 				6F0703672445D8030090975B /* NSDate+TUIKIT.m in Sources */,
@@ -6221,8 +6253,10 @@
 				6F07FE0B2445D7C70090975B /* YXSTableView.swift in Sources */,
 				6FEA7C492452990E0017C9CA /* LFMEVideoView.m in Sources */,
 				6F0704F62445D8050090975B /* YXSHomeClassStartCell.swift in Sources */,
+				6F944A51248A21190078E008 /* YXSSolitaireCollectorSetupDetailController.swift in Sources */,
 				E5AE0C942485EF2500073657 /* UIView+WZB.m in Sources */,
 				6F0705512445D8050090975B /* YXSFriendCircleUserInfoModel.swift in Sources */,
+				6F944A4D2489E6040078E008 /* YXSSolitaireReplyListController.swift in Sources */,
 				6F07043A2445D8040090975B /* YXSMAMapView.m in Sources */,
 				6F0703732445D8030090975B /* TUIContactController.m in Sources */,
 				6F0703B82445D8030090975B /* TIMConversation+DataProvider.m in Sources */,
@@ -6263,6 +6297,7 @@
 				6F0705532445D8050090975B /* YXSFriendsCircleInfoCell.swift in Sources */,
 				6FEA7C5D2452990F0017C9CA /* LFMEGIFImageSerialization.m in Sources */,
 				6FEA7BFD2452990C0017C9CA /* LFBrush.m in Sources */,
+				6F944A472489E0B60078E008 /* YXSSolitaireDetailModel.swift in Sources */,
 				6FEA7C4E2452990E0017C9CA /* LFStickerItem.m in Sources */,
 				6F0705D72445D8060090975B /* UIImage+LF_ImageCompress.m in Sources */,
 				6FEA7C1A2452990D0017C9CA /* LFFilterGifView.m in Sources */,
@@ -6406,11 +6441,11 @@
 				6F0704642445D8040090975B /* YXSRegistViewController.swift in Sources */,
 				6F0704C52445D8040090975B /* YXSPunchCardCommintListModel.swift in Sources */,
 				E53D8B02244E8BA600590B5A /* YXSSynClassModel.swift in Sources */,
-				6F0704D12445D8050090975B /* YXSSolitairePublishController.swift in Sources */,
 				6F0704822445D8040090975B /* YXSClassScheduleCardListController.swift in Sources */,
 				E58F1700245149D500A6AC18 /* UIUtil.swift in Sources */,
 				E58F16E3245149D400A6AC18 /* YXSCommonSection.swift in Sources */,
 				6F0705322445D8050090975B /* YXSLinkView.swift in Sources */,
+				6FA1CB26248B2AFA009C7191 /* YXSMediaHelper.swift in Sources */,
 				6F07036B2445D8030090975B /* TPopView.m in Sources */,
 				6F07052E2445D8050090975B /* YXSHomeworkInputLinkAlert.swift in Sources */,
 				6FEA7C3D2452990E0017C9CA /* JRCollectionViewCell.m in Sources */,
@@ -6549,7 +6584,7 @@
 				6F0703B22445D8030090975B /* TUIConversationListController.m in Sources */,
 				6F07046D2445D8040090975B /* YXSLoginViewController.swift in Sources */,
 				6F07FE0A2445D7C70090975B /* YXSButton.swift in Sources */,
-				6F07051A2445D8050090975B /* YXSClassStarSignleClassDetialController.swift in Sources */,
+				6F07051A2445D8050090975B /* YXSClassStarTeacherSignleClassDetialController.swift in Sources */,
 				6F5677A3247E527B00B523ED /* YXSSolitaireNewPublishBaseController.swift in Sources */,
 				6F07044C2445D8040090975B /* YXSInviteViewController.swift in Sources */,
 				6F0703E22445D8030090975B /* AFImageDownloader.m in Sources */,
@@ -6591,6 +6626,7 @@
 				6F0705562445D8050090975B /* YXSFriendsCommentAlert.swift in Sources */,
 				6F0704742445D8040090975B /* YXSAlbum.swift in Sources */,
 				6F0703F72445D8030090975B /* YXSXMLYRequest.swift in Sources */,
+				6F944A53248A270B0078E008 /* YXSSolitaireCollectorSetupDetailBaseCell.swift in Sources */,
 				6FEA7C402452990E0017C9CA /* JRTitleCollectionViewCell.m in Sources */,
 				6F0705372445D8050090975B /* YXSRecordAudioView.swift in Sources */,
 				E58F16F2245149D500A6AC18 /* YXSUploadSourceHelper.swift in Sources */,
@@ -6598,12 +6634,14 @@
 				6FEA7C0D2452990D0017C9CA /* SPDropMenu.m in Sources */,
 				6F0704C92445D8040090975B /* YXSPunchCardCommentModel.swift in Sources */,
 				E5AE0CA4248A351100073657 /* YXSScoreSingleSubjectListCell.swift in Sources */,
+				6F3426C3248889E30006C2D5 /* YXSEditNineMediaView.swift in Sources */,
 				6FEA7C512452990F0017C9CA /* LFStickerView.m in Sources */,
 				6F0704912445D8040090975B /* YXSClassSelectRoleView.swift in Sources */,
 				6F0703B02445D8030090975B /* TNaviBarIndicatorView.m in Sources */,
 				6F0704CD2445D8050090975B /* YXSPunchCardDetialHeaderView.swift in Sources */,
 				E58F16DE245149D400A6AC18 /* YXSGuideViewWindow.swift in Sources */,
 				E583E153245A827E00A1CD65 /* YXSHomeworkHistoryGoodVC.swift in Sources */,
+				6F944A4B2489E52F0078E008 /* YXSSolitaireReadListController.swift in Sources */,
 				6F0703AF2445D8030090975B /* TUIMessageDataProviderService.m in Sources */,
 				6F0703BC2445D8030090975B /* TCContext.m in Sources */,
 				6F0705352445D8050090975B /* YXSSelectClassView.swift in Sources */,
@@ -6718,7 +6756,7 @@
 				6FEA7C092452990D0017C9CA /* LFTipsGuideView.m in Sources */,
 				6F07050E2445D8050090975B /* YXSClassStarTeacherSingleHeaderView.swift in Sources */,
 				6F0703952445D8030090975B /* TUIRecordView.m in Sources */,
-				6FEA7C67245668B00017C9CA /* YXSPlayerMediaSingleControlTool.swift in Sources */,
+				6FEA7C67245668B00017C9CA /* YXSXMPlayerGlobalControlTool.swift in Sources */,
 				6F07037D2445D8030090975B /* TCommonPendencyCellData.m in Sources */,
 				6F903464247CAE9A000E1D85 /* YXSTemplateListModel.swift in Sources */,
 				6F0704792445D8040090975B /* YXSTrackModel.swift in Sources */,
@@ -6729,6 +6767,7 @@
 				E58F16DB245149D400A6AC18 /* YXSAvatarView.swift in Sources */,
 				6F07038A2445D8030090975B /* TUIGroupPendencyViewModel.m in Sources */,
 				E5F41C5D244D7744007F27AC /* YXSSynClassHomeListVC.swift in Sources */,
+				6F944A4F2489F21B0078E008 /* YXSSolitaireCollectorTeacherDetialCell.swift in Sources */,
 				6F0705432445D8050090975B /* YXSRecordVideoController.swift in Sources */,
 				6F0705362445D8050090975B /* YXSBottomBtnView.swift in Sources */,
 				6F0703DF2445D8030090975B /* UIActivityIndicatorView+AFNetworking.m in Sources */,
@@ -6784,6 +6823,7 @@
 				6F0704E12445D8050090975B /* YXSContactSectionHeaderView.swift in Sources */,
 				6F0704652445D8040090975B /* YXSRegisterSucessController.swift in Sources */,
 				6F07044E2445D8040090975B /* YXSNoticeReplyListViewController.swift in Sources */,
+				6FA1CB28248B3A09009C7191 /* YXSCompressionImageHelper.swift in Sources */,
 				6F0703D62445D8030090975B /* UITableView+FDTemplateLayoutCellDebug.m in Sources */,
 				6F07045C2445D8040090975B /* YXSFileCell.swift in Sources */,
 				E58F16E2245149D400A6AC18 /* YXSCustomNav.swift in Sources */,
@@ -6820,7 +6860,7 @@
 				6F0703B42445D8030090975B /* TUIConversationCellData.m in Sources */,
 				6F0703CB2445D8030090975B /* AILoadingView.m in Sources */,
 				56FCE28D2484F0F400890EA3 /* YXSPhotoPreviewCommentModel.swift in Sources */,
-				6F07050A2445D8050090975B /* YXSClassStarSignleClassCommonController.swift in Sources */,
+				6F07050A2445D8050090975B /* YXSClassStarSignleClassBaseController.swift in Sources */,
 				6F0705192445D8050090975B /* YXSClassStartTeacherClassListController.swift in Sources */,
 				6F0704F92445D8050090975B /* YXSAgendaListModel.swift in Sources */,
 				6F0703B32445D8030090975B /* TUIConversationCell.m in Sources */,
@@ -6943,7 +6983,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 2a;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				INFOPLIST_FILE = Share/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6951,7 +6992,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -6967,7 +7008,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 2a;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				INFOPLIST_FILE = Share/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6975,7 +7016,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -7106,7 +7147,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 2;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7130,7 +7172,7 @@
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/TencentIM/TUIKit/Classes/Third/voiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/XMLY",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation;
 				PRODUCT_MODULE_NAME = ZGYM;
 				PRODUCT_NAME = "优学业";
@@ -7150,7 +7192,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ZGYM/优学业.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 4YR9Q7GCD2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7174,7 +7216,7 @@
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/TencentIM/TUIKit/Classes/Third/voiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/ZGYM/YXSSDK/XMLY",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.youxueye.HNUMEducation;
 				PRODUCT_MODULE_NAME = ZGYM;
 				PRODUCT_NAME = "优学业";

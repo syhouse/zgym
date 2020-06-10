@@ -270,8 +270,13 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             let vc = YXSPunchCardDetialController.init(clockInId: model.serviceId ?? 0, childId: childModel?.id,classId: model.classId ?? 0)
             navigationController?.pushViewController(vc)
         case .solitaire:
-            let vc = YXSSolitaireNewDetailController.init(censusId: model.serviceId ?? 0, childrenId: childId ?? 0, classId: model.classId ?? 0)
-            navigationController?.pushViewController(vc)
+            if model.solitaireType == 1{
+                let vc = YXSSolitaireDetailController.init(censusId: model.serviceId ?? 0, childrenId: childId ?? 0, classId: model.classId ?? 0)
+                navigationController?.pushViewController(vc)
+            }else{
+                let vc = YXSSolitaireNewDetailController.init(censusId: model.serviceId ?? 0, childrenId: childId ?? 0, classId: model.classId ?? 0)
+                navigationController?.pushViewController(vc)
+            }
         case .notice:
             let vc = YXSNoticeDetailViewController.init(model: model)
             navigationController?.pushViewController(vc)

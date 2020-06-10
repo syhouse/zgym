@@ -69,7 +69,7 @@ extension UIView {
                     currentClassId = yxs_user.gradeIds?.first
                 }
                 if let currentClassId = currentClassId{
-                    UIUtil.currentNav().pushViewController(YXSClassStarSignleClassDetialController.init(classId: currentClassId))
+                    UIUtil.currentNav().pushViewController(YXSClassStarTeacherSignleClassDetialController.init(classId: currentClassId))
                 }else{
                     UIUtil.currentNav().pushViewController(YXSClassStartTeacherClassListController())
                 }

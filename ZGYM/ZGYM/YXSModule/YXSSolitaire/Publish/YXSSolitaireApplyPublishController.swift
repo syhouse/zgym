@@ -87,6 +87,8 @@ class YXSSolitaireApplyPublishController: YXSSolitaireNewPublishBaseController {
         }
         publishView.yxs_addLine()
         
+        publishView.setTemplateText(publishModel.publishContent ?? "")
+        subjectField.text =  publishModel.subjectText
     }
     
     
@@ -102,16 +104,11 @@ class YXSSolitaireApplyPublishController: YXSSolitaireNewPublishBaseController {
         var audioUrl: String = ""
         var pictures = [String]()
         var bgUrl: String = ""
-        var options = [String]()
         
         if let classs = publishModel.classs{
             for model in classs{
                 classIdList.append(model.id ?? 0)
             }
-        }
-        
-        for model in selectView.selectModels{
-            options.append(model.title ?? "")
         }
         
         if let mediaInfos = mediaInfos{
@@ -139,7 +136,7 @@ class YXSSolitaireApplyPublishController: YXSSolitaireNewPublishBaseController {
             MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
             self.yxs_remove()
             NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherPublishSucessNotification), object: nil)
-            self.navigationController?.popViewController()
+            self.publishSucessPop()
         }) { (msg, code) in
             MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
             MBProgressHUD.yxs_showMessage(message: msg)

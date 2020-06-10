@@ -161,7 +161,7 @@ class YXSSolitaireToolWindow: UIView{
         }
     }
     
-    // MARK: -pivate
+    // MARK: - pivate
     func setSolitaireCountUI(){
         self.studentSection.rightLabel.text = publishModel.totalCommitUpperLimit == publishModel.commitUpperLimit ? "全部" : "\(publishModel.commitUpperLimit ?? 0)"
         self.studentSection.rightLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)

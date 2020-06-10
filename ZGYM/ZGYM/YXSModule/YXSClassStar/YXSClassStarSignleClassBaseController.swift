@@ -1,5 +1,5 @@
 //
-//  YXSClassStarSignleClassCommonController.swift
+//  YXSClassStarSignleClassBaseController.swift
 //  ZGYM
 //
 //  Created by zgjy_mac on 2019/12/9.
@@ -10,7 +10,7 @@ import UIKit
 import FDFullscreenPopGesture_Bell
 import NightNight
 
-class YXSClassStarSignleClassCommonController: YXSBaseTableViewController {
+class YXSClassStarSignleClassBaseController: YXSBaseTableViewController {
     // MARK: -leftCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +32,7 @@ class YXSClassStarSignleClassCommonController: YXSBaseTableViewController {
         rightControl.addTarget(self, action: #selector(rightDropClick), for: .touchUpInside)
         view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#D1E4FF")
         tableView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#D1E4FF")
+//        tableView.bounces = false
     }
     
     var selectModels:[YXSSelectModel] = [YXSSelectModel.init(text: "按日", isSelect: false, paramsKey: DateType.D.rawValue),YXSSelectModel.init(text: "按周", isSelect: true, paramsKey: DateType.W.rawValue),YXSSelectModel.init(text: "按月", isSelect: false, paramsKey: DateType.M.rawValue),YXSSelectModel.init(text: "按年", isSelect: false, paramsKey: DateType.Y.rawValue)]
@@ -89,9 +90,9 @@ class YXSClassStarSignleClassCommonController: YXSBaseTableViewController {
     }()
 }
 
-extension YXSClassStarSignleClassCommonController{
+extension YXSClassStarSignleClassBaseController{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > kSafeTopHeight + 64{
+        if scrollView.contentOffset.y > 0{
             customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
             customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "yxs_back_white"), forState: .normal)
             customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
@@ -109,7 +110,7 @@ extension YXSClassStarSignleClassCommonController{
 }
 
 // MARK: -HMRouterEventProtocol
-extension YXSClassStarSignleClassCommonController: YXSRouterEventProtocol{
+extension YXSClassStarSignleClassBaseController: YXSRouterEventProtocol{
     func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
         switch eventName {
         case kYXSCustomNavBackEvent:

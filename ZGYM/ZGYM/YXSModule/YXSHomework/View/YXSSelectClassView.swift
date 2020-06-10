@@ -68,6 +68,7 @@ class YXSSelectClassView: UIControl {
                 
                 labelMaxWidth = (SCREEN_WIDTH - 88 - 50 - CGFloat(count - 1)*5 - 5 - selectLabel.sizeThatFits(CGSize.init(width: 100, height: 20)).width)/CGFloat(count)
             }else{
+                selectLabel.text = ""
                 selectLabel.isHidden = true
                 labelMaxWidth = (SCREEN_WIDTH - 88 - 50 - CGFloat(count - 1)*5)/CGFloat(count)
             }

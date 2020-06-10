@@ -90,10 +90,13 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
             make.top.equalTo(60)
             make.size.equalTo(CGSize.init(width: 146.5, height: 31))
         }
+        
+        publishView.setTemplateText(publishModel.publishContent ?? "")
+        subjectField.text =  publishModel.subjectText
     }
     
     
-    // MARK: -loadData
+    // MARK: - override
     override func yxs_loadClassDataSucess(){
         loadClassCountData()
     }
@@ -207,16 +210,11 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         var audioUrl: String = ""
         var pictures = [String]()
         var bgUrl: String = ""
-        var options = [String]()
         
         if let classs = publishModel.classs{
             for model in classs{
                 classIdList.append(model.id ?? 0)
             }
-        }
-        
-        for model in selectView.selectModels{
-            options.append(model.title ?? "")
         }
         
         if let mediaInfos = mediaInfos{
@@ -271,10 +269,11 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         MBProgressHUD.yxs_showLoading(message: "发布中", inView: self.navigationController?.view)
         YXSCensusV1TeacherPublishGatherRequest.init(classIdList: classIdList, content: publishView.getTextContent(), title:        subjectField.text ?? ""
           , audioUrl: audioUrl, audioDuration: publishModel.audioModels.first?.time ?? 0, videoUrl: video, bgUrl: bgUrl, imageUrl: picture, link: publishModel.publishLink ?? "",commitUpperLimit: publishModel.commitUpperLimit ?? 0, endTime: publishModel.solitaireDate!.toString(format: DateFormatType.custom("yyyy-MM-dd HH:mm:ss")), isTop: publishModel.isTop ? 1 : 0, optionList: optionList).request({ (result) in
+            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController?.view)
             MBProgressHUD.yxs_showMessage(message: "发布成功", inView: self.navigationController?.view)
             self.yxs_remove()
             NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherPublishSucessNotification), object: nil)
-            self.navigationController?.popViewController()
+            self.publishSucessPop()
         }) { (msg, code) in
             MBProgressHUD.hide(for: self.navigationController!.view, animated: true)
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -290,6 +289,7 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         }
     }
     
+    // MARK: - private
     func pushQuestionSetVC(questionModel: YXSSolitaireQuestionModel?, editIndex: Int? = nil, type: YXSQuestionType){
         let vc = YXSSolitaireQuestionSetController(questionModel, type: type)
         vc.completeHandler = {
@@ -305,7 +305,6 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         self.navigationController?.pushViewController(vc)
     }
     
-    // MARK: - private
     private func updateHeaderView(){
         let headerHeight = self.tableHeaderView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         self.tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: headerHeight)

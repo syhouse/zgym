@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class YXSSSAudioPlayer: NSObject {
     static let sharedInstance: YXSSSAudioPlayer = {
         let instance = YXSSSAudioPlayer()
@@ -64,9 +65,8 @@ class YXSSSAudioPlayer: NSObject {
          isFinish = false
          
          NotificationCenter.default.addObserver(self, selector: #selector(videoPlayEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        YXSPlayerMediaSingleControlTool.share.pausePlayer()
+        YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
     }
-    
     
     ///播放音频并缓存
     @objc public func play(url:URL, loop: Int = 1,cacheAudio: Bool,finish: (() -> ())? = nil) {
@@ -81,9 +81,6 @@ class YXSSSAudioPlayer: NSObject {
         }
         
         play(url: localUrl, loop: loop, finish: finish)
-
-        
- 
     }
     
     /// 停止播放
@@ -92,7 +89,7 @@ class YXSSSAudioPlayer: NSObject {
         player = nil
         isFinish = true
         
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
     }
     
     
@@ -100,7 +97,7 @@ class YXSSSAudioPlayer: NSObject {
     public func pauseVoice(){
         player?.pause()
         isPause = true
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+        YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
     }
     
     /// 恢复
@@ -112,17 +109,19 @@ class YXSSSAudioPlayer: NSObject {
             }
             player.play()
             isPause = false
-            YXSPlayerMediaSingleControlTool.share.pausePlayer()
+            YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
         }
     }
     
-    @objc func videoPlayEnd(){
-        try? AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
-        isFinish = true
-        isPause = true
-        finish?()
-        
-        YXSPlayerMediaSingleControlTool.share.resumePlayer()
+    @objc func videoPlayEnd(notification: Notification){
+        if player != nil{
+            try? AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
+            isFinish = true
+            isPause = true
+            finish?()
+            player = nil
+            YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
+        }
     }
         
     // MARK: - Setter

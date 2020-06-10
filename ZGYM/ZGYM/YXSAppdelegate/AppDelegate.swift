@@ -71,7 +71,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         //        UIApplication.shared.cancelAllLocalNotifications()
         // MARK: -Bugly
         Bugly.start(withAppId: "366980be21")
-        
         // MARK: -WXApi
         WXApi.registerApp(KWXAPPID, universalLink: KWXUNIVERSAL_LINK)
         // MARK: -TencentOAuth
@@ -171,7 +170,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     
     func applicationWillResignActive(_ application: UIApplication) {
         ///如果xmly播放器存在  开启锁屏控制
-        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
         UIUtil.configNowPlayingCenterUI()
     }
     
@@ -341,11 +339,9 @@ extension AppDelegate{
         UMConfigure.initWithAppkey(KUMAPPKEY, channel: "App Store")
 //        UMVisual.setVisualEnabled(true)
         
-        let isPlayerStop = (XMSDKPlayer.shared()?.isPlaying() ?? false) == false && (XMSDKPlayer.shared()?.isPaused() ?? false) == false
-        if !isPlayerStop{
+        if !YXSXMPlayerGlobalControlTool.share.isPlayerStop(){
             YXSMusicPlayerWindowView.updateSuperView()
         }
-        
         
         yxs_dealRootUI()
         yxs_addUI()

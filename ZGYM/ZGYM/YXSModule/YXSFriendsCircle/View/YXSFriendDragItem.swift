@@ -115,10 +115,12 @@ class YXSSinglImage: UIImageView {
                 if model.isService{
                     self.sd_setImage(with: URL.init(string: model.serviceUrl ?? ""),placeholderImage: defultImage)
                 }else{
+                    self.image = defultImage
                     model.getThumbnailImage { [weak self](thumbnailImage) in
                         guard let strongSelf = self else { return }
                         strongSelf.image = thumbnailImage
                     }
+                    
                 }
                 if  model.type == PHAssetMediaType.video{
                     playerView.isHidden = false

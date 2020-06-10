@@ -10,7 +10,7 @@ import UIKit
 
 
 /// 班级之星老师单个详情
-class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassCommonController {
+class YXSClassStarSignleClassStudentDetialController: YXSClassStarSignleClassBaseController {
     
     /// 孩子信息
     var childrenModel: YXSClassStarChildrenModel

@@ -8,9 +8,26 @@
 import UIKit
 import NightNight
 import ObjectMapper
+import SwiftyJSON
+
+
+private let placeholderReplaceKey = "YXSSolitaireNewDetailController___XYSPlaceholderReplaceKey__"
+
+class YXSSolitaireUploadPlaceholderModel: NSObject{
+    var questionIndex: Int
+    var selectIndex: Int
+    var media: YXSMediaModel
+    var uploadUrl: String?
+    init(questionIndex: Int, selectIndex: Int, media: YXSMediaModel){
+        self.questionIndex = questionIndex
+        self.selectIndex = selectIndex
+        self.media = media
+        super.init()
+    }
+}
 
 class YXSSolitaireNewDetailController: YXSBaseTableViewController {
-    
+    // MARK: - property
     var headerSelectedIndex: Int = 0
     var censusId: Int?
     var classId: Int?
@@ -20,17 +37,32 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
     
     var sectionDataRequestSucess: Bool = false
     
-    ///家长采集题目model
+    ///采集题目model
     var solitaireGatherHoldersModel: YXSSolitaireGatherHoldersModel?
-    ///家长采集题目数组
-    var solitairePartentCollectorItems = [YXSSolitaireQuestionModel]()
-    
-//    var censusCommitGatherResponseList
+    ///采集题目数组
+    var solitaireCollectorItems = [YXSSolitaireQuestionModel]()
+    ///家长采集题目提交数组
+    var censusCommitGatherResponseList = [YXSSolitaireAnswerHolderItemModel]()
     ///家长当前提交的id
     var censusCommitId: Int?
+    ///家长是否可以编辑 重新提交
+    var canEdit: Bool{
+        return (detailModel?.state == 100) ? false : true
+    }
     
-    var lastOffset: CGPoint = CGPoint(x: 0, y: 0)
+    var detailModel: YXSSolitaireDetailModel? {
+        didSet {
+            tableView.reloadData()
+            updateBottomView()
+        }
+    }
+    ///家长选择选项列表
+    var partakeResponseLists = [[YXSClassMemberModel](), [YXSClassMemberModel]()]
     
+    ///标记图片题目
+    var placeholderUrls = [YXSSolitaireUploadPlaceholderModel]()
+    
+    // MARK: - leftCycle
     init(censusId: Int = 0, childrenId: Int = 0, classId: Int, serviceCreateTime: String = "") {
         super.init()
         self.censusId = censusId
@@ -38,6 +70,9 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
         self.classId = classId
         self.serviceCreateTime = serviceCreateTime
         UIUtil.yxs_reduceHomeRed(serviceId: censusId, childId: childrenId )
+        
+        self.hasRefreshHeader = false
+        self.showBegainRefresh = false
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -50,75 +85,45 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
     }
     
     override func viewDidLoad() {
-        self.hasRefreshHeader = false
-        self.showBegainRefresh = false
         super.viewDidLoad()
         self.title = "接龙详情"
         
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-        } else {
-            self.view.addSubview(bottomBtnView)
-            //            bottomBtnView.isHidden = false
-            bottomBtnView.snp.makeConstraints({ (make) in
-                make.left.equalTo(0)
-                make.right.equalTo(0)
-                make.bottom.equalTo(0)
-                make.height.equalTo(62)
-            })
-            self.tableView.snp.remakeConstraints { (make) in
-                make.top.equalTo(0)
-                make.left.equalTo(0)
-                make.right.equalTo(0)
-                make.bottom.equalTo(self.bottomBtnView.snp_top)
-            }
-        }
-        // Do any additional setup after loading the view.
+        initUI()
+        
         self.tableView.register(YXSSolitaireNewDetailHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "YXSSolitaireNewDetailHeaderView")
         self.tableView.register(YXSHomeworkReadListSectionHeader.classForCoder(), forHeaderFooterViewReuseIdentifier: "YXSHomeworkReadListSectionHeader")
         self.tableView.register(YXSSolitaireCollectorSectionHeader.self, forHeaderFooterViewReuseIdentifier: "YXSSolitaireCollectorSectionHeader")
-        self.tableView.estimatedRowHeight = 60
         
-        self.tableView.register(YXSDetailNormalCell.classForCoder(), forCellReuseIdentifier: "YXSDetailNormalCell")
         self.tableView.register(YXSDetailNormalRecallCell.classForCoder(), forCellReuseIdentifier: "YXSDetailNormalRecallCell")
-        self.tableView.register(YXSDetailContactCell.classForCoder(), forCellReuseIdentifier: "YXSDetailContactCell")
-        self.tableView.register(YXSDetailCenterTitleCell.classForCoder(), forCellReuseIdentifier: "YXSDetailCenterTitleCell")
         self.tableView.register(YXSDetailSubTitleBottomCell.classForCoder(), forCellReuseIdentifier: "YXSDetailSubTitleBottomCell")
-        self.tableView.register(YXSDetailAllTitleCell2.classForCoder(), forCellReuseIdentifier: "YXSDetailAllTitleCell2")
-        self.tableView.register(YXSSolitaireCollectorPartentDetialCell.self, forCellReuseIdentifier: "YXSSolitaireCollectorPartentDetialCell")
         
+        //家长采集cell
+        self.tableView.register(YXSSolitaireCollectorPartentDetialSelectItemsCell.self, forCellReuseIdentifier: "YXSSolitaireCollectorPartentDetialSelectItemsCell")
+        self.tableView.register(YXSSolitaireCollectorPartentDetialTextCell.self, forCellReuseIdentifier: "YXSSolitaireCollectorPartentDetialTextCell")
+        self.tableView.register(YXSSolitaireCollectorPartentDetialImageCell.self, forCellReuseIdentifier: "YXSSolitaireCollectorPartentDetialImageCell")
         
-        setupRightBarButtonItem()
+        //老师采集cell
+        self.tableView.register(YXSSolitaireCollectorTeacherDetialNoSelectCell.self, forCellReuseIdentifier: "YXSSolitaireCollectorTeacherDetialNoSelectCell")
+        self.tableView.register(YXSSolitaireCollectorTeacherDetiaSelectItemsCell.self, forCellReuseIdentifier: "YXSSolitaireCollectorTeacherDetiaSelectItemsCell")
+        
+        //加载缓存数据
         self.detailModel = YXSCacheHelper.yxs_getCacheSolitaireDetailTask(censusId: censusId ?? 0, childrenId: childrenId ?? 0)
-        self.censusPartakeResponseList = YXSCacheHelper.yxs_getCacheSolitaireJoinStaffListTask(censusId: censusId ?? 0)
-        self.censusNoPartakeResponseList = YXSCacheHelper.yxs_getCacheSolitaireNotJoinStaffListTask(censusId: censusId ?? 0)
+        
+        if detailModel != nil{
+            sectionDataRequestSucess = true
+        }
+        
+        if detailModel?.type == 2{
+            self.partakeResponseLists = YXSCacheHelper.yxs_getCacheSolitaireResponseList(censusId: censusId ?? 0)
+        }else{
+            self.solitaireCollectorItems = YXSCacheHelper.yxs_getCacheSolitaireCollectorItems(censusId: censusId ?? 0, childrenId: childrenId ?? 0)
+        }
         yxs_refreshData()
-        
-    }
-    
-    func setupRightBarButtonItem() {
-        let btnShare = YXSButton(frame: CGRect(x: 0, y: 0, width: 26, height: 26))
-        btnShare.setMixedImage(MixedImage(normal: "yxs_punchCard_share", night: "yxs_punchCard_share_white"), forState: .normal)
-        btnShare.setMixedImage(MixedImage(normal: "yxs_punchCard_share", night: "yxs_punchCard_share_white"), forState: .highlighted)
-        btnShare.addTarget(self, action: #selector(yxs_shareClick(sender:)), for: .touchUpInside)
-        let navShareItem = UIBarButtonItem(customView: btnShare)
-        
-        //        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-        //            let btnMore = YXSButton(frame: CGRect(x: 0, y: 0, width: 26, height: 26))
-        //            btnMore.setMixedImage(MixedImage(normal: "yxs_homework_more", night: "yxs_homework_more_night"), forState: .normal)
-        //            btnMore.setMixedImage(MixedImage(normal: "yxs_homework_more", night: "yxs_homework_more_night"), forState: .highlighted)
-        //            btnMore.addTarget(self, action: #selector(yxs_moreClick(sender:)), for: .touchUpInside)
-        //            let navItem = UIBarButtonItem(customView: btnMore)
-        //            self.navigationItem.rightBarButtonItems = [navItem, navShareItem]
-        //
-        //        } else {
-        self.navigationItem.rightBarButtonItems = [navShareItem]
-        //        }
     }
     
     override func yxs_refreshData() {
-        
         MBProgressHUD.yxs_showLoading(ignore: true)
-        YXSEducationCensusCensusDetailRequest(censusId: censusId ?? 0, childrenId: childrenId ?? 0).request({ [weak self](model: YXSHomeworkDetailModel) in
+        YXSEducationCensusCensusDetailRequest(censusId: censusId ?? 0, childrenId: childrenId ?? 0).request({ [weak self](model: YXSSolitaireDetailModel) in
             guard let weakSelf = self else {return}
             MBProgressHUD.yxs_hideHUD()
             weakSelf.detailModel = model
@@ -131,164 +136,55 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
                     guard let strongSelf = self else {return}
                     MBProgressHUD.yxs_hideHUD()
                     strongSelf.sectionDataRequestSucess = true
-                    strongSelf.censusPartakeResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["censusPartakeResponseList"].rawString()!) ?? [YXSClassMemberModel]()
-                    strongSelf.censusNoPartakeResponseList = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["censusNoPartakeResponseList"].rawString()!) ?? [YXSClassMemberModel]()
-                    //                YXSCacheHelper.yxs_cacheSolitaireJoinStaffListTask(dataSource: strongSelf.censusPartakeResponseList ?? [YXSClassMemberModel](), censusId: weakSelf.censusId ?? 0)
-                    //                YXSCacheHelper.yxs_cacheSolitaireNotJoinStaffListTask(dataSource: strongSelf.censusNoPartakeResponseList ?? [YXSClassMemberModel](), censusId: weakSelf.censusId ?? 0)
+                    strongSelf.partakeResponseLists[0] = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["censusPartakeResponseList"].rawString()!) ?? [YXSClassMemberModel]()
+                    strongSelf.partakeResponseLists[1] = Mapper<YXSClassMemberModel>().mapArray(JSONString: json["censusNoPartakeResponseList"].rawString()!) ?? [YXSClassMemberModel]()
+                    YXSCacheHelper.yxs_cacheSolitaireResponseList(dataSource: strongSelf.partakeResponseLists , censusId: weakSelf.censusId ?? 0)
                     strongSelf.checkEmptyData()
-                    
+                    strongSelf.tableView.reloadData()
                 }) { (msg, code) in
                     MBProgressHUD.yxs_showMessage(message: msg)
                 }
             }else{
-                YXSEducationCensusParentGatherDetailRequest(censusId: weakSelf.censusId ?? 0, childrenId: weakSelf.childrenId ?? 0).request({ [weak self](json) in
-                    guard let strongSelf = self else {return}
-                    MBProgressHUD.yxs_hideHUD()
-                    strongSelf.sectionDataRequestSucess = true
-                    strongSelf.solitaireGatherHoldersModel = Mapper<YXSSolitaireGatherHoldersModel>().map(JSONString: json["censusGatherJsonData"].rawString()!)
-                    strongSelf.configPartentCollectorData()
-                    strongSelf.tableView.reloadData()
-                    
-                }) { (msg, code) in
-                    MBProgressHUD.yxs_showMessage(message: msg)
-                }
-            }
-            
-            
-            
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
-        
-        
-        
-    }
-    
-    // MARK: - Request
-    @objc func reminderRequest() {
-        var childrenIdList:[Int] = [Int]()
-        for sub in censusNoPartakeResponseList ?? [YXSClassMemberModel]() {
-            childrenIdList.append(sub.childrenId ?? 0)
-        }
-        MBProgressHUD.yxs_showLoading()
-        YXSEducationTeacherOneTouchReminderRequest(childrenIdList: childrenIdList, classId: classId ?? 0, opFlag: 1, serviceId: censusId ?? 0, serviceType: 3, serviceCreateTime: serviceCreateTime ?? "").request({ (json) in
-            MBProgressHUD.yxs_showMessage(message: "通知成功")
-            
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
-    }
-    
-    @objc func recallRequest(){
-        MBProgressHUD.yxs_showLoading()
-        YXSEducationCensusParentWithdrawCommitRequest.init(censusId: censusId ?? 0, censusCommitId: censusCommitId ?? 0, childrenId: childrenId ?? 0).request({ (result) in
-            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationStudentCancelSolitaireNotification), object: [kNotificationIdKey: self.censusId ?? 0])
-            self.yxs_refreshData()
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
-    }
-    
-    // MARK: - Setter
-    var detailModel: YXSHomeworkDetailModel? {
-        didSet {
-            tableView.reloadData()
-            
-            if self.detailModel?.state == 100 {
-                self.bottomBtnView.btnCommit.setTitle("已结束", for: .disabled)
-                self.bottomBtnView.btnCommit.isEnabled = false
-                self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), cornerRadius: 21)
-            }
-            else if self.detailModel?.state == 10 {
-                self.bottomBtnView.btnCommit.setTitle("我来接龙", for: .normal)
-                self.bottomBtnView.btnCommit.isEnabled = true
-                self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 21)
-            }
-            else {
-                if detailModel?.type == 3{
-                    self.bottomBtnView.btnCommit.setTitle("已接龙,重新提交", for: .normal)
-                    self.bottomBtnView.btnCommit.isEnabled = true
-                    self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 21)
+                if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+                    YXSEducationCensusTeacherGatherDetailRequest(censusId: weakSelf.censusId ?? 0).request({ [weak self](detialModel: YXSSolitaireGatherHoldersModel) in
+                        guard let strongSelf = self else {return}
+                        MBProgressHUD.yxs_hideHUD()
+                        strongSelf.sectionDataRequestSucess = true
+                        strongSelf.solitaireGatherHoldersModel = detialModel
+                        
+                        strongSelf.configTeacherCollectorData()
+                        strongSelf.tableView.reloadData()
+                        
+                    }) { (msg, code) in
+                        MBProgressHUD.yxs_showMessage(message: msg)
+                    }
                 }else{
-                    self.bottomBtnView.btnCommit.setTitle("已接龙", for: .normal)
-                    self.bottomBtnView.btnCommit.isEnabled = false
-                    self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), cornerRadius: 21)
+                    YXSEducationCensusParentGatherDetailRequest(censusId: weakSelf.censusId ?? 0, childrenId: weakSelf.childrenId ?? 0).request({ [weak self](json) in
+                        guard let strongSelf = self else {return}
+                        MBProgressHUD.yxs_hideHUD()
+                        strongSelf.sectionDataRequestSucess = true
+                        strongSelf.solitaireGatherHoldersModel = Mapper<YXSSolitaireGatherHoldersModel>().map(JSONString: json["censusGatherJsonData"].rawString()!)
+                        
+                        strongSelf.censusCommitGatherResponseList = Mapper<YXSSolitaireAnswerHolderItemModel>().mapArray(JSONString: json["censusCommitGatherResponseList"].rawString()!) ?? [YXSSolitaireAnswerHolderItemModel]()
+                        strongSelf.configPartentCollectorData()
+                        strongSelf.tableView.reloadData()
+                        
+                    }) { (msg, code) in
+                        MBProgressHUD.yxs_showMessage(message: msg)
+                    }
                 }
             }
-            if YXSPersonDataModel.sharePerson.personRole == .PARENT {
-                self.bottomBtnView.isHidden = false
-            }
-            
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
-    
-    var censusPartakeResponseList: [YXSClassMemberModel]? {
-        didSet {
-            /// 设置提交按钮置灰
-            if YXSPersonDataModel.sharePerson.personRole == .PARENT {
-                
-            }
-            tableView.reloadData()
-        }
-        
-        //        for sub in self.joinCensusResponseList ?? [YXSClassMemberModel]() {
-        //            if sub.childrenId == childrenId {
-        //                self.bottomBtnView.btnCommit.isEnabled = false
-        //                self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), cornerRadius: 21)
-        //            }
-        //        }
-        //        self.bottomBtnView.btnCommit.isHidden = false
-    }
-    
-    var censusNoPartakeResponseList: [YXSClassMemberModel]? {
-        didSet {
-            tableView.reloadData()
-        }
-    }
-    
     
     // MARK: - Action
     @objc func yxs_solitaireClick(sender: YXSButton) {
-        var optionLists = [YXSSelectModel]()
-        if let optionList = detailModel?.optionList{
-            for item in optionList{
-                optionLists.append(YXSSelectModel.init(text: item))
-            }
-            
-        }
-        YXSSolitaireSelectApplyView(items: optionLists, inTarget: self.view) {  [weak self] (view, index, remark) in
-            guard let weakSelf = self else {return}
-            MBProgressHUD.yxs_showLoading()
-            
-            var request: YXSBaseRequset!
-            var message = ""
-            if weakSelf.detailModel?.state == 20{
-                request = YXSEducationCensusParentPartakeCommitRequest(censusId: weakSelf.censusId ?? 0, childrenId: weakSelf.childrenId ?? 0, option: weakSelf.detailModel?.optionList?[index] ?? "", remark: remark)
-                message = "接龙成功"
-            }else{
-                request = YXSEducationCensusParentCommitRequest(censusId: weakSelf.censusId ?? 0, childrenId: weakSelf.childrenId ?? 0, option: weakSelf.detailModel?.optionList?[index] ?? "", remark: remark)
-                message = "修改成功"
-            }
-            
-            request.request({ (json) in
-                MBProgressHUD.yxs_hideHUD()
-                MBProgressHUD.yxs_showMessage(message: message)
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationIdKey: weakSelf.censusId ?? 0])
-                UIUtil.yxs_reduceAgenda(serviceId: weakSelf.censusId ?? 0, info: [kEventKey:YXSHomeType.solitaire])
-                weakSelf.yxs_refreshData()
-                weakSelf.navigationController?.yxs_existViewController(existClass: YXSSolitaireListController(classId: 0, childId: 0), complete: { (isExist, vc) in
-                    if vc != nil {
-                        vc!.yxs_refreshData()
-                    }
-                })
-                
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.01) {
-                    view.cancelClick()
-                }
-                
-            }) { (msg, code) in
-                MBProgressHUD.yxs_showMessage(message: msg)
-            }
+        if detailModel?.type == 2{
+            setupApply()
+        }else if detailModel?.type == 3{
+            setupCollector()
         }
     }
     
@@ -300,7 +196,7 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
             MBProgressHUD.yxs_hideHUD()
             let strUrl = json.stringValue
             let title = "\(weakSelf.detailModel?.teacherName ?? "")布置的接龙!"
-            let dsc = "\(weakSelf.detailModel?.content ?? "")"
+            let dsc = "\(weakSelf.detailModel?.title ?? "")"
             let shareModel = YXSShareModel(title: title, descriptionText: dsc, link: strUrl)
             YXSShareTool.showCommonShare(shareModel: shareModel)
         }) { (msg, code ) in
@@ -308,44 +204,17 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
         }
     }
     
-    @objc func yxs_moreClick(sender: YXSButton) {
-        sender.isEnabled = false
-        let title = detailModel?.isTop == 0 ? "置顶" : "取消置顶"
-        YXSSetTopAlertView.showIn(target: self.view, topButtonTitle:title) { [weak self](btn) in
-            guard let weakSelf = self else {return}
-            
-            sender.isEnabled = true
-            
-            if btn.titleLabel?.text == title {
-                let isTop = weakSelf.detailModel?.isTop == 0 ? 1 : 0
-                
-                UIUtil.yxs_loadUpdateTopData(type: .solitaire, id: weakSelf.censusId ?? 0, createTime: weakSelf.detailModel?.createTime ?? "", isTop: isTop, positon: .detial) {
-                    weakSelf.detailModel?.isTop = isTop
-                }
-            }
-        }
-    }
-    
     @objc func yxs_callUpClick(sender:YXSButton) {
-        let list: [YXSClassMemberModel] = (headerSelectedIndex == 0 ? censusNoPartakeResponseList : censusPartakeResponseList) ?? [YXSClassMemberModel]()
-        let model = list[sender.tag]
+        let model = partakeResponseLists[headerSelectedIndex][sender.tag]
         UIUtil.yxs_callPhoneNumberRequest(childrenId: model.childrenId ?? 0, classId: detailModel?.classId ?? 0)
     }
     
     @objc func yxs_chatClick(sender:YXSButton) {
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            let list: [YXSClassMemberModel] = (headerSelectedIndex == 0 ? censusNoPartakeResponseList : censusPartakeResponseList) ?? [YXSClassMemberModel]()
-            let model = list[sender.tag]
-            UIUtil.yxs_chatImRequest(childrenId: model.childrenId ?? 0, classId: detailModel?.classId ?? 0)
-        }
+        let model = partakeResponseLists[headerSelectedIndex][sender.tag]
+        UIUtil.yxs_chatImRequest(childrenId: model.childrenId ?? 0, classId: detailModel?.classId ?? 0)
     }
     
     @objc func recallClick(){
-        //        YXSCommonAlertView.showAlert(title: "确定撤回打卡?", rightClick: {
-        //            [weak self] in
-        //            guard let strongSelf = self else { return }
-        //            strongSelf.loadCancelData(section)
-        //        })
         YXSCommonAlertView.showAlert(title: "请确认", message: "您是否取消接龙？", rightClick: {
             [weak self] in
             guard let strongSelf = self else { return }
@@ -353,6 +222,7 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
         })
     }
     
+    // MARK: - getter
     lazy var bottomBtnView: YXSBottomBtnView = {
         let view = YXSBottomBtnView()
         view.isHidden = true
@@ -361,16 +231,285 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
         return view
     }()
     
-    // MARK: - Other
-    @objc func checkEmptyData() {
-        let list: [YXSClassMemberModel]
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            list = (headerSelectedIndex == 0 ? censusNoPartakeResponseList : censusPartakeResponseList) ?? [YXSClassMemberModel]()
-            
+    // MARK: - tableViewDelegate
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sectionDataRequestSucess ? 2 : 1
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 0
         } else {
-            list = (headerSelectedIndex == 0 ? censusPartakeResponseList : censusNoPartakeResponseList) ?? [YXSClassMemberModel]()
+            if detailModel?.type == 2{
+                return partakeResponseLists[headerSelectedIndex].count
+            }else{
+                return solitaireCollectorItems.count
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if detailModel?.type == 2{
+            let cModel = partakeResponseLists[headerSelectedIndex][indexPath.row]
+            return getApplyCell(indexPath: indexPath, cModel: cModel)
+            
+        }else{
+            let model = solitaireCollectorItems[indexPath.row]
+            var identifier = ""
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                switch model.type {
+                case .single, .checkbox:
+                    identifier = "YXSSolitaireCollectorTeacherDetiaSelectItemsCell"
+                case .image, .gap:
+                    identifier = "YXSSolitaireCollectorTeacherDetialNoSelectCell"
+                }
+                let cell: YXSSolitaireCollectorTeacherDetialBaseCell = tableView.dequeueReusableCell(withIdentifier: identifier) as! YXSSolitaireCollectorTeacherDetialBaseCell
+                cell.setCellModel(model, index: indexPath.row)
+                //                cell.refreshCell = {
+                //                    [weak self] in
+                //                    guard let strongSelf = self else { return }
+                //                    strongSelf.yxs_reloadTableView(indexPath)
+                //                }
+                //
+                cell.lookDetialBlock = {
+                    [weak self] (gatherTopicId,selectModel) in
+                    guard let strongSelf = self else { return }
+                    let vc = YXSSolitaireCollectorSetupDetailController(censusId: strongSelf.censusId ?? 0, gatherId: strongSelf.solitaireGatherHoldersModel?.gatherId ?? 0, gatherTopicId: gatherTopicId, option: selectModel?.leftText, type: model.type, classId: strongSelf.classId ?? 0)
+                    switch model.type {
+                    case .single, .checkbox:
+                        vc.title = "选项\(selectModel?.leftText ?? "")成员（\(selectModel?.gatherTopicCount ?? 0)人）"
+                    case .gap:
+                        vc.title = "填空题详情（\(model.gatherTopicCount ?? 0)人）"
+                    case .image:
+                        vc.title = "图片题详情（\(model.gatherTopicCount ?? 0)人）"
+                    }
+                    strongSelf.navigationController?.pushViewController(vc)
+                }
+                return cell
+            }
+            else{
+                let model = solitaireCollectorItems[indexPath.row]
+                switch model.type {
+                case .single, .checkbox:
+                    identifier = "YXSSolitaireCollectorPartentDetialSelectItemsCell"
+                case .image:
+                    identifier = "YXSSolitaireCollectorPartentDetialImageCell"
+                case .gap:
+                    identifier = "YXSSolitaireCollectorPartentDetialTextCell"
+                }
+                let cell: YXSSolitaireCollectorPartentDetialBaseCell = tableView.dequeueReusableCell(withIdentifier: identifier) as! YXSSolitaireCollectorPartentDetialBaseCell
+                cell.canEdit = canEdit
+                cell.setCellModel(model, index: indexPath.row)
+                cell.refreshCell = {
+                    [weak self] in
+                    guard let strongSelf = self else { return }
+                    strongSelf.yxs_reloadTableView(indexPath)
+                }
+                
+                cell.changeMedias = {
+                    [weak self] (meidas) in
+                    guard let strongSelf = self else { return }
+                    model.answerMedias = meidas
+                    strongSelf.yxs_reloadTableView(indexPath)
+                }
+                return cell
+            }
         }
         
+        
+    }
+    
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSSolitaireNewDetailHeaderView") as? YXSSolitaireNewDetailHeaderView
+            header?.setHeaderViewModel(detailModel: detailModel)
+            header?.videoTouchedBlock = { [weak self](url) in
+                guard let weakSelf = self else {return}
+                let vc = SLVideoPlayController()
+                vc.videoUrl = url
+                weakSelf.navigationController?.pushViewController(vc)
+            }
+            header?.pushToContainerBlock = { [weak self] in
+                guard let weakSelf = self else {return}
+                let vc = YXSSolitaireContainerController()
+                vc.detailModel = weakSelf.detailModel
+                //                vc.backClickBlock = { [weak self]()in
+                //                    guard let weakSelf = self else {return}
+                //                    weakSelf.ref
+                //                }
+                weakSelf.navigationController?.pushViewController(vc)
+            }
+            
+            return header
+            
+        } else {
+            if detailModel?.type == 2{
+                let header: YXSHomeworkReadListSectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkReadListSectionHeader") as! YXSHomeworkReadListSectionHeader
+                
+                header.btnTitle1.setTitle("参加\(partakeResponseLists[0].count)人", for: .normal)
+                header.btnTitle2.setTitle("不参加\(partakeResponseLists[1].count)人", for: .normal)
+                header.btnAlert.isHidden = true
+                
+                header.selectedIndex = headerSelectedIndex
+                
+                header.selectedBlock = {[weak self](index) in
+                    guard let weakSelf = self else {return}
+                    weakSelf.headerSelectedIndex = index
+                    weakSelf.tableView.reloadData()
+                    weakSelf.checkEmptyData()
+                }
+                
+                return header
+            }else{
+                let header: YXSSolitaireCollectorSectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSSolitaireCollectorSectionHeader") as! YXSSolitaireCollectorSectionHeader
+                return header
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if detailModel?.type == 2{
+            if headerSelectedIndex == 0{
+                let cModel = partakeResponseLists[headerSelectedIndex][indexPath.row]
+                let remark = (cModel.remark ?? "")
+                let remarkHeight: CGFloat =  UIUtil.yxs_getTextHeigh(textStr: remark, font: UIFont.systemFont(ofSize: 14), width: SCREEN_WIDTH - 15 - 15) + 13.5
+                return 17.5 + 41  + 16 + (remark.isEmpty ? 0 : remarkHeight)
+            }else{
+                return 60
+            }
+        }else{
+            let model = solitaireCollectorItems[indexPath.row]
+            return model.getCellDetialHeight(index: indexPath.row)
+        }
+    }
+    
+    
+}
+
+// MARK: - config data
+extension YXSSolitaireNewDetailController{
+    func configPartentCollectorData(){
+        if let solitaireGatherHoldersModel = solitaireGatherHoldersModel{
+            if let holders = solitaireGatherHoldersModel.gatherHolders{
+                var solitaireQuestions = [YXSSolitaireQuestionModel]()
+                for holder in holders{
+                    ///把服务器返回的题目model 转换为YXSSolitaireQuestionModel 并给值
+                    let questionModel = YXSSolitaireQuestionModel(questionType: holder.questionType)
+                    questionModel.questionStemText = holder.gatherHolderItem?.topicTitle
+                    questionModel.isNecessary = holder.gatherHolderItem?.isRequired ?? false
+                    questionModel.gatherTopicId = holder.gatherHolderItem?.gatherTopicId
+                    if let optionItems = holder.gatherHolderItem?.censusTopicOptionItems{
+                        var optionModels = [SolitairePublishNewSelectModel]()
+                        for (index, optionItem) in optionItems.enumerated(){
+                            let solitaireselectModel = SolitairePublishNewSelectModel()
+                            solitaireselectModel.index = index
+                            solitaireselectModel.title = optionItem.optionContext
+                            let mediaModel = SLPublishMediaModel()
+                            mediaModel.serviceUrl = optionItem.optionImage
+                            solitaireselectModel.mediaModel = mediaModel
+                            optionModels.append(solitaireselectModel)
+                        }
+                        questionModel.solitaireSelects = optionModels
+                    }
+                    
+                    ///把提交的回答 塞进展示的题目列表中
+                    if detailModel?.state == 20{
+                        for answer in censusCommitGatherResponseList{
+                            if answer.gatherTopicId == questionModel.gatherTopicId{
+                                
+                                switch questionModel.type {
+                                case .gap:
+                                    questionModel.answerContent = answer.option
+                                case .image:
+                                    let imgUrls = (answer.option ?? "").components(separatedBy: ",")
+                                    for imgurl in imgUrls{
+                                        if !imgurl.isEmpty{
+                                            let meidaModel = SLPublishEditMediaModel(isAddItem: false)
+                                            meidaModel.serviceUrl = imgurl
+                                            questionModel.answerMedias.append(meidaModel)
+                                        }
+                                    }
+                                case .checkbox, .single:
+                                    let selectOptions = (answer.option ?? "").components(separatedBy: ",")
+                                    if let solitaireSelects = questionModel.solitaireSelects{
+                                        for solitaireSelect in solitaireSelects{
+                                            for selectOption in selectOptions{
+                                                if solitaireSelect.leftText == selectOption{
+                                                    solitaireSelect.isSelected = true
+                                                    break	
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    
+                    ///是否需要初始化图片题目添加按钮
+                    if questionModel.type == .image && (detailModel?.state == 10 || questionModel.answerMedias.count < 9){
+                        questionModel.answerMedias.append(SLPublishEditMediaModel(isAddItem: true))
+                    }
+                    
+                    solitaireQuestions.append(questionModel)
+                }
+                solitaireCollectorItems = solitaireQuestions
+                
+                YXSCacheHelper.yxs_cacheSolitaireCollectorItems(dataSource: solitaireCollectorItems, censusId: censusId ?? 0, childrenId: childrenId ?? 0)
+            }
+        }
+        
+    }
+    
+    func configTeacherCollectorData(){
+        if let solitaireGatherHoldersModel = solitaireGatherHoldersModel{
+            if let holders = solitaireGatherHoldersModel.gatherHolders{
+                var solitaireQuestions = [YXSSolitaireQuestionModel]()
+                for holder in holders{
+                    ///把服务器返回的题目model 转换为YXSSolitaireQuestionModel 并给值
+                    let questionModel = YXSSolitaireQuestionModel(questionType: holder.questionType)
+                    questionModel.questionStemText = holder.gatherHolderItem?.topicTitle
+                    questionModel.isNecessary = holder.gatherHolderItem?.isRequired ?? false
+                    questionModel.gatherTopicId = holder.gatherHolderItem?.gatherTopicId
+                    questionModel.gatherTopicCount = holder.gatherHolderItem?.gatherTopicCount
+                    questionModel.ratio = holder.gatherHolderItem?.ratio
+                    if let optionItems = holder.gatherHolderItem?.censusTopicOptionItems{
+                        var optionModels = [SolitairePublishNewSelectModel]()
+                        for (index, optionItem) in optionItems.enumerated(){
+                            let solitaireselectModel = SolitairePublishNewSelectModel()
+                            solitaireselectModel.index = index
+                            solitaireselectModel.title = optionItem.optionContext
+                            solitaireselectModel.gatherTopicCount = optionItem.gatherTopicCount
+                            solitaireselectModel.ratio = optionItem.ratio
+                            let mediaModel = SLPublishMediaModel()
+                            mediaModel.serviceUrl = optionItem.optionImage
+                            solitaireselectModel.mediaModel = mediaModel
+                            optionModels.append(solitaireselectModel)
+                        }
+                        questionModel.solitaireSelects = optionModels
+                    }
+                    solitaireQuestions.append(questionModel)
+                }
+                solitaireCollectorItems = solitaireQuestions
+                
+                YXSCacheHelper.yxs_cacheSolitaireCollectorItems(dataSource: solitaireCollectorItems, censusId: censusId ?? 0, childrenId: childrenId ?? 0)
+            }
+            
+        }
+        
+    }
+}
+
+// MARK: - tool
+extension YXSSolitaireNewDetailController{
+    @objc func checkEmptyData() {
+        let list: [YXSClassMemberModel] = partakeResponseLists[headerSelectedIndex]
         if list.count == 0 {
             let footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_WIDTH))
             let imageView = UIImageView()
@@ -387,227 +526,321 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
         }
     }
     
-    // MARK: - tableViewDelegate
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionDataRequestSucess ? 2 : 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 0
-            
-        } else {
-            if detailModel?.type == 2{
-                return (headerSelectedIndex == 0 ? censusPartakeResponseList?.count : censusNoPartakeResponseList?.count) ?? 0
-            }else{
-                return solitairePartentCollectorItems.count
-            }
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            let list: [YXSClassMemberModel] = (headerSelectedIndex == 0 ? censusNoPartakeResponseList : censusPartakeResponseList) ?? [YXSClassMemberModel]()
-            let cModel = list[indexPath.row]
-            
-            if headerSelectedIndex == 0 {
-                let cell:YXSDetailContactCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailContactCell") as! YXSDetailContactCell
-                cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : cModel.realName
-                cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
-                cell.btnPhone.tag = indexPath.row
-                cell.btnChat.tag = indexPath.row
-                cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
-                cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
-                let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
-                cell.yxs_addLine(position: .bottom, color: cl, leftMargin: 0, rightMargin: 0, lineHeight: 0.5)
-                return cell
-                
-            } else {
-                let cell:YXSDetailAllTitleCell2 = tableView.dequeueReusableCell(withIdentifier: "YXSDetailAllTitleCell2") as! YXSDetailAllTitleCell2
-                cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : cModel.realName
-                cell.lbSubTitle.text = "\(cModel.commitTime?.yxs_DayTime() ?? "") \(cModel.option ?? "")"
-                cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
-                cell.btnPhone.tag = indexPath.row
-                cell.btnChat.tag = indexPath.row
-                cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
-                cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
-                let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
-                cell.yxs_addLine(position: .bottom, color: cl, leftMargin: 0, rightMargin: 0, lineHeight: 0.5)
-                return cell
-            }
-            
-        } else {
-            if detailModel?.type == 2{
-                let list: [YXSClassMemberModel] = (headerSelectedIndex == 0 ? censusPartakeResponseList : censusNoPartakeResponseList) ?? [YXSClassMemberModel]()
-                let cModel = list[indexPath.row]
-                
-                let isShowRecall = cModel.childrenId == childrenId
-                if isShowRecall{
-                    censusCommitId = cModel.censusCommitId
-                }
-                
-                if headerSelectedIndex == 0 {
-                    let cell:YXSDetailSubTitleBottomCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailSubTitleBottomCell") as! YXSDetailSubTitleBottomCell
-                    cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : cModel.realName
-                    cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
-                    cell.recallView.addTarget(self, action: #selector(recallClick), for: .touchUpInside)
-                    cell.recallView.isHidden = !isShowRecall
-                    cell.setRemarkTitle(remark: cModel.remark)
-                    return cell
-                    
-                } else {
-                    let cell:YXSDetailNormalRecallCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailNormalRecallCell") as! YXSDetailNormalRecallCell
-                    cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : cModel.realName
-                    cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
-                    cell.recallView.addTarget(self, action: #selector(recallClick), for: .touchUpInside)
-                    cell.recallView.isHidden = !isShowRecall
-                    return cell
-                }
-            }else{
-                let model = solitairePartentCollectorItems[indexPath.row]
-                let cell:YXSSolitaireCollectorPartentDetialCell = tableView.dequeueReusableCell(withIdentifier: "YXSSolitaireCollectorPartentDetialCell") as! YXSSolitaireCollectorPartentDetialCell
-                cell.setCellModel(model, index: indexPath.row)
-                cell.refreshCell = {
-                    [weak self] in
-                    guard let strongSelf = self else { return }
-                    strongSelf.tableView.reloadData()
-                }
-                return cell
-            }
-            
-        }
-    }
-
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 0 {
-            header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSSolitaireNewDetailHeaderView") as? YXSSolitaireNewDetailHeaderView
-            header?.avatarView.imgAvatar.sd_setImage(with: URL(string: detailModel?.teacherAvatar ?? ""), placeholderImage: kImageUserIconTeacherDefualtImage)
-            header?.titleLabel.text = detailModel?.title
-            header?.avatarView.lbTitle.text = detailModel?.teacherName//"王老师"
-            header?.avatarView.lbSubTitle.text = detailModel?.createTime?.yxs_Time()//"1小时前"
-            header?.dateView.title = "截止日期：\(detailModel?.endTime ?? "")"
-            let mModel = YXSMediaViewModel()
-            mModel.content = detailModel?.content
-            mModel.voiceUrl = detailModel?.audioUrl
-            mModel.voiceDuration = detailModel?.audioDuration
-            var imgs:[String]? = nil
-            if self.detailModel?.imageUrl?.count ?? 0 > 0 {
-                imgs = self.detailModel?.imageUrl?.components(separatedBy: ",")
-            }
-            mModel.images = imgs
-            mModel.videoUrl = detailModel?.videoUrl
-            mModel.bgUrl = detailModel?.bgUrl
-            header?.mediaView.model = mModel
-            //            header?.btnSolitaire.addTarget(self, action: #selector(yxs_solitaireClick(sender:)), for: .touchUpInside)
-            header?.videoTouchedBlock = { [weak self](url) in
-                guard let weakSelf = self else {return}
-                let vc = SLVideoPlayController()
-                vc.videoUrl = url
-                weakSelf.navigationController?.pushViewController(vc)
-            }
-            header?.linkView.strLink = detailModel?.link ?? ""
-            if detailModel?.link == nil || detailModel?.link?.count == 0 {
-                header?.linkView.isHidden = true
-                header?.linkView.snp.updateConstraints({ (make) in
-                    make.height.equalTo(0)
-                })
-                
-            } else {
-                header?.linkView.isHidden = false
-                header?.linkView.snp.updateConstraints({ (make) in
-                    make.height.equalTo(44)
-                })
-            }
-            header?.linkView.block = { (url) in
-                if url.count > 0 {
-                    let tmpStr = YXSObjcTool.shareInstance().getCompleteWebsite(url)
-                    if tmpStr.count > 0 {
-                        var charSet = CharacterSet.urlQueryAllowed
-                        charSet.insert(charactersIn: "#")
-                        charSet.insert(charactersIn: "%")
-                        let newUrl = tmpStr.addingPercentEncoding(withAllowedCharacters: charSet)!
-                        UIApplication.shared.openURL(URL(string: newUrl)!)
-                    } else {
-                        MBProgressHUD.yxs_showMessage(message: "无法打开该链接")
+    ///检查是否可以提交采集  可以提交会返回提交参数
+    func cheakCanSetup() -> Bool{
+        for (itemIndex, collectorItem) in solitaireCollectorItems.enumerated(){
+            var option: String = ""
+            switch collectorItem.type {
+            case .image:
+                var imgurls = [String]()
+                for (answerIndex, model) in collectorItem.answerMedias.enumerated(){
+                    if model.isAddItem{
+                        continue
                     }
-                } else {
-                    MBProgressHUD.yxs_showMessage(message: "无法打开该链接")
-                }
-            }
-            return header
-            
-        } else {
-            if detailModel?.type == 2{
-                let header: YXSHomeworkReadListSectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkReadListSectionHeader") as! YXSHomeworkReadListSectionHeader
-                
-                header.btnTitle1.setTitle("参加\(censusPartakeResponseList?.count ?? 0)人", for: .normal)
-                header.btnTitle2.setTitle("不参加\(censusNoPartakeResponseList?.count ?? 0)人", for: .normal)
-                
-                if YXSPersonDataModel.sharePerson.personRole == .TEACHER && headerSelectedIndex == 0 && censusNoPartakeResponseList?.count ?? 0 > 0 && detailModel?.state != 100 {
-                    header.btnAlert.isHidden = false
                     
-                } else {
-                    header.btnAlert.isHidden = true
+                    if let serviceUrl = model.serviceUrl{
+                        imgurls.append(serviceUrl)
+                    }else{
+                        imgurls.append("hasurl")
+                        let uploadPlaceModel = YXSSolitaireUploadPlaceholderModel(questionIndex: itemIndex, selectIndex: answerIndex, media: model)
+                        placeholderUrls.append(uploadPlaceModel)
+                    }
                 }
-                
-                header.selectedIndex = headerSelectedIndex
-                
-                header.selectedBlock = {[weak self](index) in
-                    guard let weakSelf = self else {return}
-                    weakSelf.headerSelectedIndex = index
-                    weakSelf.tableView.reloadData()
-                    weakSelf.checkEmptyData()
-                }
-                
-                header.alertClick = {[weak self](view) in
-                    guard let weakSelf = self else {return}
-                    weakSelf.reminderRequest()
-                }
-                return header
-            }else{
-                let header: YXSSolitaireCollectorSectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSSolitaireCollectorSectionHeader") as! YXSSolitaireCollectorSectionHeader
-                return header
-            }
-        }
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-    }
-
-
-}
-
-// MARK: - config data
-extension YXSSolitaireNewDetailController{
-    func configPartentCollectorData(){
-        if let solitaireGatherHoldersModel = solitaireGatherHoldersModel{
-            if let holders = solitaireGatherHoldersModel.gatherHolders{
-                var solitaireQuestions = [YXSSolitaireQuestionModel]()
-                for holder in holders{
-                    let questionModel = YXSSolitaireQuestionModel(questionType: holder.questionType)
-                    questionModel.questionStemText = holder.gatherHolderItem?.topicTitle
-                    questionModel.isNecessary = holder.gatherHolderItem?.isRequired ?? false
-                    if let optionItems = holder.gatherHolderItem?.censusTopicOptionItems{
-                        var optionModels = [SolitairePublishNewSelectModel]()
-                        for (index, optionItem) in optionItems.enumerated(){
-                            let solitaireselectModel = SolitairePublishNewSelectModel()
-                            solitaireselectModel.index = index
-                            solitaireselectModel.title = optionItem.optionContext
-                            let mediaModel = SLPublishMediaModel()
-                            mediaModel.serviceUrl = optionItem.optionImage
-                            solitaireselectModel.mediaModel = mediaModel
-                            optionModels.append(solitaireselectModel)
+                option = imgurls.joined(separator: ",")
+            case .gap:
+                option = collectorItem.answerContent ?? ""
+            case .single, .checkbox:
+                var selectOptions = [String]()
+                if let solitaireSelects = collectorItem.solitaireSelects{
+                    for solitaireSelect in solitaireSelects{
+                        if solitaireSelect.isSelected{
+                            selectOptions.append(solitaireSelect.leftText ?? "")
                         }
-                        questionModel.solitaireSelects = optionModels
                     }
-                    solitaireQuestions.append(questionModel)
                 }
-                solitairePartentCollectorItems = solitaireQuestions
+                option = selectOptions.joined(separator: ",")
+            }
+            if collectorItem.isNecessary && option.isEmpty{
+                MBProgressHUD.yxs_showMessage(message: "第\(itemIndex + 1)为必答题")
+                return false
+            }
+        }
+        return true
+    }
+    
+    func getSetupLists() -> [[String: Any]]{
+        var urls = placeholderUrls
+        var setupLists = [[String: Any]]()
+        for (itemIndex, collectorItem) in solitaireCollectorItems.enumerated(){
+            var setupItem = [String: Any]()
+            
+            setupItem["gatherTopicId"] = collectorItem.gatherTopicId ?? 0
+            var option: String = ""
+            switch collectorItem.type {
+            case .image:
+                var imgurls = [String]()
+                for (index, model) in collectorItem.answerMedias.enumerated(){
+                    if model.isAddItem{
+                        continue
+                    }
+                    
+                    if let serviceUrl = model.serviceUrl{
+                        imgurls.append(serviceUrl)
+                    }else{
+                        for (urlIndex, url) in urls.enumerated(){
+                            if url.questionIndex == itemIndex && url.selectIndex == index{
+                                imgurls.append(url.uploadUrl ?? "")
+                                urls.remove(at: urlIndex)
+                                break
+                            }
+                        }
+                    }
+                }
+                option = imgurls.joined(separator: ",")
+            case .gap:
+                option = collectorItem.answerContent ?? ""
+            case .single, .checkbox:
+                var selectOptions = [String]()
+                if let solitaireSelects = collectorItem.solitaireSelects{
+                    for solitaireSelect in solitaireSelects{
+                        if solitaireSelect.isSelected{
+                            selectOptions.append(solitaireSelect.leftText ?? "")
+                        }
+                    }
+                }
+                option = selectOptions.joined(separator: ",")
+            }
+            setupItem["option"] = option
+            setupLists.append(setupItem)
+        }
+        SLLog(setupLists)
+        self.placeholderUrls.removeAll()
+        return setupLists
+    }
+    
+    func setupApply(){
+        var optionLists = [YXSSelectModel]()
+        if let optionList = detailModel?.optionList{
+            for item in optionList{
+                optionLists.append(YXSSelectModel.init(text: item))
+            }
+            
+        }
+        YXSSolitaireSelectApplyView(items: optionLists, inTarget: self.view) {  [weak self] (view, index, remark) in
+            guard let weakSelf = self else {return}
+            MBProgressHUD.yxs_showLoading()
+            
+            var request: YXSBaseRequset!
+            var message = ""
+            request = YXSEducationCensusParentCommitRequest(censusId: weakSelf.censusId ?? 0, childrenId: weakSelf.childrenId ?? 0, option: weakSelf.detailModel?.optionList?[index] ?? "", remark: remark)
+            message = "接龙成功"
+            
+            request.request({ (json) in
+                MBProgressHUD.yxs_hideHUD()
+                MBProgressHUD.yxs_showMessage(message: message)
+                weakSelf.joinSucessDeal()
+                
+                weakSelf.yxs_refreshData()
+                
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.01) {
+                    view.cancelClick()
+                }
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
+        
+    }
+    
+    func setupCollector(){
+        if !cheakCanSetup(){
+            return
+        }
+        
+        var localMedias = [SLUploadSourceModel]()
+        for placeholderUrl in placeholderUrls{
+            localMedias.append(SLUploadSourceModel.init(model: placeholderUrl.media, type: .image, storageType: .temporary, fileName: placeholderUrl.media.fileName))
+            SLLog(placeholderUrl.media.fileName)
+            
+        }
+        //有本地资源上传
+        if localMedias.count != 0 {
+            MBProgressHUD.yxs_showUpload(inView: self.navigationController!.view)
+            YXSUploadSourceHelper().uploadMedia(mediaInfos: localMedias, progress: {
+                (progress)in
+                DispatchQueue.main.async {
+                    MBProgressHUD.yxs_updateUploadProgess(progess: progress, inView: self.navigationController!.view)
+                }
+            }, sucess: { (listModels) in
+                SLLog(listModels)
+                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+                for index in 0..<listModels.count{
+                    let placeholderUrl = self.placeholderUrls[index]
+                    placeholderUrl.uploadUrl = listModels[index].aliYunUploadBackUrl
+                    SLLog(listModels[index].aliYunUploadBackUrl)
+                }
+                self.loadSetupCollectorRequest(setUpItems: self.getSetupLists())
+            }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+                MBProgressHUD.yxs_showMessage(message: msg)
+                self.placeholderUrls.removeAll()
+            }
+        }else{
+            self.loadSetupCollectorRequest(setUpItems: self.getSetupLists())
+        }
+    }
+    
+    public func yxs_reloadTableView(_ indexPath: IndexPath?){
+        UIView.performWithoutAnimation {
+            ///存在当前indexPath
+            if let indexPath = indexPath{
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }else{
+                tableView.reloadData()
             }
         }
     }
     
+    func updateBottomView(){
+        if self.detailModel?.state == 100 {
+            self.bottomBtnView.btnCommit.setTitle("已结束", for: .disabled)
+            self.bottomBtnView.btnCommit.isEnabled = false
+            self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), cornerRadius: 21)
+        }
+        else if self.detailModel?.state == 10 {
+            self.bottomBtnView.btnCommit.setTitle("我来接龙", for: .normal)
+            self.bottomBtnView.btnCommit.isEnabled = true
+            self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 21)
+        }
+        else {
+            if detailModel?.type == 3{
+                self.bottomBtnView.btnCommit.setTitle("已接龙,重新提交", for: .normal)
+                self.bottomBtnView.btnCommit.isEnabled = true
+                self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#4B73F6"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#77A3F8"), cornerRadius: 21)
+            }else{
+                self.bottomBtnView.btnCommit.setTitle("已接龙", for: .normal)
+                self.bottomBtnView.btnCommit.isEnabled = false
+                self.bottomBtnView.btnCommit.yxs_gradualBackground(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH - 30, height: 42), startColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#E6E9F0"), cornerRadius: 21)
+            }
+        }
+        if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+            self.bottomBtnView.isHidden = false
+        }
+    }
+    
+    func joinSucessDeal(){
+        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationIdKey: self.censusId ?? 0])
+        UIUtil.yxs_reduceAgenda(serviceId: self.censusId ?? 0, info: [kEventKey:YXSHomeType.solitaire])
+    }
+    
+}
+
+// MARK: - Request
+extension YXSSolitaireNewDetailController{
+    func loadSetupCollectorRequest(setUpItems: [[String: Any]]){
+        MBProgressHUD.yxs_showLoading(inView: self.navigationController?.view)
+        if detailModel?.state == 10{
+            YXSEducationCensusParentCommitRequest(censusId: censusId ?? 0, childrenId: childrenId ?? 0, option: "调查", remark: "").request({ (json) in
+                YXSEducationCensusParentPartakeCommitRequest(censusId: self.censusId ?? 0, childrenId: self.childrenId ?? 0, censusGatherHolderItemRequestList: setUpItems).request({ (json) in
+                    MBProgressHUD.yxs_hideHUDInView(view: self.navigationController?.view)
+                    MBProgressHUD.yxs_showMessage(message: "参与成功")
+                    self.detailModel?.state = 20
+                    self.joinSucessDeal()
+                    self.updateBottomView()
+                }) { (msg, code) in
+                    MBProgressHUD.yxs_hideHUDInView(view: self.navigationController?.view)
+                    MBProgressHUD.yxs_showMessage(message: msg)
+                }
+            }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController?.view)
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }else{
+            YXSEducationCensusParentPartakeCommitRequest(censusId: censusId ?? 0, childrenId: childrenId ?? 0, censusGatherHolderItemRequestList: setUpItems).request({ (json) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController?.view)
+                self.joinSucessDeal()
+                MBProgressHUD.yxs_showMessage(message: "修改成功")
+            }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController?.view)
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        }
+    }
+    
+    @objc func recallRequest(){
+        MBProgressHUD.yxs_showLoading()
+        YXSEducationCensusParentWithdrawCommitRequest.init(censusId: censusId ?? 0, censusCommitId: censusCommitId ?? 0, childrenId: childrenId ?? 0).request({ (result) in
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationStudentCancelSolitaireNotification), object: [kNotificationIdKey: self.censusId ?? 0])
+            self.yxs_refreshData()
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
+    
+}
+
+
+// MARK: - UI
+extension YXSSolitaireNewDetailController{
+    func getApplyCell(indexPath: IndexPath, cModel: YXSClassMemberModel) -> UITableViewCell{
+        
+        let isShowRecall = cModel.childrenId == childrenId
+        if isShowRecall{
+            censusCommitId = cModel.censusCommitId
+        }
+        if headerSelectedIndex == 0 {
+            let cell:YXSDetailSubTitleBottomCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailSubTitleBottomCell") as! YXSDetailSubTitleBottomCell
+            cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : "\(cModel.realName ?? "")\(cModel.relationship?.yxs_RelationshipValue() ?? "")"
+            cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
+            cell.recallView.addTarget(self, action: #selector(recallClick), for: .touchUpInside)
+            cell.recallView.isHidden = !isShowRecall
+            cell.setRemarkTitle(remark: cModel.remark)
+            cell.btnPhone.tag = indexPath.row
+            cell.btnChat.tag = indexPath.row
+            cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
+            cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
+            return cell
+            
+        } else {
+            let cell:YXSDetailNormalRecallCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailNormalRecallCell") as! YXSDetailNormalRecallCell
+            cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : "\(cModel.realName ?? "")\(cModel.relationship?.yxs_RelationshipValue() ?? "")"
+            cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
+            cell.recallView.addTarget(self, action: #selector(recallClick), for: .touchUpInside)
+            cell.recallView.isHidden = !isShowRecall
+            cell.btnPhone.tag = indexPath.row
+            cell.btnChat.tag = indexPath.row
+            cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
+            cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
+            return cell
+        }
+        
+    }
+    
+    func setupRightBarButtonItem() {
+        let btnShare = YXSButton(frame: CGRect(x: 0, y: 0, width: 26, height: 26))
+        btnShare.setMixedImage(MixedImage(normal: "yxs_punchCard_share", night: "yxs_punchCard_share_white"), forState: .normal)
+        btnShare.setMixedImage(MixedImage(normal: "yxs_punchCard_share", night: "yxs_punchCard_share_white"), forState: .highlighted)
+        btnShare.addTarget(self, action: #selector(yxs_shareClick(sender:)), for: .touchUpInside)
+        let navShareItem = UIBarButtonItem(customView: btnShare)
+        self.navigationItem.rightBarButtonItems = [navShareItem]
+    }
+    
+    func initUI(){
+        if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+            self.view.addSubview(bottomBtnView)
+            bottomBtnView.snp.makeConstraints({ (make) in
+                make.left.equalTo(0)
+                make.right.equalTo(0)
+                make.bottom.equalTo(0)
+                make.height.equalTo(62)
+            })
+            self.tableView.snp.remakeConstraints { (make) in
+                make.top.equalTo(0)
+                make.left.equalTo(0)
+                make.right.equalTo(0)
+                make.bottom.equalTo(self.bottomBtnView.snp_top)
+            }
+        }
+        setupRightBarButtonItem()
+    }
 }

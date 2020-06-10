@@ -83,7 +83,7 @@ class YXSFriendPublishController: YXSCommonPublishBaseController {
     // MARK: -loadData
     override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
         var classIdList = [Int]()
-        let content:String = publishModel.publishText!
+        let content:String = publishModel.publishContent!
         var picture: String = ""
         var video: String = ""
         var pictures = [String]()
