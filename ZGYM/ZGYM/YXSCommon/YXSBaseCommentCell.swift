@@ -14,7 +14,6 @@ class YXSBaseCommentCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9"), night: UIColor.yxs_hexToAdecimalColor(hex: "#292B3A"))
         contentView.addSubview(comentLabel)
-        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9"), night: UIColor.yxs_hexToAdecimalColor(hex: "#292B3A"))
         let longTap = UILongPressGestureRecognizer.init(target: self, action: #selector(longTap(_:)))
         contentView.addGestureRecognizer(longTap)
         

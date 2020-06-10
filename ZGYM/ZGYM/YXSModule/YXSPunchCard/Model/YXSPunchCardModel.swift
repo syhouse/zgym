@@ -103,7 +103,7 @@ class YXSPunchCardModel : NSObject, NSCopying, NSCoding, Mappable{
     var hasPunchFinish: Bool{
         get{
             if let state = state{
-                if state == 100 || (endTime?.yxs_Date().timeIntervalSince1970 ?? 0) < Date().timeIntervalSince1970{
+                if state == 100{
                     return true
                 }
             }

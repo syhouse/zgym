@@ -68,9 +68,10 @@ class YXSScanViewController: YXSLBXScanViewController {
         let XRetangleLeft = scanStyle?.xScanRetangleOffset ?? 60
         let size = SCREEN_WIDTH - XRetangleLeft * 2.0
         let SLaxRetangle = (SCREEN_HEIGHT - size)/2 + size - (scanStyle?.centerUpOffset ?? 60)
+        
         view.addSubview(btnFlashControl)
         btnFlashControl.snp.makeConstraints { (make) in
-            make.bottom.equalTo( -(SCREEN_HEIGHT - SLaxRetangle) + 10)
+            make.top.equalTo(SLaxRetangle + 10)
             make.centerX.equalTo(view)
             make.width.equalTo(60)
         }
