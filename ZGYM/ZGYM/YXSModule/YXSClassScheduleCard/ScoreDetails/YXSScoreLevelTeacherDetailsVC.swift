@@ -95,6 +95,7 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "YXSScoreLevelTeacherListCell") as! YXSScoreLevelTeacherListCell
+        cell.selectionStyle = .none
         if dataSource.count > indexPath.row {
             let model = dataSource[indexPath.row]
             if indexPath.row == (dataSource.count - 1) {
@@ -119,7 +120,7 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
     
     // MARK: -列表为空
     override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
-        return showEmptyDataSource
+        return true
     }
     
     override func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView) -> Bool {

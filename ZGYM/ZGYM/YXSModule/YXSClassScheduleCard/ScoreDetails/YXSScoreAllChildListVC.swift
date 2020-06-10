@@ -96,6 +96,7 @@ class YXSScoreAllChildListVC: YXSBaseTableViewController {
             let model = dataSource[indexPath.row]
             let vc = YXSScoreNumParentDetailsVC.init(childModel: model)
             vc.examId = self.detailsModel?.examId ?? 0
+            vc.classId = self.detailsModel?.classId ?? 0
             vc.childrenId = model.childrenId ?? 0
             self.navigationController?.pushViewController(vc)
         }
@@ -108,7 +109,7 @@ class YXSScoreAllChildListVC: YXSBaseTableViewController {
     
     // MARK: -列表为空
     override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
-        return showEmptyDataSource
+        return true
     }
     
     override func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView) -> Bool {

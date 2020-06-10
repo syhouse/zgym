@@ -13,6 +13,7 @@ import FDFullscreenPopGesture_Bell
 class YXSScoreBaseDetailsVC: YXSBaseViewController {
     var examId: Int = 0
     var childrenId: Int = 0
+    var classId: Int = 0
     override init() {
         super.init()
     }

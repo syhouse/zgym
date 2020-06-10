@@ -60,7 +60,11 @@ class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
                 self.yxs_pushChatVC(imId: self.detailsModel?.teacherImId ?? "")
             }
         }
-
+        headerView.contactClickBlock = {
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                UIUtil.yxs_chatImRequest(childrenId: self.detailsModel?.childrenId ?? 0, classId: self.classId)
+            }
+        }
         
         chartView.lookOneSubjectsBlock = {
             let vc = YXSScoreSingleSubjectListVC.init(examId: self.detailsModel?.examId ?? 0, childId: self.detailsModel?.childrenId ?? 0)

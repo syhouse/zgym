@@ -145,21 +145,32 @@
                 [self wzb_drawRectWithRect:frame];
             } else {
                 // 画线
-                if (j < newLine - 1 || i == 0) {
+                if (j < columns - 1 || i == 0) {
                     [self wzb_drawRectWithRect:frame];
                 } else {
-                    if (i == 1) {
-                        if (i == columns - 1) {
-                            [self wzb_drawRectWithRect:frame];
-                        } else {
-                            [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:YES];
-                        }
-                        
-                    } else if (i == columns - 1) {
-                        [self wzb_drawRectWithRect:frame isHorizontalBottom:YES isHorizontalTop:NO];
+                    // 最后一列 总分数值需要特殊处理，合并单元格
+                    if (newLine == 2) {
+                        //只有2行，不做处理
+                        [self wzb_drawRectWithRect:frame];
                     } else {
-                        [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:NO];
+                        if (i == 1) {
+                            // 第二行的总分顶部有线
+                            [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:YES];
+//                            if (j == newLine - 1) {
+//                                [self wzb_drawRectWithRect:frame];
+//                            } else {
+//                                [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:YES];
+//                            }
+                            
+                        } else if (i == newLine - 1) {
+                            // 最后一行底部有线
+                            [self wzb_drawRectWithRect:frame isHorizontalBottom:YES isHorizontalTop:NO];
+                        } else {
+                            // 中间全部没有线
+                            [self wzb_drawRectWithRect:frame isHorizontalBottom:NO isHorizontalTop:NO];
+                        }
                     }
+                    
                     [label setBackgroundColor:[UIColor whiteColor]];
                     label.textColor = [UIColor blackColor];
                 }

@@ -57,7 +57,7 @@ class YXSScoreChildBarChartView: UIView {
                     make.bottom.equalTo(echelonLbl.snp_top).offset(-20)
                     make.right.equalTo(-15)
                     make.top.equalTo(90)
-                    make.height.equalTo(180)
+                    make.height.equalTo(220)
                 }
             } else {
                 lookSubjectsControl.isHidden = true
@@ -79,7 +79,7 @@ class YXSScoreChildBarChartView: UIView {
                     make.bottom.equalTo(echelonLbl.snp_top).offset(-20)
                     make.right.equalTo(-15)
                     make.top.equalTo(90)
-                    make.height.equalTo(180)
+                    make.height.equalTo(220)
                 }
             }
         } else {
@@ -94,7 +94,7 @@ class YXSScoreChildBarChartView: UIView {
                 make.bottom.equalTo(-30)
                 make.right.equalTo(-15)
                 make.top.equalTo(90)
-                make.height.equalTo(180)
+                make.height.equalTo(220)
             }
         }
     }
@@ -156,7 +156,7 @@ class YXSScoreChildBarChartView: UIView {
                 make.bottom.equalTo(echelonLbl.snp_top).offset(-20)
                 make.right.equalTo(-15)
                 make.top.equalTo(90)
-                make.height.equalTo(180)
+                make.height.equalTo(220)
             }
         } else {
             commentLbl.isHidden = true
@@ -167,7 +167,7 @@ class YXSScoreChildBarChartView: UIView {
                 make.bottom.equalTo(-30)
                 make.right.equalTo(-15)
                 make.top.equalTo(90)
-                make.height.equalTo(180)
+                make.height.equalTo(220)
             }
         }
     }
@@ -280,7 +280,7 @@ class YXSScoreChildBarChartView: UIView {
     
     lazy var barChartView: SSWBarChartView = {
         let chartView = SSWBarChartView.init(chartType: SSWChartsType.bar)
-        chartView?.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9")
+//        chartView?.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9")
         chartView?.barCorlor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
         chartView?.yAxisCount = 5
         chartView?.yScaleValue = 4

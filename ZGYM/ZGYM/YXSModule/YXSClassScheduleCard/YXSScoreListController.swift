@@ -161,7 +161,7 @@ class YXSScoreListController: YXSBaseTableViewController{
     
     // MARK: -列表为空
     override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
-        return showEmptyDataSource
+        return true
     }
     
     override func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView) -> Bool {

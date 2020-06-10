@@ -69,6 +69,7 @@
 -(UIView *)contentView{
     if (!_contentView) {
         _contentView = [[UIView alloc]init];
+        _contentView.backgroundColor = [UIColor colorWithRed:243/255.0 green:245/255.0 blue:249/255.0 alpha:1];
 //        _contentView.clipsToBounds = YES;
     }
     return _contentView;
@@ -137,33 +138,42 @@
 //画坐标轴
 -(void)drawAxis{
     UIBezierPath   *path = [UIBezierPath bezierPath];
-    //先画整体的线
-    [path moveToPoint:CGPointMake(0, 0)];
-    [path addLineToPoint:CGPointMake(0, _totalHeight)];
-    [path addLineToPoint:CGPointMake(_totalWidth, _totalHeight)];
-    //画左上角的箭头
-    [path moveToPoint:CGPointMake(-5, 5)];
-    [path addLineToPoint:CGPointMake(0, 0)];
-    [path addLineToPoint:CGPointMake(5, 5)];
-    //画右上角的箭头
-    [path moveToPoint:CGPointMake(_totalWidth-5, _totalHeight-5)];
-    [path addLineToPoint:CGPointMake(_totalWidth, _totalHeight)];
-    [path addLineToPoint:CGPointMake(_totalWidth-5, _totalHeight+5)];
-    //画y轴刻度
-    for (int i = 1; i<self.yAxisCount; i++) {
+    for (int i = 0; i < self.yAxisCount + 1; i++) {
         [path moveToPoint:CGPointMake(0, i*(_totalHeight/self.yAxisCount))];
-        [path addLineToPoint:CGPointMake(5, i*(_totalHeight/self.yAxisCount))];
+        [path addLineToPoint:CGPointMake(_totalWidth, i*(_totalHeight/self.yAxisCount))];
     }
+    
+    
+    
+//    UIBezierPath   *path = [UIBezierPath bezierPath];
+//    //先画整体的线
+//    [path moveToPoint:CGPointMake(0, 0)];
+//    [path addLineToPoint:CGPointMake(0, _totalHeight)];
+//    [path addLineToPoint:CGPointMake(_totalWidth, _totalHeight)];
+//    //画左上角的箭头
+//    [path moveToPoint:CGPointMake(-5, 5)];
+//    [path addLineToPoint:CGPointMake(0, 0)];
+//    [path addLineToPoint:CGPointMake(5, 5)];
+//    //画右上角的箭头
+//    [path moveToPoint:CGPointMake(_totalWidth-5, _totalHeight-5)];
+//    [path addLineToPoint:CGPointMake(_totalWidth, _totalHeight)];
+//    [path addLineToPoint:CGPointMake(_totalWidth-5, _totalHeight+5)];
+//    //画y轴刻度
+//    for (int i = 1; i<self.yAxisCount; i++) {
+//        [path moveToPoint:CGPointMake(0, i*(_totalHeight/self.yAxisCount))];
+//        [path addLineToPoint:CGPointMake(5, i*(_totalHeight/self.yAxisCount))];
+//    }
     //画x轴的刻度
     for (int i = 0; i<self.xValuesArr.count; i++) {
         CGPoint  startPoint = CGPointMake(i*(self.barWidth+self.gapWidth)+self.gapWidth+self.barWidth/2, _totalHeight);
         [self.barsStartPointsArr addObject:[NSValue valueWithCGPoint:startPoint]];
-        [path moveToPoint:startPoint];
-        [path addLineToPoint:CGPointMake(i*(self.barWidth+self.gapWidth)+self.gapWidth+self.barWidth/2, _totalHeight-5)];
+//        [path moveToPoint:startPoint];
+//        [path addLineToPoint:CGPointMake(i*(self.barWidth+self.gapWidth)+self.gapWidth+self.barWidth/2, _totalHeight-5)];
     }
     
     CAShapeLayer   *lineLayer = [CAShapeLayer layer];
-    lineLayer.strokeColor = [UIColor grayColor].CGColor;
+//     [UIColor grayColor].CGColor;
+    lineLayer.strokeColor = [UIColor colorWithRed:230/255.0 green:234/255.0 blue:243/255.0 alpha:1].CGColor;
     lineLayer.lineWidth = 1;
     lineLayer.path = path.CGPath;
     lineLayer.fillColor = [UIColor clearColor].CGColor;
@@ -178,9 +188,16 @@
         lab.frame = CGRectMake(-5, (self.yAxisCount-i)*(_totalHeight/self.yAxisCount)-10, -25, 20);
         lab.text = [NSString stringWithFormat:@"%.f",yAxis];
         lab.font = [UIFont systemFontOfSize:10];
+        lab.textColor = [UIColor colorWithRed:137/255.0 green:143/255.0 blue:154/255.0 alpha:1];
         lab.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:lab];
     }
+    UILabel   *lbl = [[UILabel alloc]initWithFrame:CGRectMake(-5, _totalHeight-10, -25, 20)];
+    lbl.text = @"0";
+    lbl.font = [UIFont systemFontOfSize:10];
+    lbl.textColor = [UIColor colorWithRed:137/255.0 green:143/255.0 blue:154/255.0 alpha:1];
+    lbl.textAlignment = NSTextAlignmentRight;
+    [self.contentView addSubview:lbl];
 }
 //给x轴添加刻度显示
 -(void)addXAxisLabs{
@@ -191,6 +208,7 @@
         lab.center = CGPointMake(point.x, point.y+lab.bounds.size.height/2);
         lab.text = [NSString stringWithFormat:@"%@",self.xValuesArr[i]];
         lab.font = [UIFont systemFontOfSize:10];
+        lab.textColor = [UIColor colorWithRed:137/255.0 green:143/255.0 blue:154/255.0 alpha:1];
         lab.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:lab];
     }
@@ -242,7 +260,7 @@
         lab.center = CGPointMake(point.x, point.y-10);
         [self.contentView addSubview:lab];
         if (self.signIndexY == i){
-            self.signView.center = CGPointMake(point.x, point.y-40);
+            self.signView.center = CGPointMake(point.x, point.y-45);
             [self.contentView addSubview:self.signView];
         }
     }

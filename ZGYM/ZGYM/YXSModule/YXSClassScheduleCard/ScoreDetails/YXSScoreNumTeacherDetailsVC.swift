@@ -67,7 +67,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         contentView.snp.makeConstraints { (make) in
             make.left.equalTo(15)
             make.right.equalTo(-15)
-            make.height.equalTo(570*SCREEN_SCALE) //370
+            make.height.equalTo(420*SCREEN_SCALE) //370
             make.top.equalTo(headerView.snp_bottom).offset(8)
         }
         leftConnectionImgV.snp.makeConstraints { (make) in
@@ -366,7 +366,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
     
     lazy var barChartView: SSWBarChartView = {
         let chartView = SSWBarChartView.init(chartType: SSWChartsType.bar)
-        chartView?.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9")
+//        chartView?.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#F3F5F9")
         chartView?.barCorlor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
         chartView?.yAxisCount = 5
         chartView?.yScaleValue = 4
