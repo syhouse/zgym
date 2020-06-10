@@ -47,7 +47,7 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
         tableView.register(YXSScoreLevelTeacherListCell.self, forCellReuseIdentifier: "YXSScoreLevelTeacherListCell")
         tableView.tableHeaderView = self.tableHeaderView
         if let dateStr = listModel?.creationTime, dateStr.count > 0 {
-            self.tableHeaderView.headerExmTimeLbl.text = "考试时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
+            self.tableHeaderView.headerExmTimeLbl.text = "发布时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
         }
         self.tableHeaderView.headerClassNameLbl.text = listModel?.className
     }
@@ -78,6 +78,7 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
             weakSelf.dataSource += joinList
             weakSelf.loadMore = json["hasNext"].boolValue
             weakSelf.tableView.reloadData()
+            weakSelf.tableHeaderView.isHidden = false
         }) { (msg, code) in
             self.yxs_endingRefresh()
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -143,6 +144,7 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
     
     lazy var tableHeaderView: YXSScoreLevelTeacherTableHeaderView = {
         let view = YXSScoreLevelTeacherTableHeaderView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 242 + 19))
+        view.isHidden = true
         return view
     }()
     
@@ -266,7 +268,7 @@ class YXSScoreLevelTeacherTableHeaderView: UIView {
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
         return lbl
     }()
-    /// 考试时间
+    /// 发布时间
     lazy var headerExmTimeLbl: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.systemFont(ofSize: 15)
@@ -277,8 +279,9 @@ class YXSScoreLevelTeacherTableHeaderView: UIView {
     
     lazy var bottomView: UIView = {
         let view = UIView()
+        view.layer.masksToBounds = true
         view.backgroundColor = UIColor.white
-        view.yxs_addRoundedCorners(corners: [.topLeft,.topRight], radii: CGSize.init(width: 2.5, height: 2.5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height:25))
+        view.yxs_addRoundedCorners(corners: [.topLeft,.topRight], radii: CGSize.init(width: 5, height: 5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height:25))
         return view
     }()
 }

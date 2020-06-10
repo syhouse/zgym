@@ -108,7 +108,7 @@
     _totalWidth= self.gapWidth+(self.barWidth+self.gapWidth)*self.xValuesArr.count;
     _totalHeight=self.scrollView.bounds.size.height-30-10;
     self.scrollView.contentSize = CGSizeMake(30+_totalWidth, 0);
-    self.contentView.frame = CGRectMake(30,10, _totalWidth,_totalHeight);
+    self.contentView.frame = CGRectMake(15,10, _totalWidth,_totalHeight);
     [self drawBarsChart];
 }
 -(void)drawBarsChart{
@@ -182,22 +182,22 @@
 }
 //给y轴添加刻度显示
 -(void)addYAxisLabs{
-    for (int i =self.yAxisCount ; i>0; i--) {
-        CGFloat   yAxis = self.yScaleValue*i;
-        UILabel  *lab = [[UILabel alloc]init];
-        lab.frame = CGRectMake(-5, (self.yAxisCount-i)*(_totalHeight/self.yAxisCount)-10, -25, 20);
-        lab.text = [NSString stringWithFormat:@"%.f",yAxis];
-        lab.font = [UIFont systemFontOfSize:10];
-        lab.textColor = [UIColor colorWithRed:137/255.0 green:143/255.0 blue:154/255.0 alpha:1];
-        lab.textAlignment = NSTextAlignmentRight;
-        [self.contentView addSubview:lab];
-    }
-    UILabel   *lbl = [[UILabel alloc]initWithFrame:CGRectMake(-5, _totalHeight-10, -25, 20)];
-    lbl.text = @"0";
-    lbl.font = [UIFont systemFontOfSize:10];
-    lbl.textColor = [UIColor colorWithRed:137/255.0 green:143/255.0 blue:154/255.0 alpha:1];
-    lbl.textAlignment = NSTextAlignmentRight;
-    [self.contentView addSubview:lbl];
+//    for (int i =self.yAxisCount ; i>0; i--) {
+//        CGFloat   yAxis = self.yScaleValue*i;
+//        UILabel  *lab = [[UILabel alloc]init];
+//        lab.frame = CGRectMake(-5, (self.yAxisCount-i)*(_totalHeight/self.yAxisCount)-10, -25, 20);
+//        lab.text = [NSString stringWithFormat:@"%.f",yAxis];
+//        lab.font = [UIFont systemFontOfSize:10];
+//        lab.textColor = [UIColor colorWithRed:137/255.0 green:143/255.0 blue:154/255.0 alpha:1];
+//        lab.textAlignment = NSTextAlignmentRight;
+//        [self.contentView addSubview:lab];
+//    }
+//    UILabel   *lbl = [[UILabel alloc]initWithFrame:CGRectMake(-5, _totalHeight-10, -25, 20)];
+//    lbl.text = @"0";
+//    lbl.font = [UIFont systemFontOfSize:10];
+//    lbl.textColor = [UIColor colorWithRed:137/255.0 green:143/255.0 blue:154/255.0 alpha:1];
+//    lbl.textAlignment = NSTextAlignmentRight;
+//    [self.contentView addSubview:lbl];
 }
 //给x轴添加刻度显示
 -(void)addXAxisLabs{
@@ -206,7 +206,7 @@
         UILabel   *lab = [[UILabel alloc]init];
         lab.bounds = CGRectMake(0, 0, self.barWidth+self.gapWidth*4/5, 20);
         lab.center = CGPointMake(point.x, point.y+lab.bounds.size.height/2);
-        lab.text = [NSString stringWithFormat:@"%@",self.xValuesArr[i]];
+        lab.text = [NSString stringWithFormat:@"%@分",self.xValuesArr[i]];
         lab.font = [UIFont systemFontOfSize:10];
         lab.textColor = [UIColor colorWithRed:137/255.0 green:143/255.0 blue:154/255.0 alpha:1];
         lab.textAlignment = NSTextAlignmentCenter;
@@ -247,6 +247,12 @@
     if (self.signDescribe.length > 0){
         self.signView.hidden = NO;
         self.signDescribeLbl.text = self.signDescribe;
+        if (self.signDescribe.length > 4) {
+            NSString *describe = [self.signDescribe substringToIndex:4];
+            self.signDescribeLbl.text = describe;
+        } else {
+            self.signDescribeLbl.text = self.signDescribe;
+        }
         self.signValueLbl.text = self.signValues;
     }
     for (int i = 0; i<self.xValuesArr.count; i++) {
@@ -268,15 +274,15 @@
 
 - (UIView *)signView {
     if (!_signView) {
-        _signView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 60, 50)];
-        UIImageView *imgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 50)];
+        _signView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 50, 40)];
+        UIImageView *imgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 40)];
         imgV.image = [UIImage imageNamed:@"yxs_score_bubbles"];
         imgV.contentMode = UIViewContentModeScaleAspectFit;
         [_signView addSubview:imgV];
         [_signView addSubview:self.signDescribeLbl];
         [_signView addSubview:self.signValueLbl];
-        self.signDescribeLbl.frame = CGRectMake(1, 1, 60, 20);
-        self.signValueLbl.frame = CGRectMake(1, 21, 60, 20);
+        self.signDescribeLbl.frame = CGRectMake(1, 3, 48, 15);
+        self.signValueLbl.frame = CGRectMake(1, 18, 48, 15);
         _signView.hidden = YES;
     }
     return _signView;
@@ -286,7 +292,7 @@
     if (!_signDescribeLbl) {
         _signDescribeLbl = [[UILabel alloc] init];
         _signDescribeLbl.textColor = [UIColor whiteColor];
-        _signDescribeLbl.font = [UIFont systemFontOfSize:13];
+        _signDescribeLbl.font = [UIFont systemFontOfSize:11];
         _signDescribeLbl.textAlignment = NSTextAlignmentCenter;
     }
     return _signDescribeLbl;
@@ -296,7 +302,7 @@
     if (!_signValueLbl) {
         _signValueLbl = [[UILabel alloc] init];
         _signValueLbl.textColor = [UIColor whiteColor];
-        _signValueLbl.font = [UIFont systemFontOfSize:13];
+        _signValueLbl.font = [UIFont systemFontOfSize:11];
         _signValueLbl.textAlignment = NSTextAlignmentCenter;
     }
     return _signValueLbl;

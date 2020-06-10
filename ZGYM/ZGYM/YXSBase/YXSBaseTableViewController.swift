@@ -254,6 +254,10 @@ extension YXSBaseScrollViewController{
             }
             
         }
+        else if event == .score {
+            let popView = YXSScorePublishView.init(frame: CGRect(x: 0, y: 0, width: 260*SCREEN_SCALE, height: 305*SCREEN_SCALE))
+            popView.showIn(target: UIUtil.RootController().view)
+        }
         
     }
 }

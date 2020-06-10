@@ -258,7 +258,7 @@ class YXSScoreChildBarChartView: UIView {
         }
         
         let count: Int = xArr.count
-        let gapWidth = ((Int(SCREEN_WIDTH) - 90 - 15) - 35 * count) / (count+1)
+        let gapWidth = ((Int(SCREEN_WIDTH) - 90) - 35 * count) / (count+1)
         barChartView.gapWidth = CGFloat(gapWidth)
         barChartView.reloadData()
         

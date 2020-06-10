@@ -103,7 +103,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
             self.detailsModel = model
             self.headerClassNameLbl.text = model.className ?? ""
             if let dateStr = model.creationTime, dateStr.count > 0 {
-                self.headerExmTimeLbl.text = "考试时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
+                self.headerExmTimeLbl.text = "发布时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
             }
             self.highestScoreLbl.text = "\(String(model.highestScore ?? 0))分"
             self.averageScoreLbl.text = "\(String(model.averageScore ?? 0))分"
@@ -149,7 +149,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
             barChartView.yScaleValue = CGFloat(maxY / 4)
         }
         let count: Int = xArr.count
-        let gapWidth = ((Int(SCREEN_WIDTH) - 90 - 15) - 35 * count) / (count+1)
+        let gapWidth = ((Int(SCREEN_WIDTH) - 90) - 35 * count) / (count+1)
         barChartView.gapWidth = CGFloat(gapWidth)
         barChartView.reloadData()
     }
@@ -262,7 +262,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
         return lbl
     }()
-    /// 考试时间
+    /// 发布时间
     lazy var headerExmTimeLbl: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.systemFont(ofSize: 15)
@@ -371,7 +371,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         chartView?.yAxisCount = 5
         chartView?.yScaleValue = 4
         chartView?.barWidth = 35
-        let gapWidth = ((SCREEN_WIDTH - 90 - 15) - 35 * 5) / 6
+        let gapWidth = ((SCREEN_WIDTH - 90) - 35 * 5) / 6
         chartView?.gapWidth = gapWidth  //30*SCREEN_SCALE
         return chartView!
     }()

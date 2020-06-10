@@ -10,9 +10,9 @@ import UIKit
 import SnapKit
 import NightNight
 
-private var texts = ["通知", "作业", "班级之星", "打卡", "接龙"]
-private var images = [kNoticeKey, kHomeworkKey, kClassStartKey,kPunchCardKey,  kSolitaireKey]
-private var actions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire]
+private var texts = ["通知", "作业", "班级之星", "打卡", "接龙", "成绩"]
+private var images = [kNoticeKey, kHomeworkKey, kClassStartKey,kPunchCardKey,  kSolitaireKey, kScoreKey]
+private var actions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .score]
 private let controlViewOrginTag = 101
 class YXSHomePublishView: UIView {
     
@@ -39,9 +39,9 @@ class YXSHomePublishView: UIView {
 //            actions = [.friendCicle, .classstart, .notice, .punchCard, .solitaire]
             
         }else{
-            texts = ["通知", "作业", "班级之星","打卡", "接龙" ]
-            images = [kNoticeKey, kHomeworkKey, kClassStartKey,kPunchCardKey,  kSolitaireKey]
-            actions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire]
+            texts = ["通知", "作业", "班级之星","打卡", "接龙", "成绩"]
+            images = [kNoticeKey, kHomeworkKey, kClassStartKey,kPunchCardKey,  kSolitaireKey, kScoreKey]
+            actions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .score]
         }
         
         

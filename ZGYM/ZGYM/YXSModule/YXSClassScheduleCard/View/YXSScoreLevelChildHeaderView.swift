@@ -174,7 +174,7 @@ class YXSScoreLevelChildHeaderView: UIView {
         if YXSPersonDataModel.sharePerson.personRole == .PARENT {
             headerChildNameLbl.text = model.childrenName
             if let dateStr = model.creationTime, dateStr.count > 0 {
-                headerExmTimeLbl.text =  "考试时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
+                headerExmTimeLbl.text =  "发布时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
             }
             if let list = model.hierarchySubjectsResponseList, list.count > 1 {
                 //多科
@@ -294,7 +294,7 @@ class YXSScoreLevelChildHeaderView: UIView {
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#212121")
         return lbl
     }()
-    /// 考试时间
+    /// 发布时间
     lazy var headerExmTimeLbl: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.systemFont(ofSize: 15)

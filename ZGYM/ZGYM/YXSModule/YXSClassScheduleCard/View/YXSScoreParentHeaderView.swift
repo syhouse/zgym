@@ -98,7 +98,7 @@ class YXSScoreParentHeaderView: UIView {
         if YXSPersonDataModel.sharePerson.personRole == .PARENT {
             headerChildNameLbl.text = model.childrenName
             if let dateStr = model.creationTime, dateStr.count > 0 {
-                headerExmTimeLbl.text =  "考试时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
+                headerExmTimeLbl.text =  "发布时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
             }
             last = headerExmTimeLbl
         } else {
@@ -197,7 +197,7 @@ class YXSScoreParentHeaderView: UIView {
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#222222")
         return lbl
     }()
-    /// 考试时间
+    /// 发布时间
     lazy var headerExmTimeLbl: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.systemFont(ofSize: 15)

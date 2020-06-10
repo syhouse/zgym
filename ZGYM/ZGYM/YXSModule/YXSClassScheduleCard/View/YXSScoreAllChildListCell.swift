@@ -28,11 +28,11 @@ class YXSScoreAllChildListCell: UITableViewCell {
         numberLbl.snp.makeConstraints { (make) in
             make.centerX.equalTo(numberImageV.snp_centerX)
             make.centerY.equalTo(contentView.snp_centerY)
-            make.width.equalTo(20)
+//            make.width.equalTo(20)
             make.height.equalTo(20)
         }
         avatarImageV.snp.makeConstraints { (make) in
-            make.left.equalTo(numberLbl.snp_right).offset(8)
+            make.left.equalTo(numberImageV.snp_right).offset(8)
             make.centerY.equalTo(contentView.snp_centerY)
             make.size.equalTo(CGSize(width: 40, height: 40))
         }

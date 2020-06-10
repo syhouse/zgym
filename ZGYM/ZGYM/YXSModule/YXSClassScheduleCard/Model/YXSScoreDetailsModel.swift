@@ -16,7 +16,7 @@ class YXSScoreDetailsModel: NSObject, Mappable {
     var classId: Int?
     ///班级名称
     var className: String?
-    ///考试时间（yyyy-MM-dd HH:mm:ss）
+    ///发布时间（yyyy-MM-dd HH:mm:ss）
     var creationTime: String?
     ///考试ID
     var examId: Int?
