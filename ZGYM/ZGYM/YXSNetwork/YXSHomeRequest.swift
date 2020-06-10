@@ -109,3 +109,44 @@ class YXSEducationFWeatherCurrentRequest: YXSBaseRequset {
     }
 }
 
+// MARK: - Qr授权
+let authQrCodeQrAuth = "/authQrCode/qrAuth"
+class YXSEducationAuthQrCodeQrAuthRequest: YXSBaseRequset {
+    /// 初始化
+    /// - Parameter city: 城市名称
+    init(base64UUID: String) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = authQrCodeQrAuth
+        param = ["base64UUID": base64UUID]
+    }
+}
+
+// MARK: - Qr确认授权
+let authQrConfirmAuth = "/authQrCode/qrConfirmAuth"
+class YXSEducationAuthQrConfirmAuthRequest: YXSBaseRequset {
+    /// 初始化
+    /// - Parameter city: 城市名称
+    init(base64UUID: String) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = authQrConfirmAuth
+        param = ["base64UUID": base64UUID]
+    }
+}
+
+// MARK: - Qr取消授权
+let authQrCancelAuth = "/authQrCode/qrCancelAuth"
+class YXSEducationAuthQrCancelAuthRequest: YXSBaseRequset {
+    /// 初始化
+    /// - Parameter city: 城市名称
+    init(base64UUID: String) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = authQrCancelAuth
+        param = ["base64UUID": base64UUID]
+    }
+}
