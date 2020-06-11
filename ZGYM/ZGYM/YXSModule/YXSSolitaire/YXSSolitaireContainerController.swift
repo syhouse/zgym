@@ -37,7 +37,7 @@ class YXSSolitaireContainerController: YXSBaseViewController, JXCategoryViewDele
         
         fd_prefersNavigationBarHidden = true
         // Do any additional setup after loading the view.
-        firstTableView = YXSSolitaireReadListController(classId: detailModel?.classId ?? 0, serviceId: detailModel?.censusId ?? 0, createTime: detailModel?.createTime ?? "",serviceType: 3)
+        firstTableView = YXSSolitaireReadListController(classId: detailModel?.classId ?? 0, serviceId: detailModel?.censusId ?? 0, createTime: detailModel?.createTime ?? "",serviceType: 3, callbackRequestParameter: ["type": detailModel?.type ?? 0])
         secondTableView = YXSSolitaireReplyListController(classId: detailModel?.classId ?? 0, serviceId: detailModel?.censusId ?? 0, createTime: detailModel?.createTime ?? "",serviceType: 3)
         
         self.view.addSubview(listContainerView)

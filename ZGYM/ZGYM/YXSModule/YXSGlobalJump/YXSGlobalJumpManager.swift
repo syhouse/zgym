@@ -160,6 +160,8 @@ class YXSGlobalJumpManager: NSObject {
             hasJumpEnd = true
             break
         }
+        
+        hasJumpEnd = true
     }
     
     // MARK: - Other

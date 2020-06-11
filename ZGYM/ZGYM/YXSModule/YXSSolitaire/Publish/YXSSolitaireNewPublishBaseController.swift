@@ -70,9 +70,11 @@ class YXSSolitaireNewPublishBaseController: YXSCommonPublishBaseController {
                             let solitaireselectModel = SolitairePublishNewSelectModel()
                             solitaireselectModel.index = index
                             solitaireselectModel.title = optionItem.optionContext
-                            let mediaModel = SLPublishMediaModel()
-                            mediaModel.serviceUrl = optionItem.optionImage
-                            solitaireselectModel.mediaModel = mediaModel
+                            if !(optionItem.optionImage ?? "").isEmpty{
+                                let mediaModel = SLPublishMediaModel()
+                                mediaModel.serviceUrl = optionItem.optionImage
+                                solitaireselectModel.mediaModel = mediaModel
+                            }
                             optionModels.append(solitaireselectModel)
                         }
                         questionModel.solitaireSelects = optionModels

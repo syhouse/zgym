@@ -166,41 +166,44 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
         //有本地资源上传
         if localMedias.count != 0{
             MBProgressHUD.yxs_showUpload(inView: self.navigationController!.view)
-        }
-    
-        YXSUploadSourceHelper().uploadMedia(mediaInfos: localMedias + localOptionMedias, progress: {
-            (progress)in
-            DispatchQueue.main.async {
-                 MBProgressHUD.yxs_updateUploadProgess(progess: progress, inView: self.navigationController!.view)
-            }
-        }, sucess: { (listModels) in
-            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-            
-            if localMedias.count + localOptionMedias.count == listModels.count{
-                for (index, model) in listModels.enumerated(){
-                    if index < localMedias.count{
-                        commintMediaInfos.append([typeKey: model.type,urlKey: model.aliYunUploadBackUrl ?? ""])
-                    }else{
-                        for question in self.publishModel.solitaireQuestions{
-                            if let solitaireSelects = question.solitaireSelects{
-                                for solitaireSelect in solitaireSelects{
-                                    let uploadSolitaireSelect = localOptionUploadModel[index - localMedias.count]
-                                    if uploadSolitaireSelect == solitaireSelect{
-                                        solitaireSelect.mediaModel?.serviceUrl = model.aliYunUploadBackUrl
-                                        break
+            YXSUploadSourceHelper().uploadMedia(mediaInfos: localMedias + localOptionMedias, progress: {
+                (progress)in
+                DispatchQueue.main.async {
+                     MBProgressHUD.yxs_updateUploadProgess(progess: progress, inView: self.navigationController!.view)
+                }
+            }, sucess: { (listModels) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+                
+                if localMedias.count + localOptionMedias.count == listModels.count{
+                    for (index, model) in listModels.enumerated(){
+                        if index < localMedias.count{
+                            commintMediaInfos.append([typeKey: model.type,urlKey: model.aliYunUploadBackUrl ?? ""])
+                        }else{
+                            for question in self.publishModel.solitaireQuestions{
+                                if let solitaireSelects = question.solitaireSelects{
+                                    for solitaireSelect in solitaireSelects{
+                                        let uploadSolitaireSelect = localOptionUploadModel[index - localMedias.count]
+                                        if uploadSolitaireSelect == solitaireSelect{
+                                            solitaireSelect.mediaModel?.serviceUrl = model.aliYunUploadBackUrl
+                                            break
+                                        }
                                     }
                                 }
+                                
                             }
-                            
                         }
                     }
                 }
+                self.yxs_loadCommintData(mediaInfos: commintMediaInfos)
+            }) { (msg, code) in
+                MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
+                MBProgressHUD.yxs_showMessage(message: msg)
             }
+        }else{
             self.yxs_loadCommintData(mediaInfos: commintMediaInfos)
-        }) { (msg, code) in
-            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-            MBProgressHUD.yxs_showMessage(message: msg)
         }
+    
+        
     }
     
     override func yxs_loadCommintData(mediaInfos: [[String: Any]]?){
@@ -244,6 +247,7 @@ class YXSSolitaireCollectorPublishController: YXSSolitaireNewPublishBaseControll
             var censusTopicOptionItems = [[String: Any]]()
 
             gatherHolderItem["isRequired"] = question.isNecessary
+            gatherHolderItem["gatherType"] = question.type.rawValue
             gatherHolderItem["topicTitle"] = question.questionStemText ?? ""
             switch question.type {
             case .single, .checkbox:
