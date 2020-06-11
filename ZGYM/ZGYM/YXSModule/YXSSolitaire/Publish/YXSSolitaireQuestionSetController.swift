@@ -342,7 +342,7 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
     }()
     
     lazy var selectView: YXSQuestionPublishNewSelectItemsView = {
-        let selectView = YXSQuestionPublishNewSelectItemsView(selectModels: questionModel.solitaireSelects)
+        let selectView = YXSQuestionPublishNewSelectItemsView(selectModels: questionModel.solitaireSelects, type: questionModel.type)
         selectView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
         selectView.updateItemsBlock = {
             [weak self] (selectModels) in

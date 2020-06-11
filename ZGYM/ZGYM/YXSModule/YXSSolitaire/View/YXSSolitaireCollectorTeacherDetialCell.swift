@@ -47,6 +47,7 @@ class YXSSolitaireCollectorTeacherDetialBaseCell : YXSSolitaireQuestionBaseCell 
         lookDetial.font = UIFont.systemFont(ofSize: 13)
         lookDetial.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))
         lookDetial.locailImage = "yxs_solitaire_arrow"
+        lookDetial.yxs_touchInsets = UIEdgeInsets(top: 15, left: 5, bottom: 10, right: 20)
         return lookDetial
     }()
 }
@@ -86,7 +87,8 @@ class YXSSolitaireCollectorTeacherDetialNoSelectCell : YXSSolitaireCollectorTeac
         self.model = model
         super.setCellModel(model, index: index)
         progressView.progress = Float(model.ratio ?? 0)/100.0
-        lookDetial.title = "\(model.gatherTopicCount ?? 0)人选择，占比\(model.ratio ?? 0)%"
+        
+        lookDetial.title = "\(model.gatherTopicCount ?? 0)人提交，占比\(model.ratio ?? 0)%"
     }
 }
 
@@ -210,6 +212,7 @@ class YXSSolitaireAnswerStatisticsView : UIView {
         lookDetial.font = UIFont.systemFont(ofSize: 13)
         lookDetial.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))
         lookDetial.locailImage = "yxs_solitaire_arrow"
+        lookDetial.yxs_touchInsets = UIEdgeInsets(top: 15, left: 5, bottom: 10, right: 20)
         return lookDetial
     }()
 }

@@ -15,13 +15,20 @@ class YXSQuestionPublishNewSelectItemsView: UIView{
     var updateItemsBlock: ((_ selectModels: [SolitairePublishNewSelectModel]) ->())?
     
     var selectModels: [SolitairePublishNewSelectModel]
-    init(selectModels: [SolitairePublishNewSelectModel]?) {
+    var type: YXSQuestionType
+    init(selectModels: [SolitairePublishNewSelectModel]?, type: YXSQuestionType = .single) {
+        self.type = type
         if let  selectModels = selectModels {
             self.selectModels = selectModels
         }else{
-            let model = SolitairePublishNewSelectModel()
-            model.index = 0
-            self.selectModels = [model]
+            let selectCount = type == .single ? 1 : 3
+            self.selectModels = [SolitairePublishNewSelectModel]()
+            for index in 0..<selectCount{
+                let model = SolitairePublishNewSelectModel()
+                model.index = index
+                self.selectModels.append(model)
+            }
+            
         }
         super.init(frame: CGRect.zero)
         updateUI()
