@@ -637,6 +637,7 @@
 		6F6511D52445DC820024A5DA /* ImSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F07FE3E2445D7FA0090975B /* ImSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F7348F324863EE400AB789E /* YXSSolitaireNewDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7348F224863EE400AB789E /* YXSSolitaireNewDetailController.swift */; };
 		6F7348F524863F2400AB789E /* YXSSolitaireNewDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7348F424863F2400AB789E /* YXSSolitaireNewDetailHeaderView.swift */; };
+		6F7E77022490D7A700FA7114 /* YXSTeacherSacnLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7E77012490D7A700FA7114 /* YXSTeacherSacnLoginController.swift */; };
 		6F80840A2485EB5600BAAE6E /* YXSSolitaireDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8084092485EB5600BAAE6E /* YXSSolitaireDetailHeaderView.swift */; };
 		6F80840C2485EF7700BAAE6E /* YXSSolitaireSelectApplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F80840B2485EF7700BAAE6E /* YXSSolitaireSelectApplyView.swift */; };
 		6F8272B5245171C900918757 /* YXSClassStarCommentItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8272B4245171C900918757 /* YXSClassStarCommentItemController.swift */; };
@@ -1852,6 +1853,7 @@
 		6F6511D62446937D0024A5DA /* 优学业.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "优学业.entitlements"; sourceTree = "<group>"; };
 		6F7348F224863EE400AB789E /* YXSSolitaireNewDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireNewDetailController.swift; sourceTree = "<group>"; };
 		6F7348F424863F2400AB789E /* YXSSolitaireNewDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireNewDetailHeaderView.swift; sourceTree = "<group>"; };
+		6F7E77012490D7A700FA7114 /* YXSTeacherSacnLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSTeacherSacnLoginController.swift; sourceTree = "<group>"; };
 		6F8084092485EB5600BAAE6E /* YXSSolitaireDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireDetailHeaderView.swift; sourceTree = "<group>"; };
 		6F80840B2485EF7700BAAE6E /* YXSSolitaireSelectApplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireSelectApplyView.swift; sourceTree = "<group>"; };
 		6F8272B4245171C900918757 /* YXSClassStarCommentItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSClassStarCommentItemController.swift; sourceTree = "<group>"; };
@@ -2368,6 +2370,7 @@
 		6F07002D2445D7FE0090975B /* YXSModule */ = {
 			isa = PBXGroup;
 			children = (
+				6F7E77032490DFC600FA7114 /* YXSScan */,
 				6F903462247CAE76000E1D85 /* YXSTemplate */,
 				560B20D524567FC3003D8A19 /* YXSNativeShareExtension */,
 				6F07002E2445D7FE0090975B /* YXSMine */,
@@ -3229,13 +3232,13 @@
 			isa = PBXGroup;
 			children = (
 				6F0701B32445D8010090975B /* YXSLBXScanNetAnimation.swift */,
-				6F0701B42445D8010090975B /* YXSScanViewController.swift */,
 				6F0701B52445D8010090975B /* LBXScanView.swift */,
 				6F0701B62445D8010090975B /* LBXScanLineAnimation.swift */,
 				6F0701B72445D8010090975B /* YXSLBXScanViewController.swift */,
 				6F0701B82445D8010090975B /* LBXScanViewStyle.swift */,
 				6F0701B92445D8010090975B /* LBXPermissions.swift */,
 				6F0701BA2445D8010090975B /* LBXScanWrapper.swift */,
+				6F7E77012490D7A700FA7114 /* YXSTeacherSacnLoginController.swift */,
 			);
 			path = yxs_Scan;
 			sourceTree = "<group>";
@@ -4445,6 +4448,14 @@
 				6FA2556B2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift */,
 			);
 			path = Publish;
+			sourceTree = "<group>";
+		};
+		6F7E77032490DFC600FA7114 /* YXSScan */ = {
+			isa = PBXGroup;
+			children = (
+				6F0701B42445D8010090975B /* YXSScanViewController.swift */,
+			);
+			path = YXSScan;
 			sourceTree = "<group>";
 		};
 		6F903462247CAE76000E1D85 /* YXSTemplate */ = {
@@ -6255,6 +6266,7 @@
 				6F0704F62445D8050090975B /* YXSHomeClassStartCell.swift in Sources */,
 				6F944A51248A21190078E008 /* YXSSolitaireCollectorSetupDetailController.swift in Sources */,
 				E5AE0C942485EF2500073657 /* UIView+WZB.m in Sources */,
+				6F7E77022490D7A700FA7114 /* YXSTeacherSacnLoginController.swift in Sources */,
 				6F0705512445D8050090975B /* YXSFriendCircleUserInfoModel.swift in Sources */,
 				6F944A4D2489E6040078E008 /* YXSSolitaireReplyListController.swift in Sources */,
 				6F07043A2445D8040090975B /* YXSMAMapView.m in Sources */,

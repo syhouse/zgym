@@ -110,8 +110,18 @@ class YXSScanViewController: YXSLBXScanViewController {
         case .addClass:
             let vc = YXSClassAddController.init(classText: parameter["gradeNum"] as? String ?? "")
             self.navigationController?.pushViewController(vc)
-        default:
-            break
+        case .teacherWebLogin:
+            MBProgressHUD.yxs_showLoading()
+            let uuid: String = String((result.strScanned ?? "").split(separator: "_").last ?? "")
+            YXSEducationAuthQrCodeQrAuthRequest(base64UUID: uuid).request({ (json) in
+                MBProgressHUD.yxs_hideHUD()
+                let vc = YXSTeacherSacnLoginController(uuid)
+                self.navigationController?.pushViewController(vc)
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+                self.perform(#selector(YXSLBXScanViewController.startScan), with: nil, afterDelay: 0.5)
+            }
+            
         }
         
     }
