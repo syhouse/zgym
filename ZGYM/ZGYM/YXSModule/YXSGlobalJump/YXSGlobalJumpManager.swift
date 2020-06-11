@@ -106,6 +106,38 @@ class YXSGlobalJumpManager: NSObject {
             break
         case 4:
             /// 成绩
+            let scoreModel = YXSScoreListModel.init(JSON: ["":""])!
+            scoreModel.examId = serviceId
+            scoreModel.classId = classId
+            scoreModel.creationTime = createTime
+            
+            let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
+            if let strategy = model.callbackRequestParameter?.calculativeStrategy, strategy == 10 {
+                /// 分数制
+                if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                    let detail = YXSScoreNumTeacherDetailsVC.init(model: scoreModel)
+                    visibleVC?.navigationController?.pushViewController(detail)
+                } else {
+                    
+                    let detail = YXSScoreNumParentDetailsVC.init(model: scoreModel)
+                    detail.examId = serviceId
+                    detail.childrenId = childrenId
+                    visibleVC?.navigationController?.pushViewController(detail)
+                }
+            } else {
+                /// 等级制
+                if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                    let detail = YXSScoreLevelTeacherDetailsVC.init(model: scoreModel)
+                    visibleVC?.navigationController?.pushViewController(detail)
+                    
+                } else {
+                    let detail = YXSScoreLevelParentDetailsVC.init(model: scoreModel)
+                    detail.examId = serviceId
+                    detail.childrenId = childrenId
+                    visibleVC?.navigationController?.pushViewController(detail)
+                }
+            }
+            hasJumpEnd = true
             break
         case 5:
             /// 优成长

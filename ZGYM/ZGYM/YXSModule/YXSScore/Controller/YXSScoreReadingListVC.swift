@@ -55,13 +55,13 @@ class YXSScoreReadingListVC: YXSBaseTableViewController, JXCategoryListContentVi
         for sub in secondListModel ?? [YXSClassMemberModel]() {
             childrenIdList.append(sub.childrenId ?? 0)
         }
-//        MBProgressHUD.yxs_showLoading()
-////        YXSEducationTeacherOneTouchReminderRequest(childrenIdList: childrenIdList, classId: homeListModel?.classId ?? 0, opFlag: 0, serviceId: homeListModel?.serviceId ?? 0, serviceType: 0, serviceCreateTime: homeListModel?.createTime ?? "").request({ (json) in
-////            MBProgressHUD.yxs_showMessage(message: "通知成功")
-////            
-////        }) { (msg, code) in
-////            MBProgressHUD.yxs_showMessage(message: msg)
-////        }
+        MBProgressHUD.yxs_showLoading()
+        YXSEducationTeacherOneTouchReminderRequest(childrenIdList: childrenIdList, classId: homeListModel?.classId ?? 0, opFlag: 0, serviceId: homeListModel?.examId ?? 0, serviceType: 4, serviceCreateTime: homeListModel?.creationTime ?? "").request({ (json) in
+            MBProgressHUD.yxs_showMessage(message: "通知成功")
+
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
     }
     
     // MARK: - Action

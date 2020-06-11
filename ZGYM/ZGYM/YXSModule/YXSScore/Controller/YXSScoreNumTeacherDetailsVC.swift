@@ -394,7 +394,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
 
 extension YXSScoreNumTeacherDetailsVC: UIScrollViewDelegate{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > kSafeTopHeight + 64{
+        if scrollView.contentOffset.y > 0{
             customNav.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
             customNav.backImageButton.setMixedImage(MixedImage(normal: "back", night: "yxs_back_white"), forState: .normal)
             customNav.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)

@@ -10,10 +10,8 @@ import Foundation
 import UIKit
 import NightNight
 
-class YXSScoreListCell: UITableViewCell {
-    var model: YXSScoreListModel = YXSScoreListModel.init(JSON: ["":""])!
-    /// cell点击block
-    public var cellBlock: ((_ model: YXSScoreListModel) -> ())?
+class YXSScoreListCell: YXSHomeBaseCell {
+    var scoreModel: YXSScoreListModel = YXSScoreListModel.init(JSON: ["":""])!
     
     // MARK: - init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -27,6 +25,7 @@ class YXSScoreListCell: UITableViewCell {
         bgContainView.addSubview(visibleView)
         bgContainView.addSubview(readButton)
         layer()
+        initCommonUI()
     }
     
     required init?(coder: NSCoder) {
@@ -68,7 +67,7 @@ class YXSScoreListCell: UITableViewCell {
     func setModel(model: YXSScoreListModel) {
         visibleView.isHidden = true
         readButton.isHidden = true
-        self.model = model
+        self.scoreModel = model
         contentLabel.text = model.examName
         UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(model.teacherName ?? "")", "  |  \(model.creationTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
         classLabel.text = model.className
@@ -100,17 +99,7 @@ class YXSScoreListCell: UITableViewCell {
         
     }
     
-    @objc func readClick(){
-        cellBlock?(model)
-    }
-    
     // MARK: - getter&setter
-    lazy var bgContainView: UIView = {
-        let bgContainView = UIView()
-        bgContainView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
-        bgContainView.cornerRadius = 4
-        return bgContainView
-    }()
     
     lazy var visibleView: YXSCustomImageControl = {
         let visibleView = YXSCustomImageControl.init(imageSize: CGSize.init(width: 18, height: 18), position: YXSImagePositionType.left, padding: 7)
@@ -119,34 +108,6 @@ class YXSScoreListCell: UITableViewCell {
         visibleView.locailImage = "visible"
         visibleView.isUserInteractionEnabled = false
         return visibleView
-    }()
-    
-    lazy var readButton: YXSButton = {
-        let button = YXSButton.init()
-        button.setMixedTitleColor(MixedColor(normal: UIColor.white, night: UIColor.white), forState: .normal)
-        button.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: UIColor.white), forState: .disabled)
-        button.setImage(UIImage.init(named: "has_red"), for: .disabled)
-        button.setImage(nil, for: .normal)
-        button.setTitle("阅", for: .normal)
-        button.setTitle("已阅", for: .disabled)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        button.addTarget(self, action: #selector(readClick), for: .touchUpInside)
-        button.isHidden = true
-        return button
-    }()
-    
-    lazy var nameTimeLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
-        label.font = UIFont.systemFont(ofSize: 13)
-        return label
-    }()
-    
-    lazy var classLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
-        label.font = UIFont.systemFont(ofSize: 13)
-        return label
     }()
     
     lazy var contentLabel: UILabel = {

@@ -122,6 +122,8 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
     var timeStamp: Int?
     var userType: String?
     
+    var calculativeStrategy: Int?
+    
     private override init(){}
     required init?(map: Map){}
     
@@ -131,6 +133,7 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
         clockInCommitId <- map["clockInCommitId"]
         timeStamp <- map["timeStamp"]
         userType <- map["userType"]
+        calculativeStrategy <- map["calculativeStrategy"]
     }
     
     /**

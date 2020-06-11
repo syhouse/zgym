@@ -108,6 +108,7 @@ class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
             self.headerView.isHidden = false
             self.chartView.isHidden = false
             if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+                self.customNav.title = model.examName
                 self.commentView.isHidden = false
                 if model.achievementChildrenSubjectsResponseList?.count ?? 0 > 1 {
                     self.chartView.setIsShowLookSubjects(isHaveComment: true, isShow: true)
