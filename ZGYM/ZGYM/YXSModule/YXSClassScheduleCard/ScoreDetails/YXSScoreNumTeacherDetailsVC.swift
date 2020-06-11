@@ -27,10 +27,17 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         super.viewDidLoad()
         view.yxs_gradualBackground(frame: view.frame, startColor: UIColor.yxs_hexToAdecimalColor(hex: "#B4C8FD"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#A9CDFD"), cornerRadius: 0,isRightOrientation: false)
         self.fd_prefersNavigationBarHidden = true
-        self.view.addSubview(self.scrollView)
-        self.scrollView.snp.makeConstraints { (make) in
+        scrollView.addSubview(contentBgView)
+        contentBgView.snp.makeConstraints { (make) in
+            make.left.right.top.equalTo(0)
+            make.bottom.equalTo(0)
+            make.width.equalTo(SCREEN_WIDTH)
+        }
+        view.addSubview(self.scrollView)
+        scrollView.snp.makeConstraints { (make) in
             make.left.top.right.equalTo(0)
             make.bottom.equalTo(-kSafeBottomHeight)
+//            make.edges.equalTo(0)
         }
         view.addSubview(customNav)
         customNav.snp.makeConstraints { (make) in
@@ -39,24 +46,31 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         if #available(iOS 11.0, *){
             self.scrollView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         }
+        //        tableView.estimatedSectionHeaderHeight = 0
+        //        //去除group空白
+        //        tableView.estimatedSectionFooterHeight = 0.0
+        //        tableView.estimatedRowHeight = 0
         customNav.title = listModel?.examName
+        
         initUI()
         loadData()
     }
     
     func initUI() {
-        self.scrollView.addSubview(headerBgImageView)
-        self.scrollView.addSubview(headerView)
-        self.scrollView.addSubview(contentView)
-        self.scrollView.addSubview(lookAllScoreBtn)
-        self.scrollView.addSubview(visibleView)
-        self.scrollView.addSubview(leftConnectionImgV)
-        self.scrollView.addSubview(rightConnectionImgV)
+        contentBgView.addSubview(headerBgImageView)
+        contentBgView.addSubview(headerView)
+        contentBgView.addSubview(contentView)
+        contentBgView.addSubview(lookAllScoreBtn)
+        contentBgView.addSubview(visibleView)
+        contentBgView.addSubview(leftConnectionImgV)
+        contentBgView.addSubview(rightConnectionImgV)
         
         headerBgImageView.snp.makeConstraints { (make) in
             make.left.top.right.equalTo(0)
-            make.height.equalTo(242*SCREEN_SCALE)
+            make.height.equalTo(242)
         }
+        headerBgImageView.layoutIfNeeded()
+        print("123")
         headerView.snp.makeConstraints { (make) in
             make.left.equalTo(15)
             make.right.equalTo(-15)
@@ -67,7 +81,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         contentView.snp.makeConstraints { (make) in
             make.left.equalTo(15)
             make.right.equalTo(-15)
-            make.height.equalTo(420*SCREEN_SCALE) //370
+            make.height.equalTo(420) //370
             make.top.equalTo(headerView.snp_bottom).offset(8)
         }
         leftConnectionImgV.snp.makeConstraints { (make) in
@@ -187,6 +201,11 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         let scrollView = UIScrollView(frame: self.view.frame)
         scrollView.delegate = self
         return scrollView
+    }()
+    
+    lazy var contentBgView: UIView = {
+        let view = UIView.init(frame: CGRect.zero)
+        return view
     }()
     
     lazy var headerBgImageView: UIImageView = {

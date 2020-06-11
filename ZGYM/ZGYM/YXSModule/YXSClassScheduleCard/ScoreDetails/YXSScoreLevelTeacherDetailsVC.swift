@@ -187,7 +187,7 @@ class YXSScoreLevelTeacherTableHeaderView: UIView {
         addSubview(rightConnectionImgV)
         headerBgImageV.snp.makeConstraints { (make) in
             make.left.top.right.equalTo(0)
-            make.height.equalTo(242*SCREEN_SCALE)
+            make.height.equalTo(242)
         }
         headerView.snp.makeConstraints { (make) in
             make.left.equalTo(15)

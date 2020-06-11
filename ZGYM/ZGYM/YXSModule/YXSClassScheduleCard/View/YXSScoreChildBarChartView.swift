@@ -110,7 +110,7 @@ class YXSScoreChildBarChartView: UIView {
         
         formHeaderView.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.snp_centerX)
-            make.width.equalTo(205*SCREEN_SCALE)
+            make.width.equalTo(205)
             make.height.equalTo(40)
             make.top.equalTo(0)
         }
@@ -284,7 +284,7 @@ class YXSScoreChildBarChartView: UIView {
         chartView?.barCorlor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
         chartView?.yAxisCount = 5
         chartView?.yScaleValue = 4
-        chartView?.gapWidth = 25*SCREEN_SCALE
+        chartView?.gapWidth = 25
         chartView?.barWidth = 35
         return chartView!
     }()

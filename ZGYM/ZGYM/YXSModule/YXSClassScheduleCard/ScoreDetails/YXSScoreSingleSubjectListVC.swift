@@ -129,7 +129,7 @@ class YXSScoreSingleSubjectListVC: YXSBaseTableViewController {
     
     lazy var bgView: UIView = {
         let view = UIView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT))
-        let imageV = UIImageView.init(frame: CGRect(x: 0, y: -22, width: SCREEN_WIDTH, height: 242*SCREEN_SCALE))
+        let imageV = UIImageView.init(frame: CGRect(x: 0, y: -22, width: SCREEN_WIDTH, height: 242))
         imageV.image = UIImage.init(named: "yxs_score_detailsHear_one")
         imageV.contentMode = .scaleAspectFit
         view.addSubview(imageV)
@@ -137,7 +137,7 @@ class YXSScoreSingleSubjectListVC: YXSBaseTableViewController {
     }()
     
     lazy var headerBgImageView: UIImageView = {
-        let imageV = UIImageView.init(frame: CGRect(x: 0, y: -20, width: SCREEN_WIDTH, height: 242*SCREEN_SCALE))
+        let imageV = UIImageView.init(frame: CGRect(x: 0, y: -20, width: SCREEN_WIDTH, height: 242))
         imageV.image = UIImage.init(named: "yxs_score_detailsHear_one")
         imageV.contentMode = .scaleAspectFit
         return imageV

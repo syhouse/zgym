@@ -30,7 +30,7 @@ class YXSScoreBaseDetailsVC: YXSBaseViewController {
         view.addSubview(headerBgImageView)
         headerBgImageView.snp.makeConstraints { (make) in
             make.left.top.right.equalTo(0)
-            make.height.equalTo(242*SCREEN_SCALE)
+            make.height.equalTo(242)
         }
         self.view.addSubview(self.scrollView)
         self.scrollView.snp.makeConstraints { (make) in
