@@ -2370,6 +2370,7 @@
 		6F07002D2445D7FE0090975B /* YXSModule */ = {
 			isa = PBXGroup;
 			children = (
+				E5AAF9E82491D26E00D21EEB /* YXSScore */,
 				6F7E77032490DFC600FA7114 /* YXSScan */,
 				6F903462247CAE76000E1D85 /* YXSTemplate */,
 				560B20D524567FC3003D8A19 /* YXSNativeShareExtension */,
@@ -2650,11 +2651,7 @@
 		6F07009C2445D7FE0090975B /* YXSClassScheduleCard */ = {
 			isa = PBXGroup;
 			children = (
-				E5AA445324849A410032C2CF /* ScoreDetails */,
-				E5DD273C247D1B13000BB1A9 /* Model */,
-				E5DD2732247CECAF000BB1A9 /* View */,
 				6F07009D2445D7FE0090975B /* YXSClassScheduleCardCell.swift */,
-				6F07009E2445D7FE0090975B /* YXSScoreListController.swift */,
 				6F07009F2445D7FE0090975B /* YXSClassScheduleCardListController.swift */,
 				6F0700A02445D7FE0090975B /* YXSClassScheduleCardDetialController.swift */,
 				6F0700A12445D7FE0090975B /* YXSClassScheduleCardModel.swift */,
@@ -5629,7 +5626,17 @@
 			path = Chart;
 			sourceTree = "<group>";
 		};
-		E5AA445324849A410032C2CF /* ScoreDetails */ = {
+		E5AAF9E82491D26E00D21EEB /* YXSScore */ = {
+			isa = PBXGroup;
+			children = (
+				E5AAF9E92491D2C900D21EEB /* Controller */,
+				E5DD273C247D1B13000BB1A9 /* Model */,
+				E5DD2732247CECAF000BB1A9 /* View */,
+			);
+			path = YXSScore;
+			sourceTree = "<group>";
+		};
+		E5AAF9E92491D2C900D21EEB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				E5DD2741247E4714000BB1A9 /* YXSScoreNumTeacherDetailsVC.swift */,
@@ -5641,8 +5648,9 @@
 				E5AAF9DE248E3C1300D21EEB /* YXSScoreLevelTeacherDetailsVC.swift */,
 				E5AAF9E2248F826200D21EEB /* YXSScoreReadingListVC.swift */,
 				E5AAF9E4248F83A900D21EEB /* YXSScoreContainerVC.swift */,
+				6F07009E2445D7FE0090975B /* YXSScoreListController.swift */,
 			);
-			path = ScoreDetails;
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		E5AC9B7C246BD353000B47BB /* View */ = {

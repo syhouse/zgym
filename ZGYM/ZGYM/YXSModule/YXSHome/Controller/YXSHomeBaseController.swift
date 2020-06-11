@@ -431,7 +431,9 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                     cell = tableView.dequeueReusableCell(withIdentifier: "SLSolitaireListHomeCell") as? YXSHomeBaseCell
                 }else if model.type == .periodical{
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomePeriodicalCell") as? YXSHomeBaseCell
-                }else{
+                } else if model.type == .score {
+                    cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell
+                } else {
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell
                 }
                 cell.isSingleHome = isSingleHome

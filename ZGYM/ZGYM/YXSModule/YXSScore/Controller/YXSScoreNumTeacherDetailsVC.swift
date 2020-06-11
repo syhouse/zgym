@@ -46,10 +46,6 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         if #available(iOS 11.0, *){
             self.scrollView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         }
-        //        tableView.estimatedSectionHeaderHeight = 0
-        //        //去除group空白
-        //        tableView.estimatedSectionFooterHeight = 0.0
-        //        tableView.estimatedRowHeight = 0
         customNav.title = listModel?.examName
         
         initUI()

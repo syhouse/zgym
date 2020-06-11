@@ -78,7 +78,6 @@ class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
         }
         
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
-            commentView.isHidden = true
             chartView.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
                 make.width.equalTo(SCREEN_WIDTH - 30)
@@ -91,7 +90,6 @@ class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
                 make.width.equalTo(SCREEN_WIDTH - 30)
                 make.top.equalTo(headerView.snp_bottom).offset(15)
             }
-            commentView.isHidden = false
             commentView.snp.makeConstraints { (make) in
                 make.left.equalTo(15)
                 make.width.equalTo(SCREEN_WIDTH - 30)
@@ -107,8 +105,10 @@ class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
             let model = Mapper<YXSScoreDetailsModel>().map(JSONObject:json.object) ?? YXSScoreDetailsModel.init(JSON: ["": ""])!
             self.detailsModel = model
             
-            
+            self.headerView.isHidden = false
+            self.chartView.isHidden = false
             if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+                self.commentView.isHidden = false
                 if model.achievementChildrenSubjectsResponseList?.count ?? 0 > 1 {
                     self.chartView.setIsShowLookSubjects(isHaveComment: true, isShow: true)
                 }
@@ -118,6 +118,7 @@ class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
                     self.commentView.contentLbl.text = "暂无评语"
                 }
             } else {
+                self.commentView.isHidden = true
                 self.chartView.setIsShowLookSubjects(isHaveComment: true, isShow: false)
             }
             if model.achievementChildrenSubjectsResponseList?.count ?? 0 > 1 {
@@ -137,11 +138,13 @@ class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
     // MARK: - getter&stter
     lazy var headerView: YXSScoreParentHeaderView = {
         let view = YXSScoreParentHeaderView.init()
+        view.isHidden = true
         return view
     }()
     
     lazy var chartView: YXSScoreChildBarChartView = {
         let chartView = YXSScoreChildBarChartView.init(isHaveComment: true,isShowLookSubjects: true)
+        chartView.isHidden = true
         return chartView
     }()
     

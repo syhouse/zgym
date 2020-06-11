@@ -469,6 +469,7 @@ class YXSHomeworkCommentController: YXSBaseViewController , UITableViewDelegate,
         tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.showsVerticalScrollIndicator = true
         return tableView
     }()
     
