@@ -18,11 +18,13 @@ class YXSSolitaireReadListController: YXSBaseTableViewController, JXCategoryList
     var serviceId: Int
     var createTime: String
     var serviceType: Int
-    init(classId: Int, serviceId: Int, createTime: String, serviceType: Int) {
+    var callbackRequestParameter: [String: Any]?
+    init(classId: Int, serviceId: Int, createTime: String, serviceType: Int, callbackRequestParameter: [String: Any]?) {
         self.classId = classId
         self.serviceId = serviceId
         self.createTime = createTime
         self.serviceType = serviceType
+        self.callbackRequestParameter = callbackRequestParameter
         super.init()
     }
     
@@ -73,7 +75,7 @@ class YXSSolitaireReadListController: YXSBaseTableViewController, JXCategoryList
             childrenIdList.append(sub.childrenId ?? 0)
         }
         MBProgressHUD.yxs_showLoading()
-        YXSEducationTeacherOneTouchReminderRequest(childrenIdList: childrenIdList, classId: classId, opFlag: 0, serviceId: serviceId , serviceType: serviceType, serviceCreateTime: createTime ).request({ (json) in
+        YXSEducationTeacherOneTouchReminderRequest(childrenIdList: childrenIdList, classId: classId, opFlag: 0, serviceId: serviceId , serviceType: serviceType, serviceCreateTime: createTime ,callbackRequestParameter: callbackRequestParameter).request({ (json) in
             MBProgressHUD.yxs_showMessage(message: "通知成功")
             
         }) { (msg, code) in

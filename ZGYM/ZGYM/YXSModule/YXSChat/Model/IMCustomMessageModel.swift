@@ -25,7 +25,7 @@ class IMCustomMessageModel : NSObject, NSCoding, NSCopying, Mappable{
     var classId : Int?
     var childrenId : Int?
     var ring: Int?      /// 是否响铃(0否，1是)
-    var stage: String?      /// 是否响铃(0否，1是)
+    var stage: String?    
     
     var callbackRequestParameter: CallbackRequestParameter?
     private override init(){}
@@ -121,6 +121,8 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
     var clockInCommitId: Int?
     var timeStamp: Int?
     var userType: String?
+    ///接龙类型
+    var type: Int?
     
     var calculativeStrategy: Int?
     
@@ -134,6 +136,7 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
         timeStamp <- map["timeStamp"]
         userType <- map["userType"]
         calculativeStrategy <- map["calculativeStrategy"]
+        type <- map["type"]
     }
     
     /**
@@ -146,6 +149,8 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
         clockInCommitId = aDecoder.decodeObject(forKey: "clockInCommitId") as? Int
         timeStamp = aDecoder.decodeObject(forKey: "timeStamp") as? Int
         userType = aDecoder.decodeObject(forKey: "userType") as? String
+        calculativeStrategy = aDecoder.decodeObject(forKey: "calculativeStrategy") as? Int
+        type = aDecoder.decodeObject(forKey: "type") as? Int
     }
     
     /**
@@ -165,6 +170,12 @@ class CallbackRequestParameter:NSObject, NSCoding, NSCopying, Mappable{
         }
         if userType != nil{
             aCoder.encode(userType, forKey: "userType")
+        }
+        if type != nil{
+            aCoder.encode(type, forKey: "type")
+        }
+        if calculativeStrategy != nil{
+            aCoder.encode(calculativeStrategy, forKey: "calculativeStrategy")
         }
     }
 }

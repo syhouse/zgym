@@ -60,13 +60,16 @@ class YXSEducationTeacherOneTouchReminderRequest: YXSBaseRequset {
     ///   - opFlag: 0:提醒未阅读，1：提醒未提交
     ///   - serviceId: 业务ID
     ///   - serviceType: 0:通知,1:作业,2:打卡,3:接龙,5:班级圈,6:班级之星
-    init(childrenIdList:[Int], classId: Int, opFlag:Int, serviceId:Int, serviceType:Int, serviceCreateTime:String = ""){
+    init(childrenIdList:[Int], classId: Int, opFlag:Int, serviceId:Int, serviceType:Int, serviceCreateTime:String = "", callbackRequestParameter: [String: Any]? = nil){
         super.init()
         method = .post
         host = homeHost
         path = teacherOneTouchReminder
         param = ["childrenIdList":childrenIdList,
                  "classId":classId, "opFlag":opFlag, "serviceId":serviceId, "serviceType":serviceType, "serviceCreateTime":serviceCreateTime]
+        if let callbackRequestParameter = callbackRequestParameter{
+            param?["callbackRequestParameter"] = callbackRequestParameter
+        }
     }
 }
 

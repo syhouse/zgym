@@ -71,7 +71,7 @@ class YXSAssistantChatViewController: YXSChatViewController {
         
         if let msgData = cell.messageData {
             if msgData.innerMessage != nil {
-                SLLog("\(type(of: msgData.innerMessage))>>\(msgData.innerMessage)")
+                SLLog("\(type(of: msgData.innerMessage))")
                 let md = msgData.innerMessage
                 if YXSChatHelper.sharedInstance.isServiceMessage(msg: md) {
                     let model: IMCustomMessageModel = YXSChatHelper.sharedInstance.msg2IMCustomModel(msg: md)

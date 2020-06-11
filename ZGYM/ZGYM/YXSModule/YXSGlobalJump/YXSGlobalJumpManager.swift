@@ -99,7 +99,12 @@ class YXSGlobalJumpManager: NSObject {
             break
         case 3:
             /// 接龙
-            let vc = YXSSolitaireNewDetailController(censusId: serviceId, childrenId: childrenId, classId: classId, serviceCreateTime: createTime)
+            var vc: UIViewController!
+            if model.callbackRequestParameter?.type == 1{
+                vc = YXSSolitaireDetailController(censusId: serviceId, childrenId: childrenId, classId: classId, serviceCreateTime: createTime)
+            }else{
+                vc = YXSSolitaireNewDetailController(censusId: serviceId, childrenId: childrenId, classId: classId, serviceCreateTime: createTime)
+            }
             let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
             visibleVC?.navigationController?.pushViewController(vc)
             hasJumpEnd = true
@@ -192,6 +197,8 @@ class YXSGlobalJumpManager: NSObject {
             hasJumpEnd = true
             break
         }
+        
+        hasJumpEnd = true
     }
     
     // MARK: - Other

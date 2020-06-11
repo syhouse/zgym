@@ -144,7 +144,7 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
                 }) { (msg, code) in
                     MBProgressHUD.yxs_showMessage(message: msg)
                 }
-            }else{
+            }else if model.type == 3{
                 if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
                     YXSEducationCensusTeacherGatherDetailRequest(censusId: weakSelf.censusId ?? 0).request({ [weak self](detialModel: YXSSolitaireGatherHoldersModel) in
                         guard let strongSelf = self else {return}
@@ -409,9 +409,11 @@ extension YXSSolitaireNewDetailController{
                             let solitaireselectModel = SolitairePublishNewSelectModel()
                             solitaireselectModel.index = index
                             solitaireselectModel.title = optionItem.optionContext
-                            let mediaModel = SLPublishMediaModel()
-                            mediaModel.serviceUrl = optionItem.optionImage
-                            solitaireselectModel.mediaModel = mediaModel
+                            if !(optionItem.optionImage ?? "").isEmpty{
+                                 let mediaModel = SLPublishMediaModel()
+                                 mediaModel.serviceUrl = optionItem.optionImage
+                                 solitaireselectModel.mediaModel = mediaModel
+                             }
                             optionModels.append(solitaireselectModel)
                         }
                         questionModel.solitaireSelects = optionModels
@@ -487,9 +489,11 @@ extension YXSSolitaireNewDetailController{
                             solitaireselectModel.title = optionItem.optionContext
                             solitaireselectModel.gatherTopicCount = optionItem.gatherTopicCount
                             solitaireselectModel.ratio = optionItem.ratio
-                            let mediaModel = SLPublishMediaModel()
-                            mediaModel.serviceUrl = optionItem.optionImage
-                            solitaireselectModel.mediaModel = mediaModel
+                            if !(optionItem.optionImage ?? "").isEmpty{
+                                let mediaModel = SLPublishMediaModel()
+                                mediaModel.serviceUrl = optionItem.optionImage
+                                solitaireselectModel.mediaModel = mediaModel
+                            }
                             optionModels.append(solitaireselectModel)
                         }
                         questionModel.solitaireSelects = optionModels
