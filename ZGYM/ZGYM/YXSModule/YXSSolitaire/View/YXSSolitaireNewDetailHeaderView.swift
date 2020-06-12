@@ -137,6 +137,10 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
         readCommitPanel.secondValue = String(detailModel?.commitCount ?? 0)
         readCommitPanel.secondTotal = String(detailModel?.classChildrenCount ?? 0)
         
+        if detailModel?.state == 100{
+            readCommitPanel.btnAlert.setTitle("去查看", for: .normal)
+        }
+        
         linkView.strLink = detailModel?.link ?? ""
         if detailModel?.link == nil || detailModel?.link?.count == 0 {
             linkView.isHidden = true

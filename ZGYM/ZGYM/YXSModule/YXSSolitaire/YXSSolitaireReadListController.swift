@@ -10,8 +10,8 @@ import UIKit
 import JXCategoryView
 
 class YXSSolitaireReadListController: YXSBaseTableViewController, JXCategoryListContentViewDelegate {
-    
-    var sectionHeader: YXSHomeworkReadListSectionHeader?
+    ///是否展示一键提醒
+    var showRemind: Bool = true
     var selectedListDataIndex: Int = 0
     
     var classId: Int
@@ -53,8 +53,7 @@ class YXSSolitaireReadListController: YXSBaseTableViewController, JXCategoryList
     override func yxs_refreshData() {
         
         tableView.reloadData()
-        checkEmptyData()
-        
+
         let headerModel = HomeworkReadCommitListHeaderViewModel()
         if firstListModel?.count ?? 0 > 0 {
             headerModel.percent = CGFloat(firstListModel?.count ?? 0) / CGFloat((firstListModel?.count ?? 0) + (secondListModel?.count ?? 0))
@@ -130,34 +129,23 @@ class YXSSolitaireReadListController: YXSBaseTableViewController, JXCategoryList
         cell.btnChat.addTarget(self, action: #selector(chatClick(sender:)), for: .touchUpInside)
         cell.model = currentModel?[indexPath.row]
         return cell
-        
-        //        } else {
-        //            let cell:YXSHomeworkReadListCell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeworkReadListCell") as! YXSHomeworkReadListCell
-        //            cell.lbSub.isHidden = true
-        //            cell.imgRightArrow.isHidden = true
-        //            cell.model = currentModel?[indexPath.row]
-        //            return cell
-        //        }
-        
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        sectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkReadListSectionHeader") as! YXSHomeworkReadListSectionHeader
+        let sectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkReadListSectionHeader") as? YXSHomeworkReadListSectionHeader
         
         sectionHeader?.btnTitle1.setTitle("未阅（\(secondListModel?.count ?? 0)）", for: .normal)
         sectionHeader?.btnTitle2.setTitle("已阅（\(firstListModel?.count ?? 0)）", for: .normal)
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER && selectedListDataIndex == 0 && secondListModel?.count ?? 0 > 0 {
+        if (YXSPersonDataModel.sharePerson.personRole == .TEACHER && selectedListDataIndex == 0 && secondListModel?.count ?? 0 > 0 ) && showRemind{
             sectionHeader?.btnAlert.isHidden = false
-            
         } else {
             sectionHeader?.btnAlert.isHidden = true
         }
-        
+
         sectionHeader?.selectedBlock = {[weak self](index) in
             guard let weakSelf = self else {return}
             weakSelf.selectedListDataIndex = index
             weakSelf.tableView.reloadData()
-            weakSelf.checkEmptyData()
         }
         
         sectionHeader?.alertClick = {[weak self](index) in
@@ -167,55 +155,9 @@ class YXSSolitaireReadListController: YXSBaseTableViewController, JXCategoryList
         return sectionHeader
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if selectedListDataIndex == 0 {
-            
-        } else {
-            //            let cell:SLHomeworkCommitListCell = tableView.cellForRow(at: indexPath) as! SLHomeworkCommitListCell
-            /// 打电话、私信
-        }
-    }
-    
-    
     // MARK: - LazyLoad
     lazy var tableHeaderView: HomeworkReadCommitListHeaderView = {
         let header = HomeworkReadCommitListHeaderView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 211))
         return header
     }()
-    
-    
-    // MARK: - Other
-    @objc func checkEmptyData() {
-        //        let currentModel: [YXSClassMemberModel]? = selectedListDataIndex == 0 ? firstListModel : secondListModel
-        //
-        //        if currentModel?.count == 0 || currentModel == nil{
-        //
-        //            let footer = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_WIDTH))
-        //            let imageView = UIImageView.init(image: UIImage.init(named: "yxs_defultImage_nodata"))
-        //            imageView.contentMode = .scaleAspectFit
-        //            footer.addSubview(imageView)
-        //            imageView.snp.makeConstraints({ (make) in
-        //                make.edges.equalTo(0)
-        //            })
-        //
-        //            tableView.tableFooterView = footer
-        //
-        //        } else {
-        //            tableView.tableFooterView = nil
-        //        }
-    }
-    
-    //    override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
-    //        return true
-    //    }
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }
