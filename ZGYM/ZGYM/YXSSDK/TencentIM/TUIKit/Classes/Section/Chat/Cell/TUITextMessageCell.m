@@ -20,6 +20,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _content = [[UILabel alloc] init];
+        _content.lineBreakMode = NSLineBreakByCharWrapping;
         _content.numberOfLines = 0;
         [self.bubbleView addSubview:_content];
     }

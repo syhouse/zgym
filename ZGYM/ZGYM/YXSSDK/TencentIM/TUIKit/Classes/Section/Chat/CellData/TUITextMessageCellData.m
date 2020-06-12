@@ -47,22 +47,30 @@
 
 - (CGSize)contentSize
 {
-    CGRect rect = [self.attributedString boundingRectWithSize:CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+    UILabel *lable = [[UILabel alloc] init];
+    lable.numberOfLines = 0;
+    lable.attributedText = self.attributedString;
+    lable.lineBreakMode = NSLineBreakByCharWrapping;
+    lable.frame = CGRectMake(0, 0, TTextMessageCell_Text_Width_Max, 0);
+    [lable sizeToFit];
+    
+    
+    CGRect rect = CGRectMake(0, 0, lable.frame.size.width, lable.frame.size.height);
     CGSize size = CGSizeMake(CGFLOAT_CEIL(rect.size.width), CGFLOAT_CEIL(rect.size.height));
     self.textSize = size;
     self.textOrigin = CGPointMake(self.cellLayout.bubbleInsets.left, self.cellLayout.bubbleInsets.top+self.bubbleTop);
-
+    
     size.height += self.cellLayout.bubbleInsets.top+self.cellLayout.bubbleInsets.bottom;
     size.width += self.cellLayout.bubbleInsets.left+self.cellLayout.bubbleInsets.right;
-
+    
     if (self.direction == MsgDirectionIncoming) {
-//        size.width = MAX(size.width, [TUIBubbleMessageCellData incommingBubble].size.width);
+        //        size.width = MAX(size.width, [TUIBubbleMessageCellData incommingBubble].size.width);
         size.height = MAX(size.height, [TUIBubbleMessageCellData incommingBubble].size.height);
     } else {
-//        size.width = MAX(size.width, [TUIBubbleMessageCellData outgoingBubble].size.width);
+        //        size.width = MAX(size.width, [TUIBubbleMessageCellData outgoingBubble].size.width);
         size.height = MAX(size.height, [TUIBubbleMessageCellData outgoingBubble].size.height);
     }
-
+    
     return size;
 }
 
@@ -83,26 +91,26 @@
     }
     //1、创建一个可变的属性字符串
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:text];
-
+    
     if([TUIKit sharedInstance].config.faceGroups.count == 0){
         [attributeString addAttribute:NSFontAttributeName value:self.textFont range:NSMakeRange(0, attributeString.length)];
         return attributeString;
     }
-
+    
     //2、通过正则表达式来匹配字符串
     NSString *regex_emoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]"; //匹配表情
-
+    
     NSError *error = nil;
     NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];
     if (!re) {
         NSLog(@"%@", [error localizedDescription]);
         return attributeString;
     }
-
+    
     NSArray *resultArray = [re matchesInString:text options:0 range:NSMakeRange(0, text.length)];
-
+    
     TFaceGroup *group = [TUIKit sharedInstance].config.faceGroups[0];
-
+    
     //3、获取所有的表情以及位置
     //用来存放字典，字典中存储的是图片和图片对应的位置
     NSMutableArray *imageArray = [NSMutableArray arrayWithCapacity:resultArray.count];
@@ -112,7 +120,7 @@
         NSRange range = [match range];
         //获取原字符串中对应的值
         NSString *subStr = [text substringWithRange:range];
-
+        
         for (TFaceCellData *face in group.faces) {
             if ([face.name isEqualToString:subStr]) {
                 //face[i][@"png"]就是我们要加载的图片
@@ -135,7 +143,7 @@
             }
         }
     }
-
+    
     //4、从后往前替换，否则会引起位置问题
     for (int i = (int)imageArray.count -1; i >= 0; i--) {
         NSRange range;
@@ -143,10 +151,10 @@
         //进行替换
         [attributeString replaceCharactersInRange:range withAttributedString:imageArray[i][@"image"]];
     }
-
-
+    
+    
     [attributeString addAttribute:NSFontAttributeName value:self.textFont range:NSMakeRange(0, attributeString.length)];
-
+    
     return attributeString;
 }
 
