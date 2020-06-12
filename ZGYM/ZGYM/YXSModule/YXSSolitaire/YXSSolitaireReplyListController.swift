@@ -10,7 +10,8 @@ import JXCategoryView
 import NightNight
 
 class YXSSolitaireReplyListController: YXSBaseTableViewController, JXCategoryListContentViewDelegate {
-    
+    ///是否展示一键提醒
+    var showRemind: Bool = true
     var sectionHeader: YXSHomeworkReadListSectionHeader?
     var selectedListDataIndex: Int = 0
     
@@ -36,7 +37,7 @@ class YXSSolitaireReplyListController: YXSBaseTableViewController, JXCategoryLis
         self.hasRefreshHeader = false
         
         super.viewDidLoad()
-//        self.title = "提交"
+        //        self.title = "提交"
         // Do any additional setup after loading the view.
         self.tableView.register(YXSHomeworkReadListSectionHeader.classForCoder(), forHeaderFooterViewReuseIdentifier: "YXSHomeworkReadListSectionHeader")
         self.tableView.register(YXSHomeworkReadListCell.classForCoder(), forCellReuseIdentifier: "YXSHomeworkReadListCell")
@@ -121,30 +122,20 @@ class YXSSolitaireReplyListController: YXSBaseTableViewController, JXCategoryLis
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let currentModel: [YXSClassMemberModel]? = selectedListDataIndex == 0 ? secondListModel : firstListModel
         
-//        if selectedListDataIndex == 0 {
-            let cell:YXSHomeworkCommitListCell = tableView.dequeueReusableCell(withIdentifier: "SLHomeworkCommitListCell") as! YXSHomeworkCommitListCell
-            cell.btnChat.tag = indexPath.row
-            cell.btnPhone.tag = indexPath.row
-            cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
-            cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
-            cell.model = currentModel?[indexPath.row]
-            return cell
-            
-//        } else {
-//            let cell:YXSHomeworkReadListCell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeworkReadListCell") as! YXSHomeworkReadListCell
-//            cell.lbSub.isHidden = true
-//            cell.imgRightArrow.isHidden = true
-//            cell.model = currentModel?[indexPath.row]
-//            return cell
-//        }
-        
+        let cell:YXSHomeworkCommitListCell = tableView.dequeueReusableCell(withIdentifier: "SLHomeworkCommitListCell") as! YXSHomeworkCommitListCell
+        cell.btnChat.tag = indexPath.row
+        cell.btnPhone.tag = indexPath.row
+        cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
+        cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
+        cell.model = currentModel?[indexPath.row]
+        return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         sectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "YXSHomeworkReadListSectionHeader") as? YXSHomeworkReadListSectionHeader
         sectionHeader?.btnTitle1.setTitle("未交（\(secondListModel?.count ?? 0)）", for: .normal)
         sectionHeader?.btnTitle2.setTitle("已交（\(firstListModel?.count ?? 0)）", for: .normal)
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER && selectedListDataIndex == 0 && secondListModel?.count ?? 0 > 0{
+        if (YXSPersonDataModel.sharePerson.personRole == .TEACHER && selectedListDataIndex == 0 && secondListModel?.count ?? 0 > 0)  && showRemind{
             sectionHeader?.btnAlert.isHidden = false
             
         } else {
@@ -194,14 +185,5 @@ class YXSSolitaireReplyListController: YXSBaseTableViewController, JXCategoryLis
         })
         return footer
     }()
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }

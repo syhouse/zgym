@@ -40,6 +40,9 @@ class YXSSolitaireContainerController: YXSBaseViewController, JXCategoryViewDele
         firstTableView = YXSSolitaireReadListController(classId: detailModel?.classId ?? 0, serviceId: detailModel?.censusId ?? 0, createTime: detailModel?.createTime ?? "",serviceType: 3, callbackRequestParameter: ["type": detailModel?.type ?? 0])
         secondTableView = YXSSolitaireReplyListController(classId: detailModel?.classId ?? 0, serviceId: detailModel?.censusId ?? 0, createTime: detailModel?.createTime ?? "",serviceType: 3)
         
+        firstTableView.showRemind = detailModel?.state == 100 ? false : true
+        secondTableView.showRemind = detailModel?.state == 100 ? false : true
+        
         self.view.addSubview(listContainerView)
         self.categoryView.listContainer = listContainerView
         self.categoryView.delegate = self

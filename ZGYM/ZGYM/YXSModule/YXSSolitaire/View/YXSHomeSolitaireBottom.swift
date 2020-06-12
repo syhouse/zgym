@@ -123,14 +123,14 @@ class YXSHomeSolitaireBottom: UIView {
             if isFinish {
                 setStatusText(status: 0)
                 statusLabel.isHidden = false
-            }else if state == 10{
+            }else if state == 10 && YXSPersonDataModel.sharePerson.personRole == .PARENT{
                 statusButton.isHidden = false
             }
-            else if state == 20{
+            else if state == 20 && YXSPersonDataModel.sharePerson.personRole == .PARENT{
                 setStatusText(status: 2)
                 statusLabel.isHidden = false
             }
-            else if state == 30{
+            else if state == 30  && YXSPersonDataModel.sharePerson.personRole == .TEACHER{
                 setStatusText(status: 1)
                 statusLabel.isHidden = false
             }

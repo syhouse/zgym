@@ -13,7 +13,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface YXSCustomTextMessageCell : TUITextMessageCell
-@property UILabel *myTextLabel;
 @property UILabel *myLinkLabel;
 - (void)fillWithData:(YXSCustomTextMessageCellData *)data;
 @end

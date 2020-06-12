@@ -13,12 +13,6 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
-        _myTextLabel = [[UILabel alloc] init];
-        _myTextLabel.numberOfLines = 0;
-        _myTextLabel.font = [UIFont systemFontOfSize:15];
-        [self.container addSubview:_myTextLabel];
-
         _myLinkLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _myLinkLabel.text = @"点击查看 >";
         _myLinkLabel.font = [UIFont systemFontOfSize:15];
