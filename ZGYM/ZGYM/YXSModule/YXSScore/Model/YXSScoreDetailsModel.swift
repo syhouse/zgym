@@ -11,7 +11,7 @@ import ObjectMapper
 
 class YXSScoreDetailsModel: NSObject, Mappable {
     ///平均分
-    var averageScore: Int?
+    var averageScore: Float?
     ///班级ID
     var classId: Int?
     ///班级名称
@@ -25,9 +25,9 @@ class YXSScoreDetailsModel: NSObject, Mappable {
     ///最高学段分
     var highestBranch: String?
     ///最高分
-    var highestScore: Int?
+    var highestScore: Float?
     ///最低分
-    var lowestScore: Int?
+    var lowestScore: Float?
     ///人数
     var number: Int?
     ///阅读人数
@@ -48,7 +48,13 @@ class YXSScoreDetailsModel: NSObject, Mappable {
     var avatar: String?
     
     /// 老师imid
-    var teacherImId: String?
+    var teacherImId: String {
+        get {
+            return "\(teacherId ?? 0)TEACHER"
+        }
+    }
+    
+    var teacherId: Int?
     
     var achievementChildrenSubjectsResponseList: [YXSScoreChildrenSubjectsModel]?
     var achievementChildrenSubjectsResponseSum: YXSScoreChildrenSubjectsModel?
@@ -81,7 +87,7 @@ class YXSScoreDetailsModel: NSObject, Mappable {
         achievementChildrenSubjectsResponseList <- map["achievementChildrenSubjectsResponseList"]
         achievementChildrenSubjectsResponseSum <- map["achievementChildrenSubjectsResponseSum"]
         hierarchySubjectsResponseList <- map["hierarchySubjectsResponseList"]
-        teacherImId <- map["teacherImId"]
+        teacherId <- map["teacherId"]
     }
 }
 
@@ -89,7 +95,7 @@ class YXSScoreChildrenSubjectsModel: NSObject, Mappable {
     /// 小孩当前得分分段
     var branch: String?
     /// 得分
-    var score: Int?
+    var score: Float?
     /// 科目ID
     var subjectsId: Int?
     /// 科目名

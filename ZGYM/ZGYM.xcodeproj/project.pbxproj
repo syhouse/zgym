@@ -875,6 +875,7 @@
 		E5AAF9E1248F1FA900D21EEB /* YXSScoreLevelTeacherListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9E0248F1FA900D21EEB /* YXSScoreLevelTeacherListCell.swift */; };
 		E5AAF9E3248F826300D21EEB /* YXSScoreReadingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9E2248F826200D21EEB /* YXSScoreReadingListVC.swift */; };
 		E5AAF9E5248F83AA00D21EEB /* YXSScoreContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9E4248F83A900D21EEB /* YXSScoreContainerVC.swift */; };
+		E5AAF9EB249328AF00D21EEB /* Float+YXSCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAF9EA249328AF00D21EEB /* Float+YXSCategory.swift */; };
 		E5AC9B7B246A849B000B47BB /* YXSCollectBabyhearListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7A246A849B000B47BB /* YXSCollectBabyhearListVC.swift */; };
 		E5AC9B7E246BD3AF000B47BB /* YXSCollectArticleListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7D246BD3AF000B47BB /* YXSCollectArticleListVC.swift */; };
 		E5AC9B80246BD49F000B47BB /* YXSCollectArticleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AC9B7F246BD49F000B47BB /* YXSCollectArticleCell.swift */; };
@@ -2237,6 +2238,7 @@
 		E5AAF9E0248F1FA900D21EEB /* YXSScoreLevelTeacherListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreLevelTeacherListCell.swift; sourceTree = "<group>"; };
 		E5AAF9E2248F826200D21EEB /* YXSScoreReadingListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreReadingListVC.swift; sourceTree = "<group>"; };
 		E5AAF9E4248F83A900D21EEB /* YXSScoreContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSScoreContainerVC.swift; sourceTree = "<group>"; };
+		E5AAF9EA249328AF00D21EEB /* Float+YXSCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Float+YXSCategory.swift"; sourceTree = "<group>"; };
 		E5AC9B7A246A849B000B47BB /* YXSCollectBabyhearListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectBabyhearListVC.swift; sourceTree = "<group>"; };
 		E5AC9B7D246BD3AF000B47BB /* YXSCollectArticleListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectArticleListVC.swift; sourceTree = "<group>"; };
 		E5AC9B7F246BD49F000B47BB /* YXSCollectArticleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCollectArticleCell.swift; sourceTree = "<group>"; };
@@ -3547,6 +3549,7 @@
 				6F07FE102445D7F20090975B /* Date+YXSCategory.swift */,
 				6F07FE112445D7F20090975B /* String+YXSCategory.swift */,
 				6F07FE122445D7F20090975B /* UITextField+YXSPlaceholder.swift */,
+				E5AAF9EA249328AF00D21EEB /* Float+YXSCategory.swift */,
 				6F07FE132445D7F20090975B /* UIView+YXSCallUp.swift */,
 				6F07FE142445D7F20090975B /* UITextField+YXSClearButton.swift */,
 				6F07FE152445D7F20090975B /* UIkit */,
@@ -6647,6 +6650,7 @@
 				6F0704742445D8040090975B /* YXSAlbum.swift in Sources */,
 				6F0703F72445D8030090975B /* YXSXMLYRequest.swift in Sources */,
 				6F944A53248A270B0078E008 /* YXSSolitaireCollectorSetupDetailBaseCell.swift in Sources */,
+				E5AAF9EB249328AF00D21EEB /* Float+YXSCategory.swift in Sources */,
 				6FEA7C402452990E0017C9CA /* JRTitleCollectionViewCell.m in Sources */,
 				6F0705372445D8050090975B /* YXSRecordAudioView.swift in Sources */,
 				E58F16F2245149D500A6AC18 /* YXSUploadSourceHelper.swift in Sources */,

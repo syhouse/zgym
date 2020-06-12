@@ -58,7 +58,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         tableView.register(YXSPunchCardListHomeCell.self, forCellReuseIdentifier: "SLPunchCardListHomeCell")
         tableView.register(SLSolitaireListHomeCell.self, forCellReuseIdentifier: "SLSolitaireListHomeCell")
         tableView.register(YXSHomePeriodicalCell.self, forCellReuseIdentifier: "YXSHomePeriodicalCell")
-        
+        tableView.register(YXSScoreListHomeCell.self, forCellReuseIdentifier: "YXSScoreListHomeCell")
         tableView.tableFooterView = UIView(frame: CGRect.init(x: 0, y: 0, width: self.view.width, height: 0.01))
         //老师展示发布
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
@@ -289,6 +289,47 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             yxs_showComment(indexPath)
         case .periodical:
             yxs_pushPeriodicalHtml(id: model.periodicalListModel?.articles?.first?.id ?? 0)
+        case .score:
+            model.scoreListModel?.examName = model.scoreListModel?.title
+            model.scoreListModel?.examId = model.serviceId
+            model.scoreListModel?.creationTime = model.createTime
+            model.scoreListModel?.className = model.className
+            model.scoreListModel?.classId = model.classId
+            model.scoreListModel?.teacherName = model.teacherName
+            model.scoreListModel?.teacherId = model.teacherId
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT && model.isRead != 1{
+                /// 标记页面已读
+                if !(model.readList?.contains(childId ?? 0) ?? false) {
+                    model.childrenId = childId
+                    UIUtil.yxs_loadReadData(model)
+                }
+            }
+            if let strategy = model.scoreListModel?.calculativeStrategy, strategy == 10 {
+                /// 分数制
+                if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                    let detail = YXSScoreNumTeacherDetailsVC.init(model: model.scoreListModel!)
+                    navigationController?.pushViewController(detail)
+                } else {
+//                    UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: childId ?? 0)
+                    let detail = YXSScoreNumParentDetailsVC.init(model: model.scoreListModel!)
+                    detail.examId = model.serviceId ?? 0
+                    detail.childrenId = childId ?? 0
+                    navigationController?.pushViewController(detail)
+                }
+            } else {
+                /// 等级制
+                if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
+                    let detail = YXSScoreLevelTeacherDetailsVC.init(model: model.scoreListModel!)
+                    self.navigationController?.pushViewController(detail)
+                    
+                } else {
+//                    UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: childId ?? 0)
+                    let detail = YXSScoreLevelParentDetailsVC.init(model: model.scoreListModel!)
+                    detail.examId = model.serviceId ?? 0
+                    detail.childrenId = childId ?? 0
+                    navigationController?.pushViewController(detail)
+                }
+            }
         default:
             break
         }
@@ -432,7 +473,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                 }else if model.type == .periodical{
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomePeriodicalCell") as? YXSHomeBaseCell
                 } else if model.type == .score {
-                    cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell
+                    cell = tableView.dequeueReusableCell(withIdentifier: "YXSScoreListHomeCell") as? YXSHomeBaseCell
                 } else {
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell
                 }

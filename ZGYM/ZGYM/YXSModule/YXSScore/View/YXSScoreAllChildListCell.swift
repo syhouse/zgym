@@ -43,7 +43,6 @@ class YXSScoreAllChildListCell: UITableViewCell {
         }
         scoreNumLbl.snp.makeConstraints { (make) in
             make.right.equalTo(-20)
-            make.width.equalTo(50)
             make.top.bottom.equalTo(0)
         }
         
@@ -65,7 +64,7 @@ class YXSScoreAllChildListCell: UITableViewCell {
         }
         avatarImageV.sd_setImage(with: URL(string: model.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
         nameLbl.text = model.childrenName
-        scoreNumLbl.text = "\(String(model.sumScore ?? 0))分"
+        scoreNumLbl.text = "\(model.sumScore?.cleanZero ?? "")分"
     }
     
     // MARK: - getter&setter

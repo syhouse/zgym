@@ -115,8 +115,9 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
             if let dateStr = model.creationTime, dateStr.count > 0 {
                 self.headerExmTimeLbl.text = "发布时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
             }
-            self.highestScoreLbl.text = "\(String(model.highestScore ?? 0))分"
-            self.averageScoreLbl.text = "\(String(model.averageScore ?? 0))分"
+            
+            self.highestScoreLbl.text = "\(model.highestScore?.cleanZero ?? "")分"
+            self.averageScoreLbl.text = "\(model.averageScore?.cleanZero ?? "")分"
             
             self.setBarChartData(list: model.totalStatement ?? [YXSScoreTotalStatementModel]())
             UIUtil.yxs_setLabelAttributed(self.visibleView.textLabel, text: [String(model.readNumber ?? 0), "/\(model.number ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF")])

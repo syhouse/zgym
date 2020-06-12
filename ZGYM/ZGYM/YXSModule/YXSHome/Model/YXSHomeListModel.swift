@@ -62,6 +62,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             if type == .periodical{
                 periodicalListModel = YXSPeriodicalListModel.init(JSONString: content ?? "")
                 SLLog(periodicalListModel)
+            } else if type == .score {
+                scoreListModel = YXSScoreListModel.init(JSONString: content ?? "")
             }
             
         }
@@ -420,6 +422,8 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
     var friendCircleModel: YXSFriendCircleModel?
     ///优期刊数据 使用该model
     var periodicalListModel: YXSPeriodicalListModel?
+    /// 成绩数据 使用该model
+    var scoreListModel: YXSScoreListModel?
     ///是否是首页需要显示标签
     var isShowTag: Bool = false
     
@@ -451,6 +455,15 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                     return friendsModel.friendHeight + 30
                 }
                 return 0
+            }
+            
+            /// 成绩
+            if serviceType == 4{
+                if isShowTag{
+                    return 152.5
+                }else{
+                    return 117
+                }
             }
             
             if frameModel == nil{

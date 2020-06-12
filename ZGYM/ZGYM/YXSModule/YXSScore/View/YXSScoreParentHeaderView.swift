@@ -113,7 +113,7 @@ class YXSScoreParentHeaderView: UIView {
             var valueArr = [String]()
             for sub in list {
                 keyArr.append(sub.subjectsName ?? "")
-                valueArr.append(String(sub.score ?? 0))
+                valueArr.append(sub.score?.cleanZero ?? "")
             }
             if list.count > 3 {
                 line = list.count / 3
@@ -127,7 +127,7 @@ class YXSScoreParentHeaderView: UIView {
                 columns = list.count + 1
             }
             keyArr.append(model.achievementChildrenSubjectsResponseSum?.subjectsName ?? "")
-            valueArr.append(String(model.achievementChildrenSubjectsResponseSum?.score ?? 0))
+            valueArr.append(model.achievementChildrenSubjectsResponseSum?.score?.cleanZero ?? "")
             let width = CGFloat(SCREEN_WIDTH - 60.0)
             let height = CGFloat(line * 34)
             formTable.snp.remakeConstraints { (make) in

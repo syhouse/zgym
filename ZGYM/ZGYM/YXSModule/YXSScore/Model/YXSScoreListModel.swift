@@ -27,6 +27,7 @@ class YXSScoreListModel: NSObject, NSCoding, Mappable {
     /// 班级名称
     var className: String?
     
+    var title: String?
     
     /// 老师名称
     var teacherName: String?
@@ -46,6 +47,7 @@ class YXSScoreListModel: NSObject, NSCoding, Mappable {
 
     func mapping(map: Map)
     {
+        title <- map["title"]
         classId <- map["classId"]
         calculativeStrategy <- map["calculativeStrategy"]
         creationTime <- map["creationTime"]
@@ -61,6 +63,7 @@ class YXSScoreListModel: NSObject, NSCoding, Mappable {
     }
     
     @objc required init(coder aDecoder: NSCoder) {
+        title = aDecoder.decodeObject(forKey: "title") as? String
         classId = aDecoder.decodeObject(forKey: "classId") as? Int
         calculativeStrategy = aDecoder.decodeObject(forKey: "calculativeStrategy") as? Int
         creationTime = aDecoder.decodeObject(forKey: "creationTime") as? String
@@ -76,6 +79,9 @@ class YXSScoreListModel: NSObject, NSCoding, Mappable {
     }
     @objc func encode(with aCoder: NSCoder)
     {
+        if title != nil{
+            aCoder.encode(title, forKey: "title")
+        }
         if classId != nil{
             aCoder.encode(classId, forKey: "classId")
         }

@@ -17,7 +17,7 @@ class YXSScoreChildListModel: NSObject, Mappable {
     /// 孩子名称
     var childrenName: String?
     /// 孩子总分数
-    var sumScore: Int?
+    var sumScore: Float?
     
     /// 等级
     var rank: String?
@@ -51,7 +51,7 @@ class YXSScoreChildSingleReportModel: NSObject, Mappable {
     /// 统计柱状图数据
     var statisticsBranchSubjectsScoreNumberEntities: [YXSScoreTotalStatementModel]?
     /// 孩子当前得分
-    var currentScore: Int?
+    var currentScore: Float?
     /// 科目id
     var subjectsId: Int?
     /// 孩子当前分段

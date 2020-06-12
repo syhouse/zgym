@@ -163,7 +163,7 @@ class YXSBaseRequset: NSObject {
                 }
                 
                 let resutlValue = response.result.value
-                let resultJson = JSON(resutlValue ?? "");
+                let resultJson = JSON(resutlValue ?? "")
                 let code = resultJson["code"].stringValue
                 if code == "0"{
                     SLLog(resultJson.stringValue)

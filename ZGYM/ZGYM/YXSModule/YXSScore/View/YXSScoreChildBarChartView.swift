@@ -217,11 +217,11 @@ class YXSScoreChildBarChartView: UIView {
             }
             currentChildechelon = 3 - hasIndex
         }
-        var childName = ""
-        if YXSPersonDataModel.sharePerson.personRole == .PARENT {
-            childName.append("您的孩子")
-        }
-        childName.append(self.detailsModel?.childrenName ?? "")
+        let childName = self.detailsModel?.childrenName ?? ""
+//        if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+//            childName.append("您的孩子")
+//        }
+//        childName.append(self.detailsModel?.childrenName ?? "")
         
         switch currentChildechelon {
         case 0:
@@ -247,7 +247,7 @@ class YXSScoreChildBarChartView: UIView {
         } else {
             barChartView.signDescribe = self.detailsModel?.childrenName
         }
-        barChartView.signValues = "\(String(self.detailsModel?.achievementChildrenSubjectsResponseSum?.score ?? 0))分"
+        barChartView.signValues = "\(self.detailsModel?.achievementChildrenSubjectsResponseSum?.score?.cleanZero ?? "")分"
         
         barChartView.xValuesArr = xArr
         barChartView.yValuesArr = yArr

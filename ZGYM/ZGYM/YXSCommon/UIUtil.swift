@@ -387,17 +387,22 @@ extension UIUtil{
                 isEnd = false
             }
         }
+        if model.type == .score {
+            isEnd = false
+        }
         
         UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER || model.isRead == 1 || isEnd{
             return
         }
         model.isRead = 1
-        if model.type == .homework || model.type == .notice{
+        if model.type == .homework || model.type == .notice || model.type == .score{
             if model.type == .homework{
                 YXSEducationHomeworkCustodianUpdateReadRequest.init(childrenId: model.childrenId ?? 0, homeworkCreateTime: model.createTime ?? "", homeworkId: model.serviceId ?? 0).request(nil, failureHandler: nil)
             }else if model.type == .notice{
                 YXSEducationNoticeCustodianUpdateReadRequest.init( childrenId: model.childrenId ?? 0, noticeCreateTime: model.createTime ?? "", noticeId: model.serviceId ?? 0).request(nil, failureHandler: nil)
+            } else if model.type == .score{
+                YXSEducationReadingScoreRequest.init(childrenId: model.childrenId ?? 0, examId: model.serviceId ?? 0).request(nil, failureHandler: nil)
             }
             if showLoading{
                 MBProgressHUD.yxs_showMessage(message: "已阅读", inView: UIUtil.currentNav().view)
