@@ -30,6 +30,9 @@ class YXSSolitaireTemplateListController: YXSBaseTableViewController {
         tableView.rowHeight = 55
         
         loadTemplateData()
+        
+        
+        self.dataSouer = YXSCacheHelper.yxs_getCacheSolitaireTemplateLists()
     }
     
     override func yxs_loadNextPage() {
@@ -47,6 +50,7 @@ class YXSSolitaireTemplateListController: YXSBaseTableViewController {
             
             self.loadMore = templateLists.count == kPageSize
             self.tableView.reloadData()
+            YXSCacheHelper.yxs_cacheSolitaireTemplateLists(dataSource: self.dataSouer)
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
             self.yxs_endingRefresh()

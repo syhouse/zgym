@@ -20,6 +20,12 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     var currentPage: Int?
     
     var updateAlbumModel: ((_ albumModel:  YXSPhotoAlbumsModel)->())?
+    
+    /// 当前是否展示工具栏
+    var iscurrentShowTool: Bool = true
+    
+    var currentIndex: Int = 0
+    
     init(dataSource: [YXSPhotoAlbumsDetailListModel], albumModel: YXSPhotoAlbumsModel) {
         super.init()
         self.dataSource = dataSource
@@ -82,12 +88,12 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             make.height.equalTo(64)
         })
         
-        view.addSubview(commentView)
-        commentView.snp.makeConstraints({ (make) in
-            make.left.equalTo(0)
-            make.right.equalTo(0)
-            make.bottom.equalTo(0)
-        })
+//        view.addSubview(commentView)
+//        commentView.snp.makeConstraints({ (make) in
+//            make.left.equalTo(0)
+//            make.right.equalTo(0)
+//            make.bottom.equalTo(0)
+//        })
     }
     
     // MARK: - Request
@@ -118,6 +124,27 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
 //
 //        }
 //    }
+    
+    // MARK: - private
+    private func reloadToolStatus(){
+        if iscurrentShowTool{
+            customNav.isHidden = false
+            footerView.isHidden = false
+        }else{
+            customNav.isHidden = true
+            footerView.isHidden = true
+        }
+    }
+    
+    private  func updateUI(){
+        reloadToolStatus()
+        customNav.title = "\(currentIndex + 1)/\(self.dataSource.count)"
+        albumQueryPraiseCommentCountRequest(page: currentIndex)
+//        let model = praisesModels[dataSource[currentIndex].id ?? 0]
+//        if let model = model{
+//            footerView.setModel(model: model)
+//        }
+    }
     
     // MARK: - Action
     @objc func praiseOrCancelClick(sender: UIButton) {
@@ -187,7 +214,11 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             let data = YBIBImageData()
             data.imageURL = URL(string: model.resourceUrl ?? "")
             data.interactionProfile.disable = true
-            data.singleTouchBlock = {(ybImgData) in}
+            data.singleTouchBlock = {[weak self](ybImgData)in
+                guard let strongSelf = self else { return }
+                strongSelf.iscurrentShowTool = false
+                strongSelf.reloadToolStatus()
+            }
             return data
             
         } else {
@@ -196,16 +227,19 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             data.videoURL = URL(string: model.resourceUrl ?? "")
             data.interactionProfile.disable = true
             data.shouldHideForkButton = true
-            data.singleTouchBlock = {(ybImgData) in}
+            data.singleTouchBlock = {[weak self](ybImgData)in
+                guard let strongSelf = self else { return }
+                strongSelf.iscurrentShowTool = false
+                strongSelf.reloadToolStatus()
+            }
             return data
         }
     }
     
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, pageChanged page: Int, data: YBIBDataProtocol) {
-        customNav.title = "\(page + 1)/\(dataSource.count)"
-        albumQueryPraiseCommentCountRequest(page: page)
-//        albumQueryCommentListRequest(page: page)
-        commentView.loadData(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: dataSource[page].id ?? 0)
+        currentIndex = page
+        updateUI()
+//        commentView.loadData(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: dataSource[page].id ?? 0)
     }
     
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, respondsToLongPressWithData data: YBIBDataProtocol) {

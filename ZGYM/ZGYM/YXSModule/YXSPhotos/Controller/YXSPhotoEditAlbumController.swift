@@ -102,6 +102,9 @@ class YXSPhotoEditAlbumController: YXSEditAlbumBaseController {
             self.navigationController?.yxs_existViewController(existClass: YXSPhotoClassPhotoAlbumListController.self, complete: { [weak self](vc) in
                 guard let weakSelf = self else {return}
                 vc.removeAlbum(albumModel: weakSelf.albumModel)
+                weakSelf.navigationController?.yxs_existViewController(existClass: YXSPhotoClassListController.self, complete: { (listVc) in
+                    listVc.yxs_loadData()
+                })
                 weakSelf.navigationController?.popToViewController(vc, animated: true)
             })
 

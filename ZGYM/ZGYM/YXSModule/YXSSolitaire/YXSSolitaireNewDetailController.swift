@@ -410,10 +410,10 @@ extension YXSSolitaireNewDetailController{
                             solitaireselectModel.index = index
                             solitaireselectModel.title = optionItem.optionContext
                             if !(optionItem.optionImage ?? "").isEmpty{
-                                 let mediaModel = SLPublishMediaModel()
-                                 mediaModel.serviceUrl = optionItem.optionImage
-                                 solitaireselectModel.mediaModel = mediaModel
-                             }
+                                let mediaModel = SLPublishMediaModel()
+                                mediaModel.serviceUrl = optionItem.optionImage
+                                solitaireselectModel.mediaModel = mediaModel
+                            }
                             optionModels.append(solitaireselectModel)
                         }
                         questionModel.solitaireSelects = optionModels
@@ -792,32 +792,42 @@ extension YXSSolitaireNewDetailController{
         if isShowRecall{
             censusCommitId = cModel.censusCommitId
         }
-        if headerSelectedIndex == 0 {
-            let cell:YXSDetailSubTitleBottomCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailSubTitleBottomCell") as! YXSDetailSubTitleBottomCell
-            cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : "\(cModel.realName ?? "")\(cModel.relationship?.yxs_RelationshipValue() ?? "")"
-            cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
-            cell.recallView.addTarget(self, action: #selector(recallClick), for: .touchUpInside)
-            cell.recallView.isHidden = !isShowRecall
-            cell.setRemarkTitle(remark: cModel.remark)
-            cell.btnPhone.tag = indexPath.row
-            cell.btnChat.tag = indexPath.row
-            cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
-            cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
-            return cell
-            
-        } else {
-            let cell:YXSDetailNormalRecallCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailNormalRecallCell") as! YXSDetailNormalRecallCell
-            cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : "\(cModel.realName ?? "")\(cModel.relationship?.yxs_RelationshipValue() ?? "")"
-            cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
-            cell.recallView.addTarget(self, action: #selector(recallClick), for: .touchUpInside)
-            cell.recallView.isHidden = !isShowRecall
-            cell.btnPhone.tag = indexPath.row
-            cell.btnChat.tag = indexPath.row
-            cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
-            cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
-            return cell
-        }
-        
+        //        if headerSelectedIndex == 0 {
+        //            let cell:YXSDetailSubTitleBottomCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailSubTitleBottomCell") as! YXSDetailSubTitleBottomCell
+        //            cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : "\(cModel.realName ?? "")\(cModel.relationship?.yxs_RelationshipValue() ?? "")"
+        //            cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
+        //            cell.recallView.addTarget(self, action: #selector(recallClick), for: .touchUpInside)
+        //            cell.recallView.isHidden = !isShowRecall
+        //            cell.setRemarkTitle(remark: cModel.remark)
+        //            cell.btnPhone.tag = indexPath.row
+        //            cell.btnChat.tag = indexPath.row
+        //            cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
+        //            cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
+        //            return cell
+        //
+        //        } else {
+        //            let cell:YXSDetailNormalRecallCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailNormalRecallCell") as! YXSDetailNormalRecallCell
+        //            cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : "\(cModel.realName ?? "")\(cModel.relationship?.yxs_RelationshipValue() ?? "")"
+        //            cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
+        //            cell.recallView.addTarget(self, action: #selector(recallClick), for: .touchUpInside)
+        //            cell.recallView.isHidden = !isShowRecall
+        //            cell.btnPhone.tag = indexPath.row
+        //            cell.btnChat.tag = indexPath.row
+        //            cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
+        //            cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
+        //            return cell
+        //        }
+        let cell:YXSDetailSubTitleBottomCell = tableView.dequeueReusableCell(withIdentifier: "YXSDetailSubTitleBottomCell") as! YXSDetailSubTitleBottomCell
+        cell.lbTitle.text = childrenId == cModel.childrenId ? "我" : "\(cModel.realName ?? "")\(cModel.relationship?.yxs_RelationshipValue() ?? "")"
+        cell.imgAvatar.sd_setImage(with: URL(string: cModel.avatar ?? ""), placeholderImage: kImageUserIconStudentDefualtImage)
+        cell.recallView.addTarget(self, action: #selector(recallClick), for: .touchUpInside)
+        cell.recallView.isHidden = !isShowRecall
+        cell.setRemarkTitle(remark: cModel.remark)
+        cell.btnPhone.tag = indexPath.row
+        cell.btnChat.tag = indexPath.row
+        cell.btnPhone.addTarget(self, action: #selector(yxs_callUpClick(sender:)), for: .touchUpInside)
+        cell.btnChat.addTarget(self, action: #selector(yxs_chatClick(sender:)), for: .touchUpInside)
+        return cell
     }
     
     func setupRightBarButtonItem() {

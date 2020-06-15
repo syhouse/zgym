@@ -32,6 +32,12 @@ class YXSSolitaireSelectTypeController: YXSBaseTableViewController {
         tableView.rowHeight = 55
         tableView.isScrollEnabled = false
         
+        
+        let lists = YXSCacheHelper.yxs_getCacheSolitaireTemplateLists()
+        let maxCount = lists.count > 3 ? 3 : lists.count
+        for index in 0..<maxCount{
+            self.dataSouer.append(lists[index])
+        }
         loadTemplateData()
     }
     
@@ -43,6 +49,7 @@ class YXSSolitaireSelectTypeController: YXSBaseTableViewController {
             for index in 0..<maxCount{
                 self.dataSouer.append(templateLists[index])
             }
+            YXSCacheHelper.yxs_cacheSolitaireTemplateLists(dataSource: templateLists)
             self.tableView.reloadData()
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)

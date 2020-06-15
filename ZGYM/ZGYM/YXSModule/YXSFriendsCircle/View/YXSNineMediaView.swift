@@ -34,6 +34,9 @@ class YXSNineMediaView: UIView{
     public var edges: UIEdgeInsets = UIEdgeInsets.zero
     public var padding: CGFloat = 5
     
+    ///单张图片点击事件block  可以自己实现
+    public var itemClickBlock: ((_ index: Int) -> ())?
+    
     /// 是否能编辑涂鸦（老师对家长提交的作业进行批改）
     public var isGraffiti: Bool = false
     
@@ -100,26 +103,30 @@ class YXSNineMediaView: UIView{
     
     @objc func imageClick(_ tap: UITapGestureRecognizer){
         let index = (tap.view?.tag ?? kImageOrginTag) - kImageOrginTag
-        if let medias = medias{
-            let maxCount = medias.count > imageMaxCount ? imageMaxCount :  medias.count
-            var urls = [URL]()
-            var images = [UIImage?]()
-            for index in 0..<maxCount{
-                let model = medias[index]
-                if model.type == .serviceVedio{
-                    UIUtil.pushOpenVideo(url: model.url ?? "")
-                    return
-                }else{
-                    if model.type == .serviceImg {
-                        if let url = URL.init(string: model.url ?? ""){
-                            urls.append(url)
-                        }
+        if let itemClickBlock = itemClickBlock{
+            itemClickBlock(index)
+        }else{
+            if let medias = medias{
+                let maxCount = medias.count > imageMaxCount ? imageMaxCount :  medias.count
+                var urls = [URL]()
+                var images = [UIImage?]()
+                for index in 0..<maxCount{
+                    let model = medias[index]
+                    if model.type == .serviceVedio{
+                        UIUtil.pushOpenVideo(url: model.url ?? "")
+                        return
                     }else{
-                        images.append(UIImage.init(named: model.url ?? ""))
+                        if model.type == .serviceImg {
+                            if let url = URL.init(string: model.url ?? ""){
+                                urls.append(url)
+                            }
+                        }else{
+                            images.append(UIImage.init(named: model.url ?? ""))
+                        }
                     }
                 }
+                YXSShowBrowserHelper.showImage(urls: urls, images: images, currentIndex: index)
             }
-            YXSShowBrowserHelper.showImage(urls: urls, images: images, currentIndex: index)
         }
     }
 }

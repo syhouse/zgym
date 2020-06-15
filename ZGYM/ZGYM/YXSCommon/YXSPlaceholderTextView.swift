@@ -77,12 +77,14 @@ class YXSPlaceholderTextView: UITextView{
         placeholderLabel.yxs_height = placeholderLabel.sizeThatFits(CGSize(width: placeholderLabel.yxs_width,height: CGFloat.greatestFiniteMagnitude)).height
     }
     
-    @objc func textDidChange()  {
-        if text.count > limitCount{
-            text = text.mySubString(to: limitCount)
+    @objc func textDidChange(_ notification:Notification)  {
+        if let object = notification.object as? UITextView, object == self{
+            if text.count > limitCount{
+                text = text.mySubString(to: limitCount)
+            }
+            placeholderLabel.isHidden = self.hasText
+            textDidChangeBlock?(self.text)
         }
-        placeholderLabel.isHidden = self.hasText
-        textDidChangeBlock?(self.text)
     }
 }
 

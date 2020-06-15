@@ -16,6 +16,7 @@ class YXSPhotoAlbumsDetailListCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.addSubview(imageView)
         contentView.addSubview(btnSelect)
+        contentView.addSubview(playerImageView)
         layout()
     }
     
@@ -32,13 +33,20 @@ class YXSPhotoAlbumsDetailListCell: UICollectionViewCell {
             make.right.equalTo(-6.5)
             make.top.equalTo(7.5)
         }
+        playerImageView.snp.makeConstraints { (make) in
+            make.size.equalTo(CGSize.init(width: 23, height: 23))
+            make.left.equalTo(12.5)
+            make.bottom.equalTo(-6)
+        }
     }
     
     func setCellModel(_ model: YXSPhotoAlbumsDetailListModel){
         btnSelect.isHidden = !isEdit
         btnSelect.isSelected = model.isSelected
+        playerImageView.isHidden = true
         if model.resourceType == 1{
             imageView.sd_setImage(with: URL.init(string: (model.bgUrl ?? "").yxs_getImageThumbnail()), placeholderImage: UIImage.init(named: "yxs_photo_nocover"))
+            playerImageView.isHidden = false
         }else{
             imageView.sd_setImage(with: URL.init(string: (model.resourceUrl ?? "").yxs_getImageThumbnail()), placeholderImage: UIImage.init(named: "yxs_photo_nocover"))
         }
@@ -57,4 +65,11 @@ class YXSPhotoAlbumsDetailListCell: UICollectionViewCell {
         btn.setBackgroundImage(UIImage(named: "yxs_cell_select"), for: .selected)
         return btn
     }()
+    
+    
+    lazy var playerImageView: UIImageView = {
+        let view = UIImageView(image: UIImage(named: "yxs_photo_play"))
+        return view
+    }()
+    
 }
