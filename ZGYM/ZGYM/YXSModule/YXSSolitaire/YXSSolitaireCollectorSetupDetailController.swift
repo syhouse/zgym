@@ -12,7 +12,7 @@ import NightNight
 
 class YXSSolitaireCollectorSetupDetailController: YXSBaseTableViewController {
     var dataSource: [YXSClassMemberModel] = [YXSClassMemberModel]()
-
+    
     var censusId: Int
     var gatherId: Int
     var option: String?
@@ -37,7 +37,7 @@ class YXSSolitaireCollectorSetupDetailController: YXSBaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.tableView.register(YXSSolitaireCollectorSetupDetailBaseCell.self, forCellReuseIdentifier: "YXSSolitaireCollectorSetupDetailBaseCell")
         self.tableView.estimatedRowHeight = 150
     }
@@ -71,9 +71,9 @@ class YXSSolitaireCollectorSetupDetailController: YXSBaseTableViewController {
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
-   
+    
     // MARK: - Setter
-
+    
     
     // MARK: - Action
     
@@ -96,18 +96,27 @@ class YXSSolitaireCollectorSetupDetailController: YXSBaseTableViewController {
                 UIUtil.yxs_callPhoneNumberRequest(childrenId: model.childrenId ?? 0, classId: strongSelf.classId)
             }
         }
+        cell.imageGoDetialBlock = {
+            [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.pushImageDetailController(indexPath: indexPath)
+        }
         return cell
         
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if type == .image{
-            let model = dataSource[indexPath.row]
-            let vc = YXSSolitaireCollectorSetupImageDetailController()
-            vc.classModel = model
-            vc.title = "\(model.realName ?? "")\(model.relationship?.yxs_RelationshipValue() ?? "")"
-            self.navigationController?.pushViewController(vc)
+            self.pushImageDetailController(indexPath: indexPath)
         }
+    }
+    
+    func pushImageDetailController(indexPath: IndexPath){
+        let model = dataSource[indexPath.row]
+        let vc = YXSSolitaireCollectorSetupImageDetailController()
+        vc.classModel = model
+        vc.title = "\(model.realName ?? "")\(model.relationship?.yxs_RelationshipValue() ?? "")"
+        self.navigationController?.pushViewController(vc)
     }
 }
 
@@ -129,7 +138,7 @@ class  YXSSolitaireCollectorSetupImageDetailController: YXSBaseViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(nineMediaView)
-            nineMediaView.snp.makeConstraints({ (make) in
+        nineMediaView.snp.makeConstraints({ (make) in
             make.top.equalTo(17)
             make.left.equalTo(0)
             make.right.equalTo(0)

@@ -361,7 +361,20 @@ extension YXSCacheHelper {
             NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SolitaireCollectorItems\(YXSPersonDataModel.sharePerson.personRole.rawValue)\(YXSPersonDataModel.sharePerson.userModel.id ?? 0)\(censusId)\(childrenId)".MD5()))
         }
     }
+    
+    /// 获取接龙模版列表
+    public static func yxs_getCacheSolitaireTemplateLists() -> [YXSTemplateListModel]{
+        let lists = NSKeyedUnarchiver.unarchiveObject(withFile: NSUtil.yxs_archiveFile(file: "SolitaireTemplateLists".MD5())) as? [YXSTemplateListModel] ?? [YXSTemplateListModel]()
+        return lists
+    }
+    /// 获取接龙模版列表
+    public static func yxs_cacheSolitaireTemplateLists(dataSource: [YXSTemplateListModel]){
+        DispatchQueue.global().async {
+            NSKeyedArchiver.archiveRootObject(dataSource, toFile: NSUtil.yxs_archiveFile(file: "SolitaireTemplateLists".MD5()))
+        }
+    }
 }
+
 
 // MARK: - 作业详情
 extension YXSCacheHelper {

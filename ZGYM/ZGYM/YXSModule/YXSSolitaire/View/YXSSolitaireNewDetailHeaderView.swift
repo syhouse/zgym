@@ -18,9 +18,9 @@ import NightNight
 import UIKit
 
 class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
-
+    
     var videoTouchedBlock:((_ videoUlr: String)->())?
-
+    
     var pushToContainerBlock: (()->())?
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -30,12 +30,11 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
         self.contentView.addSubview(mediaView)
         self.contentView.addSubview(linkView)
         self.contentView.addSubview(dateView)
-
         mediaView.videoTouchedHandler = { [weak self](url) in
             guard let weakSelf = self else {return}
             weakSelf.videoTouchedBlock?(url)
         }
-
+        
         titleLabel.snp.makeConstraints({ (make) in
             make.top.equalTo(17)
             make.left.equalTo(15)
@@ -63,7 +62,7 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
                 make.right.equalTo(-15)
                 make.height.equalTo(60)
             })
-
+            
             mediaView.snp.makeConstraints({ (make) in
                 make.top.equalTo(readCommitPanel.snp_bottom).offset(17.5)
                 make.left.equalTo(15)
@@ -93,17 +92,25 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
                 make.bottom.equalTo(-27)
             })
             
-//            btnSolitaire.snp.makeConstraints({ (make) in
-//                make.top.equalTo(linkView.snp_bottom).offset(53)
-//                make.centerX.equalTo(self.contentView.snp_centerX)
-//                make.width.equalTo(318)
-//                make.height.equalTo(50)
-//                make.bottom.equalTo(-27)
-//            })
+            self.contentView.addSubview(contactTeacher)
+            self.contactTeacher.snp.makeConstraints({ (make) in
+                make.top.equalTo(titleLabel.snp_bottom).offset(24.5)
+                make.right.equalTo(-15)
+                make.width.equalTo(85)
+                make.height.equalTo(34)
+            })
+            
+            //            btnSolitaire.snp.makeConstraints({ (make) in
+            //                make.top.equalTo(linkView.snp_bottom).offset(53)
+            //                make.centerX.equalTo(self.contentView.snp_centerX)
+            //                make.width.equalTo(318)
+            //                make.height.equalTo(50)
+            //                make.bottom.equalTo(-27)
+            //            })
         }
         
         let cl = NightNight.theme == .night ? kNightBackgroundColor : kTableViewBackgroundColor
-//        self.contentView.yxs_addLine(position: .top, color: cl, leftMargin: 0, rightMargin: 0, lineHeight: 10)
+        //        self.contentView.yxs_addLine(position: .top, color: cl, leftMargin: 0, rightMargin: 0, lineHeight: 10)
         self.contentView.yxs_addLine(position: .bottom, color: cl, leftMargin: 0, rightMargin: 0, lineHeight: 10)
     }
     
@@ -130,7 +137,7 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
         mModel.videoUrl = detailModel?.videoUrl
         mModel.bgUrl = detailModel?.bgUrl
         mediaView.model = mModel
-
+        
         readCommitPanel.firstValue = String(detailModel?.readCount ?? 0)
         readCommitPanel.firstTotal = String(detailModel?.classChildrenCount ?? 0)
         
@@ -192,6 +199,12 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
         pushToContainerBlock?()
     }
     
+    @objc func contactClick(sender: YXSButton) {
+        let conv = TIMManager.sharedInstance()?.getConversation(TIMConversationType.C2C, receiver: "\(detailModel?.teacherId ?? 0)TEACHER")
+        let vc = YXSChatViewController(conversation: conv)!
+        UIUtil.currentNav().pushViewController(vc)
+    }
+    
     // MARK: - getter&setter
     lazy var avatarView: YXSAvatarView = {
         let view = YXSAvatarView()
@@ -223,7 +236,7 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
         view.lbTitle1.addTaget(target: self, selctor: #selector(readListClick))
         view.lbRead.addTaget(target: self, selctor: #selector(readListClick))
         view.lbTotal1.addTaget(target: self, selctor: #selector(readListClick))
-
+        
         view.lbTitle2.text = "提交"
         view.lbTitle2.addTaget(target: self, selctor: #selector(commitListClick))
         view.lbCommit.addTaget(target: self, selctor: #selector(commitListClick))
@@ -239,5 +252,18 @@ class YXSSolitaireNewDetailHeaderView: UITableViewHeaderFooterView {
         label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         return label
     }()
-
+    
+    lazy var contactTeacher: YXSButton = {
+        let btn = YXSButton()
+        btn.setTitle("联系老师", for: .normal)
+        btn.addTarget(self, action: #selector(contactClick(sender:)), for: .touchUpInside)
+        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        btn.setMixedTitleColor(MixedColor(normal: kNight898F9A, night: kNight898F9A), forState: .normal)
+        btn.clipsToBounds = true
+        btn.layer.borderWidth = 1
+        btn.layer.mixedBorderColor = MixedColor(normal: kNight898F9A, night: kNight898F9A)
+        btn.layer.cornerRadius = 17
+        return btn
+    }()
+    
 }

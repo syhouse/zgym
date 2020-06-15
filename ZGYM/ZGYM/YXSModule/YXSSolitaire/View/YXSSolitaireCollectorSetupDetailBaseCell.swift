@@ -11,7 +11,7 @@ import NightNight
 
 class YXSSolitaireCollectorSetupDetailBaseCell: YXSBaseDetailViewCell {
     var callClickBlock:((_ isChat: Bool)->())?
-    
+    var imageGoDetialBlock: ((()->()))?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
@@ -50,6 +50,13 @@ class YXSSolitaireCollectorSetupDetailBaseCell: YXSBaseDetailViewCell {
         btnPhone.addTarget(self, action: #selector(callUpClick), for: .touchUpInside)
         btnChat.addTarget(self, action: #selector(chatClick), for: .touchUpInside)
         
+        let imageView = viewWithTag(kImageOrginTag + 2)
+        if let imageView = imageView{
+            imageView.addSubview(countLabel)
+            countLabel.snp.makeConstraints({ (make) in
+                make.center.equalTo(imageView)
+            })
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -64,6 +71,7 @@ class YXSSolitaireCollectorSetupDetailBaseCell: YXSBaseDetailViewCell {
         callClickBlock?(true)
     }
     
+    var medias = [YXSFriendsMediaModel]()
     func setCellModel(model: YXSClassMemberModel, type: YXSQuestionType){
         
         nineMediaView.isHidden = true
@@ -91,7 +99,14 @@ class YXSSolitaireCollectorSetupDetailBaseCell: YXSBaseDetailViewCell {
                     medias.append(meidaModel)
                 }
             }
+            self.medias = medias
             nineMediaView.medias = medias
+            countLabel.isHidden = true
+            if medias.count > 3{
+                countLabel.isHidden = false
+                countLabel.text = "+\(medias.count - 3)"
+            }
+            
         case .gap:
             detailLabel.isHidden = false
             imgAvatar.snp.remakeConstraints({ (make) in
@@ -123,6 +138,28 @@ class YXSSolitaireCollectorSetupDetailBaseCell: YXSBaseDetailViewCell {
     lazy var nineMediaView: YXSNineMediaView = {
         let nineMediaView = YXSNineMediaView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 0), imageMaxCount: 3)
         nineMediaView.edges = UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 15)
+        nineMediaView.itemClickBlock = {
+            [weak self] (index)in
+            guard let strongSelf = self else { return }
+            let goDetial = index == 2 && strongSelf.medias.count > 3
+            if goDetial{
+                strongSelf.imageGoDetialBlock?()
+            }else{
+                var urls = [URL]()
+                var images = [UIImage?]()
+                for index in 0..<strongSelf.medias.count{
+                    let model = strongSelf.medias[index]
+                    if model.type == .serviceImg {
+                        if let url = URL.init(string: model.url ?? ""){
+                            urls.append(url)
+                        }
+                    }else{
+                        images.append(UIImage.init(named: model.url ?? ""))
+                    }
+                }
+                YXSShowBrowserHelper.showImage(urls: urls, images: images, currentIndex: index)
+            }
+        }
         return nineMediaView
     }()
     
@@ -133,5 +170,14 @@ class YXSSolitaireCollectorSetupDetailBaseCell: YXSBaseDetailViewCell {
         label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#696C73"), night: UIColor.yxs_hexToAdecimalColor(hex: "#696C73"))
         return label
     }()
+    
+    
+    lazy var countLabel: YXSLabel = {
+        let label = YXSLabel()
+        label.font = UIFont.boldSystemFont(ofSize: 29)
+        label.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+        return label
+    }()
 }
 
+//29
