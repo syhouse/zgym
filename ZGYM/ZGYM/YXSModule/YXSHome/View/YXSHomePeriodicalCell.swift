@@ -163,6 +163,7 @@ class YXSHomePeriodicalCell: YXSHomeBaseCell {
         remaidControl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")
         remaidControl.locailImage = "arrow_gray"
         remaidControl.title = "查看往期"
+        remaidControl.yxs_touchInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         remaidControl.addTarget(self, action: #selector(pushPeriodicalListVc), for: .touchUpInside)
         return remaidControl
     }()
