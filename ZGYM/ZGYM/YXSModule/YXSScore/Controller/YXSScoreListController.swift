@@ -15,9 +15,11 @@ class YXSScoreListController: YXSBaseTableViewController{
 
     var currentChildrenId: Int = NSObject.init().yxs_user.currentChild?.id ?? 0
     var currentClassId: Int = NSObject.init().yxs_user.currentChild?.classId ?? 0
-    init(classId: Int = NSObject.init().yxs_user.currentChild?.classId ?? 0, childId: Int = NSObject.init().yxs_user.currentChild?.id ?? 0) {
+    init(classId: Int = NSObject.init().yxs_user.currentChild?.classId ?? 0, childId: Int?) {
         super.init()
-        currentChildrenId = childId
+        if let child = childId, child > 0 {
+            currentChildrenId = child
+        }
         currentClassId = classId
     }
     
@@ -45,6 +47,25 @@ class YXSScoreListController: YXSBaseTableViewController{
                 make.size.equalTo(CGSize.init(width: 51.5, height: 51.5))
             }
         }
+        //家长阅读成功
+        NotificationCenter.default.addObserver(self, selector: #selector(yxs_updateListForRead), name: NSNotification.Name.init(rawValue: kParentReadSucessNotification), object: nil)
+    }
+    
+    ///阅读成功刷新
+    @objc func yxs_updateListForRead(_ notification:Notification){
+        let userInfo = notification.object as? [String: Any]
+        if let notificationModel = userInfo?[kNotificationModelKey] as? YXSHomeListModel{
+            for (row,model) in dataSource.enumerated(){
+                if model.examId == notificationModel.serviceId {
+                    model.isRead = true
+                    self.tableView.reloadRows(at: [IndexPath.init(row: row, section: 0)], with: UITableView.RowAnimation.automatic)
+                }
+            }
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -130,6 +151,16 @@ class YXSScoreListController: YXSBaseTableViewController{
         tableView.deselectRow(at: indexPath, animated: true)
         if dataSource.count > indexPath.row {
             let model = dataSource[indexPath.row]
+            
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT && !(model.isRead ?? false){
+                /// 标记页面已读
+                let listModel = YXSHomeListModel.init(JSON: ["":""])
+                listModel?.childrenId = currentChildrenId
+                listModel?.serviceId = model.examId
+                listModel?.isRead = 0
+                listModel?.serviceType = 4
+                UIUtil.yxs_loadReadData(listModel!)
+            }
             if let strategy = model.calculativeStrategy, strategy == 10 {
                 /// 分数制
                 if YXSPersonDataModel.sharePerson.personRole == .TEACHER {

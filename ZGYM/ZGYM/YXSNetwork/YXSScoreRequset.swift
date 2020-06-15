@@ -160,3 +160,24 @@ class YXSEducationScoreReadingChildListRequset: YXSBaseRequset {
     }
 }
 
+// MARK: 已阅未阅列表
+let ScoreChildDetails = "/achievement/achievementSingleDetails"
+class YXSEducationScoreChildDetailsRequset: YXSBaseRequset {
+    init(examId: Int, childrenId: Int = 0) {
+        super.init()
+        method = .post
+        host = homeHost
+        path = ScoreChildDetails
+        
+        if childrenId == 0 {
+            param = [
+            "examId":examId]
+        } else {
+            param = [
+            "examId":examId,
+            "childrenId":childrenId]
+        }
+        
+    }
+}
+

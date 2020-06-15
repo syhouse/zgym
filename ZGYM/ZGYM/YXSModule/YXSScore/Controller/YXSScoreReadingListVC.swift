@@ -56,9 +56,8 @@ class YXSScoreReadingListVC: YXSBaseTableViewController, JXCategoryListContentVi
             childrenIdList.append(sub.childrenId ?? 0)
         }
         MBProgressHUD.yxs_showLoading()
-        YXSEducationTeacherOneTouchReminderRequest(childrenIdList: childrenIdList, classId: homeListModel?.classId ?? 0, opFlag: 0, serviceId: homeListModel?.examId ?? 0, serviceType: 4, serviceCreateTime: homeListModel?.creationTime ?? "").request({ (json) in
+        YXSEducationTeacherOneTouchReminderRequest.init(childrenIdList: childrenIdList, classId: homeListModel?.classId ?? 0, opFlag: 0, serviceId: homeListModel?.examId ?? 0, serviceType: 4, serviceCreateTime: homeListModel?.creationTime ?? "", callbackRequestParameter: ["calculativeStrategy":homeListModel?.calculativeStrategy ?? 10]).request({ (json) in
             MBProgressHUD.yxs_showMessage(message: "通知成功")
-
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
