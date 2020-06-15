@@ -252,7 +252,7 @@ class YXSQuestionPublishItem: UIView, YXSSelectMediaHelperDelegate{
     
     lazy var contentField: YXSPlaceholderTextView = {
         let textView = YXSPlaceholderTextView()
-        textView.limitCount = 50
+        textView.limitCount = 100
         textView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.placeholderMixColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"), night: UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA"))

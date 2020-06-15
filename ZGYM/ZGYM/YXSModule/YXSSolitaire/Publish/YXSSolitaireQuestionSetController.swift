@@ -121,6 +121,7 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
         
         textView.text = questionModel.questionStemText
         isNecessarySwitch.swt.isOn = questionModel.isNecessary
+        textCountlabel.text = "\(questionModel.questionStemText?.count ?? 0)/\(limitTextLength)"
         
         switch questionModel.type {
         case .single,.checkbox:

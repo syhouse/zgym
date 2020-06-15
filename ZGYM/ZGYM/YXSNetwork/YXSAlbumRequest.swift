@@ -103,14 +103,15 @@ class YXSEducationAlbumUploadResourceRequest: YXSBaseRequset {
 /// 批量删除相册资源复制地址复制文档
 let albumBatchDeleteResource = "/album/batch-delete-resource"
 class YXSEducationAlbumBatchDeleteResourceRequest: YXSBaseRequset {
-    init(albumId: Int, resourceIdList: [Int]){
+    init(classId: Int,albumId: Int, resourceIdList: [Int]){
         super.init()
         method = .post
         host = fileHost
         path = albumBatchDeleteResource
         param = [
-            "albumId":albumId,
-            "resourceIdList":resourceIdList]
+            "classId": classId,
+            "albumId": albumId,
+            "resourceIdList": resourceIdList]
     }
 }
 

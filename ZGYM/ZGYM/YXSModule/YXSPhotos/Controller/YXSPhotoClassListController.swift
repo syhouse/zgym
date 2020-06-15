@@ -35,7 +35,7 @@ class YXSPhotoClassListController: YXSBaseTableViewController {
         yxs_loadData()
     }
     
-    func yxs_loadData() {
+    public func yxs_loadData() {
         
         YXSEducationAlbumQueryClassListRequest(stage: YXSPersonDataModel.sharePerson.personStage).requestCollection({ [weak self](list: [YXSPhotoClassListCellModel]) in
             guard let weakSelf = self else {return}

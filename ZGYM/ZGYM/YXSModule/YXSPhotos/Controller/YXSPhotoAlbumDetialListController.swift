@@ -11,9 +11,18 @@ import UIKit
 import NightNight
 import ObjectMapper
 
+
+class YXSPhotoAlbumDetialListSectionModel: NSObject{
+    var lists: [YXSPhotoAlbumsDetailListModel] = [YXSPhotoAlbumsDetailListModel]()
+    var createTime: String?
+    var title: String?{
+        return createTime?.yxs_Date().toString(format: DateFormatType.custom("mm月dd日"))
+    }
+}
+
 /// 相片列表
 class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
-    var dataSource: [YXSPhotoAlbumsDetailListModel] = [YXSPhotoAlbumsDetailListModel]()
+    var dataSource: [YXSPhotoAlbumDetialListSectionModel] = [YXSPhotoAlbumDetialListSectionModel]()
     var albumModel: YXSPhotoAlbumsModel
     var videoDuration: Int?
     var updateAlbumModel: ((_ albumModel:  YXSPhotoAlbumsModel)->())?
@@ -25,9 +34,11 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     var isEdit: Bool = false
     var resourceIdList: [Int]{
         var selectModels = [Int]()
-        for model in dataSource{
-            if model.isSelected{
-                selectModels.append(model.id ?? 0)
+        for section in dataSource{
+            for model in section.lists{
+                if model.isSelected{
+                    selectModels.append(model.id ?? 0)
+                }
             }
         }
         return selectModels
@@ -39,10 +50,10 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 6
         layout.minimumInteritemSpacing = 6
-        layout.sectionInset = UIEdgeInsets.init(top: 10, left: 15, bottom: 0, right: 15)
+        layout.sectionInset = UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 15)
         let itemW = (SCREEN_WIDTH - CGFloat(15*2) - CGFloat(2*6))/3
         layout.itemSize = CGSize.init(width: itemW, height: itemW)
-        
+        layout.headerReferenceSize = CGSize(width: SCREEN_WIDTH, height: 47)
         self.layout = layout
     }
     required init?(coder aDecoder: NSCoder) {
@@ -62,7 +73,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         }
         
         collectionView.register(YXSPhotoAlbumsDetailListCell.self, forCellWithReuseIdentifier: "YXSPhotoAlbumsDetailListCell")
-        
+        collectionView.register(YXSPhotoAlbumsDetailListHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSPhotoAlbumsDetailListHeaderView")
         rightButton = yxs_setRightButton(title: "编辑",titleColor: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"))
         rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         rightButton.addTarget(self, action: #selector(rightButtonClick), for: .touchUpInside)
@@ -91,7 +102,20 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
                     model.isSelected = true
                 }
             }
-            self.dataSource += list
+
+            
+            var lastSectionModel = self.dataSource.last
+            for model in list{
+                if let createTime = lastSectionModel?.createTime,NSUtil.yxs_isSameDay(createTime.yxs_Date(), date2:  model.createTime?.yxs_Date() ?? Date()){
+                    lastSectionModel?.lists.append(model)
+                }else{
+                    let newLastModel = YXSPhotoAlbumDetialListSectionModel()
+                    newLastModel.createTime = model.createTime
+                    newLastModel.lists.append(model)
+                    lastSectionModel = newLastModel
+                    self.dataSource.append(newLastModel)
+                }
+            }
             self.loadMore = result["hasNext"].boolValue
             
             self.refreshShowFooterData()
@@ -107,96 +131,64 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         for obj in assets{
             assetList.append(obj.asset)
         }
-        YXSFileUploadHelper.sharedInstance.uploadPHAssetDataSource(mediaAssets: assetList, storageType: .album, classId: albumModel.classId, albumId: albumModel.id, progress: nil, sucess: { [weak self](list) in
-            guard let weakSelf = self else {return}
-            weakSelf.albumResourceUploadRequest(list: list)
-            
+        uploadCount = assets.count
+        var mediaInfos = [SLUploadSourceModel]()
+        for asset in assets{
+            if asset.type == .video {
+                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .video, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
+                videoDuration = Int(asset.asset.duration)
+            }else{
+                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .image, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
+            }
+        }
+        MBProgressHUD.yxs_showUpload()
+        YXSUploadSourceHelper().uploadMedia(mediaInfos: mediaInfos  , progress: {
+            (progress) in
+            DispatchQueue.main.async {
+                MBProgressHUD.yxs_updateUploadProgess(progess: progress)
+            }
+        }, sucess: { (lists) in
+            self.loadUploadAlbumRequest(mediaInfos: lists)
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
         
-//        uploadCount = assets.count
-//        var mediaInfos = [SLUploadSourceModel]()
-//        for asset in assets{
-//            if asset.type == .video {
-//                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .video, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
-//                videoDuration = Int(asset.asset.duration)
-//            }else{
-//                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .image, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
-//            }
-//        }
-//        MBProgressHUD.yxs_showUpload()
-//        YXSUploadSourceHelper().uploadMedia(mediaInfos: mediaInfos  , progress: {
-//            (progress) in
-//            MBProgressHUD.yxs_updateUploadProgess(progess: progress)
-//        }, sucess: { (lists) in
-//            self.loadUploadAlbumRequest(mediaInfos: lists)
-//        }) { (msg, code) in
-//            MBProgressHUD.yxs_showMessage(message: msg)
-//        }
-        
     }
     
-    func albumResourceUploadRequest(list: [YXSFileModel]) {
+    func loadUploadAlbumRequest(mediaInfos: [SLUploadDataSourceModel]){
         var resourceList = [[String: Any]]()
-        for model in list{
-            if model.fileType == "mp4" || model.fileType == "mov"{
-                /// 视频
-                resourceList.append(["resourceType": 1, "resourceUrl": model.fileUrl ?? "", "bgUrl": model.bgUrl ?? "", "videoDuration": model.fileDuration ?? 0])
-            }else {
-                /// 图片
-                resourceList.append(["resourceType": 0, "resourceUrl": model.fileUrl ?? "", "bgUrl": "", "videoDuration": 0])
+        var pictures = [String]()
+        var video: String = ""
+        var bgUrl: String = ""
+        for model in mediaInfos{
+            if model.type == .video{
+                video = model.aliYunUploadBackUrl ?? ""
+            }else if model.type == .image{
+                pictures.append(model.aliYunUploadBackUrl ?? "")
+            }else if model.type == .firstVideo{
+                bgUrl = model.aliYunUploadBackUrl ?? ""
             }
         }
-        
-        
-        YXSEducationAlbumUploadResourceRequest(classId: albumModel.classId ?? 0,albumId: albumModel.id ?? 0, resourceList: resourceList).request({ [weak self](result) in
-            guard let weakSelf = self else {return}
+
+
+        if video.count != 0{
+            resourceList.append(["resourceType": 1, "resourceUrl": video, "bgUrl": bgUrl, "videoDuration": videoDuration ?? 0])
+        }else{
+            for picUrl in pictures{
+                resourceList.append(["resourceType": 0, "resourceUrl": picUrl,"bgUrl": "", "videoDuration": 0])
+            }
+        }
+        YXSEducationAlbumUploadResourceRequest.init(classId: albumModel.classId ?? 0,albumId: albumModel.id ?? 0, resourceList: resourceList).request({ (result) in
             MBProgressHUD.yxs_hideHUD()
-            weakSelf.yxs_refreshData()
-            weakSelf.albumModel.resourceCount = (weakSelf.albumModel.resourceCount ?? 0) + weakSelf.uploadCount
-            weakSelf.updateAlbumModel?(weakSelf.albumModel)
-            
+            self.yxs_refreshData()
+            self.albumModel.resourceCount = (self.albumModel.resourceCount ?? 0) + self.uploadCount
+            self.updateAlbumModel?(self.albumModel)
         }) { (msg, code) in
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
+
     }
-    
-//    func loadUploadAlbumRequest(mediaInfos: [SLUploadDataSourceModel]){
-//        var resourceList = [[String: Any]]()
-//        var pictures = [String]()
-//        var video: String = ""
-//        var bgUrl: String = ""
-//        for model in mediaInfos{
-//            if model.type == .video{
-//                video = model.aliYunUploadBackUrl ?? ""
-//            }else if model.type == .image{
-//                pictures.append(model.aliYunUploadBackUrl ?? "")
-//            }else if model.type == .firstVideo{
-//                bgUrl = model.aliYunUploadBackUrl ?? ""
-//            }
-//        }
-//
-//
-//        if video.count != 0{
-//            resourceList.append(["resourceType": 1, "resourceUrl": video, "bgUrl": bgUrl, "videoDuration": videoDuration ?? 0])
-//        }else{
-//            for picUrl in pictures{
-//                resourceList.append(["resourceType": 0, "resourceUrl": picUrl,"bgUrl": "", "videoDuration": 0])
-//            }
-//        }
-//        YXSEducationAlbumUploadResourceRequest.init(classId: albumModel.classId ?? 0,albumId: albumModel.id ?? 0, resourceList: resourceList).request({ (result) in
-//            MBProgressHUD.yxs_hideHUD()
-//            self.yxs_refreshData()
-//            self.albumModel.resourceCount = (self.albumModel.resourceCount ?? 0) + self.uploadCount
-//            self.updateAlbumModel?(self.albumModel)
-//        }) { (msg, code) in
-//            MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
-//            MBProgressHUD.yxs_showMessage(message: msg)
-//        }
-//
-//    }
     
     func loadDelectAlbum(){
         if resourceIdList.count == 0{
@@ -205,16 +197,17 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         }
         MBProgressHUD.yxs_showLoading()
         let delectCount = resourceIdList.count
-        YXSEducationAlbumBatchDeleteResourceRequest.init(albumId: albumModel.id ?? 0, resourceIdList: resourceIdList).request({ (result) in
+        YXSEducationAlbumBatchDeleteResourceRequest.init(classId: albumModel.classId ?? 0 ,albumId: albumModel.id ?? 0, resourceIdList: resourceIdList).request({ (result) in
             MBProgressHUD.yxs_showMessage(message: "删除完成")
-            
-            var newData = [YXSPhotoAlbumsDetailListModel]()
-            for model in self.dataSource{
-                if model.isSelected == false{
-                    newData.append(model)
+            for section in self.dataSource{
+                section.lists.removeAll { (model) -> Bool in
+                    return model.isSelected
                 }
             }
-            self.dataSource = newData
+            
+            self.dataSource.removeAll { (section) -> Bool in
+                return section.lists.count == 0
+            }
             
             self.albumModel.resourceCount = (self.albumModel.resourceCount ?? 0) - delectCount
             self.updateAlbumModel?(self.albumModel)
@@ -274,13 +267,20 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     }
     
     func cleanSelects(){
-        for model in dataSource{
-            model.isSelected = false
+        for section in dataSource{
+            for model in section.lists{
+                model.isSelected = false
+            }
         }
+        
     }
     
     // MARK: - Delegate
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return dataSource[section].lists.count
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return dataSource.count
     }
     
@@ -288,19 +288,25 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "YXSPhotoAlbumsDetailListCell", for: indexPath) as! YXSPhotoAlbumsDetailListCell
         cell.isEdit = isEdit
-        cell.setCellModel(self.dataSource[indexPath.row])
+        cell.setCellModel(self.dataSource[indexPath.section].lists[indexPath.row])
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let model = self.dataSource[indexPath.row]
+        let model = self.dataSource[indexPath.section].lists[indexPath.row]
         if isEdit{
             model.isSelected = !model.isSelected
             footerView.rightButton.setTitle("删除(\(resourceIdList.count))", for: .normal)
             collectionView.reloadItems(at: [indexPath])
             
         }else{
-            let vc = YXSPhotoPreviewController(dataSource: dataSource, albumModel: albumModel)
+            var showList = [YXSPhotoAlbumsDetailListModel]()
+            for section in dataSource{
+                for model in section.lists{
+                    showList.append(model)
+                }
+            }
+            let vc = YXSPhotoPreviewController(dataSource: showList, albumModel: albumModel)
             vc.updateAlbumModel = updateAlbumModel
             vc.currentPage = indexPath.row
 
@@ -308,6 +314,17 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSPhotoAlbumsDetailListHeaderView", for: indexPath) as! YXSPhotoAlbumsDetailListHeaderView
+//            headerView.setModel(tabListTemplates[indexPath.section])
+            headerView.titleLabel.text = dataSource[indexPath.row].title
+            return headerView
+        }
+        return YXSTemplateListHeaderView()
+    }
+    
+    // MARK: - emptyData
     override func emptyDataSetShouldDisplay(_ scrollView: UIScrollView) -> Bool {
         return showEmptyDataSource
     }
@@ -335,6 +352,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
  
         return view
     }
+    
     // MARK: - getter&setter
     
     lazy var footerView: YXSPhotoAlbumDetialFooterView = {
@@ -344,8 +362,10 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         footerView.selectAllBlock = {[weak self](isSelected) in
             guard let strongSelf = self else { return }
             if isSelected{
-                for model in strongSelf.dataSource{
-                    model.isSelected = true
+                for section in strongSelf.dataSource{
+                    for model in section.lists{
+                        model.isSelected = true
+                    }
                 }
             }else{
                 strongSelf.cleanSelects()
@@ -391,3 +411,24 @@ extension YXSPhotoAlbumDetialListController: YXSRouterEventProtocol{
     }
 }
 
+class YXSPhotoAlbumsDetailListHeaderView: UICollectionReusableView{
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(14.5)
+            make.top.equalTo(19)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textColor = kTextMainBodyColor
+        return label
+    }()
+}

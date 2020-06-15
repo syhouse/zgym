@@ -39,6 +39,9 @@ class YXSPhotoCreateAlbumController: YXSEditAlbumBaseController {
                 MBProgressHUD.yxs_hideHUDInView(view: self.view)
                 MBProgressHUD.yxs_showMessage(message: "创建成功")
                 self.changeAlbumBlock?()
+                self.navigationController?.yxs_existViewController(existClass: YXSPhotoClassListController.self, complete: { (listVc) in
+                    listVc.yxs_loadData()
+                })
                 self.navigationController?.popViewController()
             }) { (msg, code) in
                 MBProgressHUD.yxs_hideHUDInView(view: self.view)
