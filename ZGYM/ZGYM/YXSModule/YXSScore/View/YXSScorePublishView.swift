@@ -34,14 +34,23 @@ class YXSScorePublishView: YXSBasePopingView {
             make.bottom.equalTo(btnDone.snp_top).offset(-15)
             make.top.equalTo(imgBgTop.snp_centerY)
         }
-        let text = NSMutableAttributedString(string: "发布成绩可以通过在电脑上操作输入www.xxxxx.com进行快捷发布哦。")
-        text.yy_setTextHighlight(NSRange.init(location: 0, length: 16), color: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), backgroundColor: nil, tapAction: nil)
-        text.yy_setTextHighlight(NSRange(location: 16, length: 13), color: UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), backgroundColor: nil) { [weak self](view, str, range, rect) in
-            guard let weakSelf = self else {return}
+        let textArr: [String] = ["发布成绩可以通过在电脑上操作输入",
+                       "https://teacher.ym698.com",
+                       "进行快捷发布哦。"]
+        let text = NSMutableAttributedString(string: textArr.joined(separator: ""))
+        let firstStr = textArr.first ?? ""
+        text.yy_setTextHighlight(NSRange.init(location: 0, length: firstStr.count), color: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), backgroundColor: nil, tapAction: nil)
         
+        let secondStr = textArr[1]
+        text.yy_setTextHighlight(NSRange(location: firstStr.count, length: secondStr.count), color: UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7"), backgroundColor: nil) { (view, str, range, rect) in
+//            let updateUrl:URL = URL.init(string: secondStr)!
+//            UIApplication.shared.openURL(updateUrl)
         }
-        text.yy_setTextHighlight(NSRange.init(location: 29, length: 8), color: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), backgroundColor: nil, tapAction: nil)
+        
+        let thirdStr = textArr.last ?? ""
+        text.yy_setTextHighlight(NSRange.init(location: firstStr.count + secondStr.count, length: thirdStr.count), color: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), backgroundColor: nil, tapAction: nil)
         text.yy_font = UIFont.systemFont(ofSize: 16)
+        text.yy_lineBreakMode = .byCharWrapping
         tvContent.attributedText = text
         
         
