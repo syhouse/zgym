@@ -129,6 +129,14 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
             weakSelf.detailModel = model
             YXSCacheHelper.yxs_cacheSolitaireDetailTask(model: model, censusId: weakSelf.censusId ?? 0, childrenId: weakSelf.childrenId ?? 0)
             
+            ///设置已读
+            if !(model.read ?? false){
+                if let model = YXSHomeListModel.init(JSON: ["childrenId": weakSelf.childrenId ?? 0, "serviceId": weakSelf.censusId ?? 0, "serviceType" : 3]){
+                    UIUtil.yxs_loadReadData(model)
+                }
+            }
+
+            
             MBProgressHUD.yxs_showLoading(ignore: true)
             
             if model.type == 2{
@@ -374,14 +382,10 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if detailModel?.type == 2{
-            if headerSelectedIndex == 0{
-                let cModel = partakeResponseLists[headerSelectedIndex][indexPath.row]
-                let remark = (cModel.remark ?? "")
-                let remarkHeight: CGFloat =  UIUtil.yxs_getTextHeigh(textStr: remark, font: UIFont.systemFont(ofSize: 14), width: SCREEN_WIDTH - 15 - 15) + 13.5
-                return 17.5 + 41  + 16 + (remark.isEmpty ? 0 : remarkHeight)
-            }else{
-                return 60
-            }
+            let cModel = partakeResponseLists[headerSelectedIndex][indexPath.row]
+            let remark = (cModel.remark ?? "")
+            let remarkHeight: CGFloat =  UIUtil.yxs_getTextHeigh(textStr: remark, font: UIFont.systemFont(ofSize: 14), width: SCREEN_WIDTH - 15 - 15) + 13.5
+            return 17.5 + 41  + 16 + (remark.isEmpty ? 0 : remarkHeight)
         }else{
             let model = solitaireCollectorItems[indexPath.row]
             return model.getCellDetialHeight(index: indexPath.row)
@@ -532,6 +536,7 @@ extension YXSSolitaireNewDetailController{
     
     ///检查是否可以提交采集  可以提交会返回提交参数
     func cheakCanSetup() -> Bool{
+        var isTotalEmpty = true
         for (itemIndex, collectorItem) in solitaireCollectorItems.enumerated(){
             var option: String = ""
             switch collectorItem.type {
@@ -564,11 +569,21 @@ extension YXSSolitaireNewDetailController{
                 }
                 option = selectOptions.joined(separator: ",")
             }
+            if !option.isEmpty{
+                isTotalEmpty = false
+                
+            }
             if collectorItem.isNecessary && option.isEmpty{
                 MBProgressHUD.yxs_showMessage(message: "第\(itemIndex + 1)为必答题")
                 return false
             }
         }
+        
+        if isTotalEmpty{
+            yxs_showAlert(title: "您尚未填写任何内容")
+            return false
+        }
+        
         return true
     }
     

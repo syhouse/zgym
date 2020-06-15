@@ -74,6 +74,10 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         browser.show(to: contentPanel, containerSize: size)
         self.browserView = browser
         
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) {
+            self.browserView?.currentPage = self.currentPage ?? 0
+        }
+        
         view.addSubview(footerView)
         footerView.snp.makeConstraints({ (make) in
             make.top.equalTo(contentPanel.snp_bottom)
@@ -87,13 +91,6 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             }
             make.height.equalTo(64)
         })
-        
-//        view.addSubview(commentView)
-//        commentView.snp.makeConstraints({ (make) in
-//            make.left.equalTo(0)
-//            make.right.equalTo(0)
-//            make.bottom.equalTo(0)
-//        })
     }
     
     // MARK: - Request
@@ -216,7 +213,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             data.interactionProfile.disable = true
             data.singleTouchBlock = {[weak self](ybImgData)in
                 guard let strongSelf = self else { return }
-                strongSelf.iscurrentShowTool = false
+                strongSelf.iscurrentShowTool = !strongSelf.iscurrentShowTool
                 strongSelf.reloadToolStatus()
             }
             return data
@@ -229,7 +226,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             data.shouldHideForkButton = true
             data.singleTouchBlock = {[weak self](ybImgData)in
                 guard let strongSelf = self else { return }
-                strongSelf.iscurrentShowTool = false
+                strongSelf.iscurrentShowTool = !strongSelf.iscurrentShowTool
                 strongSelf.reloadToolStatus()
             }
             return data

@@ -188,10 +188,10 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
             guard let strongSelf = self else { return }
             strongSelf.dealCellEvent(type, indexPath: indexPath)
         }
-//        cell.cellLongTapEvent = {[weak self]  in
-//            guard let strongSelf = self else { return }
-//            strongSelf.showTopAlert(indexPath: indexPath)
-//        }
+        //        cell.cellLongTapEvent = {[weak self]  in
+        //            guard let strongSelf = self else { return }
+        //            strongSelf.showTopAlert(indexPath: indexPath)
+        //        }
         return cell
     }
     
@@ -207,21 +207,21 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
             UIUtil.yxs_reduceAgenda(serviceId: model.censusId ?? 0, info: [kEventKey:YXSHomeType.solitaire])
             if isAgenda {
-//            self.dataSource.remove(at: indexPath.row)
-//            self.tableView.reloadData()
+                //            self.dataSource.remove(at: indexPath.row)
+                //            self.tableView.reloadData()
             }
- 
+            
         }
     }
     
-//    ///处理预加载数据
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if loadMore{
-//            if indexPath.row + 1 >= solitaireLists.count - kPreloadSize{
-//                tableView.mj_footer?.beginRefreshing()
-//            }
-//        }
-//    }
+    //    ///处理预加载数据
+    //    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    //        if loadMore{
+    //            if indexPath.row + 1 >= solitaireLists.count - kPreloadSize{
+    //                tableView.mj_footer?.beginRefreshing()
+    //            }
+    //        }
+    //    }
     
     
     // MARK: - getter&setter

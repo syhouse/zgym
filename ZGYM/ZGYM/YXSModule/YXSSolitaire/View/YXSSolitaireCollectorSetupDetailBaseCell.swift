@@ -52,6 +52,10 @@ class YXSSolitaireCollectorSetupDetailBaseCell: YXSBaseDetailViewCell {
         
         let imageView = viewWithTag(kImageOrginTag + 2)
         if let imageView = imageView{
+            imageView.addSubview(maskImageView)
+            maskImageView.snp.makeConstraints { (make) in
+                make.edges.equalTo(imageView)
+            }
             imageView.addSubview(countLabel)
             countLabel.snp.makeConstraints({ (make) in
                 make.center.equalTo(imageView)
@@ -102,8 +106,10 @@ class YXSSolitaireCollectorSetupDetailBaseCell: YXSBaseDetailViewCell {
             self.medias = medias
             nineMediaView.medias = medias
             countLabel.isHidden = true
+            maskImageView.isHidden = true
             if medias.count > 3{
                 countLabel.isHidden = false
+                maskImageView.isHidden = false
                 countLabel.text = "+\(medias.count - 3)"
             }
             
@@ -177,6 +183,12 @@ class YXSSolitaireCollectorSetupDetailBaseCell: YXSBaseDetailViewCell {
         label.font = UIFont.boldSystemFont(ofSize: 29)
         label.mixedTextColor = MixedColor(normal: UIColor.white, night: UIColor.white)
         return label
+    }()
+    
+    lazy var maskImageView: UIView = {
+        let maskView = UIView()
+        maskView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#000000", alpha: 0.3)
+        return maskView
     }()
 }
 

@@ -310,6 +310,11 @@ class YXSSolitaireQuestionSetController: YXSBaseViewController{
                     return false
                 }
             }
+            
+            if questionModel.type == .checkbox, selectView.selectModels.count < 3{
+                yxs_showAlert(title: "多选题选项至少3项")
+                return false
+            }
         }
         
         if textView.text.isEmpty{

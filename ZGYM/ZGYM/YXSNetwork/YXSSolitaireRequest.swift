@@ -393,3 +393,16 @@ class YXSEducationCensusTeacherGatherItemPersonnelListRequest: YXSBaseRequset {
     }
 }
 
+// MARK: - 阅读(家长)
+let censusParentRead = "/census/parentRead"
+class YXSEducationCensusParentReadRequest: YXSBaseRequset {
+    init(censusId: Int, childrenId: Int) {
+        super.init()
+        host = homeHost
+        method = .post
+        path = censusParentRead
+        param = ["censusId":censusId,
+                 "childrenId":childrenId]
+    }
+}
+
