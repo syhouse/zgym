@@ -51,7 +51,7 @@ extension UIView {
             UIUtil.currentNav().pushViewController(YXSPhotoClassListController())
         case .score:
             
-            UIUtil.currentNav().pushViewController(YXSScoreListController(classId: classId ?? 0,childId: childId ?? 0))
+            UIUtil.currentNav().pushViewController(YXSScoreListController(classId: classId ?? 0,childId: childId))
             
         case .addressbook:
 //            UIUtil.currentNav().pushViewController(YXSPhotoClassListController())

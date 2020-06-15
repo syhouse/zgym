@@ -115,7 +115,23 @@ class YXSGlobalJumpManager: NSObject {
             scoreModel.examId = serviceId
             scoreModel.classId = classId
             scoreModel.creationTime = createTime
-            
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT {
+                /// 标记页面已读
+                YXSEducationScoreChildDetailsRequset.init(examId: serviceId, childrenId: childrenId).request({ (json) in
+                    
+                    let detailsModel = Mapper<YXSScoreDetailsModel>().map(JSONObject:json.object) ?? YXSScoreDetailsModel.init(JSON: ["": ""])!
+                    if !(detailsModel.isRead ?? false) {
+                        let listModel = YXSHomeListModel.init(JSON: ["":""])
+                        listModel?.childrenId = childrenId
+                        listModel?.serviceId = serviceId
+                        listModel?.isRead = 0
+                        listModel?.serviceType = 4
+                        UIUtil.yxs_loadReadData(listModel!)
+                    }
+                }) { (msg, code) in
+                    
+                }
+            }
             let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
             if let strategy = model.callbackRequestParameter?.calculativeStrategy, strategy == 10 {
                 /// 分数制

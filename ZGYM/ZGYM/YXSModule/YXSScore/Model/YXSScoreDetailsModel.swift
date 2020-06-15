@@ -47,6 +47,9 @@ class YXSScoreDetailsModel: NSObject, Mappable {
     /// 孩子头像
     var avatar: String?
     
+    /// 是否已阅
+    var isRead: Bool?
+    
     /// 老师imid
     var teacherImId: String {
         get {
@@ -88,6 +91,7 @@ class YXSScoreDetailsModel: NSObject, Mappable {
         achievementChildrenSubjectsResponseSum <- map["achievementChildrenSubjectsResponseSum"]
         hierarchySubjectsResponseList <- map["hierarchySubjectsResponseList"]
         teacherId <- map["teacherId"]
+        isRead <- map["isRead"]
     }
 }
 
