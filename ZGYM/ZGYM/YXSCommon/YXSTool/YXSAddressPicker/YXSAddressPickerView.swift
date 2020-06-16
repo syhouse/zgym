@@ -157,7 +157,7 @@ class YXSAddressPickerView: YXSBasePopingView, UIPickerViewDelegate, UIPickerVie
         btn.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight383E56)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         btn.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightBCC6D4), forState: .normal)
-        btn.layer.cornerRadius = 3
+        btn.cornerRadius = 3
         btn.addTarget(self, action: #selector(cancelClick(sender:)), for: .touchUpInside)
         btn.yxs_addLine(position: .right, leftMargin: 0, rightMargin: 0, lineHeight: 0.5)
         return btn
@@ -169,7 +169,7 @@ class YXSAddressPickerView: YXSBasePopingView, UIPickerViewDelegate, UIPickerVie
         btn.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNight383E56)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         btn.setTitleColor(kNight5E88F7, for: .normal)
-        btn.layer.cornerRadius = 3
+        btn.cornerRadius = 3
         btn.addTarget(self, action: #selector(doneClick(sender:)), for: .touchUpInside)
         return btn
     }()

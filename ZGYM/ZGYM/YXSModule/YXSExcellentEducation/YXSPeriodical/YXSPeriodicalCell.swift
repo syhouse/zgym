@@ -18,7 +18,7 @@ class YXSPeriodicalCell : UITableViewCell {
         contentView.addSubview(yxs_desLabel)
         contentView.addSubview(timeLabel)
         
-        contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: UIColor.white)
+        contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         contentView.yxs_addLine(position: .bottom, mixedBackgroundColor: MixedColor(normal: kLineColor, night: kLineColor), leftMargin: 15)
 
         yxs_nameLabel.snp.makeConstraints { (make) in
@@ -60,14 +60,14 @@ class YXSPeriodicalCell : UITableViewCell {
     lazy var rightImageView: UIImageView = {
         let rightImageView = UIImageView()
         rightImageView.contentMode = .scaleAspectFill
-        rightImageView.layer.cornerRadius = 2.5
+        rightImageView.cornerRadius = 2.5
         return rightImageView
     }()
     
     lazy var yxs_nameLabel: YXSLabel = {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kTextMainBodyColor)
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         return label
     }()
     
@@ -75,14 +75,14 @@ class YXSPeriodicalCell : UITableViewCell {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 15)
         label.numberOfLines = 0
-        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"))
+        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNightBCC6D4)
         return label
     }()
     
     lazy var timeLabel: YXSLabel = {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 15)
-        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))
+        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: kNightBCC6D4)
         return label
     }()
 }
