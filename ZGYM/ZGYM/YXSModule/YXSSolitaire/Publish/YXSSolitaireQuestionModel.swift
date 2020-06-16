@@ -58,7 +58,7 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
                         let model = solitaireSelects[index]
                         height += 13 //顶部
                         height += 15// 选项
-                        height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")",attributes: dic, width: SCREEN_WIDTH - 15 - 15)
+                        height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")",attributes: dic, width: SCREEN_WIDTH - 15 - 50)
                         if model.mediaModel != nil{
                             height += 84 + 12.5
                         }

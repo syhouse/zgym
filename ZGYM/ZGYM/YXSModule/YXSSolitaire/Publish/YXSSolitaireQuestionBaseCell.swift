@@ -189,7 +189,7 @@ class YXSSolitaireQuestionTitleView : UIView {
         }
         tipsLabel.text = "【\(typeStr)】"
         isNecessaryLabel.isHidden = model.isNecessary ? false : true
-        UIUtil.yxs_setLabelParagraphText(titleLabel, text: "\(index + 1)、\(model.questionStemText ?? "")")
+        UIUtil.yxs_setLabelParagraphText(titleLabel, text: "\(index + 1)、\(model.questionStemText ?? "")", font: UIFont.systemFont(ofSize: 15))
     }
     
     // MARK: -getter&setter
@@ -253,7 +253,7 @@ class YXSSolitaireLabelImageView : UIView {
         default:
             leftText = "H"
         }
-        UIUtil.yxs_setLabelParagraphText(titleLabel, text: "\(leftText)、\(model.title ?? "")")
+        UIUtil.yxs_setLabelParagraphText(titleLabel, text: "\(leftText)、\(model.title ?? "")", font: UIFont.systemFont(ofSize: 15))
         
         meidaItem.isHidden = true
         if let mediaModel = model.mediaModel{
@@ -272,7 +272,8 @@ class YXSSolitaireLabelImageView : UIView {
             meidaItem.isHidden = false
         }else{
             titleLabel.snp.remakeConstraints { (make) in
-                make.left.right.top.equalTo(0)
+                make.left.top.equalTo(0)
+                make.right.equalTo(-titleRightGap)
                 make.bottom.equalTo(0).priorityHigh()
             }
         }
