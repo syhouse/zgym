@@ -9,7 +9,7 @@
 import Foundation
 import NightNight
 
-class YXSSynClassFolderCell: UITableViewCell {
+class YXSSynClassFolderCell: YXSBaseTableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

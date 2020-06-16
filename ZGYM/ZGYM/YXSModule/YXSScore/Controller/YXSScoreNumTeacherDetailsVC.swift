@@ -102,7 +102,7 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
         visibleView.snp.makeConstraints { (make) in
             make.centerY.equalTo(lookAllScoreBtn)
             make.right.equalTo(-15)
-            make.height.equalTo(20)
+            make.height.equalTo(40)
         }
     }
     

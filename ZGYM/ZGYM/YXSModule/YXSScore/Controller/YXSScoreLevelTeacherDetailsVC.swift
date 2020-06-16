@@ -26,6 +26,7 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
     
     // MARK: -leftCicle
     override func viewDidLoad() {
+        hasRefreshHeader = false
         super.viewDidLoad()
         view.yxs_gradualBackground(frame: view.frame, startColor: UIColor.yxs_hexToAdecimalColor(hex: "#B4C8FD"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#A9CDFD"), cornerRadius: 0,isRightOrientation: false)
         tableView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#A9CDFD")
@@ -39,9 +40,9 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
         
         view.addSubview(visibleView)
         visibleView.snp.makeConstraints { (make) in
-            make.bottom.equalTo(-30)
+            make.bottom.equalTo(-20)
             make.right.equalTo(-15)
-            make.height.equalTo(20)
+            make.height.equalTo(40)
         }
         UIUtil.yxs_setLabelAttributed(self.visibleView.textLabel, text: [String(self.listModel?.readNumber ?? 0), "/\(self.listModel?.sumNumber ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF")])
         view.addSubview(customNav)
@@ -51,6 +52,7 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
         if #available(iOS 11.0, *){
             self.scrollView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         }
+        
         //去除group空白
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0.0

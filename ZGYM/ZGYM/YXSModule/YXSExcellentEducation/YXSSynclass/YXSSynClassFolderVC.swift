@@ -45,7 +45,8 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
         //调整行间距
         paragraphStye.lineSpacing = kMainContentLineHeight
         paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
-        let attributedString = NSMutableAttributedString.init(string: self.folderInfoModel?.synopsis ?? "", attributes: [NSAttributedString.Key.paragraphStyle:paragraphStye,NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
+        let color = NightNight.theme == .night ? kNight898F9A : UIColor.yxs_hexToAdecimalColor(hex: "#4E4E4E")
+        let attributedString = NSMutableAttributedString.init(string: self.folderInfoModel?.synopsis ?? "", attributes: [NSAttributedString.Key.paragraphStyle:paragraphStye,NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor:color])
         self.footerTextView.attributedText = attributedString
         self.refreshTableViewFooter()
     }
@@ -85,6 +86,7 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
     
     func refreshTableViewFooter() {
         self.footerTextView.sizeToFit()
+        self.footerTextView.layoutIfNeeded()
         self.tableFooterView.height = self.footerTextView.height
         
         if self.isShowContent {
@@ -175,6 +177,7 @@ class YXSSynClassFolderVC:YXSBaseTableViewController {
     lazy var footerTextView:UITextView = {
         let textView = UITextView.init(frame: CGRect(x: 15, y: 0, width: SCREEN_WIDTH - 30, height: 0))
         textView.font = UIFont.systemFont(ofSize: 16)
+        textView.backgroundColor = UIColor.clear
         textView.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#4E4E4E"), night: kNight898F9A)
         textView.isEditable = false
         return textView
