@@ -91,6 +91,12 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             }
             make.height.equalTo(64)
         })
+        
+        view.addSubview(commentView)
+        commentView.snp.makeConstraints({ (make) in
+            make.top.equalTo(view.snp_bottom)
+            make.left.right.equalTo(0)
+        })
     }
     
     // MARK: - Request
@@ -167,7 +173,11 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     }
     
     @objc func commentClick(sender: UIButton) {
-        
+        UIView.animate(withDuration: 0.25) {
+            self.commentView.snp.remakeConstraints { (make) in
+                make.left.right.bottom.equalTo(0)
+            }
+        }
     }
     
     @objc func moreClick(sender: UIButton) {
@@ -266,7 +276,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         view.backgroundColor = UIColor.black
 //        view.minePriseButton.addTarget(self, action: #selector(pra), for: .touchUpInside)
         view.minePriseButton.addTarget(self, action: #selector(praiseOrCancelClick(sender:)), for: .touchUpInside)
-        view.commentButtonClick()
+        view.commentButton.addTarget(self, action: #selector(commentClick(sender:)), for: .touchUpInside)
         view.moreActionButton.addTarget(self, action: #selector(moreClick(sender:)), for: .touchUpInside)
         return view
     }()

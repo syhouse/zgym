@@ -16,7 +16,7 @@ class YXSPhotoAlbumDetialListSectionModel: NSObject{
     var lists: [YXSPhotoAlbumsDetailListModel] = [YXSPhotoAlbumsDetailListModel]()
     var createTime: String?
     var title: String?{
-        return createTime?.yxs_Date().toString(format: DateFormatType.custom("mm月dd日"))
+        return createTime?.yxs_Date().toString(format: DateFormatType.custom("MM月dd日"))
     }
 }
 
@@ -308,7 +308,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             }
             let vc = YXSPhotoPreviewController(dataSource: showList, albumModel: albumModel)
             vc.updateAlbumModel = updateAlbumModel
-            vc.currentPage = indexPath.row
+            vc.currentPage = showList.firstIndex(of: model) ?? 0
 
             self.navigationController?.pushViewController(vc)
         }

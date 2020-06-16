@@ -13,6 +13,8 @@ class YXSSolitaireCollectorPartentDetialBaseCell : YXSSolitaireQuestionBaseCell 
     var refreshCell: (()->())?
     var changeMedias: ((_ medias: [SLPublishEditMediaModel])->())?
     
+    var textViewBeginEdit: (()->())?
+    
     var canEdit: Bool = true
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -111,7 +113,7 @@ class YXSSolitaireCollectorPartentDetialSelectItemsCell : YXSSolitaireCollectorP
     }
 }
 
-class YXSSolitaireCollectorPartentDetialTextCell : YXSSolitaireCollectorPartentDetialBaseCell {
+class YXSSolitaireCollectorPartentDetialTextCell : YXSSolitaireCollectorPartentDetialBaseCell , UITextViewDelegate{
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -170,6 +172,7 @@ class YXSSolitaireCollectorPartentDetialTextCell : YXSSolitaireCollectorPartentD
         textView.textContainerInset = UIEdgeInsets.init(top: 15.5, left: 13, bottom: 25, right: 13)
         textView.borderColor = UIColor.yxs_hexToAdecimalColor(hex: "#E6EAF3")
         textView.cornerRadius = 2.5
+        textView.delegate = self
         textView.borderWidth = 0.5
         textView.textDidChangeBlock = {
             [weak self](text: String) in
@@ -187,6 +190,11 @@ class YXSSolitaireCollectorPartentDetialTextCell : YXSSolitaireCollectorPartentD
         label.text = "200字内"
         return label
     }()
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        textViewBeginEdit?()
+        return true
+    }
 }
 
 

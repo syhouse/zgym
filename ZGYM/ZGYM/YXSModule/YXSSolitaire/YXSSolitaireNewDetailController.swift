@@ -9,6 +9,7 @@ import UIKit
 import NightNight
 import ObjectMapper
 import SwiftyJSON
+import IQKeyboardManager
 
 
 private let placeholderReplaceKey = "YXSSolitaireNewDetailController___XYSPlaceholderReplaceKey__"
@@ -56,6 +57,11 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
             updateBottomView()
         }
     }
+    
+    var curruntIndex: IndexPath?
+    
+    var curruntContentOffset: CGPoint?
+    
     ///家长选择选项列表
     var partakeResponseLists = [[YXSClassMemberModel](), [YXSClassMemberModel]()]
     
@@ -77,6 +83,11 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        IQKeyboardManager.shared().isEnabled = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -119,6 +130,13 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
             self.solitaireCollectorItems = YXSCacheHelper.yxs_getCacheSolitaireCollectorItems(censusId: censusId ?? 0, childrenId: childrenId ?? 0)
         }
         yxs_refreshData()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyBoardWillShow(_ :)),name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyBoardWillHide(_ :)),name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func yxs_refreshData() {
@@ -135,7 +153,7 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
                     UIUtil.yxs_loadReadData(model)
                 }
             }
-
+            
             
             MBProgressHUD.yxs_showLoading(ignore: true)
             
@@ -320,6 +338,12 @@ class YXSSolitaireNewDetailController: YXSBaseTableViewController {
                     model.answerMedias = meidas
                     strongSelf.yxs_reloadTableView(indexPath)
                 }
+                cell.textViewBeginEdit = {
+                    [weak self]  in
+                    guard let strongSelf = self else { return }
+                    strongSelf.curruntIndex = indexPath
+                }
+                
                 return cell
             }
         }
@@ -871,5 +895,40 @@ extension YXSSolitaireNewDetailController{
             }
         }
         setupRightBarButtonItem()
+    }
+    
+    @objc func keyBoardWillShow(_ notification:Notification){
+        if UIUtil.TopViewController() == self{
+            DispatchQueue.main.async {
+                let user_info = notification.userInfo
+                let keyboardRect = (user_info?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+                if let currentIndexPath = self.curruntIndex{
+                    let cell = self.tableView.cellForRow(at: currentIndexPath)
+                    if let textCell  = cell as? YXSSolitaireCollectorPartentDetialTextCell{
+                        
+                        let rc = textCell.convert(textCell.textView.frame, to: self.view)
+                        
+                        let offsetY = (SCREEN_HEIGHT - rc.maxY) - keyboardRect.height - 40
+                        var contentSet = self.tableView.contentOffset
+                        self.curruntContentOffset = contentSet
+                        contentSet.y -= offsetY
+                        if contentSet.y >= 0 {
+                            self.tableView.setContentOffset(contentSet, animated: true)
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    @objc func keyBoardWillHide(_ notification:Notification){
+        if UIUtil.TopViewController() == self{
+            DispatchQueue.main.async {
+                if let curruntContentOffset = self.curruntContentOffset{
+                    self.tableView.setContentOffset(curruntContentOffset, animated: true)
+                }
+                self.curruntContentOffset = nil
+            }
+        }
     }
 }
