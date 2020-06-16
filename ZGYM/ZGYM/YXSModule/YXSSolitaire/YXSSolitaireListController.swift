@@ -198,10 +198,10 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = solitaireLists[indexPath.row]
         if model.type == 1{
-            let vc = YXSSolitaireDetailController.init(censusId: model.censusId ?? 0, childrenId: childId ?? 0, classId: model.classId ?? 0)
+            let vc = YXSSolitaireDetailController.init(censusId: model.censusId ?? 0, childrenId: model.childrenId ?? 0, classId: model.classId ?? 0)
             navigationController?.pushViewController(vc)
         }else{
-            let vc = YXSSolitaireNewDetailController.init(censusId: model.censusId ?? 0, childrenId: childId ?? 0, classId: model.classId ?? 0)
+            let vc = YXSSolitaireNewDetailController.init(censusId: model.censusId ?? 0, childrenId: model.childrenId ?? 0, classId: model.classId ?? 0)
             navigationController?.pushViewController(vc)
         }
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{

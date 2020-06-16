@@ -90,6 +90,9 @@ class YXSSinglImage: UIImageView {
         super.init(frame: frame)
         isUserInteractionEnabled = true
         
+        self.contentMode = .scaleAspectFill
+        self.clipsToBounds = true
+        
         addSubview(playerView)
         addSubview(addImageView)
         

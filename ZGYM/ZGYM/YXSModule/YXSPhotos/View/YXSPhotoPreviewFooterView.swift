@@ -7,9 +7,6 @@
 //
 
 import UIKit
-
-let kYXSPhotoShowAlubmFooterViewMoreEventKey = "YXSPhotoShowAlubmFooterViewMoreEventKey"
-
 /// 赞/评论
 class YXSPhotoPreviewFooterView: UIView {
     var model: YXSPhotoAlbumsPraiseModel!
@@ -71,14 +68,6 @@ class YXSPhotoPreviewFooterView: UIView {
         }
     }
     
-    @objc func commentButtonClick(){
-        cellBlock?(true)
-    }
-    
-    @objc func moreActionClick(){
-        next?.yxs_routerEventWithName(eventName: kYXSPhotoShowAlubmFooterViewMoreEventKey)
-    }
-    
     
     // MARK: - LazyLoad
     lazy var minePriseButton: YXSCustomImageControl = {
@@ -90,7 +79,6 @@ class YXSPhotoPreviewFooterView: UIView {
         minePriseButton.font = UIFont.systemFont(ofSize: 16)
         minePriseButton.setImage(UIImage.init(named: "yxs_photo_praise_normal"), for: .normal)
         minePriseButton.setImage(UIImage.init(named: "yxs_photo_praise_select"), for: .selected)
-        minePriseButton.addTarget(self, action: #selector(minePriseButtonClick), for: .touchUpInside)
         minePriseButton.isSelected = false
         return minePriseButton
     }()
@@ -101,7 +89,6 @@ class YXSPhotoPreviewFooterView: UIView {
         commentButton.title = "评论"
         commentButton.font = UIFont.systemFont(ofSize: 16)
         commentButton.locailImage = "yxs_photo_comment"
-        commentButton.addTarget(self, action: #selector(commentButtonClick), for: .touchUpInside)
         return commentButton
     }()
     
@@ -117,7 +104,6 @@ class YXSPhotoPreviewFooterView: UIView {
     lazy var moreActionButton: UIButton = {
         let button = UIButton.init()
         button.setImage(UIImage.init(named: "yxs_photo_more"), for: .normal)
-        button.addTarget(self, action: #selector(moreActionClick), for: .touchUpInside)
         return button
     }()
 }
