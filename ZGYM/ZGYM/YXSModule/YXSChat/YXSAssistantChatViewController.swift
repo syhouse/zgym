@@ -22,16 +22,26 @@ class YXSAssistantChatViewController: YXSChatViewController {
         customNav?.snp.makeConstraints { (make) in
             make.left.right.top.equalTo(0)
         }
-         
-        let receiver = conversation?.getReceiver() ?? ""
-        TIMFriendshipManager.sharedInstance()?.getUsersProfile([receiver], forceUpdate: true, succ: { [weak self](list) in
-            guard let weakSelf = self else {return}
-            if list?.count ?? 0 > 0 {
-                if list?.count ?? 0 > 0 && list?.first?.nickname.count ?? 0 > 0 {
-                    weakSelf.customNav?.title = list?.first?.nickname
-                }
+        if !YXSPersonDataModel.sharePerson.isNetWorkingConnect {
+//          无网络从缓存中获取用户资料
+            let userProfile = TIMFriendshipManager.sharedInstance()?.queryUserProfile((conversation?.getReceiver() ?? ""))
+            if userProfile?.nickname.count ?? 0 > 0 {
+                let arr = userProfile?.nickname.components(separatedBy: "&")
+                self.customNav?.title = arr?.last ?? ""
             }
-        }, fail: nil)
+            
+        } else {
+            let receiver = conversation?.getReceiver() ?? ""
+            TIMFriendshipManager.sharedInstance()?.getUsersProfile([receiver], forceUpdate: true, succ: { [weak self](list) in
+                guard let weakSelf = self else {return}
+                if list?.count ?? 0 > 0 {
+                    if list?.count ?? 0 > 0 && list?.first?.nickname.count ?? 0 > 0 {
+                        weakSelf.customNav?.title = list?.first?.nickname
+                    }
+                }
+            }, fail: nil)
+        }
+        
         
 //        self.messageController.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
 //        self.inputController?.removeFromParent()

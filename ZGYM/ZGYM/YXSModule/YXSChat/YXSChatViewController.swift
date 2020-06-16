@@ -81,15 +81,26 @@ class YXSChatViewController: TUIChatController,TUIChatControllerDelegate {
             make.centerX.equalTo(customNav!.snp_centerX)
             make.centerY.equalTo(customNav!.snp_centerY).offset(distance)
         })
-        TIMFriendshipManager.sharedInstance()?.getUsersProfile([(conversation?.getReceiver() ?? "")], forceUpdate: true, succ: { [weak self](list) in
-            guard let weakSelf = self else {return}
-            if list?.count ?? 0 > 0 {
-                if list?.count ?? 0 > 0 && list?.first?.nickname.count ?? 0 > 0 {
-                    let arr = list?.first?.nickname.components(separatedBy: "&")
-                    titleView.titles = arr?.count ?? 0 >= 2 ? [arr?.first ?? "", arr?.last ?? ""] : [arr?.first ?? ""]
-                }
+        if !YXSPersonDataModel.sharePerson.isNetWorkingConnect {
+//          无网络从缓存中获取用户资料
+            let userProfile = TIMFriendshipManager.sharedInstance()?.queryUserProfile((conversation?.getReceiver() ?? ""))
+            if userProfile?.nickname.count ?? 0 > 0 {
+                let arr = userProfile?.nickname.components(separatedBy: "&")
+                titleView.titles = arr?.count ?? 0 >= 2 ? [arr?.first ?? "", arr?.last ?? ""] : [arr?.first ?? ""]
             }
-        }, fail: nil)
+            
+        } else {
+            TIMFriendshipManager.sharedInstance()?.getUsersProfile([(conversation?.getReceiver() ?? "")], forceUpdate: true, succ: { [weak self](list) in
+                guard let weakSelf = self else {return}
+                if list?.count ?? 0 > 0 {
+                    if list?.count ?? 0 > 0 && list?.first?.nickname.count ?? 0 > 0 {
+                        let arr = list?.first?.nickname.components(separatedBy: "&")
+                        titleView.titles = arr?.count ?? 0 >= 2 ? [arr?.first ?? "", arr?.last ?? ""] : [arr?.first ?? ""]
+                    }
+                }
+            }, fail: nil)
+        }
+        
         
         
         self.messageController.tableView.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#EEEFF8"), night: kNightBackgroundColor)
@@ -107,7 +118,7 @@ class YXSChatViewController: TUIChatController,TUIChatControllerDelegate {
         if(conversation?.getType() == TIMConversationType.C2C){
             self.title = conversation?.getReceiver() ?? ""
         } else if(conversation?.getType() == TIMConversationType.GROUP){
-             self.title = conversation?.getGroupName() ?? ""
+            self.title = conversation?.getGroupName() ?? ""
         }
         
         // Do any additional setup after loading the view.
