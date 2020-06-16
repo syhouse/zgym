@@ -40,14 +40,16 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
     
     ///详情页cell高度
     func getCellDetialHeight(index: Int) -> CGFloat{
+        var height: CGFloat = 17.0
+        
+        let paragraphStye = NSMutableParagraphStyle()
+        paragraphStye.lineSpacing = kMainContentLineHeight
+        paragraphStye.lineBreakMode = NSLineBreakMode.byWordWrapping
+        let dic = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15), NSAttributedString.Key.paragraphStyle:paragraphStye]
+
+        height += UIUtil.yxs_getTextHeigh(textStr: "\(index + 1)、\(questionStemText ?? "")",attributes: dic, width: SCREEN_WIDTH - 15 - 15)
+        height += 30
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-            var height: CGFloat = 17.0
-            
-            ///title rightGp 默认50
-            
-            height += UIUtil.yxs_getTextHeigh(textStr: "\(index + 1)、\(questionStemText ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
-            height += 30
-            
             switch type {
             case .single, .checkbox:
                 if let solitaireSelects = solitaireSelects{
@@ -56,7 +58,7 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
                         let model = solitaireSelects[index]
                         height += 13 //顶部
                         height += 15// 选项
-                        height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
+                        height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")",attributes: dic, width: SCREEN_WIDTH - 15 - 15)
                         if model.mediaModel != nil{
                             height += 84 + 12.5
                         }
@@ -80,10 +82,6 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
             height += 17
             return height
         }else{
-            var height: CGFloat = 17.0
-            ///title rightGp 默认50
-            height += UIUtil.yxs_getTextHeigh(textStr: "\(index + 1)、\(questionStemText ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
-            height += 30
             
             switch type {
             case .single, .checkbox:
@@ -92,7 +90,7 @@ class YXSSolitaireQuestionModel: NSObject, NSCoding{
                     for index in 0..<maxCount {
                         let model = solitaireSelects[index]
                         height += 26
-                        height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")", font: UIFont.systemFont(ofSize: 15), width: SCREEN_WIDTH - 15 - 50)
+                        height += UIUtil.yxs_getTextHeigh(textStr: "\(model.leftText ?? "")、\(model.title ?? "")",attributes: dic, width: SCREEN_WIDTH - 15 - 15)
                         if model.mediaModel != nil{
                             height += 84 + 12.5
                         }

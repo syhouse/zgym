@@ -21,6 +21,8 @@ class YXSSolitaireCollectorPartentDetialBaseCell : YXSSolitaireQuestionBaseCell 
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         dealBtn.isHidden = true
         contentView.yxs_addLine(leftMargin: 15)
+        
+        questionTitleView.rightGap = 15
     }
     
     required init?(coder: NSCoder) {

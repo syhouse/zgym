@@ -88,7 +88,7 @@ class YXSTeacherSacnLoginController: YXSBaseViewController{
     lazy var pcImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "yxs_Scan_pc")
+        imageView.mixedImage = MixedImage(normal: "yxs_Scan_pc", night: "yxs_Scan_pc_night")
         return imageView
     }()
     

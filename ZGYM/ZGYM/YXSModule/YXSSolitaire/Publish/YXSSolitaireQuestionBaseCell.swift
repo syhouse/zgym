@@ -147,7 +147,7 @@ class YXSSolitaireQuestionTitleView : UIView {
         titleLabel.snp.makeConstraints { (make) in
             make.left.equalTo(15)
             make.top.equalTo(0)
-            make.right.equalTo(-50)
+            make.right.equalTo(-rightGap)
         }
         
         tipsLabel.snp.makeConstraints { (make) in
@@ -160,6 +160,14 @@ class YXSSolitaireQuestionTitleView : UIView {
             make.left.equalTo(tipsLabel.snp_right).offset(9.5)
             make.size.equalTo(CGSize(width: 35, height: 18))
             make.centerY.equalTo(tipsLabel)
+        }
+    }
+    
+    var rightGap: CGFloat = 50{
+        didSet{
+            titleLabel.snp.updateConstraints { (make) in
+                make.right.equalTo(-rightGap)
+            }
         }
     }
     
@@ -179,9 +187,9 @@ class YXSSolitaireQuestionTitleView : UIView {
         case .image:
             typeStr = "图片题"
         }
-        titleLabel.text = "\(index + 1)、\(model.questionStemText ?? "")"
         tipsLabel.text = "【\(typeStr)】"
         isNecessaryLabel.isHidden = model.isNecessary ? false : true
+        UIUtil.yxs_setLabelParagraphText(titleLabel, text: "\(index + 1)、\(model.questionStemText ?? "")")
     }
     
     // MARK: -getter&setter
@@ -245,7 +253,8 @@ class YXSSolitaireLabelImageView : UIView {
         default:
             leftText = "H"
         }
-        titleLabel.text = "\(leftText)、\(model.title ?? "")"
+        UIUtil.yxs_setLabelParagraphText(titleLabel, text: "\(leftText)、\(model.title ?? "")")
+        
         meidaItem.isHidden = true
         if let mediaModel = model.mediaModel{
             meidaItem.model = mediaModel
@@ -312,7 +321,7 @@ class YXSSolitaireAnswerControl : UIControl {
             make.bottom.equalTo(-13)
             make.right.equalTo(-11)
         }
-        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD"), night: UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD"))
+        self.mixedBackgroundColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#F7F9FD"), night: UIColor.yxs_hexToAdecimalColor(hex: "#282C3B"))
     }
     
     required init?(coder: NSCoder) {
