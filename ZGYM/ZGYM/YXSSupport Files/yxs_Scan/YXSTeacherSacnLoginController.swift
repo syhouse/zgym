@@ -88,14 +88,14 @@ class YXSTeacherSacnLoginController: YXSBaseViewController{
     lazy var pcImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "yxs_Scan_pc")
+        imageView.mixedImage = MixedImage(normal: "yxs_Scan_pc", night: "yxs_Scan_pc_night")
         return imageView
     }()
     
     lazy var titleLabel: YXSLabel = {
         let label = YXSLabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#222222")
+        label.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#222222"), night: UIColor.white)
         label.text = "网页端优学业确认登录"
         return label
     }()

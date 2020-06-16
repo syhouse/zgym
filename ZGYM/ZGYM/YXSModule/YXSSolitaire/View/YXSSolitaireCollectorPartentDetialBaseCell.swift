@@ -21,6 +21,8 @@ class YXSSolitaireCollectorPartentDetialBaseCell : YXSSolitaireQuestionBaseCell 
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         dealBtn.isHidden = true
         contentView.yxs_addLine(leftMargin: 15)
+        
+        questionTitleView.rightGap = 15
     }
     
     required init?(coder: NSCoder) {
@@ -43,6 +45,7 @@ class YXSSolitaireCollectorPartentDetialSelectItemsCell : YXSSolitaireCollectorP
         for index in 0..<maxQuestionCount{
             let answerControl = YXSSolitaireAnswerControl()
             answerControl.tag = index + labelOrginTag
+            answerControl.answerView.titleRightGap = 50
             answerControl.isHidden = true
             answerControl.addTarget(self, action: #selector(didSelect), for: .touchUpInside)
             contentView.addSubview(answerControl)
@@ -174,6 +177,7 @@ class YXSSolitaireCollectorPartentDetialTextCell : YXSSolitaireCollectorPartentD
         textView.cornerRadius = 2.5
         textView.delegate = self
         textView.borderWidth = 0.5
+        textView.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         textView.textDidChangeBlock = {
             [weak self](text: String) in
             guard let strongSelf = self else { return }
