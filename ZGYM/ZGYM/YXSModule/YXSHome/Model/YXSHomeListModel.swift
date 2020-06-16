@@ -194,6 +194,10 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
             
         }
     }
+    
+    /// 成绩用于筛选是否显示
+    var committedArrayList: [Int]?
+    
     /// 初始化设置已点评列表
     var remarkListStr : String?{
         didSet{
@@ -583,7 +587,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         
         totalDay <- map["totalDay"]
         solitaireType <- map["type"]
-        
+        committedArrayList <- map["committedArrayList"]
         confingHeight()
     }
     
@@ -636,6 +640,7 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         periodicalListModel = aDecoder.decodeObject(forKey: "periodicalListModel") as? YXSPeriodicalListModel
         totalDay = aDecoder.decodeObject(forKey: "totalDay") as? Int
         solitaireType = aDecoder.decodeObject(forKey: "solitaireType") as? Int
+        committedArrayList = aDecoder.decodeObject(forKey: "committedArrayList") as? [Int]
     }
     
     /**
@@ -766,6 +771,10 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
         
         if solitaireType != nil{
             aCoder.encode(solitaireType, forKey: "solitaireType")
+        }
+        
+        if committedArrayList != nil{
+            aCoder.encode(committedArrayList, forKey: "committedArrayList")
         }
     }
 }

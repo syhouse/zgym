@@ -114,7 +114,8 @@ class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
                     self.chartView.setIsShowLookSubjects(isHaveComment: true, isShow: true)
                 }
                 if let comment = model.comment,comment.count > 0 {
-                    self.commentView.contentLbl.text = model.comment
+                    UIUtil.yxs_setLabelParagraphText(self.commentView.contentLbl, text: model.comment, font: UIFont.systemFont(ofSize: 16), lineSpacing: 8, removeSpace: false)
+//                    self.commentView.contentLbl.text = model.comment
                 } else {
                     self.commentView.contentLbl.text = "暂无评语"
                 }

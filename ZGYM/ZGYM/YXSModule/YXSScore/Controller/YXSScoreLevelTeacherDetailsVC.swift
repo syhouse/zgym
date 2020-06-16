@@ -14,6 +14,7 @@ import ObjectMapper
 class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
     private var dataSource: [YXSScoreChildListModel] = [YXSScoreChildListModel]()
     var listModel: YXSScoreListModel?
+    
     init(model:YXSScoreListModel) {
         super.init()
         self.listModel = model
@@ -26,13 +27,23 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
     // MARK: -leftCicle
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.yxs_gradualBackground(frame: view.frame, startColor: UIColor.yxs_hexToAdecimalColor(hex: "#B4C8FD"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#A9CDFD"), cornerRadius: 0,isRightOrientation: false)
+        view.yxs_gradualBackground(frame: view.frame, startColor: UIColor.yxs_hexToAdecimalColor(hex: "#B4C8FD"), endColor: UIColor.yxs_hexToAdecimalColor(hex: "#A9CDFD"), cornerRadius: 0,isRightOrientation: false)
         tableView.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#A9CDFD")
         customNav.title = listModel?.examName
         self.fd_prefersNavigationBarHidden = true
         self.scrollView.snp.remakeConstraints { (make) in
-            make.edges.equalTo(0)
+            make.left.right.top.equalTo(0)
+            make.bottom.equalTo(-80)
+//            make.edges.equalTo(0)
         }
+        
+        view.addSubview(visibleView)
+        visibleView.snp.makeConstraints { (make) in
+            make.bottom.equalTo(-30)
+            make.right.equalTo(-15)
+            make.height.equalTo(20)
+        }
+        UIUtil.yxs_setLabelAttributed(self.visibleView.textLabel, text: [String(self.listModel?.readNumber ?? 0), "/\(self.listModel?.sumNumber ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF")])
         view.addSubview(customNav)
         customNav.snp.makeConstraints { (make) in
             make.left.right.top.equalTo(0)
@@ -50,6 +61,7 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
             self.tableHeaderView.headerExmTimeLbl.text = "发布时间：\(dateStr.yxs_Date().toString(format: .custom("yyyy/MM/dd")))"
         }
         self.tableHeaderView.headerClassNameLbl.text = listModel?.className
+        self.loadScoreDetails()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,6 +77,20 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
     
     override func yxs_loadNextPage() {
         loadData()
+    }
+    
+    func loadScoreDetails() {
+        if self.listModel?.sumNumber ?? 0 == 0 && self.listModel?.readNumber ?? 0 == 0 {
+            YXSEducationScoreChildDetailsRequset.init(examId: listModel?.examId ?? 0).request({ (json) in
+                let detailsModel = Mapper<YXSScoreListModel>().map(JSONObject:json.object) ?? YXSScoreListModel.init(JSON: ["": ""])!
+                self.listModel?.sumNumber = detailsModel.sumNumber
+                self.listModel?.readNumber = detailsModel.readNumber
+                UIUtil.yxs_setLabelAttributed(self.visibleView.textLabel, text: [String(self.listModel?.readNumber ?? 0), "/\(self.listModel?.sumNumber ?? 0)"], colors: [UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF")])
+            }) { (msg, code) in
+                
+            }
+        }
+        
     }
     
     func loadData(){
@@ -83,6 +109,13 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
             self.yxs_endingRefresh()
             MBProgressHUD.yxs_showMessage(message: msg)
         }
+    }
+    
+    // MARK: - Action
+    @objc func visibleClick() {
+        let vc = YXSScoreContainerVC()
+        vc.detailModel = self.listModel
+        self.navigationController?.pushViewController(vc)
     }
     
     // MARK: - tableViewDelegate
@@ -146,6 +179,15 @@ class YXSScoreLevelTeacherDetailsVC: YXSBaseTableViewController {
         let view = YXSScoreLevelTeacherTableHeaderView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 242 + 19))
         view.isHidden = true
         return view
+    }()
+    
+    lazy var visibleView: YXSCustomImageControl = {
+        let visibleView = YXSCustomImageControl.init(imageSize: CGSize.init(width: 18, height: 18), position: YXSImagePositionType.left, padding: 7)
+        visibleView.locailImage = "visible_white"
+        visibleView.mixedTextColor = MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"), night: UIColor.yxs_hexToAdecimalColor(hex: "#FFFFFF"))
+        visibleView.font = UIFont.systemFont(ofSize: 13)
+        visibleView.addTarget(self, action: #selector(visibleClick), for: .touchUpInside)
+        return visibleView
     }()
     
 }

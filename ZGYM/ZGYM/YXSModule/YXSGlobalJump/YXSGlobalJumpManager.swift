@@ -131,7 +131,7 @@ class YXSGlobalJumpManager: NSObject {
                 }) { (msg, code) in
                     
                 }
-            }
+            } 
             let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
             if let strategy = model.callbackRequestParameter?.calculativeStrategy, strategy == 10 {
                 /// 分数制

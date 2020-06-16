@@ -160,7 +160,7 @@ class YXSEducationScoreReadingChildListRequset: YXSBaseRequset {
     }
 }
 
-// MARK: 已阅未阅列表
+// MARK: 成绩详情
 let ScoreChildDetails = "/achievement/achievementSingleDetails"
 class YXSEducationScoreChildDetailsRequset: YXSBaseRequset {
     init(examId: Int, childrenId: Int = 0) {

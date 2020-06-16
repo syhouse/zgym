@@ -222,6 +222,19 @@ class YXSHomeController: YXSHomeBaseController {
             self.lastRecordTime = list.last?.createTime
             
             for model in list{
+                var isShowScore = true
+                if isParent && model.serviceType == 4{
+                    
+                    if model.committedArrayList?.contains(self.yxs_user.currentChild?.classId ?? 0) ?? false {
+                        isShowScore = true
+                    } else {
+                        isShowScore = false
+                    }
+                }
+                if !isShowScore {
+                    continue
+                }
+                
                 //置顶
                 if let isTop = model.isTop{
                     if isTop == 1 {
