@@ -117,7 +117,7 @@ class YXSClassDetialListController: YXSHomeBaseController {
                 var isShowScore = true
                 if YXSPersonDataModel.sharePerson.personRole == .PARENT && model.serviceType == 4{
                     
-                    if model.committedArrayList?.contains(self.yxs_user.currentChild?.id ?? 0) ?? false {
+                    if model.committedArrayList?.contains(self.classModel.childrenId ?? 0) ?? false {
                         isShowScore = true
                     } else {
                         isShowScore = false
