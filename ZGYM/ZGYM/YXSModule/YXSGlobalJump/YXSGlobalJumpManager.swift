@@ -42,7 +42,7 @@ class YXSGlobalJumpManager: NSObject {
         let serviceId: Int = model.serviceId ?? 0
         let classId: Int = model.classId ?? 0
         let createTime: String = model.createTime ?? ""
-        let childrenId: Int = model.childrenId ?? getChildID(classId: classId)
+        var childrenId: Int = model.childrenId ?? getChildID(classId: classId)
         
         
         if serviceType == 666 {
@@ -111,6 +111,10 @@ class YXSGlobalJumpManager: NSObject {
             break
         case 4:
             /// 成绩
+            if model.childrenId ?? 0 == 0 {
+                childrenId = self.yxs_user.currentChild?.id ?? 0
+            }
+            
             let scoreModel = YXSScoreListModel.init(JSON: ["":""])!
             scoreModel.examId = serviceId
             scoreModel.classId = classId
