@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NightNight
 /// 相册封面
 class YXSPhotoAlbumsListCell: UICollectionViewCell {
     override init(frame: CGRect) {
@@ -90,7 +91,7 @@ class YXSPhotoAlbumsListCell: UICollectionViewCell {
     lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = UIFont.systemFont(ofSize: 16)
-        view.textColor = kTextBlackColor
+        view.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kNight898F9A)
         return view
     }()
     

@@ -112,6 +112,8 @@ class YXSScoreNumParentDetailsVC: YXSScoreBaseDetailsVC {
                 self.commentView.isHidden = false
                 if model.achievementChildrenSubjectsResponseList?.count ?? 0 > 1 {
                     self.chartView.setIsShowLookSubjects(isHaveComment: true, isShow: true)
+                } else {
+                    self.chartView.setIsShowLookSubjects(isHaveComment: true, isShow: false)
                 }
                 if let comment = model.comment,comment.count > 0 {
                     UIUtil.yxs_setLabelParagraphText(self.commentView.contentLbl, text: model.comment, font: UIFont.systemFont(ofSize: 16), lineSpacing: 8, removeSpace: false)

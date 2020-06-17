@@ -33,4 +33,8 @@ extension UIView{
         shape.path = rounded.cgPath
         self.layer.mask = shape
     }
+    
+    func yxs_removeRoundedCorners() {
+        self.layer.mask?.removeFromSuperlayer()
+    }
 }

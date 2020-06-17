@@ -428,7 +428,7 @@ class YXSPhotoAlbumsDetailListHeaderView: UICollectionReusableView{
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = kTextMainBodyColor
+        label.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: kNight898F9A)
         return label
     }()
 }

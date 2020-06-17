@@ -33,6 +33,7 @@ class YXSMyCollectVC: YXSBaseTableViewController {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: YXSBaseTableViewCell = tableView.dequeueReusableCell(withIdentifier: "YXSMyCollectVCCell") as! YXSBaseTableViewCell
+        cell.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         cell.contentView.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         cell.imageView?.image = UIImage.init(named: dataSouer[indexPath.row]["imgName"] ?? "")
         cell.textLabel?.text = dataSouer[indexPath.row]["title"]

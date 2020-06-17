@@ -114,6 +114,18 @@ class YXSClassDetialListController: YXSHomeBaseController {
             self.lastRecordTime = list.last?.createTime
             
             for model in list{
+                var isShowScore = true
+                if YXSPersonDataModel.sharePerson.personRole == .PARENT && model.serviceType == 4{
+                    
+                    if model.committedArrayList?.contains(self.yxs_user.currentChild?.id ?? 0) ?? false {
+                        isShowScore = true
+                    } else {
+                        isShowScore = false
+                    }
+                }
+                if !isShowScore {
+                    continue
+                }
                 model.childrenId = self.classModel.childrenId
                 model.childrenRealName = self.classModel.realName
                 //置顶

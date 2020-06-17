@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NightNight
 
 let kYXSPhotoAlbumDetialFooterViewDelectEventKey = "YXSPhotoAlbumDetialFooterViewDelectEvent"
 let kYXSPhotoAlbumDetialFooterViewUploadEventKey = "YXSPhotoAlbumDetialFooterViewUploadEvent"
@@ -104,7 +105,8 @@ class YXSPhotoAlbumDetialFooterView: UIView {
     
     lazy var selectPhotoButton: UIButton = {
         let selectPhotoButton = UIButton()
-        selectPhotoButton.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), for: .normal)
+        selectPhotoButton.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNight898F9A), forState: .normal)
+//        selectPhotoButton.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), for: .normal)
         selectPhotoButton.setTitle("选择照片", for: .normal)
         selectPhotoButton.addTarget(self, action: #selector(selectPhotoButtonClick), for: .touchUpInside)
         return selectPhotoButton
@@ -112,7 +114,9 @@ class YXSPhotoAlbumDetialFooterView: UIView {
     
     lazy var selectAllControl: YXSCustomImageControl = {
         let selectAllControl = YXSCustomImageControl.init(imageSize: CGSize.init(width: 17, height: 17), position: YXSImagePositionType.left, padding: 7)
-        selectAllControl.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#222222"), for: .normal)
+        let color = NightNight.theme == .night ? kNight898F9A : UIColor.yxs_hexToAdecimalColor(hex: "#222222")
+        selectAllControl.setTitleColor(color, for: .normal)
+        selectAllControl.setTitleColor(color, for: .selected)
         selectAllControl.setTitle("全选", for: .normal)
         selectAllControl.setTitle("全选", for: .selected)
         selectAllControl.font = UIFont.systemFont(ofSize: 17)
@@ -125,7 +129,8 @@ class YXSPhotoAlbumDetialFooterView: UIView {
     
         lazy var cancelSelectButton: UIButton = {
         let cancelSelectButton = UIButton()
-        cancelSelectButton.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), for: .normal)
+        cancelSelectButton.setMixedTitleColor(MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), night: kNight898F9A), forState: .normal)
+//        cancelSelectButton.setTitleColor(UIColor.yxs_hexToAdecimalColor(hex: "#575A60"), for: .normal)
         cancelSelectButton.setTitle("取消", for: .normal)
         cancelSelectButton.addTarget(self, action: #selector(cancelSelectButtonClick), for: .touchUpInside)
         return cancelSelectButton

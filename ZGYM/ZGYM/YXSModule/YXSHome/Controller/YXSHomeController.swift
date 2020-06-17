@@ -225,7 +225,7 @@ class YXSHomeController: YXSHomeBaseController {
                 var isShowScore = true
                 if isParent && model.serviceType == 4{
                     
-                    if model.committedArrayList?.contains(self.yxs_user.currentChild?.classId ?? 0) ?? false {
+                    if model.committedArrayList?.contains(self.yxs_user.currentChild?.id ?? 0) ?? false {
                         isShowScore = true
                     } else {
                         isShowScore = false

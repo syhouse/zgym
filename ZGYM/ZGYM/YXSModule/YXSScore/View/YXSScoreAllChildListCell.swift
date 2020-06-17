@@ -9,11 +9,12 @@
 import Foundation
 import NightNight
 
-class YXSScoreAllChildListCell: UITableViewCell {
+class YXSScoreAllChildListCell: YXSBaseTableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
         self.accessoryType = .disclosureIndicator
+        self.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         contentView.addSubview(numberImageV)
         contentView.addSubview(numberLbl)
         contentView.addSubview(avatarImageV)

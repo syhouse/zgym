@@ -59,7 +59,9 @@ class YXSScoreLevelTeacherListCell: UITableViewCell {
         rankLbl.text = model.rank
         if isNeedCorners {
 //            contentView.yxs_addRoundedCorners(corners: [.bottomLeft,.bottomRight], radii: CGSize.init(width: 5, height: 5))
-//            self.yxs_addRoundedCorners(corners: [.bottomRight,.bottomLeft], radii: CGSize.init(width: 5, height: 5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height:60))
+            self.yxs_addRoundedCorners(corners: [.bottomRight,.bottomLeft], radii: CGSize.init(width: 5, height: 5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height:60))
+        } else {
+            self.yxs_removeRoundedCorners()
         }
         
     }
