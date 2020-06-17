@@ -13,10 +13,10 @@ import ObjectMapper
 
 class YXSPhotoAlbumsPraiseModel : NSObject, NSCoding, Mappable{
 
-    var commentList : [AnyObject]?
+    var commentCount : Int?
     
     /// 点赞(0未点赞  1已点赞)
-    var isPraise : Int?
+    var praiseStat : Int?
     var praiseCount : Int?
 
     required init?(map: Map){}
@@ -24,8 +24,8 @@ class YXSPhotoAlbumsPraiseModel : NSObject, NSCoding, Mappable{
 
     func mapping(map: Map)
     {
-        commentList <- map["commentList"]
-        isPraise <- map["isPraise"]
+        commentCount <- map["commentCount"]
+        praiseStat <- map["praiseStat"]
         praiseCount <- map["praiseCount"]
         
     }
@@ -36,8 +36,8 @@ class YXSPhotoAlbumsPraiseModel : NSObject, NSCoding, Mappable{
     */
     @objc required init(coder aDecoder: NSCoder)
     {
-         commentList = aDecoder.decodeObject(forKey: "commentList") as? [AnyObject]
-         isPraise = aDecoder.decodeObject(forKey: "isPraise") as? Int
+         commentCount = aDecoder.decodeObject(forKey: "commentCount") as? Int
+         praiseStat = aDecoder.decodeObject(forKey: "praiseStat") as? Int
          praiseCount = aDecoder.decodeObject(forKey: "praiseCount") as? Int
 
     }
@@ -48,11 +48,11 @@ class YXSPhotoAlbumsPraiseModel : NSObject, NSCoding, Mappable{
     */
     @objc func encode(with aCoder: NSCoder)
     {
-        if commentList != nil{
-            aCoder.encode(commentList, forKey: "commentList")
+        if commentCount != nil{
+            aCoder.encode(commentCount, forKey: "commentCount")
         }
-        if isPraise != nil{
-            aCoder.encode(isPraise, forKey: "isPraise")
+        if praiseStat != nil{
+            aCoder.encode(praiseStat, forKey: "praiseStat")
         }
         if praiseCount != nil{
             aCoder.encode(praiseCount, forKey: "praiseCount")

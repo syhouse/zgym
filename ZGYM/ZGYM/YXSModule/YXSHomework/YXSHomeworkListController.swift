@@ -127,6 +127,8 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
                 self.dataSource.remove(at: indexPath.row)
                 self.reloadTableView()
             }
+        case .goPhotoLists:
+            SLLog("goPhotoLists")
         default:
             print("")
         }

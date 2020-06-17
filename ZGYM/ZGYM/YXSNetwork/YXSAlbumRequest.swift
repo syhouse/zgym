@@ -17,20 +17,7 @@ class YXSEducationAlbumQueryClassListRequest: YXSBaseRequset {
         method = .post
         host = fileHost
         path = albumQueryClassList
-        param = [
-            "stage":stage.rawValue]
-    }
-}
-
-// MARK: - 获取班级相册数量
-let albumQueryAlbumMessage = "/album/query-album-message"
-class YXSEducationAlbumQueryAlbumMessageRequest: YXSBaseRequset {
-    override init(){
-        super.init()
-        method = .post
-        host = fileHost
-        path = albumPagequery
-//        param = []
+        param = ["stage":stage.rawValue]
     }
 }
 
@@ -96,6 +83,21 @@ class YXSEducationAlbumUploadResourceRequest: YXSBaseRequset {
         param = [
             "albumId":albumId,
             "resourceList":resourceList,
+            "classId": classId]
+    }
+}
+
+/// 班级相册资源检查md5
+let albumCheckMD5 = "/album/check-md5"
+class YXSEducationAlbumCheckMD5Request: YXSBaseRequset {
+    init(classId: Int,albumId: Int, md5List: [String]){
+        super.init()
+        method = .post
+        host = fileHost
+        path = albumCheckMD5
+        param = [
+            "albumId":albumId,
+            "md5List":md5List,
             "classId": classId]
     }
 }
@@ -210,5 +212,46 @@ class YXSEducationAlbumCommentRequest: YXSBaseRequset {
             "type": type,
             "content": content,
             "id": id]
+    }
+}
+
+// MARK: - 获取相册互动消息(已完成)
+let albumQueryAlbumMessage = "/album/query-album-message"
+class YXSEducationQueryAlbumMessageRequest: YXSBaseRequset {
+    override init(){
+        super.init()
+        method = .post
+        host = fileHost
+        path = albumQueryAlbumMessage
+    }
+}
+
+// MARK: - 删除相册互动消息
+let albumDeleteComment = "/album/delete-comment"
+class YXSEducationAlbumDeleteCommentRequest: YXSBaseRequset {
+    init(albumId: Int, classId: Int, resourceId: Int, id: Int){
+        super.init()
+        method = .post
+        host = fileHost
+        path = albumDeleteComment
+        param = [
+        "albumId":albumId,
+        "classId": classId,
+        "resourceId": resourceId,
+        "id": id]
+    }
+}
+
+// MARK: - 相册信息查询
+let albumQuery = "/album/query"
+class YXSEducationAlbumQueryRequest: YXSBaseRequset {
+    init(classId: Int, id: Int){
+        super.init()
+        method = .post
+        host = fileHost
+        path = albumQuery
+        param = [
+        "classId": classId,
+        "id": id]
     }
 }

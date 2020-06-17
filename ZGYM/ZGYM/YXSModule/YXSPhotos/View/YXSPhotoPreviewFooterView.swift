@@ -51,24 +51,15 @@ class YXSPhotoPreviewFooterView: UIView {
     
     func setModel(model: YXSPhotoAlbumsPraiseModel){
         self.model = model
-        minePriseButton.isSelected = model.isPraise == 1
-        commentButton.title = "评论\(model.commentList?.count ?? 0)"
+        minePriseButton.isSelected = model.praiseStat == 1
+        commentButton.title = "评论\(model.commentCount ?? 0)"
         let praiseCount = model.praiseCount ?? 0
         currentPriseButton.title = praiseCount > 99 ? "99+" : "\(praiseCount)"
+        
     }
     
     var cellBlock: ((_ isComment: Bool)->())?
-    
-    @objc func minePriseButtonClick(){
-        if model != nil{
-            let isCanclePraise = (model.isPraise ?? 0 ) == 1
-            model.isPraise =  isCanclePraise ? 0 : 1
-            model.praiseCount = isCanclePraise ? (model.praiseCount ?? 0) - 1 : (model.praiseCount ?? 0) + 1
-            cellBlock?(false)
-        }
-    }
-    
-    
+
     // MARK: - LazyLoad
     lazy var minePriseButton: YXSCustomImageControl = {
         let minePriseButton = YXSCustomImageControl.init(imageSize: CGSize.init(width: 22, height: 22), position: YXSImagePositionType.left, padding: 7)

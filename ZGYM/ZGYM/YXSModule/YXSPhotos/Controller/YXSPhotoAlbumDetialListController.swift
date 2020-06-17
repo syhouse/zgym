@@ -23,7 +23,7 @@ class YXSPhotoAlbumDetialListSectionModel: NSObject{
 /// 相片列表
 class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     var dataSource: [YXSPhotoAlbumDetialListSectionModel] = [YXSPhotoAlbumDetialListSectionModel]()
-    var albumModel: YXSPhotoAlbumsModel
+    var albumModel: YXSPhotoAlbumsModel?
     var videoDuration: Int?
     var updateAlbumModel: ((_ albumModel:  YXSPhotoAlbumsModel)->())?
     /// 上传资源个数
@@ -32,6 +32,9 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     var rightButton: UIButton!
     
     var isEdit: Bool = false
+    
+    var hasRepeatFile: Bool = false
+    
     var resourceIdList: [Int]{
         var selectModels = [Int]()
         for section in dataSource{
@@ -43,10 +46,27 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         }
         return selectModels
     }
-    init(albumModel: YXSPhotoAlbumsModel) {
-        self.albumModel = albumModel
+    var classId: Int
+    var albumsId: Int
+    init(classId: Int, albumsId: Int) {
+        self.classId = classId
+        self.albumsId = albumsId
         super.init()
         
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 6
+        layout.minimumInteritemSpacing = 6
+        layout.sectionInset = UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: 15)
+        let itemW = (SCREEN_WIDTH - CGFloat(15*2) - CGFloat(2*6))/3
+        layout.itemSize = CGSize.init(width: itemW, height: itemW)
+        layout.headerReferenceSize = CGSize(width: SCREEN_WIDTH, height: 47)
+        self.layout = layout
+    }
+    
+    convenience init(albumModel: YXSPhotoAlbumsModel) {
+        
+        self.init(classId: albumModel.classId ?? 0, albumsId: albumModel.id ?? 0)
+        self.albumModel = albumModel
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 6
         layout.minimumInteritemSpacing = 6
@@ -63,20 +83,24 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = albumModel.albumName
-        
-        self.view.addSubview(footerView)
-        footerView.snp.makeConstraints { (make) in
-            make.left.right.equalTo(0)
-            make.bottom.equalTo(-kSafeBottomHeight)
-            make.height.equalTo(60)
-        }
-        
         collectionView.register(YXSPhotoAlbumsDetailListCell.self, forCellWithReuseIdentifier: "YXSPhotoAlbumsDetailListCell")
         collectionView.register(YXSPhotoAlbumsDetailListHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSPhotoAlbumsDetailListHeaderView")
-        rightButton = yxs_setRightButton(title: "编辑",titleColor: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"))
-        rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        rightButton.addTarget(self, action: #selector(rightButtonClick), for: .touchUpInside)
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            rightButton = yxs_setRightButton(title: "编辑",titleColor: UIColor.yxs_hexToAdecimalColor(hex: "#575A60"))
+            rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            rightButton.addTarget(self, action: #selector(rightButtonClick), for: .touchUpInside)
+            
+            self.view.addSubview(footerView)
+            footerView.snp.makeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.bottom.equalTo(-kSafeBottomHeight)
+                make.height.equalTo(60)
+            }
+        }
+        
+        if albumModel == nil{
+            loadAlbumInfo()
+        }
     }
     
     // MARK: - Request
@@ -90,7 +114,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     }
     
     func yxs_loadData() {
-        YXSEducationAlbumPagequeryResourceRequest.init(classId: albumModel.classId ?? 0 ,albumId: albumModel.id ?? 0, currentPage: currentPage).request({ (result) in
+        YXSEducationAlbumPagequeryResourceRequest.init(classId: classId  ,albumId: albumsId, currentPage: currentPage).request({ (result) in
             self.yxs_endingRefresh()
             if self.currentPage == 1{
                 self.dataSource.removeAll()
@@ -102,8 +126,6 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
                     model.isSelected = true
                 }
             }
-
-            
             var lastSectionModel = self.dataSource.last
             for model in list{
                 if let createTime = lastSectionModel?.createTime,NSUtil.yxs_isSameDay(createTime.yxs_Date(), date2:  model.createTime?.yxs_Date() ?? Date()){
@@ -123,6 +145,40 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             self.yxs_endingRefresh()
         }
     }
+//
+    
+    func cheakMD5Requset(_ assets: [YXSMediaModel]){
+        var md5List = [String]()
+        for model in assets{
+            md5List.append(model.fileName.MD5())
+        }
+        MBProgressHUD.yxs_showLoading()
+        YXSEducationAlbumCheckMD5Request(classId: classId, albumId: albumsId, md5List: md5List).request({ (json) in
+            MBProgressHUD.yxs_hideHUD()
+            if let repeatlists = json.arrayObject as? [String]{
+                if repeatlists.count == 0{
+                    self.hasRepeatFile = false
+                    self.uploadRequest(assets)
+                }else{
+                    if repeatlists.count >= assets.count{
+                        ///完全重复
+                        self.showAlert(title: "当前所选照片与相册内重复", message: nil)
+                        return
+                    }else{
+                        var newAssets = [YXSMediaModel]()
+                        for model in assets{
+                            if !repeatlists.contains(model.fileName.MD5()){
+                                newAssets.append(model)
+                            }
+                        }
+                        self.uploadRequest(newAssets)
+                    }
+                }
+            }
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
     
     /// 上传资源
     func uploadRequest(_ assets: [YXSMediaModel]){
@@ -135,10 +191,10 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         var mediaInfos = [SLUploadSourceModel]()
         for asset in assets{
             if asset.type == .video {
-                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .video, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
+                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .video, storageType: .album, fileName: asset.fileName, classId: classId, albumId: albumsId))
                 videoDuration = Int(asset.asset.duration)
             }else{
-                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .image, storageType: .album, fileName: asset.fileName, classId: albumModel.classId, albumId: albumModel.id))
+                mediaInfos.append(SLUploadSourceModel.init(model: asset, type: .image, storageType: .album, fileName: asset.fileName, classId: classId, albumId: albumsId))
             }
         }
         MBProgressHUD.yxs_showUpload()
@@ -160,11 +216,14 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         var pictures = [String]()
         var video: String = ""
         var bgUrl: String = ""
+        var md5List = [String]()
         for model in mediaInfos{
             if model.type == .video{
                 video = model.aliYunUploadBackUrl ?? ""
+                md5List.append(model.fileName.MD5())
             }else if model.type == .image{
                 pictures.append(model.aliYunUploadBackUrl ?? "")
+                md5List.append(model.fileName.MD5())
             }else if model.type == .firstVideo{
                 bgUrl = model.aliYunUploadBackUrl ?? ""
             }
@@ -172,17 +231,25 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
 
 
         if video.count != 0{
-            resourceList.append(["resourceType": 1, "resourceUrl": video, "bgUrl": bgUrl, "videoDuration": videoDuration ?? 0])
+            resourceList.append(["resourceType": 1, "resourceUrl": video, "bgUrl": bgUrl, "videoDuration": videoDuration ?? 0, "fileMd5": md5List.first ?? ""])
         }else{
-            for picUrl in pictures{
-                resourceList.append(["resourceType": 0, "resourceUrl": picUrl,"bgUrl": "", "videoDuration": 0])
+            for (index,picUrl) in pictures.enumerated(){
+                resourceList.append(["resourceType": 0, "resourceUrl": picUrl,"bgUrl": "", "videoDuration": 0, "fileMd5": md5List[index]])
             }
         }
-        YXSEducationAlbumUploadResourceRequest.init(classId: albumModel.classId ?? 0,albumId: albumModel.id ?? 0, resourceList: resourceList).request({ (result) in
+        
+        YXSEducationAlbumUploadResourceRequest.init(classId: classId,albumId: albumsId, resourceList: resourceList).request({ (result) in
             MBProgressHUD.yxs_hideHUD()
+            if self.hasRepeatFile{
+                MBProgressHUD.yxs_showMessage(message: "上传成功,已过滤重复的")
+            }else{
+                MBProgressHUD.yxs_showMessage(message: "上传成功")
+            }
             self.yxs_refreshData()
-            self.albumModel.resourceCount = (self.albumModel.resourceCount ?? 0) + self.uploadCount
-            self.updateAlbumModel?(self.albumModel)
+            self.albumModel?.resourceCount = (self.albumModel?.resourceCount ?? 0) + self.uploadCount
+            if let albumModel = self.albumModel{
+                self.updateAlbumModel?(albumModel)
+            }
         }) { (msg, code) in
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -197,7 +264,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         }
         MBProgressHUD.yxs_showLoading()
         let delectCount = resourceIdList.count
-        YXSEducationAlbumBatchDeleteResourceRequest.init(classId: albumModel.classId ?? 0 ,albumId: albumModel.id ?? 0, resourceIdList: resourceIdList).request({ (result) in
+        YXSEducationAlbumBatchDeleteResourceRequest.init(classId: classId ,albumId: albumsId, resourceIdList: resourceIdList).request({ (result) in
             MBProgressHUD.yxs_showMessage(message: "删除完成")
             for section in self.dataSource{
                 section.lists.removeAll { (model) -> Bool in
@@ -208,30 +275,44 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             self.dataSource.removeAll { (section) -> Bool in
                 return section.lists.count == 0
             }
-            
-            self.albumModel.resourceCount = (self.albumModel.resourceCount ?? 0) - delectCount
-            self.updateAlbumModel?(self.albumModel)
-            if self.albumModel.resourceCount == 0{
-                self.refreshShowFooterData()
-            }else{
-                self.yxs_refreshData()
+            if let albumModel = self.albumModel{
+                albumModel.resourceCount = (albumModel.resourceCount ?? 0) - delectCount
+                self.updateAlbumModel?(albumModel)
+                if albumModel.resourceCount == 0{
+                    self.refreshShowFooterData()
+                }else{
+                    self.yxs_refreshData()
+                }
             }
+
             self.refreshView(isEdit: false)
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     
+    func loadAlbumInfo(){
+        YXSEducationAlbumQueryRequest.init(classId: classId ,id: albumsId).request({ (result: YXSPhotoAlbumsModel) in
+            self.title = result.albumName
+            self.albumModel = result
+        }) { (msg, code) in
+            MBProgressHUD.yxs_showMessage(message: msg)
+        }
+    }
+    
+    
     // MARK: - Action
     @objc func rightButtonClick(){
-        let vc = YXSPhotoEditAlbumController.init(albumModel: albumModel)
-        vc.updateAlbumSucess = {[weak self](albumModel) in
-            guard let strongSelf = self else { return }
-            strongSelf.title = albumModel.albumName
-            strongSelf.albumModel = albumModel
-            strongSelf.updateAlbumModel?(albumModel)
+        if let albumModel = albumModel{
+            let vc = YXSPhotoEditAlbumController.init(albumModel: albumModel)
+            vc.updateAlbumSucess = {[weak self](albumModel) in
+                guard let strongSelf = self else { return }
+                strongSelf.title = albumModel.albumName
+                strongSelf.albumModel = albumModel
+                strongSelf.updateAlbumModel?(albumModel)
+            }
+            self.navigationController?.pushViewController(vc)
         }
-        self.navigationController?.pushViewController(vc)
     }
     
     @objc func addPhotoClick(){
@@ -242,17 +323,19 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
     
     // MARK: - Private
     func refreshShowFooterData(){
-        if self.dataSource.count == 0{
-            self.footerView.isHidden = true
-            self.collectionView.snp.remakeConstraints { (make) in
-                make.left.top.right.equalTo(0)
-                make.bottom.equalTo(-kSafeBottomHeight)
-            }
-        }else{
-            self.footerView.isHidden = false
-            self.collectionView.snp.remakeConstraints { (make) in
-                make.left.top.right.equalTo(0)
-                make.bottom.equalTo(-kSafeBottomHeight - 60)
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            if self.dataSource.count == 0{
+                self.footerView.isHidden = true
+                self.collectionView.snp.remakeConstraints { (make) in
+                    make.left.top.right.equalTo(0)
+                    make.bottom.equalTo(-kSafeBottomHeight)
+                }
+            }else{
+                self.footerView.isHidden = false
+                self.collectionView.snp.remakeConstraints { (make) in
+                    make.left.top.right.equalTo(0)
+                    make.bottom.equalTo(-kSafeBottomHeight - 60)
+                }
             }
         }
         self.collectionView.reloadData()
@@ -306,9 +389,17 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
                     showList.append(model)
                 }
             }
-            let vc = YXSPhotoPreviewController(dataSource: showList, albumModel: albumModel)
-            vc.updateAlbumModel = updateAlbumModel
-            vc.currentPage = showList.firstIndex(of: model) ?? 0
+            let vc = YXSPhotoPreviewController(dataSource: showList, classId: classId , albumsId: albumsId)
+            vc.updateCoverBlock = {
+                [weak self] (cover)in
+                guard let strongSelf = self else { return }
+                strongSelf.albumModel?.coverUrl = cover
+                if let albumModel = strongSelf.albumModel{
+                    strongSelf.updateAlbumModel?(albumModel)
+                }
+                
+            }
+            vc.currentIndex = showList.firstIndex(of: model) ?? 0
 
             self.navigationController?.pushViewController(vc)
         }
@@ -318,7 +409,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         if kind == UICollectionView.elementKindSectionHeader {
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSPhotoAlbumsDetailListHeaderView", for: indexPath) as! YXSPhotoAlbumsDetailListHeaderView
 //            headerView.setModel(tabListTemplates[indexPath.section])
-            headerView.titleLabel.text = dataSource[indexPath.row].title
+            headerView.titleLabel.text = dataSource[indexPath.section].title
             return headerView
         }
         return YXSTemplateListHeaderView()
@@ -348,6 +439,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             
         } else {
             view.label.text = "老师还没有上传照片哦"
+            view.button.isHidden = true
         }
  
         return view
@@ -381,14 +473,14 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
 extension YXSPhotoAlbumDetialListController: YXSSelectMediaHelperDelegate{
     func didSelectMedia(asset: YXSMediaModel) {
 //        loadUploadRequest([asset])
-        uploadRequest([asset])
+        cheakMD5Requset([asset])
     }
     
     /// 选中多个图片资源
     /// - Parameter assets: models
     func didSelectSourceAssets(assets: [YXSMediaModel]) {
 //        loadUploadRequest(assets)
-        uploadRequest(assets)
+        cheakMD5Requset(assets)
     }
 }
 

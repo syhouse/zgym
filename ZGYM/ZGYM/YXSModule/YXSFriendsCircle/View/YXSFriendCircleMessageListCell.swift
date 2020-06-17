@@ -111,6 +111,25 @@ class YXSFriendCircleMessageListCell: UITableViewCell {
         }
     }
     
+    func setCellModel(_ model: YXSAlbumsMessageModel){
+        nameLabel.text = model.operatorName
+        let bodyColor = NightNight.theme == .normal ? kBlueColor : UIColor.white
+        let grayBodyColor = NightNight.theme == .normal ? UIColor.yxs_hexToAdecimalColor(hex: "#575A60") : kNightBCC6D4
+        let nameText: String = model.recipient == yxs_user.id ? "我:" :  ""
+        if model.type == "COMMENT"{
+            UIUtil.yxs_setLabelAttributed(commentLabel, text: ["评论", nameText, " \(model.content ?? "")" ], colors: [grayBodyColor,bodyColor,grayBodyColor])
+        } else if model.type == "REPLY"{
+            UIUtil.yxs_setLabelAttributed(commentLabel, text: ["回复", nameText, " \(model.content ?? "")" ], colors: [grayBodyColor,bodyColor,grayBodyColor])
+        } else {
+            UIUtil.yxs_setLabelAttributed(commentLabel, text: ["点赞" ], colors: [grayBodyColor])
+        }
+        rightImage.isHidden = true
+        if let url = model.attachment, url.count > 0 {
+            rightImage.isHidden = false
+            rightImage.yxs_setImageWithURL(url: URL.init(string: url), placeholder: kImageDefualtMixedImage)
+        }
+    }
+    
     
     lazy var nameLabel: UILabel = {
         let label = UILabel()

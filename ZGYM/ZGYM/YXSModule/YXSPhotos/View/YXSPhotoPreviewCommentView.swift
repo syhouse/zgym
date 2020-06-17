@@ -9,15 +9,21 @@
 import UIKit
 /// 图片预览 底部评论框
 class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSource {
-
-    var albumId: Int = 0
-    var classId: Int = 0
+    
+    let albumId: Int
+    let classId: Int
     var resourceId: Int = 0
     
     var dataSource: [YXSPhotoPreviewCommentModel] = [YXSPhotoPreviewCommentModel]()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    var commentLists: [Int: [YXSPhotoPreviewCommentModel]] = [Int: [YXSPhotoPreviewCommentModel]]()
+    var updateCountBlock: ((_ curruntCount: Int)->())?
+    
+    init(albumId: Int, classId: Int) {
+        self.albumId = albumId
+        self.classId = classId
+        super.init(frame: CGRect.zero)
         
         tbView.register(YXSPhotoPreviewCommentCell.classForCoder(), forCellReuseIdentifier: "YXSPhotoPreviewCommentCell")
         
@@ -32,6 +38,7 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
             make.right.equalTo(0)
             make.height.equalTo(58)
         })
+        lbTitle.yxs_addLine(position: .bottom, color: UIColor.yxs_hexToAdecimalColor(hex: "#434343"))
         
         self.tbView.snp.makeConstraints({ (make) in
             make.top.equalTo(self.lbTitle.snp_bottom)
@@ -44,7 +51,7 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
             make.top.equalTo(tbView.snp_bottom).offset(14)
             make.left.equalTo(14)
             make.bottom.equalTo(-14)
-            make.height.equalTo(38)
+            make.height.equalTo(44)
         })
         
         self.btnSend.snp.makeConstraints({ (make) in
@@ -55,6 +62,15 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
             make.height.equalTo(38)
             
         })
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.greetingTextFieldChanged),
+                                               name:NSNotification.Name(rawValue:"UITextFieldTextDidChangeNotification"),
+                                               object: self.tf)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     required init?(coder: NSCoder) {
@@ -62,11 +78,7 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
     }
     
     // MARK: - Request
-    @objc func loadData(albumId: Int, classId: Int, resourceId: Int) {
-        self.albumId = albumId
-        self.classId = classId
-        self.resourceId = resourceId
-        
+    @objc func loadData() {
         YXSEducationAlbumQueryCommentListRequest(albumId: albumId, classId: classId, resourceId: resourceId).requestCollection({ [weak self](list:[YXSPhotoPreviewCommentModel]) in
             guard let weakSelf = self else {return}
             weakSelf.dataSource = list
@@ -78,7 +90,40 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
         }
     }
     
+    func delectRequset(commentId: Int){
+        YXSCommonAlertView.showAlert(title: "是否撤销该条评论？", rightClick: {
+            [weak self] in
+            guard let strongSelf = self else { return }
+            MBProgressHUD.yxs_showLoading()
+            YXSEducationAlbumDeleteCommentRequest.init(albumId: strongSelf.albumId, classId: strongSelf.classId, resourceId: strongSelf.resourceId, id: commentId).request({ (result) in
+                MBProgressHUD.yxs_showMessage(message: "撤销成功")
+                strongSelf.dataSource.removeAll { (model) -> Bool in
+                    model.id == commentId
+                }
+                strongSelf.tbView.reloadData()
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        })
+        
+    }
+    
+    func reloadData(){
+        if let list = commentLists[resourceId]{
+            dataSource = list
+        }else{
+            dataSource = [YXSPhotoPreviewCommentModel]()
+        }
+        loadData()
+        self.lbTitle.text = "评论(\(dataSource.count))"
+        self.tbView.reloadData()
+    }
+    
     // MARK: - Action
+    @objc func greetingTextFieldChanged(obj:Notification) {
+        self.greetingTextFieldChanged(obj: obj, length: 100)
+    }
+    
     @objc func sendClick(sender: YXSButton) {
         YXSEducationAlbumCommentRequest(albumId: albumId, classId: classId, resourceId: resourceId, content: self.tf.text ?? "", id: 1).request({ [weak self](result: YXSPhotoPreviewCommentModel) in
             guard let weakSelf = self else {return}
@@ -86,6 +131,9 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
             weakSelf.tbView.reloadData()
             weakSelf.tf.text = ""
             MBProgressHUD.yxs_showMessage(message: "评论成功")
+            weakSelf.endEditing(true)
+            weakSelf.lbTitle.text = "评论(\(weakSelf.dataSource.count))"
+            weakSelf.updateCountBlock?(weakSelf.dataSource.count)
             
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -99,7 +147,13 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: YXSPhotoPreviewCommentCell = tableView.dequeueReusableCell(withIdentifier: "YXSPhotoPreviewCommentCell") as! YXSPhotoPreviewCommentCell
-        cell.model = dataSource[indexPath.row]
+        let model = dataSource[indexPath.row]
+        cell.model = model
+        cell.delectClickBlock = {
+            [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.delectRequset(commentId: model.id ?? 0)
+        }
         return cell
     }
     
@@ -113,27 +167,32 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
         lb.text = "评论(0)"
         return lb
     }()
-
+    
     lazy var tbView: UITableView = {
         let tb = UITableView()
         tb.separatorStyle = .none
-        tb.backgroundColor = UIColor.black
+        tb.backgroundColor = UIColor.clear
         
         tb.delegate = self
         tb.dataSource = self
-
+        
         return tb
     }()
     
-    lazy var tf: YXSQSTextField = {
-        let tf = YXSQSTextField()
-        tf.edgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        tf.backgroundColor = UIColor.white
-        tf.placeholder = "评论"
-        tf.font = UIFont.systemFont(ofSize: 16)
-        tf.cornerRadius = 3
-        return tf
+    lazy var tf: YXSPlaceholderTextView = {
+        let textView = YXSPlaceholderTextView()
+        textView.placeholder = "评论"
+        textView.font = kTextMainBodyFont
+        textView.placeholderColor = UIColor.yxs_hexToAdecimalColor(hex: "#C4CDDA")
+        textView.textColor = kTextMainBodyColor
+        textView.backgroundColor = UIColor.white
+        textView.contentInset = UIEdgeInsets.init(top: 5, left: 10, bottom: 0, right: 10)
+        textView.cornerRadius = 3
+        textView.limitCount = 100
+        textView.inputAccessoryView = nil
+        return textView
     }()
+    
     
     lazy var btnSend: YXSButton = {
         let btn = YXSButton()
@@ -150,11 +209,13 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
 
 // MARK: - 评论Cell
 class YXSPhotoPreviewCommentCell: UITableViewCell {
+    
+    var delectClickBlock: (()->())?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
-        self.contentView.backgroundColor = UIColor.black
-        
+        self.contentView.backgroundColor = UIColor.clear
+        self.backgroundColor = UIColor.clear
         contentView.addSubview(imgAvatar)
         contentView.addSubview(lbTitle)
         contentView.addSubview(lbDate)
@@ -184,6 +245,13 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
             make.right.equalTo(-15)
             make.bottom.equalTo(-20)
         })
+        
+        contentView.addSubview(delectButton)
+        delectButton.snp.makeConstraints({ (make) in
+            make.centerY.equalTo(imgAvatar)
+            make.right.equalTo(-8)
+            make.size.equalTo(CGSize.init(width: 30, height: 30))
+        })
     }
     
     required init?(coder: NSCoder) {
@@ -197,7 +265,12 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
             lbTitle.text = self.model?.userName
             lbDate.text = "\(self.model?.createTime ?? 0)".yxs_DayTime()
             lbContent.text = self.model?.content ?? ""
+            delectButton.isHidden = !(model?.isMyPublish ?? false)
         }
+    }
+    
+    @objc func delectClick(){
+        delectClickBlock?()
     }
     
     // MARK: - LazyLoad
@@ -231,5 +304,13 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
         lb.font = UIFont.systemFont(ofSize: 16)
         lb.numberOfLines = 0
         return lb
+    }()
+    
+    lazy var delectButton: YXSButton = {
+        let button = YXSButton()
+        button.setImage(UIImage.init(named: "recall"), for: .normal)
+         button.addTarget(self, action: #selector(delectClick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        return button
     }()
 }

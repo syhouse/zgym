@@ -38,7 +38,7 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController, UI
         self.title = "班级相册"
 
         collectionView.register(YXSPhotoAlbumsListCell.self, forCellWithReuseIdentifier: "YXSPhotoAlbumsListCell")
-        collectionView.register(YXSPhotoClassPhotoAlbumListHeader.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSPhotoClassPhotoAlbumListHeader")
+        collectionView.register(YXSFriendsCircleMessageView.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSFriendsCircleMessageView")
     }
     
     override func yxs_refreshData() {
@@ -63,7 +63,7 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController, UI
             let list = Mapper<YXSPhotoAlbumsModel>().mapArray(JSONObject: result["classAlbumList"].object) ?? [YXSPhotoAlbumsModel]()
             weakSelf.dataSource += list
             
-            if list.count != 0 {
+            if list.count != 0 && YXSPersonDataModel.sharePerson.personRole == .TEACHER{
                 let createAlbums = YXSPhotoAlbumsModel.init(JSON: ["": ""])
                 createAlbums?.isSystemCreateItem = true
                 weakSelf.dataSource.insert(createAlbums!, at: 0)
@@ -75,6 +75,17 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController, UI
             self.yxs_endingRefresh()
             MBProgressHUD.yxs_showMessage(message: msg)
         }
+    }
+    
+    // MARK: - public
+    public func updateCover(cover: String, albumId: Int){
+        for model in dataSource{
+            if model.id == albumId{
+                model.coverUrl = cover
+                break
+            }
+        }
+        collectionView.reloadData()
     }
     
     // MARK: - Action
@@ -125,6 +136,7 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController, UI
             
         }else{
             let vc = YXSPhotoAlbumDetialListController.init(albumModel: model)
+            vc.title = model.albumName
             vc.updateAlbumModel = {[weak self](albumModel) in
                 guard let strongSelf = self else { return }
                 strongSelf.dataSource[indexPath.row] = albumModel
@@ -176,11 +188,30 @@ class YXSPhotoClassPhotoAlbumListController: YXSBaseCollectionViewController, UI
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
-            let header: YXSPhotoClassPhotoAlbumListHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSPhotoClassPhotoAlbumListHeader", for: indexPath) as! YXSPhotoClassPhotoAlbumListHeader
-            header.messageInfo = messageInfo
+            let header: YXSFriendsCircleMessageView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSFriendsCircleMessageView", for: indexPath) as! YXSFriendsCircleMessageView
+            header.setMessageTipsModel(messageModel: messageInfo)
             return header
         }
         return UICollectionReusableView()
+    }
+}
+
+extension YXSPhotoClassPhotoAlbumListController: YXSRouterEventProtocol{
+    func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?){
+        switch eventName {
+        case kFriendsCircleMessageViewGoMessageEvent:
+            let vc = YXSCommonMessageListController.init(photoClassId: classId)
+            vc.loadSucess = {
+                [weak self] in
+                guard let strongSelf = self else { return }
+                strongSelf.messageInfo = nil
+                strongSelf.collectionView.reloadData()
+            }
+            self.navigationController?.pushViewController(vc)
+            break
+        default:
+            print("")
+        }
     }
 }
 

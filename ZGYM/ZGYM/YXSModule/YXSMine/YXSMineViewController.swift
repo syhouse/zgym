@@ -280,8 +280,13 @@ class YXSMineViewController: YXSBaseTableViewController{
     
     /// 班级相册
     @objc func classAlbumClick() {
-        let vc = YXSPhotoClassListController()
-        self.navigationController?.pushViewController(vc)
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            let vc = YXSPhotoClassListController()
+            self.navigationController?.pushViewController(vc)
+        }else{
+            let vc = YXSPhotoClassPhotoAlbumListController(classId: self.yxs_user.currentChild?.classId ?? 0)
+            self.navigationController?.pushViewController(vc)
+        }
     }
     
     // MARK: - loadData

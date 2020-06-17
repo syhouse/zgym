@@ -12,7 +12,7 @@ import NightNight
 let kFriendsCircleMessageViewGoMessageEvent = "FriendsCircleMessageViewGoMessageEvent"
 private let maxcount: Int = 2
 private let kImageViewOrginTag: Int = 101
-class YXSFriendsCircleMessageView: UIView {
+class YXSFriendsCircleMessageView: UICollectionReusableView {
     override init(frame: CGRect){
         super.init(frame: frame)
         mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightBackgroundColor)
@@ -70,6 +70,41 @@ class YXSFriendsCircleMessageView: UIView {
             make.left.equalTo(last!.snp_right).offset(8)
             make.centerY.equalTo(last!)
             make.right.equalTo(-7.5)
+        }
+    }
+    
+    func setMessageTipsModel(messageModel :YXSPhotoClassPhotoAlbumListMsgModel?){
+        if let messageModel = messageModel{
+            for index in 0 ..< maxcount {
+                let imageView = viewWithTag(kImageViewOrginTag + index) as! UIImageView
+                imageView.isHidden = true
+                imageView.snp.removeConstraints()
+            }
+            var last: UIView?
+            for index in 0..<1{
+                let rightImage = viewWithTag(kImageViewOrginTag + index) as! UIImageView
+
+                let personRole = PersonRole.init(rawValue: messageModel.messageUserType ?? "") ?? PersonRole.TEACHER
+                rightImage.yxs_setImageWithURL(url: URL.init(string: messageModel.messageAvatar ?? ""),placeholder: personRole == .TEACHER ? kImageUserIconTeacherDefualtMixedImage : kImageUserIconPartentDefualtMixedImage)
+                
+                rightImage.snp.makeConstraints { (make) in
+                    if index == 0{
+                        make.left.equalTo(2.5)
+                    }else{
+                        make.left.equalTo(2.5 + 13.5)
+                    }
+                    make.centerY.equalTo(controlBgView)
+                    make.size.equalTo(CGSize.init(width: 27, height: 27))
+                }
+                last = rightImage
+                rightImage.isHidden = false
+            }
+            leftlabel.text = "\(messageModel.messageCount ?? 0)新消息"
+            leftlabel.snp.makeConstraints { (make) in
+                make.left.equalTo(last!.snp_right).offset(8)
+                make.centerY.equalTo(last!)
+                make.right.equalTo(-7.5)
+            }
         }
     }
     

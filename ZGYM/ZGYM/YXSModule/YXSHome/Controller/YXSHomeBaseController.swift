@@ -59,6 +59,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         tableView.register(SLSolitaireListHomeCell.self, forCellReuseIdentifier: "SLSolitaireListHomeCell")
         tableView.register(YXSHomePeriodicalCell.self, forCellReuseIdentifier: "YXSHomePeriodicalCell")
         tableView.register(YXSScoreListHomeCell.self, forCellReuseIdentifier: "YXSScoreListHomeCell")
+        tableView.register(YXSHomePhotoCell.self, forCellReuseIdentifier: "YXSHomePhotoCell")
         tableView.tableFooterView = UIView(frame: CGRect.init(x: 0, y: 0, width: self.view.width, height: 0.01))
         //老师展示发布
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
@@ -199,6 +200,9 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                     strongSelf.yxs_refreshData()
                 }
             })
+        case .goPhotoLists:
+            let vc = YXSPhotoAlbumDetialListController(classId: model.classId ?? 0, albumsId: model.serviceId ?? 0)
+            self.navigationController?.pushViewController(vc)
             break
         default:
             break
@@ -330,6 +334,8 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                     navigationController?.pushViewController(detail)
                 }
             }
+        case .photo:
+            yxs_dealCellEvent(.goPhotoLists, indexPath: indexPath)
         default:
             break
         }
@@ -474,6 +480,8 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomePeriodicalCell") as? YXSHomeBaseCell
                 } else if model.type == .score {
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSScoreListHomeCell") as? YXSHomeBaseCell
+                }else if  model.type == .photo{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomePhotoCell") as? YXSHomePhotoCell
                 } else {
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell
                 }

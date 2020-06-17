@@ -54,12 +54,12 @@ class YXSPhotoAlbumsListCell: UICollectionViewCell {
         titleLabel.isHidden = true
         countLabel.isHidden = true
         
-        if model.id == nil {
-            /// 新建相册
-            redView.isHidden = true
-        } else {
-            redView.isHidden = false
-        }
+//        if model.id == nil {
+//            /// 新建相册
+//            redView.isHidden = true
+//        } else {
+//            redView.isHidden = false
+//        }
         
         if model.isSystemCreateItem{
             imageView.image = UIImage.init(named: "yxs_photo_new_ablum")
@@ -85,6 +85,7 @@ class YXSPhotoAlbumsListCell: UICollectionViewCell {
     lazy var redView: UIImageView = {
         let redView = UIImageView()
         redView.image = UIImage.init(named: "home_new_read")
+        redView.isHidden = true
         return redView
     }()
     
