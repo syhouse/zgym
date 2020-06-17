@@ -115,8 +115,15 @@ class YXSScoreListCell: YXSHomeBaseCell {
             setTagUI("成绩", backgroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#FAF0D7"), textColor: UIColor.yxs_hexToAdecimalColor(hex: "#EB9A3C"))
         }
         ///红点
+        
         if YXSPersonDataModel.sharePerson.personRole == .PARENT,YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: model.serviceId ?? 1001, childId: model.childrenId ?? 0){
-            redView.isHidden = false
+            if model.isRead == 1 {
+                redView.isHidden = true
+                UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
+            } else {
+                redView.isHidden = false
+            }
+            
         }
         UIUtil.yxs_setLabelAttributed(nameTimeLabel, text: ["\(model.teacherName ?? "")", "  |  \(model.createTime?.yxs_Time() ?? "")"], colors: [MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54"), night: UIColor.yxs_hexToAdecimalColor(hex: "#4B4E54")),MixedColor(normal: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"), night: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A"))])
         classLabel.text = model.className

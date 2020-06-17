@@ -55,10 +55,12 @@ class YXSScoreListController: YXSBaseTableViewController{
     @objc func yxs_updateListForRead(_ notification:Notification){
         let userInfo = notification.object as? [String: Any]
         if let notificationModel = userInfo?[kNotificationModelKey] as? YXSHomeListModel{
-            for (row,model) in dataSource.enumerated(){
-                if model.examId == notificationModel.serviceId {
-                    model.isRead = true
-                    self.tableView.reloadRows(at: [IndexPath.init(row: row, section: 0)], with: UITableView.RowAnimation.automatic)
+            if currentChildrenId == notificationModel.childrenId {
+                for (row,model) in dataSource.enumerated(){
+                    if model.examId == notificationModel.serviceId{
+                        model.isRead = true
+                        self.tableView.reloadRows(at: [IndexPath.init(row: row, section: 0)], with: UITableView.RowAnimation.automatic)
+                    }
                 }
             }
         }
@@ -169,7 +171,7 @@ class YXSScoreListController: YXSBaseTableViewController{
                 } else {
                     let detail = YXSScoreNumParentDetailsVC.init(model: model)
                     detail.examId = model.examId ?? 0
-                    detail.childrenId = NSObject.init().yxs_user.currentChild?.id ?? 0
+                    detail.childrenId = currentChildrenId
                     self.navigationController?.pushViewController(detail)
                 }
             } else {
@@ -181,7 +183,7 @@ class YXSScoreListController: YXSBaseTableViewController{
                 } else {
                     let detail = YXSScoreLevelParentDetailsVC.init(model: model)
                     detail.examId = model.examId ?? 0
-                    detail.childrenId = NSObject.init().yxs_user.currentChild?.id ?? 0
+                    detail.childrenId = currentChildrenId
                     self.navigationController?.pushViewController(detail)
                 }
             }

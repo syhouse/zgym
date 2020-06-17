@@ -625,7 +625,7 @@ extension YXSHomeBaseController{
         if let notificationModel = userInfo?[kNotificationModelKey] as? YXSHomeListModel{
             for (section,sectionModel) in yxs_dataSource.enumerated(){
                 for (row,model) in sectionModel.items.enumerated(){
-                    if model.serviceId == notificationModel.serviceId{
+                    if model.serviceId == notificationModel.serviceId && model.childrenId == notificationModel.childrenId{
                         model.isRead = 1
                         yxs_reloadTableView(IndexPath.init(row: row, section: section))
                         break
