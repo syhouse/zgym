@@ -360,14 +360,14 @@ class YXSScoreNumTeacherDetailsVC: YXSBaseViewController {
     
     lazy var highestScoreLbl: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.systemFont(ofSize: 19)
+        lbl.font = UIFont.systemFont(ofSize: 15)
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
         return lbl
     }()
     
     lazy var averageScoreLbl: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.systemFont(ofSize: 19)
+        lbl.font = UIFont.systemFont(ofSize: 15)
         lbl.textColor = UIColor.yxs_hexToAdecimalColor(hex: "#5E88F7")
         return lbl
     }()
