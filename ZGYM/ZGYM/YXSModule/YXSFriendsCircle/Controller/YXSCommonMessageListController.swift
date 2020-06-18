@@ -137,7 +137,7 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
                 MBProgressHUD.yxs_showMessage(message: msg)
             }
         case .photo:
-            YXSEducationQueryAlbumMessageRequest().requestCollection({ (list: [YXSAlbumsMessageModel]) in
+            YXSEducationQueryAlbumMessageRequest(classId: classId ?? 0).requestCollection({ (list: [YXSAlbumsMessageModel]) in
                 MBProgressHUD.hide(for: self.view, animated: true)
                 self.photoSource = list
                 self.tableView.reloadData()

@@ -349,7 +349,7 @@ class YXSFriendsCircleController: YXSBaseTableViewController {
             positon = .list
         }
         let YXSFriendCircleModel = dataSource[section]
-        UIUtil.yxs_loadRecallData(.friendCicle, id: YXSFriendCircleModel.classCircleId ?? 0,positon: positon) {
+        UIUtil.yxs_loadRecallData(YXSRecallModel(serviceId: YXSFriendCircleModel.classCircleId, createTime: nil, homeType: .friendCicle), positon: positon){
             self.dataSource.remove(at: section)
             self.reloadTableView()
         }
@@ -680,9 +680,9 @@ extension YXSFriendsCircleController{
     
     @objc func yxs_updateListForRecall(_ notification:Notification){
         let userInfo = notification.object as? [String: Any]
-        if let serviceId = userInfo?[kNotificationIdKey] as? Int{
+        if let recallModel = userInfo?[kNotificationModelKey] as? YXSRecallModel{
             for (index,model) in dataSource.enumerated(){
-                if model.classCircleId == serviceId{
+                if model.classCircleId == recallModel.serviceId{
                     dataSource.remove(at: index)
                     self.reloadTableView()
                     break

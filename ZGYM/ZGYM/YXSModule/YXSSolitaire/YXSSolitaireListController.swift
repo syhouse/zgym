@@ -152,7 +152,7 @@ class YXSSolitaireListController: YXSCommonScreenListBaseController {
         case .showAll:
             reloadTableView(indexPath, isScroll:  !model.isShowAll)
         case .recall:
-            UIUtil.yxs_loadRecallData(.solitaire, id: solitaireLists[indexPath.row].censusId ?? 0,positon: .list) {
+            UIUtil.yxs_loadRecallData(YXSRecallModel.init(serviceId: solitaireLists[indexPath.row].censusId, createTime: nil, homeType: .solitaire),positon: .list) {
                 self.solitaireLists.remove(at: indexPath.row)
                 self.reloadTableView()
             }

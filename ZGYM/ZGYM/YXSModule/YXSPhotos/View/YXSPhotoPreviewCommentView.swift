@@ -125,6 +125,11 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
     }
     
     @objc func sendClick(sender: YXSButton) {
+        if self.tf.text.isEmpty{
+            MBProgressHUD.yxs_showMessage(message: "评论不能为空")
+            return
+        }
+        
         YXSEducationAlbumCommentRequest(albumId: albumId, classId: classId, resourceId: resourceId, content: self.tf.text ?? "", id: 1).request({ [weak self](result: YXSPhotoPreviewCommentModel) in
             guard let weakSelf = self else {return}
             weakSelf.dataSource.append(result)

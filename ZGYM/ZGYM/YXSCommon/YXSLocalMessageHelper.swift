@@ -10,6 +10,11 @@ import UIKit
 
 private let kHomeRedServiceListKey = "HomeRedServiceListKey"
 /// 家长端首页本地红点消息
+
+private let serviceIdKey = "serviceId"
+///瀑布流id
+private let waterfallIdKey = "waterfallIdKey"
+
 @objc class YXSLocalMessageHelper: NSObject {
     @objc static let shareHelper:YXSLocalMessageHelper = {
         let instance =  YXSLocalMessageHelper()
@@ -29,7 +34,6 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
         yxs_initListData(fileList: localMessageLists)
     }
     
-    
     /// 用消息列表来初始化本地红点相关数据
     /// - Parameter fileList: 消息列表
     private func yxs_initListData(fileList: [IMCustomMessageModel]){
@@ -40,9 +44,9 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
                 if gradeIds.contains(model.classId ?? 0){
                     if let childrenId = model.childrenId{
                         if localRedServiceList.has(key: "\(childrenId)"){
-                            localRedServiceList["\(childrenId)"]?.insert(model.serviceId ?? 0)
+                            localRedServiceList["\(childrenId)"]?.insert([serviceIdKey :model.serviceId ?? 0, waterfallIdKey: model.callbackRequestParameter?.waterfallId ?? 0])
                         }else{
-                            localRedServiceList["\(childrenId)"] = Set([model.serviceId ?? 0])
+                            localRedServiceList["\(childrenId)"] = Set([[serviceIdKey :model.serviceId ?? 0, waterfallIdKey: model.callbackRequestParameter?.waterfallId ?? 0]])
                         }
                     }
                     messageLists.append(model)
@@ -56,7 +60,7 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
     
     
     /// 本地红点集合
-    private var localRedServiceList: [String: Set<Int>] = [String: Set<Int>]()
+    private var localRedServiceList: [String: Set<[String: Int]>] = [String: Set<[String: Int]>]()
     
     
     /// 消息列表数组
@@ -86,7 +90,7 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
                     if model.msgType == 3{
                         for key in localRedServiceList.keys{
                             if var set = localRedServiceList[key]{
-                                set.remove(model.serviceId ?? 0)
+                                set.remove([serviceIdKey: model.serviceId ?? 0, waterfallIdKey: model.callbackRequestParameter?.waterfallId ?? 0])
                                 localRedServiceList[key] = set
                             }
                         }
@@ -103,9 +107,9 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
                                 if model.childrenId == nil{
                                     model.childrenId = info["childrenId"]
                                     if localRedServiceList.has(key: "\(model.childrenId ?? 0)"){
-                                        localRedServiceList["\(model.childrenId ?? 0)"]?.insert(model.serviceId ?? 0)
+                                        localRedServiceList["\(model.childrenId ?? 0)"]?.insert([serviceIdKey: model.serviceId ?? 0, waterfallIdKey: model.callbackRequestParameter?.waterfallId ?? 0])
                                     }else{
-                                        localRedServiceList["\(model.childrenId ?? 0)"] = Set([model.serviceId ?? 0])
+                                        localRedServiceList["\(model.childrenId ?? 0)"] = Set([[serviceIdKey: model.serviceId ?? 0, waterfallIdKey: model.callbackRequestParameter?.waterfallId ?? 0]])
                                     }
                                     newList.append(model)
                                 }else{
@@ -113,9 +117,9 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
                                     if let newModel = newModel as? IMCustomMessageModel{
                                         newModel.childrenId = info["childrenId"]
                                         if localRedServiceList.has(key: "\(newModel.childrenId ?? 0)"){
-                                            localRedServiceList["\(newModel.childrenId ?? 0)"]?.insert(newModel.serviceId ?? 0)
+                                            localRedServiceList["\(newModel.childrenId ?? 0)"]?.insert([serviceIdKey: newModel.serviceId ?? 0, waterfallIdKey: newModel.callbackRequestParameter?.waterfallId ?? 0])
                                         }else{
-                                            localRedServiceList["\(newModel.childrenId ?? 0)"] = Set([newModel.serviceId ?? 0])
+                                            localRedServiceList["\(newModel.childrenId ?? 0)"] = Set([[serviceIdKey: newModel.serviceId ?? 0, waterfallIdKey: newModel.callbackRequestParameter?.waterfallId ?? 0]])
                                         }
                                         newList.append(newModel)
                                     }
@@ -134,10 +138,20 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
     
     
     /// 移除本地红点消息
-    /// - Parameter serviceId: 服务Id
+    /// - Parameter serviceId: 服务Id(相册的)
     public func yxs_removeLocalMessage(serviceId: Int, childId: Int){
         if localRedServiceList.has(key: "\(childId)"){
-            localRedServiceList["\(childId)"]?.remove(serviceId)
+            var newChildServiceList = Set<[String : Int]>()
+            if let childServiceDics = localRedServiceList["\(childId)"]{
+                for dic in childServiceDics{
+                    if dic[serviceIdKey] == serviceId{
+                        continue
+                    }
+                    newChildServiceList.insert(dic)
+                }
+            }
+            
+            localRedServiceList["\(childId)"] = newChildServiceList
             DispatchQueue.global().async {
                 SLLog("serviceId=\(serviceId), childId = \(childId)")
                 //删除所有满足条件的本地数据
@@ -152,8 +166,22 @@ private let kHomeRedServiceListKey = "HomeRedServiceListKey"
     
     /// 是否位于本地红点中
     /// - Parameter serviceId: 服务Id
-    public func yxs_isLocalMessage(serviceId: Int, childId: Int) -> Bool{
-        return localRedServiceList["\(childId)"]?.contains(serviceId) ?? false
+    /// - 瀑布流id(相册首页需要用  waterfallIdKey判断红点)
+    public func yxs_isLocalMessage(serviceId: Int, childId: Int, waterfallId: Int? = nil) -> Bool{
+        if let childServiceDics = localRedServiceList["\(childId)"]{
+            for dic in childServiceDics{
+                if let waterfallId = waterfallId{
+                    if dic[waterfallIdKey] == waterfallId {
+                        return true
+                    }
+                }else{
+                    if dic[serviceIdKey] == serviceId{
+                        return true
+                    }
+                }
+            }
+        }
+        return false
     }
     
     

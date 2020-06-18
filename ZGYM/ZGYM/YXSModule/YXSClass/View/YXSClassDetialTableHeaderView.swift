@@ -67,18 +67,18 @@ class YXSClassDetialTableHeaderView: UIView {
 //            kHeaderImages = [kNoticeKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kFoodKey,"yxs_photo", kAddressbookKey]
 //            kHeaderActions = [SLHomeActionEvent.notice, .classstart, .punchCard, .solitaire, .course, .photo, .addressbook]
 //            lineCount = 4
-            kHeaderTexts = ["通知", "班级之星", "打卡", "接龙", "食谱", "通讯录"]
-            kHeaderImages = [kNoticeKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kFoodKey, kAddressbookKey]
-            kHeaderActions = [YXSHomeHeaderActionEvent.notice, .classstart, .punchCard, .solitaire, .course, .addressbook]
+            kHeaderTexts = ["通知", "班级之星", "打卡", "接龙", "食谱", "班级相册"]
+            kHeaderImages = [kNoticeKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kFoodKey, "yxs_photo"]
+            kHeaderActions = [YXSHomeHeaderActionEvent.notice, .classstart, .punchCard, .solitaire, .course, .photo]
             lineCount = 3
 
         }else{
 //            kHeaderTexts = ["通知", "作业", "班级之星", "打卡", "接龙", "课表","班级相册", "通讯录"]
 //            kHeaderImages = [kNoticeKey, kHomeworkKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kCourseKey,"yxs_photo", kAddressbookKey]
 //            kHeaderActions = [SLHomeActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .course, .photo,.addressbook]
-            kHeaderTexts = ["通知", "作业", "班级之星", "打卡", "接龙", "课表", "成绩", "通讯录"]
-            kHeaderImages = [kNoticeKey, kHomeworkKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kCourseKey, kScoreKey, kAddressbookKey]
-            kHeaderActions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .course, .score, .addressbook]
+            kHeaderTexts = ["通知", "作业", "班级之星", "打卡", "接龙", "课表", "成绩", "班级相册"]
+            kHeaderImages = [kNoticeKey, kHomeworkKey, kClassStartKey, kPunchCardKey, kSolitaireKey, kCourseKey, kScoreKey, "yxs_photo"]
+            kHeaderActions = [YXSHomeHeaderActionEvent.notice,.homework, .classstart, .punchCard, .solitaire, .course, .score, .photo]
 
             lineCount = 4
         }

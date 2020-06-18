@@ -141,7 +141,7 @@ class YXSPunchCardListController: YXSCommonScreenListBaseController {
             let vc = YXSPunchCardDetialController.init(clockInId: model.clockInId ?? 0,childId: childId,classId:model.classId ?? 0)
             self.navigationController?.pushViewController(vc)
         case .recall:
-            UIUtil.yxs_loadRecallData(.punchCard, id: model.clockInId ?? 0,positon: .list) {
+            UIUtil.yxs_loadRecallData(YXSRecallModel.init(serviceId: model.clockInId, createTime: nil, homeType: .punchCard),positon: .list) {
                 self.yxs_punchCardDataSource.remove(at: indexPath.row)
                 self.reloadTableView()
             }

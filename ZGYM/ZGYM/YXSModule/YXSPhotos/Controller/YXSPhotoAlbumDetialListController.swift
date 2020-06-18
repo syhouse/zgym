@@ -61,6 +61,8 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         layout.itemSize = CGSize.init(width: itemW, height: itemW)
         layout.headerReferenceSize = CGSize(width: SCREEN_WIDTH, height: 47)
         self.layout = layout
+        
+        UIUtil.yxs_reduceHomeRed(serviceId: albumsId, childId: self.yxs_user.currentChild?.id ?? 0)
     }
     
     convenience init(albumModel: YXSPhotoAlbumsModel) {

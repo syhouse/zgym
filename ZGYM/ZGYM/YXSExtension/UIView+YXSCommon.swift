@@ -48,7 +48,13 @@ extension UIView {
         case .notice:
             UIUtil.currentNav().pushViewController(YXSNoticeListController(classId: classId,childId: childId))
         case .photo:
-            UIUtil.currentNav().pushViewController(YXSPhotoClassListController())
+            if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+                let vc = YXSPhotoClassListController()
+                UIUtil.currentNav().pushViewController(vc)
+            }else{
+                let vc = YXSPhotoClassPhotoAlbumListController(classId: classId ?? 0)
+                UIUtil.currentNav().pushViewController(vc)
+            }
         case .score:
             
             UIUtil.currentNav().pushViewController(YXSScoreListController(classId: classId ?? 0,childId: childId))

@@ -218,11 +218,13 @@ class YXSEducationAlbumCommentRequest: YXSBaseRequset {
 // MARK: - 获取相册互动消息(已完成)
 let albumQueryAlbumMessage = "/album/query-album-message"
 class YXSEducationQueryAlbumMessageRequest: YXSBaseRequset {
-    override init(){
+    init(classId: Int){
         super.init()
         method = .post
         host = fileHost
         path = albumQueryAlbumMessage
+        param = [
+        "classId": classId]
     }
 }
 
@@ -255,3 +257,19 @@ class YXSEducationAlbumQueryRequest: YXSBaseRequset {
         "id": id]
     }
 }
+
+// MARK: - 相册撤回
+let albumCancelResource = "/album/cancel-resource"
+class YXSEducationAlbumCancelResourceRequest: YXSBaseRequset {
+    init(classId: Int, waterfallId: Int, waterfallCreateTime: String){
+        super.init()
+        method = .post
+        host = fileHost
+        path = albumCancelResource
+        param = [
+        "classId": classId,
+        "waterfallId": waterfallId,
+        "waterfallCreateTime": waterfallCreateTime]
+    }
+}
+

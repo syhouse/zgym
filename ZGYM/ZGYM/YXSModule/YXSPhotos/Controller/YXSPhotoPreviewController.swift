@@ -9,6 +9,7 @@
 import UIKit
 import YBImageBrowser
 import NightNight
+import IQKeyboardManager
 
 /// 查看图片/视频 页面
 class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource, YBImageBrowserDelegate {
@@ -41,6 +42,16 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        IQKeyboardManager.shared().isEnableAutoToolbar = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared().isEnableAutoToolbar = true
     }
     
     override func viewDidLoad() {

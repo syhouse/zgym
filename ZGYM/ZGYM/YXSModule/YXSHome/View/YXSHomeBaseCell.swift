@@ -333,6 +333,7 @@ class YXSHomeBaseCell: UITableViewCell {
         let button = YXSButton()
         button.setImage(UIImage.init(named: "recall"), for: .normal)
         button.addTarget(self, action: #selector(yxs_recallClick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return button
     }()
     

@@ -614,14 +614,21 @@ extension YXSHomeBaseController{
     ///老师撤销刷新
     @objc func yxs_updateListForRecall(_ notification:Notification){
         let userInfo = notification.object as? [String: Any]
-        if let serviceId = userInfo?[kNotificationIdKey] as? Int{
+        if let recallModel = userInfo?[kNotificationModelKey] as? YXSRecallModel{
             for (section,sectionModel) in yxs_dataSource.enumerated(){
                 for (row,model) in sectionModel.items.enumerated(){
-                    if model.serviceId == serviceId{
+                    if recallModel.homeType == .photo && model.id == recallModel.waterfallId{
                         yxs_dataSource[section].items.remove(at: row)
                         tableView.reloadData()
                         break
+                    }else{
+                        if model.serviceId == recallModel.serviceId{
+                            yxs_dataSource[section].items.remove(at: row)
+                            tableView.reloadData()
+                            break
+                        }
                     }
+                    
                 }
             }
         }

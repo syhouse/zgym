@@ -123,7 +123,7 @@ class YXSHomeworkListController: YXSCommonScreenListBaseController {
         case .punchRemind:
             yxs_showAlert(title: "punchRemind")
         case .recall:
-            UIUtil.yxs_loadRecallData(dataSource[indexPath.row],positon: .list){
+            UIUtil.yxs_loadRecallData(YXSRecallModel.initWithHomeModel(homeModel: dataSource[indexPath.row]),positon: .list){
                 self.dataSource.remove(at: indexPath.row)
                 self.reloadTableView()
             }

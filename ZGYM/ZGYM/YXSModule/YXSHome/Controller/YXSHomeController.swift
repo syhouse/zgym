@@ -120,7 +120,7 @@ class YXSHomeController: YXSHomeBaseController {
     }
     ///撤销
     override func yxs_homeyxs_loadRecallData(model: YXSHomeListModel, sucess: (() -> ())? = nil) {
-        UIUtil.yxs_loadRecallData(model, positon: .home, complete: sucess)
+        UIUtil.yxs_loadRecallData(YXSRecallModel.initWithHomeModel(homeModel: model), positon: .home, complete: sucess)
     }
     
     override func yxs_refreshData() {

@@ -29,6 +29,7 @@ class YXSHomePhotoCell: YXSHomeBaseCell {
     override func yxs_setCellModel(_ model: YXSHomeListModel) {
         self.model = model
         redView.isHidden = true
+        recallView.isHidden = true
         
         var medias = [YXSFriendsMediaModel]()
         let jsonData:Data = (model.bgUrl ?? "").data(using: .utf8)!
@@ -52,6 +53,10 @@ class YXSHomePhotoCell: YXSHomeBaseCell {
             countLabel.text = "+\(medias.count - 3)"
         }
         
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER && model.teacherId == yxs_user.id{
+            recallView.isHidden = false
+        }
+        
         
         setTagUI("班级相册", backgroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#E1EBFE"), textColor: kBlueColor)
         titleLabel.text = "\(model.teacherName ?? "")发布了班级相册"
@@ -60,7 +65,7 @@ class YXSHomePhotoCell: YXSHomeBaseCell {
         classLabel.text = model.className
         
         ///红点
-        if YXSPersonDataModel.sharePerson.personRole == .PARENT,YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: model.serviceId ?? 1001, childId: model.childrenId ?? 0){
+        if YXSPersonDataModel.sharePerson.personRole == .PARENT,YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: model.serviceId ?? 1001, childId: model.childrenId ?? 0, waterfallId: model.id ?? 0){
             redView.isHidden = false
         }
     }
@@ -75,6 +80,7 @@ class YXSHomePhotoCell: YXSHomeBaseCell {
         
         bgContainView.addSubview(redView)
         bgContainView.addSubview(nineMediaView)
+        bgContainView.addSubview(recallView)
         
         let imageView = viewWithTag(kImageOrginTag + 2)
         if let imageView = imageView{
@@ -128,6 +134,14 @@ class YXSHomePhotoCell: YXSHomeBaseCell {
             make.left.equalTo(14.5)
             make.top.equalTo(nineMediaView.snp_bottom).offset(14)
         }
+        recallView.snp.remakeConstraints { (make) in
+            make.right.equalTo(-8.5)
+            make.centerY.equalTo(nameTimeLabel)
+        }
+    }
+    
+    override func yxs_recallClick() {
+        cellBlock?(.recall)
     }
     
     lazy var titleLabel: UILabel = {
