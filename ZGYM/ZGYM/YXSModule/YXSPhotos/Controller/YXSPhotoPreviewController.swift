@@ -13,11 +13,11 @@ import IQKeyboardManager
 
 /// 查看图片/视频 页面
 class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource, YBImageBrowserDelegate {
-
+    
     var dataSource: [YXSPhotoAlbumsDetailListModel] = [YXSPhotoAlbumsDetailListModel]()
     
     var browserView: YBImageBrowser?
-
+    
     var classId: Int
     var albumsId: Int
     
@@ -77,7 +77,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         
         let browser = YBImageBrowser()
         // 禁止旋转（但是若当前控制器能旋转，图片浏览器也会跟随，布局可能会错位，这种情况还待处理）
-//        browser.supportedOrientations = .portrait
+        //        browser.supportedOrientations = .portrait
         browser.dataSource = self
         browser.delegate = self
         browser.shouldHideStatusBar = false
@@ -86,7 +86,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         // 关闭入场和出场动效
         browser.defaultAnimatedTransition?.showType = .none
         browser.defaultAnimatedTransition?.hideType = .none
-                
+        
         // 删除工具视图（你可能需要自定义的工具视图，那请自己实现吧）
         browser.toolViewHandlers = []
         
@@ -122,11 +122,11 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     
     // MARK: - Request
     @objc func albumQueryPraiseCommentCountRequest(page: Int) {
-//        YXSEducationAlbumQueryPraiseCommentCountRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0)
+        //        YXSEducationAlbumQueryPraiseCommentCountRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0)
         let model = dataSource[page]
         YXSEducationAlbumQueryPraiseCommentCountRequest(albumId: albumsId, classId: classId, resourceId: model.id ?? 0).request({ (model: YXSPhotoAlbumsPraiseModel) in
-
-            self.footerView.setModel(model: model)
+            
+            self.footerView.model = model
             self.praiseAndComments[page] = model
             
         }) { (msg, code) in
@@ -149,9 +149,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         reloadToolStatus()
         customNav.title = "\(currentIndex + 1)/\(self.dataSource.count)"
         let model = praiseAndComments[currentIndex]
-        if let model = model{
-            footerView.setModel(model: model)
-        }
+        footerView.model = model
         albumQueryPraiseCommentCountRequest(page: currentIndex)
     }
     
@@ -191,23 +189,18 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     // MARK: - Action
     @objc func praiseOrCancelClick(sender: UIButton) {
         let model = dataSource[browserView?.currentPage ?? 0]
-        YXSEducationAlbumPraiseOrCancelRequest(albumId: albumsId, classId: classId, resourceId: model.id ?? 0).request({ [weak self](json) in
-            guard let weakSelf = self else {return}
-            let selected = json.boolValue
-            let priseCount = weakSelf.footerView.currentPriseButton.title
-
-            var count: Int = priseCount?.int ?? 0
-            if selected {
-                count += 1
-            } else {
-                count -= 1
-            }
-            weakSelf.footerView.currentPriseButton.title = "\(count)"
-
-            sender.isSelected = selected
-            
+        let curruntPraiseModel = footerView.model
+        if curruntPraiseModel?.praiseStat == 0{
+            curruntPraiseModel?.praiseStat = 1
+            curruntPraiseModel?.praiseCount = (curruntPraiseModel?.praiseCount ?? 0) + 1
+        }else{
+            curruntPraiseModel?.praiseStat = 0
+            curruntPraiseModel?.praiseCount = (curruntPraiseModel?.praiseCount ?? 1) - 1
+        }
+        footerView.model = curruntPraiseModel
+        YXSEducationAlbumPraiseOrCancelRequest(albumId: albumsId, classId: classId, resourceId: model.id ?? 0).request({ (_)in
         }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
+            //            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     
@@ -242,7 +235,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
                 }) { (msg, code) in
                     MBProgressHUD.yxs_showMessage(message: msg)
                 }
-
+                
             default:
                 break
             }
@@ -302,9 +295,9 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     lazy var customNav: YXSCustomNav = {
         let view = YXSCustomNav(YXSCustomStyle.backAndTitle)
         view.backgroundColor = UIColor.black
-//        view.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+        //        view.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         view.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
-//        view.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        //        view.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         view.titleLabel.textColor = UIColor.white
         return view
     }()
@@ -312,7 +305,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     lazy var footerView: YXSPhotoPreviewFooterView = {
         let view = YXSPhotoPreviewFooterView()
         view.backgroundColor = UIColor.black
-//        view.minePriseButton.addTarget(self, action: #selector(pra), for: .touchUpInside)
+        //        view.minePriseButton.addTarget(self, action: #selector(pra), for: .touchUpInside)
         view.minePriseButton.addTarget(self, action: #selector(praiseOrCancelClick(sender:)), for: .touchUpInside)
         view.commentButton.addTarget(self, action: #selector(commentClick(sender:)), for: .touchUpInside)
         view.moreActionButton.addTarget(self, action: #selector(moreClick(sender:)), for: .touchUpInside)
@@ -331,28 +324,28 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             let model = strongSelf.praiseAndComments[strongSelf.currentIndex]
             if let model = model{
                 model.commentCount = count
-                strongSelf.footerView.setModel(model: model)
+                strongSelf.footerView.model = model
             }
         }
         return view
     }()
     
-//    lazy var browser: YBImageBrowser = {
-//        let view = YBImageBrowser()
-//        // 禁止旋转（但是若当前控制器能旋转，图片浏览器也会跟随，布局可能会错位，这种情况还待处理）
-//        view.supportedOrientations = .portrait
-//        view.dataSource = self
-//        view.delegate = self
-////        view.currentPage = 4
-//        // 关闭入场和出场动效
-//        view.defaultAnimatedTransition?.showType = .none
-//        view.defaultAnimatedTransition?.hideType = .none
-//
-//        // 删除工具视图（你可能需要自定义的工具视图，那请自己实现吧）
-//        view.toolViewHandlers = []
-//        return view
-//    }()
-
+    //    lazy var browser: YBImageBrowser = {
+    //        let view = YBImageBrowser()
+    //        // 禁止旋转（但是若当前控制器能旋转，图片浏览器也会跟随，布局可能会错位，这种情况还待处理）
+    //        view.supportedOrientations = .portrait
+    //        view.dataSource = self
+    //        view.delegate = self
+    ////        view.currentPage = 4
+    //        // 关闭入场和出场动效
+    //        view.defaultAnimatedTransition?.showType = .none
+    //        view.defaultAnimatedTransition?.hideType = .none
+    //
+    //        // 删除工具视图（你可能需要自定义的工具视图，那请自己实现吧）
+    //        view.toolViewHandlers = []
+    //        return view
+    //    }()
+    
 }
 
 // MARK: -HMRouterEventProtocol

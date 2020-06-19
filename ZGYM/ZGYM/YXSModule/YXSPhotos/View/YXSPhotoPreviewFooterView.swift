@@ -9,7 +9,17 @@
 import UIKit
 /// 赞/评论
 class YXSPhotoPreviewFooterView: UIView {
-    var model: YXSPhotoAlbumsPraiseModel!
+    var model: YXSPhotoAlbumsPraiseModel?{
+        didSet{
+            if let model = model{
+                minePriseButton.isSelected = model.praiseStat == 1
+                commentButton.title = "评论\(model.commentCount ?? 0)"
+                let praiseCount = model.praiseCount ?? 0
+                currentPriseButton.title = praiseCount > 99 ? "99+" : "\(praiseCount)"
+            }
+            
+        }
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.black
@@ -42,24 +52,15 @@ class YXSPhotoPreviewFooterView: UIView {
             make.width.height.equalTo(42)
         }
         
-//        64 +
+        //        64 +
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setModel(model: YXSPhotoAlbumsPraiseModel){
-        self.model = model
-        minePriseButton.isSelected = model.praiseStat == 1
-        commentButton.title = "评论\(model.commentCount ?? 0)"
-        let praiseCount = model.praiseCount ?? 0
-        currentPriseButton.title = praiseCount > 99 ? "99+" : "\(praiseCount)"
-        
-    }
-    
     var cellBlock: ((_ isComment: Bool)->())?
-
+    
     // MARK: - LazyLoad
     lazy var minePriseButton: YXSCustomImageControl = {
         let minePriseButton = YXSCustomImageControl.init(imageSize: CGSize.init(width: 22, height: 22), position: YXSImagePositionType.left, padding: 7)

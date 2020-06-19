@@ -193,6 +193,10 @@ private let waterfallIdKey = "waterfallIdKey"
     
     /// 本地红点数量
     public func yxs_localMessageCount(childId: Int? = nil) -> Int{
+        if localRedServiceList.isEmpty{
+            return 0
+        }
+        
         if let childId = childId{
             return localRedServiceList["\(childId)"]?.count ?? 0
         }

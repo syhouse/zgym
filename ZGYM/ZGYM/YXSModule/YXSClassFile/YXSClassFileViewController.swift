@@ -982,11 +982,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
     
     override func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
-        return  NightNight.theme == nil ? UIImage.init(named: "yxs_empty_file") : UIImage(named: "yxs_empty_file")
+        return  NightNight.theme == .night ? UIImage.init(named: "yxs_empty_file") : UIImage(named: "yxs_empty_file")
     }
 
     override func buttonImage(forEmptyDataSet scrollView: UIScrollView, for state: UIControl.State) -> UIImage? {
-        return UIImage(named: "yxs_file_add")
+        return  YXSPersonDataModel.sharePerson.personRole == .PARENT ? nil : UIImage(named: "yxs_file_add")
     }
     
     override func emptyDataSet(_ scrollView: UIScrollView, didTapButton button: UIButton) {
@@ -994,7 +994,11 @@ class YXSClassFileViewController: YXSBaseTableViewController, YXSSelectMediaHelp
     }
 
     override func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        return nil
+        let text = "暂无文件"
+        let attributes = [NSAttributedString.Key.font:UIFont.systemFont(ofSize: CGFloat(18)),
+                          NSAttributedString.Key.foregroundColor: UIColor.yxs_hexToAdecimalColor(hex: "#898F9A")]
+        let attriText = NSAttributedString(string: text, attributes: attributes as [NSAttributedString.Key : Any])
+        return YXSPersonDataModel.sharePerson.personRole == .PARENT ? attriText : nil
     }
     
     /*
