@@ -19,48 +19,48 @@ enum YXSPlayerStatus: Int{
 //    case unKonwer
 }
 
-///播放模式
-enum YXSPlayerListModel: Int{
-    ///列表
-    case modelList
-    ///单曲循环
-    case modelSingle
-    ///随机播放
-    case modelRandow
-    ///循环播放
-    case modelCycle
-}
-
 ///播放回调
 protocol YXSAVPlayerDelegate {
     ///播放进度 当前时间
     func avPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt)
     ///播放器将要开始播放
     func avPlayerWillPlaying()
-    ///播放列表完成 结束播放
-    func avPlayerDidPlaylistEnd()
+
     ///播放器正在播放
     func avPlayerDidPlaying()
     ///播放器暂停播放
     func avPlayerDidPaused()
-    ///播放器缓冲完成 开始播放
+    
+    ///播放器开始播放
     func avPlayerDidStart()
+    
+    ///播放结束
+    func avPlayerPlayEnd()
+    
+    ///获取到播放总时间回调
+    func avPlayerGetTotalDuration(duration: Int)
+    
+    ///缓冲进度
+    func avPlayerLoadedTimeRanges(percent: CGFloat)
 }
 
+extension YXSAVPlayerDelegate{
+    func avPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt){}
+    func avPlayerWillPlaying(){}
+    func avPlayerDidPlaying(){}
+    func avPlayerDidPaused(){}
+    func avPlayerDidStart(){}
+    func avPlayerPlayEnd(){}
+    func avPlayerGetTotalDuration(duration: Int){}
+    func avPlayerLoadedTimeRanges(percent: CGFloat){}
+}
 
+// MARK: - YXSAVPlayer
 class YXSAVPlayer: NSObject{
-    static var share: YXSAVPlayer = YXSAVPlayer()
-    private override init() {
-    }
-    
-    private var curruntTrack: XMTrack?
-    private var trackList: [XMTrack] = [XMTrack]()
+    ///音乐播放器使用的单例
+    static var musicShare: YXSAVPlayer = YXSAVPlayer()
     public var playerStatus: YXSPlayerStatus = .stop
-    public var playListModel: YXSPlayerListModel = .modelCycle
     public var avPlayerDelegate: YXSAVPlayerDelegate?
-    
-    ///是否自动播放下一首
-    private var isAutoNexTrack: Bool = false
     
     private var timeObser: Any?
     
@@ -70,41 +70,28 @@ class YXSAVPlayer: NSObject{
     ///进度前进
     private var isseekforword: Bool = false
     ///当前播放时间
-    var curruntTime: Int = 0
+    private var curruntTime: Int = 0
+    ///播放总时间
+    private var duration: Int = 1{
+        didSet{
+            avPlayerDelegate?.avPlayerGetTotalDuration(duration: duration)
+        }
+    }
     
+    private var isLocal: Bool = true
     // MARK: - setter func
-    
-    public func setAutoNex(_ isAutoNext: Bool){
-        self.isAutoNexTrack = isAutoNext
+    public func getCurruntTime() -> Int{
+        return curruntTime
     }
     
-    // MARK: - getter func
-    ///获取当前播放model
-    public func getCurruntTrack() -> XMTrack?{
-        return curruntTrack
-    }
-    ///获取当前播放列表
-    public func getTrackList() -> [XMTrack]{
-        return trackList
-    }
-    
-    // MARK: - player Control
-    public func play(track: XMTrack?, playlist: [XMTrack]){
-        self.curruntTrack = track
-        self.trackList = playlist
-        
-        self.play(playerUrl: track?.downloadUrl ?? "")
-    }
-    
+    // MARK: - playerControl
     public func stopPlayer(){
         cleanTimeObser()
         self.player?.pause()
         self.player = nil
         playerStatus = .stop
-        curruntTrack = nil
         curruntTime = 0
         seekTime = nil
-        trackList.removeAll()
     }
     
     public func pausePlayer(){
@@ -120,28 +107,15 @@ class YXSAVPlayer: NSObject{
         avPlayerDelegate?.avPlayerDidPlaying()
     }
     
-    public func playNext(){
-        if let track = getNextTrack(){
-            play(track: track, playlist: trackList)
-        }
-        
-    }
-    
-    public func playPrev(){
-        if let track = getPrevTrack(){
-            play(track: track, playlist: trackList)
-        }
-        
-    }
-    
     public func playSeek(second: CGFloat){
         seekTime = Int(second)
         isseekforword = seekTime ?? 0 > curruntTime
         self.player?.seek(to: CMTime(seconds: Double(seekTime ?? 0), preferredTimescale: CMTimeScale(1.0)))
     }
     
-    private func play(playerUrl: String){
-        if let url = URL.init(string: playerUrl){
+    
+    public func play(url: URL?){
+        if let url = url{
             let asset = AVURLAsset.init(url: url)
             let item = AVPlayerItem(asset: asset)
             
@@ -160,6 +134,19 @@ class YXSAVPlayer: NSObject{
             self.player = AVPlayer.init(playerItem: item)
             
             self.avPlayerDelegate?.avPlayerWillPlaying()
+            
+            isLocal = url.isFileURL
+            if isLocal{
+                let totalDuration = CMTimeGetSeconds(item.duration)
+                if !totalDuration.isNaN{
+                    duration = Int(totalDuration)
+                }
+                self.player?.play()
+                
+                
+                self.avPlayerDelegate?.avPlayerDidPlaying()
+                self.avPlayerDelegate?.avPlayerDidStart()
+            }
         }else{
             MBProgressHUD.yxs_showLoading(message: "播放地址错误")
         }
@@ -170,26 +157,12 @@ class YXSAVPlayer: NSObject{
         self.player?.currentItem?.addObserver(self, forKeyPath: "loadedTimeRanges", options: .new, context: nil)
         self.player?.currentItem?.addObserver(self, forKeyPath: "playbackBufferEmpty", options: .new, context: nil)
         self.player?.currentItem?.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: .new, context: nil)
-        
         setTimeObser()
     }
     
     // MARK: - NotificationCenter
     @objc func videoPlayEnd(notification: Notification){
-        if self.playerStatus == .playing{
-            switch playListModel {
-            case .modelList:
-                if getCurruntIndex() == trackList.count - 1{
-                    self.avPlayerDelegate?.avPlayerDidPlaylistEnd()
-                }else{
-                    playNext()
-                }
-            case .modelSingle:
-                play(playerUrl: curruntTrack?.downloadUrl ?? "")
-            case .modelCycle, .modelRandow:
-                playNext()
-            }
-        }
+        avPlayerDelegate?.avPlayerPlayEnd()
     }
     
     @objc func handleInterreption(notification: Notification){
@@ -212,62 +185,7 @@ class YXSAVPlayer: NSObject{
     }
     
     // MARK: - tool
-    
-    private func getCurruntIndex() -> Int?{
-        if let curruntTrack = curruntTrack{
-            let index = trackList.firstIndex { (track) -> Bool in
-                track.trackId == curruntTrack.trackId
-            }
-            return index
-        }
-        return nil
-    }
-    
-    private func getNextTrack() -> XMTrack?{
-        return getNewTrack(isNext: true)
-    }
-    
-    private func getPrevTrack() -> XMTrack?{
-        return getNewTrack(isNext: false)
-    }
-    
-    ///将要播放的音频
-    private func getNewTrack(isNext: Bool) ->XMTrack?{
-        if let index = getCurruntIndex(){
-            if trackList.count != 0{
-                switch playListModel {
-                case .modelSingle, .modelCycle, .modelList:
-                    if isNext{
-                        if index == trackList.count - 1{
-                            return trackList.first
-                        }else{
-                            return trackList[index + 1]
-                        }
-                    }else{
-                        if index == 0{
-                            return trackList.last
-                        }else{
-                            return trackList[index - 1]
-                        }
-                    }
-                case .modelRandow:
-                    if trackList.count == 1{
-                        return curruntTrack
-                    }else{
-                        var newIndex = index
-                        while newIndex == index{
-                            newIndex = Int(arc4random() % UInt32(trackList.count - 1))
-                        }
-                        return trackList[newIndex]
-                    }
-                    
-                }
-            }
-        }
-        return nil
-    }
-    
-    
+ 
     
     private func cleanTimeObser(){
         if let timeObser = timeObser{
@@ -293,7 +211,7 @@ class YXSAVPlayer: NSObject{
                 
             }
             strongSelf.curruntTime = currunt
-            strongSelf.avPlayerDelegate?.avPlayNotifyProcess(CGFloat(currunt)/CGFloat(strongSelf.curruntTrack?.duration ?? 1), currentSecond: UInt(currunt))
+            strongSelf.avPlayerDelegate?.avPlayNotifyProcess(CGFloat(currunt)/CGFloat(strongSelf.duration), currentSecond: UInt(currunt))
             strongSelf.seekTime = nil
         })
     }
@@ -309,7 +227,7 @@ class YXSAVPlayer: NSObject{
                 case .readyToPlay:
                     let totalDuration = CMTimeGetSeconds(currentItem.duration)
                     if !totalDuration.isNaN{
-                        curruntTrack?.duration = Int(totalDuration)
+                        duration = Int(totalDuration)
                     }
                     self.player?.play()
                     self.playerStatus = .playing
@@ -324,6 +242,18 @@ class YXSAVPlayer: NSObject{
             }
             
         }else if keyPath == "loadedTimeRanges"{
+            if let currentItem = self.player?.currentItem{
+                let timeRanges = currentItem.loadedTimeRanges
+                let timeRange = timeRanges.first?.timeRangeValue
+                let totalDuration = CMTimeGetSeconds(currentItem.duration)
+                if !totalDuration.isNaN{
+                    duration = Int(totalDuration)
+                }
+                if let timeRange = timeRange{
+                    let totalLoadTime = CMTimeGetSeconds(timeRange.start) + CMTimeGetSeconds(timeRange.duration)
+                    avPlayerDelegate?.avPlayerLoadedTimeRanges(percent: CGFloat(totalLoadTime/Double(duration)))
+                }
+            }
             
         }else if keyPath == "playbackBufferEmpty"{
             SLLog("playbackBufferEmpty")

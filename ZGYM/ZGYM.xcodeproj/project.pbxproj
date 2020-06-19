@@ -662,6 +662,7 @@
 		6FA1CB26248B2AFA009C7191 /* YXSMediaHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA1CB25248B2AFA009C7191 /* YXSMediaHelper.swift */; };
 		6FA1CB28248B3A09009C7191 /* YXSCompressionImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA1CB27248B3A09009C7191 /* YXSCompressionImageHelper.swift */; };
 		6FA2556C2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA2556B2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift */; };
+		6FA74A632493241E00D3B4BF /* YXSMusicPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA74A622493241D00D3B4BF /* YXSMusicPlayerManager.swift */; };
 		6FA849682473E0110021A57F /* YXSYBRotationToolViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA849672473E0110021A57F /* YXSYBRotationToolViewHandler.swift */; };
 		6FB0DA13246D18D1009E46F1 /* UIControl+YXSTapRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA12246D18D1009E46F1 /* UIControl+YXSTapRange.swift */; };
 		6FB0DA15246E31AF009E46F1 /* YXSPeriodicalListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DA14246E31AE009E46F1 /* YXSPeriodicalListModel.swift */; };
@@ -1887,6 +1888,7 @@
 		6FA1CB25248B2AFA009C7191 /* YXSMediaHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSMediaHelper.swift; sourceTree = "<group>"; };
 		6FA1CB27248B3A09009C7191 /* YXSCompressionImageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSCompressionImageHelper.swift; sourceTree = "<group>"; };
 		6FA2556B2481108400A0DCD4 /* YXSSolitaireTemplateDetialModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSSolitaireTemplateDetialModel.swift; sourceTree = "<group>"; };
+		6FA74A622493241D00D3B4BF /* YXSMusicPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSMusicPlayerManager.swift; sourceTree = "<group>"; };
 		6FA849672473E0110021A57F /* YXSYBRotationToolViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSYBRotationToolViewHandler.swift; sourceTree = "<group>"; };
 		6FB0DA12246D18D1009E46F1 /* UIControl+YXSTapRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+YXSTapRange.swift"; sourceTree = "<group>"; };
 		6FB0DA14246E31AE009E46F1 /* YXSPeriodicalListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YXSPeriodicalListModel.swift; sourceTree = "<group>"; };
@@ -5515,6 +5517,7 @@
 				E58F16AE245149D400A6AC18 /* YXSSSAudioPlayer.swift */,
 				6FC61E57248E221F005138B1 /* YXSAVPlayer.swift */,
 				E58F16AF245149D400A6AC18 /* message.wav */,
+				6FA74A622493241D00D3B4BF /* YXSMusicPlayerManager.swift */,
 			);
 			path = YXSAudioPlayer;
 			sourceTree = "<group>";
@@ -6479,6 +6482,7 @@
 				E58F16F1245149D500A6AC18 /* YXSObjcTool.m in Sources */,
 				6FEA7C052452990D0017C9CA /* LFImageCoder.m in Sources */,
 				6F07048E2445D8040090975B /* YXSPasswordView.swift in Sources */,
+				6FA74A632493241E00D3B4BF /* YXSMusicPlayerManager.swift in Sources */,
 				6F0703592445D8030090975B /* TUIVideoViewController.m in Sources */,
 				6F0704AE2445D8040090975B /* YXSPhotoAlbumsDetailListModel.swift in Sources */,
 				6F0703F12445D8030090975B /* YXSHomeRequest.swift in Sources */,

@@ -122,7 +122,7 @@ class YXSPlayingViewController: YXSBaseViewController {
         }else{//根据喜马拉雅当前播放器设置播放UI
             track = YXSXMPlayerGlobalControlTool.share.currentTrack
             trackList = YXSXMPlayerGlobalControlTool.share.playList
-            xmTrackPlayerDidStart()
+            musicPlayerManagerDidStart()
             updatePlayerModelUI()
             
             progressView.value = Float(YXSRemoteControlInfoHelper.currentTime)/Float(YXSXMPlayerGlobalControlTool.share.currentTrack?.duration ?? 1)
@@ -512,38 +512,34 @@ extension YXSPlayingViewController: CAAnimationDelegate{
     }
 }
 
-// MARK: - YXSXMPlayerDelegate
-extension YXSPlayingViewController: YXSXMPlayerDelegate{
-    func xmTrackPlayerDidPlaylistEnd() {
+// MARK: - YXSMusicPlayerManagerDelegate
+extension YXSPlayingViewController: YXSMusicPlayerManagerDelegate{
+    func musicPlayerManagerDidPlaylistEnd() {
         
     }
     
-    func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
+    func musicPlayerManagerNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
         if !isOnDragProgress{
             progressView.value = Float(percent)
         }
         lbCurrentDuration.text = stringWithDuration(duration: currentSecond)
         UIUtil.configNowPlayingCenterUI()
     }
+
     
-    func xmTrackPlayNotifyCacheProcess(_ percent: CGFloat) {
-        ///
-        //        SLLog("CacheProcess:\(percent)")
-    }
-    
-    func xmTrackPlayerWillPlaying() {
+    func musicPlayerManagerWillPlaying() {
         playListVC?.tableView.reloadData()
     }
     
-    func xmTrackPlayerDidPlaying() {
+    func musicPlayerManagerDidPlaying() {
         self.imgCover.resumeRotate()
     }
     
-    func xmTrackPlayerDidPaused() {
+    func musicPlayerManagerDidPaused() {
         self.imgCover.stopRotating()
     }
     
-    func xmTrackPlayerDidStart() {
+    func musicPlayerManagerDidStart() {
         let track = YXSXMPlayerGlobalControlTool.share.currentTrack
         requestJudge(voiceId: track?.trackId ?? 0)
         

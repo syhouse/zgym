@@ -48,21 +48,21 @@ typedef NS_ENUM(NSInteger, XMSDKLivePlayerState) {
 @optional
 #pragma mark - process notification
 //播放时被调用，频率为1s，告知当前播放进度和播放时间
-- (void)XMTrackPlayNotifyProcess:(CGFloat)percent currentSecond:(NSUInteger)currentSecond;
+- (void)avPlayNotifyProcess:(CGFloat)percent currentSecond:(NSUInteger)currentSecond;
 //播放时被调用，告知当前播放器的缓冲进度
 - (void)XMTrackPlayNotifyCacheProcess:(CGFloat)percent;
 
 #pragma mark - player state change
 //播放列表结束时被调用
-- (void)XMTrackPlayerDidPlaylistEnd;
+- (void)avPlayerDidPlaylistEnd;
 //开始播放时调用
-- (void)XMTrackPlayerDidStart;
+- (void)avPlayerDidStart;
 //将要播放时被调用
-- (void)XMTrackPlayerWillPlaying;
+- (void)avPlayerWillPlaying;
 //已经播放时被调用
-- (void)XMTrackPlayerDidPlaying;
+- (void)avPlayerDidPlaying;
 //暂停时调用
-- (void)XMTrackPlayerDidPaused;
+- (void)avPlayerDidPaused;
 //停止时调用
 - (void)XMTrackPlayerDidStopped;
 //结束播放时调用

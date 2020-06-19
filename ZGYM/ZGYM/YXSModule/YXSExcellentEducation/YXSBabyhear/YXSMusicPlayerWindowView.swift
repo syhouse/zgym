@@ -292,30 +292,30 @@ extension YXSMusicPlayerWindowView{
     }
 }
 
-extension YXSMusicPlayerWindowView: YXSXMPlayerDelegate{
+extension YXSMusicPlayerWindowView: YXSMusicPlayerManagerDelegate{
     // MARK: - Delegate
-    func xmTrackPlayNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
+    func musicPlayerManagerNotifyProcess(_ percent: CGFloat, currentSecond: UInt) {
         UIUtil.configNowPlayingCenterUI()
     }
     
-    func xmTrackPlayerWillPlaying() {
+    func musicPlayerManagerWillPlaying() {
         let track = YXSXMPlayerGlobalControlTool.share.currentTrack
         titleLabel.text = track?.trackTitle
     }
     
-    func xmTrackPlayerDidPlaylistEnd() {
+    func musicPlayerManagerDidPlaylistEnd() {
         YXSMusicPlayerWindowView.hidePlayerWindow()
     }
     
-    func xmTrackPlayerDidPlaying() {
+    func musicPlayerManagerDidPlaying() {
         startVoiceAnimation()
     }
     
-    func xmTrackPlayerDidPaused() {
+    func musicPlayerManagerDidPaused() {
         stopVoiceAnimation()
     }
     
-    func xmTrackPlayerDidStart() {
+    func musicPlayerManagerDidStart() {
         UIUtil.configNowPlayingCenterUI()
     }
 }
