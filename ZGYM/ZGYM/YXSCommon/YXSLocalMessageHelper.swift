@@ -138,14 +138,20 @@ private let waterfallIdKey = "waterfallIdKey"
     
     
     /// 移除本地红点消息
-    /// - Parameter serviceId: 服务Id(相册的)
-    public func yxs_removeLocalMessage(serviceId: Int, childId: Int){
+    /// - Parameter serviceId: 服务Id
+    public func yxs_removeLocalMessage(serviceId: Int, childId: Int, waterfallId: Int? = nil){
         if localRedServiceList.has(key: "\(childId)"){
             var newChildServiceList = Set<[String : Int]>()
             if let childServiceDics = localRedServiceList["\(childId)"]{
                 for dic in childServiceDics{
-                    if dic[serviceIdKey] == serviceId{
-                        continue
+                    if let waterfallId = waterfallId{
+                        if dic[waterfallIdKey] == waterfallId {
+                            continue
+                        }
+                    }else{
+                        if dic[serviceIdKey] == serviceId{
+                            continue
+                        }
                     }
                     newChildServiceList.insert(dic)
                 }
@@ -191,12 +197,12 @@ private let waterfallIdKey = "waterfallIdKey"
             return localRedServiceList["\(childId)"]?.count ?? 0
         }
         var count = 0
+//        SLLog(localRedServiceList)
         for key in localRedServiceList.keys{
             if let set = localRedServiceList[key]{
                 count += set.count
             }
         }
-//        SLLog(count)
         return count
     }
     

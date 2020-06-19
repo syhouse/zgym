@@ -62,7 +62,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
         layout.headerReferenceSize = CGSize(width: SCREEN_WIDTH, height: 47)
         self.layout = layout
         
-        UIUtil.yxs_reduceHomeRed(serviceId: albumsId, childId: self.yxs_user.currentChild?.id ?? 0)
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId:albumsId, childrenId: self.yxs_user.currentChild?.id ?? 0))
     }
     
     convenience init(albumModel: YXSPhotoAlbumsModel) {
@@ -147,7 +147,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             self.yxs_endingRefresh()
         }
     }
-//
+    //
     
     func cheakMD5Requset(_ assets: [YXSMediaModel]){
         var md5List = [String]()
@@ -230,8 +230,8 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
                 bgUrl = model.aliYunUploadBackUrl ?? ""
             }
         }
-
-
+        
+        
         if video.count != 0{
             resourceList.append(["resourceType": 1, "resourceUrl": video, "bgUrl": bgUrl, "videoDuration": videoDuration ?? 0, "fileMd5": md5List.first ?? ""])
         }else{
@@ -252,11 +252,12 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             if let albumModel = self.albumModel{
                 self.updateAlbumModel?(albumModel)
             }
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kTeacherPublishSucessNotification), object: nil)
         }) { (msg, code) in
             MBProgressHUD.yxs_hideHUDInView(view: self.navigationController!.view)
             MBProgressHUD.yxs_showMessage(message: msg)
         }
-
+        
     }
     
     func loadDelectAlbum(){
@@ -286,7 +287,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
                     self.yxs_refreshData()
                 }
             }
-
+            
             self.refreshView(isEdit: false)
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
@@ -402,15 +403,16 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
                 
             }
             vc.currentIndex = showList.firstIndex(of: model) ?? 0
-
             self.navigationController?.pushViewController(vc)
+            
+            
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "YXSPhotoAlbumsDetailListHeaderView", for: indexPath) as! YXSPhotoAlbumsDetailListHeaderView
-//            headerView.setModel(tabListTemplates[indexPath.section])
+            //            headerView.setModel(tabListTemplates[indexPath.section])
             headerView.titleLabel.text = dataSource[indexPath.section].title
             return headerView
         }
@@ -443,7 +445,7 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             view.label.text = "老师还没有上传照片哦"
             view.button.isHidden = true
         }
- 
+        
         return view
     }
     
@@ -474,14 +476,14 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
 // MARK: -
 extension YXSPhotoAlbumDetialListController: YXSSelectMediaHelperDelegate{
     func didSelectMedia(asset: YXSMediaModel) {
-//        loadUploadRequest([asset])
+        //        loadUploadRequest([asset])
         cheakMD5Requset([asset])
     }
     
     /// 选中多个图片资源
     /// - Parameter assets: models
     func didSelectSourceAssets(assets: [YXSMediaModel]) {
-//        loadUploadRequest(assets)
+        //        loadUploadRequest(assets)
         cheakMD5Requset(assets)
     }
 }

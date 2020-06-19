@@ -25,7 +25,7 @@ class YXSSolitaireDetailController: YXSBaseTableViewController {
         self.childrenId = childrenId
         self.classId = classId
         self.serviceCreateTime = serviceCreateTime
-        UIUtil.yxs_reduceHomeRed(serviceId: censusId, childId: childrenId )
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId:censusId, childrenId: childrenId))
     }
     
     required init?(coder aDecoder: NSCoder) {

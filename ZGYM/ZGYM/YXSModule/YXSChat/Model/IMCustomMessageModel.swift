@@ -27,6 +27,35 @@ class IMCustomMessageModel : NSObject, NSCoding, NSCopying, Mappable{
     var ring: Int?      /// 是否响铃(0否，1是)
     var stage: String?
     
+    /// 业务类型  通过 serviceId 获取的枚举
+    var type: YXSHomeType{
+        get{
+            switch serviceType ?? 0 {
+            case 0:
+                return .notice
+            case 1:
+                return .homework
+            case 2:
+                return .punchCard
+            case 3:
+                return .solitaire
+            case 4:
+                return .score
+            case 5:
+                return .friendCicle
+            case 6:
+                return .classstart
+            case 7:
+                return .photo
+                
+            case 9:
+                return .periodical
+            default:
+                return .notice
+            }
+        }
+    }
+    
     var callbackRequestParameter: CallbackRequestParameter?
     private override init(){}
     required init?(map: Map){}

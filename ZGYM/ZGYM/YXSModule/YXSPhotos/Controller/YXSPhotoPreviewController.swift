@@ -47,11 +47,14 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         IQKeyboardManager.shared().isEnableAutoToolbar = false
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
         IQKeyboardManager.shared().isEnableAutoToolbar = true
+        UIApplication.shared.statusBarStyle =  .default
     }
     
     override func viewDidLoad() {
@@ -74,10 +77,10 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         
         let browser = YBImageBrowser()
         // 禁止旋转（但是若当前控制器能旋转，图片浏览器也会跟随，布局可能会错位，这种情况还待处理）
-        browser.supportedOrientations = .portrait
+//        browser.supportedOrientations = .portrait
         browser.dataSource = self
         browser.delegate = self
-        
+        browser.shouldHideStatusBar = false
         browser.currentPage = currentIndex
         
         // 关闭入场和出场动效
@@ -88,7 +91,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         browser.toolViewHandlers = []
         
         // 由于 self.view 的大小可能会变化，所以需要显式的赋值容器大小
-        let size = CGSize(width: SCREEN_WIDTH, height: SCREEN_HEIGHT - YBIBStatusbarHeight() - 44 - 64)
+        let size = CGSize(width: SCREEN_WIDTH, height: SCREEN_HEIGHT - kSafeTopHeight - 64)
         browser.show(to: contentPanel, containerSize: size)
         self.browserView = browser
         
@@ -212,6 +215,13 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         showCommentView(show: true)
     }
     
+    @objc func currentPriseClick(sender: UIButton) {
+        let model = dataSource[browserView?.currentPage ?? 0]
+        let vc = YXSPraiseDetialListController(classId: classId, resourceId: model.id ?? 0, albumId: model.albumId ?? 0)
+        self.navigationController?.pushViewController(vc)
+    }
+    
+    
     @objc func moreClick(sender: UIButton) {
         let lists = [YXSCommonBottomParams.init(title: "保存到手机", event: "save"),YXSCommonBottomParams.init(title: "设置为封面", event: "setCover")]
         
@@ -306,6 +316,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         view.minePriseButton.addTarget(self, action: #selector(praiseOrCancelClick(sender:)), for: .touchUpInside)
         view.commentButton.addTarget(self, action: #selector(commentClick(sender:)), for: .touchUpInside)
         view.moreActionButton.addTarget(self, action: #selector(moreClick(sender:)), for: .touchUpInside)
+        view.currentPriseButton.addTarget(self, action: #selector(currentPriseClick(sender:)), for: .touchUpInside)
         return view
     }()
     

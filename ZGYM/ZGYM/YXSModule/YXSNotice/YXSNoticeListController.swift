@@ -131,7 +131,7 @@ class YXSNoticeListController: YXSCommonScreenListBaseController {
                 MBProgressHUD.yxs_hideHUD()
                 model.commitState = 2
                 NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationModelKey: model])
-                UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
+                UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: model.childrenId))
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.notice])
                 self.reloadTableView()
             }) { (msg, code) in

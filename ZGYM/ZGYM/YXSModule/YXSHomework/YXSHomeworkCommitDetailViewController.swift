@@ -19,7 +19,7 @@ class YXSHomeworkCommitDetailViewController: YXSBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        UIUtil.yxs_reduceHomeRed(serviceId: homeModel?.serviceId ?? 0, childId: homeModel?.childrenId ?? 0)
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId:homeModel?.serviceId, childrenId: homeModel?.childrenId))
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER {
             self.title = "查看作业"
         } else {

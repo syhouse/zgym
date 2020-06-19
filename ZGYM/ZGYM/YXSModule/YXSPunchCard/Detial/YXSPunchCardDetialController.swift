@@ -75,7 +75,7 @@ class YXSPunchCardDetialController: YXSBaseTableViewController {
         self.init(clockInId: clockInId,classId: classId)
         self.childId = childId
         
-        UIUtil.yxs_reduceHomeRed(serviceId: clockInId, childId: childId ?? 0)
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId:clockInId, childrenId: childId ?? 0))
     }
     
     required init?(coder aDecoder: NSCoder) {

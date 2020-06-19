@@ -36,6 +36,21 @@ class YXSEducationAlbumPagequeryRequest: YXSBaseRequset {
     }
 }
 
+// MARK: -相册点赞列表
+let albumQueryPraiseList = "/album/query-praise-list"
+class YXSEducationAlbumQueryPraiseListRequest: YXSBaseRequset {
+    init(classId: Int, resourceId: Int,albumId: Int){
+        super.init()
+        method = .post
+        host = fileHost
+        path = albumQueryPraiseList
+        param = [
+            "classId":classId,
+            "resourceId":resourceId,
+            "albumId":albumId]
+    }
+}
+
 
 /// 创建相册
 let albumCreate = "/album/create"

@@ -71,6 +71,7 @@ class YXSPhotoPreviewFooterView: UIView {
         minePriseButton.setImage(UIImage.init(named: "yxs_photo_praise_normal"), for: .normal)
         minePriseButton.setImage(UIImage.init(named: "yxs_photo_praise_select"), for: .selected)
         minePriseButton.isSelected = false
+        minePriseButton.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return minePriseButton
     }()
     
@@ -80,6 +81,7 @@ class YXSPhotoPreviewFooterView: UIView {
         commentButton.title = "评论"
         commentButton.font = UIFont.systemFont(ofSize: 16)
         commentButton.locailImage = "yxs_photo_comment"
+        commentButton.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return commentButton
     }()
     
@@ -89,12 +91,14 @@ class YXSPhotoPreviewFooterView: UIView {
         currentPriseButton.title = "0"
         currentPriseButton.font = UIFont.systemFont(ofSize: 16)
         currentPriseButton.locailImage = "yxs_photo_praise_normal"
+        currentPriseButton.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return currentPriseButton
     }()
     
     lazy var moreActionButton: UIButton = {
         let button = UIButton.init()
         button.setImage(UIImage.init(named: "yxs_photo_more"), for: .normal)
+        button.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return button
     }()
 }

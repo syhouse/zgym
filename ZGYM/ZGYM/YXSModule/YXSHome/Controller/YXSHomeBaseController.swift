@@ -182,7 +182,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             YXSEducationNoticeCustodianCommitReceiptRequest(noticeId: model.serviceId ?? 0, childrenId: model.childrenId ?? 0, noticeCreateTime: model.createTime ?? "").request({ (json) in
                 NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationModelKey: model])
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.notice])
-                UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
+                UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: model.childrenId ?? 0))
                 MBProgressHUD.yxs_hideHUD()
                 MBProgressHUD.yxs_showMessage(message: "提交成功", inView: self.navigationController?.view)
                 model.commitState = 2
@@ -286,7 +286,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             navigationController?.pushViewController(vc)
         case .classstart:
             if let childModel = childModel{
-                UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: childModel.id ?? 0)
+                UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: childModel.id))
                 UIUtil.currentNav().pushViewController(YXSClassStarPartentDetialController.init(childrenModel: childModel, startTime: model.startTime,endTime: model.endTime))
             }
         case .friendCicle:
@@ -388,7 +388,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     ///点击头像去个人详情
     private func yxs_goToUserInfoController(_ indexPath: IndexPath){
         let friendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
-        UIUtil.yxs_reduceHomeRed(serviceId: friendCircleModel?.classCircleId ?? 0, childId: friendCircleModel?.childrenId ?? 0)
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: friendCircleModel?.classCircleId, childrenId: friendCircleModel?.childrenId))
         if let model = friendCircleModel{
             let vc = YXSFriendsCircleInfoController.init(userId:  model.userIdPublisher ?? 0, childId: model.childrenId ?? 0, type: model.typePublisher ?? "")
             self.navigationController?.pushViewController(vc)

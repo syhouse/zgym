@@ -119,7 +119,7 @@ class YXSScoreListCell: YXSHomeBaseCell {
         if YXSPersonDataModel.sharePerson.personRole == .PARENT,YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: model.serviceId ?? 1001, childId: model.childrenId ?? 0){
             if model.isRead == 1 {
                 redView.isHidden = true
-                UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
+                UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: model.childrenId))
             } else {
                 redView.isHidden = false
             }

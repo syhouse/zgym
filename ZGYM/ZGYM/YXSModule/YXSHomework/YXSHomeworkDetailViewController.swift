@@ -56,7 +56,7 @@ class YXSHomeworkDetailViewController: YXSBaseViewController, UITableViewDelegat
     init(model: YXSHomeListModel, selectChildrenId: Int = NSObject.init().yxs_user.currentChild?.id ?? 0) {
         self.homeModel = model
         self.selectChildrenId = selectChildrenId
-        UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0,childId: model.childrenId ?? 0)
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId:model.serviceId, childrenId: model.childrenId))
         super.init()
     }
     

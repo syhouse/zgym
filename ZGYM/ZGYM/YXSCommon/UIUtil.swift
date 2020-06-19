@@ -44,6 +44,7 @@ class YXSRecallModel: NSObject{
     ///瀑布流id
     var waterfallId: Int?
     var classId: Int?
+    
     var homeType: YXSHomeType = .homework
     
     static func initWithHomeModel(homeModel: YXSHomeListModel) -> YXSRecallModel{
@@ -64,6 +65,19 @@ class YXSRecallModel: NSObject{
         self.init(serviceId: nil, createTime: createTime, homeType: .photo)
         self.waterfallId = waterfallId
         self.classId = classId
+    }
+}
+
+///首页红点model
+class YXSHomeRedModel: NSObject{
+    var serviceId: Int?
+    var waterfallId: Int?
+    var childrenId: Int?
+    /// waterfallId (目前只有相册老师撤销消除红点)必需传这个参数
+    init(serviceId: Int?, childrenId: Int?, waterfallId: Int? = nil) {
+        self.serviceId =  serviceId
+        self.waterfallId = waterfallId
+        self.childrenId =  childrenId
     }
 }
 
@@ -420,7 +434,7 @@ extension UIUtil{
             isEnd = false
         }
         
-        UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: model.childrenId))
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER || model.isRead == 1 || isEnd{
             return
         }
@@ -612,12 +626,13 @@ extension UIUtil{
     
     
     /// 去掉首页红点
-    /// - Parameter serviceId: serviceId 
-    static func yxs_reduceHomeRed(serviceId: Int, childId: Int){
+    /// - Parameter serviceId: serviceId
+    /// - Parameter waterfallId: 瀑布流id
+    static func yxs_reduceHomeRed(_ model: YXSHomeRedModel){
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-            if YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: serviceId,childId: childId){
-                YXSLocalMessageHelper.shareHelper.yxs_removeLocalMessage(serviceId: serviceId, childId: childId)
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kHomeCellReducNotification), object: serviceId)
+            if YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: model.serviceId ?? 0,childId: model.childrenId ?? 0, waterfallId: model.waterfallId){
+                YXSLocalMessageHelper.shareHelper.yxs_removeLocalMessage(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0, waterfallId: model.waterfallId)
+                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kHomeCellReducNotification), object: [kNotificationModelKey: model])
             }
         }
     }

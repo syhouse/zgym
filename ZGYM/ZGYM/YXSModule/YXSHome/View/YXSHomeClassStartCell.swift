@@ -37,7 +37,7 @@ class YXSHomeClassStartCell: YXSHomeBaseCell {
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
-        UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: model.childrenId))
     }
     
     // MARK: -UI
