@@ -188,6 +188,7 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
             guard let strongSelf = self else { return }
             strongSelf.replyId = model.id
             strongSelf.tf.text = ""
+            strongSelf.tf.becomeFirstResponder()
             strongSelf.tf.placeholder = "回复\(model.userName ?? "")："
         }
         return cell
@@ -304,7 +305,8 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
                 lbContent.text = model.content ?? ""
                 delectButton.isHidden = !model.isMyPublish
                 
-                let nameText = model.isMyPublish ? "我" : model.userName ?? ""
+//                let nameText = model.isMyPublish ? "我" : model.userName ?? ""
+                let nameText = model.userName ?? ""
                 
                 if let reUserId = model.reUserId{
                     var replyNameText: String = model.reUserName ?? ""
