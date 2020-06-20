@@ -113,6 +113,7 @@ class YXSPraiseDetialListListCell: UITableViewCell {
     
     lazy var avarView: UIImageView = {
         let avarView = UIImageView()
+        avarView.contentMode = .scaleAspectFill
         avarView.cornerRadius = 20.5
         return avarView
     }()

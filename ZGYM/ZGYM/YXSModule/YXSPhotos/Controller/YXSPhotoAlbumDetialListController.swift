@@ -494,7 +494,11 @@ extension YXSPhotoAlbumDetialListController: YXSRouterEventProtocol{
     func yxs_user_routerEventWithName(eventName: String, info: [String : Any]?) {
         switch eventName {
         case kYXSPhotoAlbumDetialFooterViewDelectEventKey:
-            loadDelectAlbum()
+            YXSCommonAlertView.showAlert(title: "提示",message:  "确定删除相册资源么？", rightClick: {
+                [weak self] in
+                guard let strongSelf = self else { return }
+                strongSelf.loadDelectAlbum()
+            })
         case kYXSPhotoAlbumDetialFooterViewCancelEditEventKey:
             refreshView(isEdit: false)
         case kYXSPhotoAlbumDetialFooterViewUploadEventKey:

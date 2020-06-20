@@ -9,6 +9,7 @@
 import UIKit
 import NightNight
 
+/// 设置内边距时使用 textContainerInset
 class YXSPlaceholderTextView: UITextView{
     var textDidChangeBlock: ((_ text: String) -> ())?
     var placeholder: String = ""{
@@ -36,6 +37,7 @@ class YXSPlaceholderTextView: UITextView{
             placeholderLabel.isHidden = self.hasText
         }
     }
+    
     
     fileprivate lazy var placeholderLabel: YXSLabel = {
         let label = YXSLabel()

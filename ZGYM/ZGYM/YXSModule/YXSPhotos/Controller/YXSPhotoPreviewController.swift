@@ -154,6 +154,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     }
     
     private func cellClickAction(){
+        self.view.endEditing(true)
         if isShowingCommentView{
             showCommentView(show: false)
             isShowingCommentView = false

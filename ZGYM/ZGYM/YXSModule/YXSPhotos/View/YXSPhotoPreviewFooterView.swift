@@ -13,7 +13,7 @@ class YXSPhotoPreviewFooterView: UIView {
         didSet{
             if let model = model{
                 minePriseButton.isSelected = model.praiseStat == 1
-                commentButton.title = "评论\(model.commentCount ?? 0)"
+                commentButton.title = "评论(\(model.commentCount ?? 0))"
                 let praiseCount = model.praiseCount ?? 0
                 currentPriseButton.title = praiseCount > 99 ? "99+" : "\(praiseCount)"
             }
@@ -26,7 +26,7 @@ class YXSPhotoPreviewFooterView: UIView {
         addSubview(minePriseButton)
         addSubview(commentButton)
         addSubview(currentPriseButton)
-        addSubview(moreActionButton)
+        
         
         minePriseButton.snp.makeConstraints { (make) in
             make.left.equalTo(14)
@@ -40,16 +40,25 @@ class YXSPhotoPreviewFooterView: UIView {
             make.height.equalTo(22)
         }
         
-        currentPriseButton.snp.makeConstraints { (make) in
-            make.right.equalTo(-56)
-            make.centerY.equalTo(minePriseButton)
-            make.height.equalTo(22)
-        }
-        
-        moreActionButton.snp.makeConstraints { (make) in
-            make.right.equalTo(-4.5)
-            make.centerY.equalTo(minePriseButton)
-            make.width.height.equalTo(42)
+
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            currentPriseButton.snp.makeConstraints { (make) in
+                make.right.equalTo(-56)
+                make.centerY.equalTo(minePriseButton)
+                make.height.equalTo(22)
+            }
+            addSubview(moreActionButton)
+            moreActionButton.snp.makeConstraints { (make) in
+                make.right.equalTo(-4.5)
+                make.centerY.equalTo(minePriseButton)
+                make.width.height.equalTo(42)
+            }
+        }else{
+            currentPriseButton.snp.makeConstraints { (make) in
+                make.right.equalTo(-14)
+                make.centerY.equalTo(minePriseButton)
+                make.height.equalTo(22)
+            }
         }
         
         //        64 +

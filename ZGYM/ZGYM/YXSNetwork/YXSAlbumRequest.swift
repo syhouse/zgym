@@ -215,7 +215,7 @@ class YXSEducationAlbumQueryPraiseCommentCountRequest: YXSBaseRequset {
 //评论相册资源
 let albumComment = "/album/comment"
 class YXSEducationAlbumCommentRequest: YXSBaseRequset {
-    init(albumId: Int, classId: Int, resourceId: Int, type: String = "COMMENT", content: String, id: Int){
+    init(albumId: Int, classId: Int, resourceId: Int, type: String = "COMMENT", content: String, id: Int?){
         super.init()
         method = .post
         host = fileHost
@@ -225,8 +225,10 @@ class YXSEducationAlbumCommentRequest: YXSBaseRequset {
             "classId": classId,
             "resourceId": resourceId,
             "type": type,
-            "content": content,
-            "id": id]
+            "content": content]
+        if let id = id{
+            param?["id"] = id
+        }
     }
 }
 

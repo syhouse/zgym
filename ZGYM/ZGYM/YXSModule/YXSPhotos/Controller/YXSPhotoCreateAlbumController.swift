@@ -49,11 +49,10 @@ class YXSPhotoCreateAlbumController: YXSEditAlbumBaseController {
             }
             
         } else {
+            MBProgressHUD.yxs_showLoading(inView: self.view)
             YXSFileUploadHelper.sharedInstance.uploadPHAssetDataSource(mediaAssets: [selectMediaModel.asset], storageType: .albumCover, classId: classId, progress: nil, sucess: { [weak self](list) in
                 guard let weakSelf = self else {return}
-                
                 if let url = list.first?.fileUrl {
-                    MBProgressHUD.yxs_showLoading(inView: weakSelf.view)
                     YXSEducationAlbumCreateRequest.init(classId: weakSelf.classId, albumName: weakSelf.nameField.text!, coverUrl: url).request({ (json) in
                         MBProgressHUD.yxs_hideHUDInView(view: weakSelf.view)
                         MBProgressHUD.yxs_showMessage(message: "创建成功")

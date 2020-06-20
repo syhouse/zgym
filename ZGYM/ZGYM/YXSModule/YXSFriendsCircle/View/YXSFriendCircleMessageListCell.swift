@@ -115,11 +115,10 @@ class YXSFriendCircleMessageListCell: UITableViewCell {
         nameLabel.text = model.operatorName
         let bodyColor = NightNight.theme == .normal ? kBlueColor : UIColor.white
         let grayBodyColor = NightNight.theme == .normal ? UIColor.yxs_hexToAdecimalColor(hex: "#575A60") : kNightBCC6D4
-        let nameText: String = model.recipient == yxs_user.id ? "我:" :  ""
         if model.type == "COMMENT"{
-            UIUtil.yxs_setLabelAttributed(commentLabel, text: ["评论", nameText, " \(model.content ?? "")" ], colors: [grayBodyColor,bodyColor,grayBodyColor])
+            UIUtil.yxs_setLabelAttributed(commentLabel, text: ["评论:", " \(model.content ?? "")" ], colors: [grayBodyColor,grayBodyColor])
         } else if model.type == "REPLY"{
-            UIUtil.yxs_setLabelAttributed(commentLabel, text: ["回复", nameText, " \(model.content ?? "")" ], colors: [grayBodyColor,bodyColor,grayBodyColor])
+            UIUtil.yxs_setLabelAttributed(commentLabel, text: ["回复", "我:", " \(model.content ?? "")" ], colors: [grayBodyColor,bodyColor,grayBodyColor])
         } else {
             UIUtil.yxs_setLabelAttributed(commentLabel, text: ["点赞" ], colors: [grayBodyColor])
         }

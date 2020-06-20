@@ -20,7 +20,9 @@ class YXSSSAudioPlayer: NSObject {
     func playMessageSoundEffect() {
         let str = Bundle.main.path(forResource: "message", ofType: "wav")
         let url = URL(fileURLWithPath: str ?? "")
-        play(url: url)
+        if avplayer == nil{
+            play(url: url)
+        }
     }
     
     var sourceUrl: URL?
