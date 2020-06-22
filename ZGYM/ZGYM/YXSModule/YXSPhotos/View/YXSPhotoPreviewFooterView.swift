@@ -40,28 +40,18 @@ class YXSPhotoPreviewFooterView: UIView {
             make.height.equalTo(22)
         }
         
-
-        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-            currentPriseButton.snp.makeConstraints { (make) in
-                make.right.equalTo(-56)
-                make.centerY.equalTo(minePriseButton)
-                make.height.equalTo(22)
-            }
-            addSubview(moreActionButton)
-            moreActionButton.snp.makeConstraints { (make) in
-                make.right.equalTo(-4.5)
-                make.centerY.equalTo(minePriseButton)
-                make.width.height.equalTo(42)
-            }
-        }else{
-            currentPriseButton.snp.makeConstraints { (make) in
-                make.right.equalTo(-14)
-                make.centerY.equalTo(minePriseButton)
-                make.height.equalTo(22)
-            }
-        }
         
-        //        64 +
+        currentPriseButton.snp.makeConstraints { (make) in
+            make.right.equalTo(-56)
+            make.centerY.equalTo(minePriseButton)
+            make.height.equalTo(22)
+        }
+        addSubview(moreActionButton)
+        moreActionButton.snp.makeConstraints { (make) in
+            make.right.equalTo(-4.5)
+            make.centerY.equalTo(minePriseButton)
+            make.width.height.equalTo(42)
+        }
     }
     
     required init?(coder: NSCoder) {
