@@ -9,6 +9,7 @@
 import Foundation
 import AVKit
 
+
 class YXSPlayerVC: YXSBaseViewController {
 
     init(player:AVPlayer) {
@@ -106,7 +107,7 @@ class YXSPlayerVC: YXSBaseViewController {
         let btn = UIButton()
         btn.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#37383A", alpha: 0.8) //7B7C80 20232F
         btn.addTarget(self, action: #selector(fullScreen(btn:)), for: .touchUpInside)
-        btn.layer.cornerRadius = 12
+        btn.layer.cornerRadius = 15
         btn.layer.masksToBounds = true
         btn.setImage(UIImage.init(named: "yxs_fullScreen"), for: .normal)
         btn.setImage(UIImage.init(named: "yxs_smallScreen"), for: .selected)
