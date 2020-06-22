@@ -21,7 +21,9 @@ import SDWebImage
 class AppDelegate: UIResponder, UIApplicationDelegate{
     var window: UIWindow?
     
-    
+    var isForceLandscape:Bool = false
+    var isForcePortrait:Bool = false
+    var isForceAllDerictions:Bool = false //支持所有方向
     /// 是否是第一次启动
     var isFirst:Bool{
         get{
@@ -83,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         #if DEBUG
         FLEXManager.shared()?.showExplorer()
         #endif
-
+        
 //        // MARK: -创建网络缓存
 //        NetworkReachabilityManager.init()?.startListening()
 //        let urlCache = URLCache.init(memoryCapacity: 4*1024*1024, diskCapacity: 20*1024*1024, diskPath: nil)
@@ -215,6 +217,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         }
     }
     
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        if isForceAllDerictions == true {
+            return .all
+        } else if isForceLandscape == true {
+            return .landscape
+        } else if isForcePortrait == true {
+            return .portrait
+        }
+        return .portrait
+    }
+    
     // MARK: -Other
     /// 向苹果后台请求 DeviceToken
     @objc func registAppleDeviceToken() {
@@ -243,7 +256,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
             UIApplication.shared.registerForRemoteNotifications(matching: UIRemoteNotificationType(rawValue: type))
         }
     }
-
+    
     // MARK: - CoreData
     lazy var managedObjectModel: NSManagedObjectModel = {
         var modelURL = Bundle.main.url(forResource: "ZGYMEducation", withExtension: "mom")
