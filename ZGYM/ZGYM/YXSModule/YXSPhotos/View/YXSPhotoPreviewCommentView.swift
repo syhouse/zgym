@@ -189,7 +189,11 @@ class YXSPhotoPreviewCommentView: UIView, UITableViewDelegate, UITableViewDataSo
             strongSelf.replyId = model.id
             strongSelf.tf.text = ""
             strongSelf.tf.becomeFirstResponder()
-            strongSelf.tf.placeholder = "回复\(model.userName ?? "")："
+            var nameText = model.userName ?? ""
+            if model.userType == PersonRole.PARENT.rawValue{
+                nameText = nameText.components(separatedBy: "&").last ?? ""
+            }
+            strongSelf.tf.placeholder = "回复\(nameText)："
         }
         return cell
     }
@@ -278,7 +282,7 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
         })
         
         lbContent.snp.makeConstraints({ (make) in
-            make.top.equalTo(imgAvatar.snp_bottom).offset(17)
+            make.top.equalTo(lbDate.snp_bottom).offset(19)
             make.left.equalTo(imgAvatar.snp_right).offset(12)
             make.right.equalTo(-15)
             make.bottom.equalTo(-20)
@@ -305,11 +309,13 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
                 lbContent.text = model.content ?? ""
                 delectButton.isHidden = !model.isMyPublish
                 
-//                let nameText = model.isMyPublish ? "我" : model.userName ?? ""
                 var nameText = model.userName ?? ""
-                if model.userType == PersonRole.PARENT.rawValue{
+                if model.isMyPublish{
+                    nameText = "我"
+                }else if model.userType == PersonRole.PARENT.rawValue{
                     nameText = nameText.components(separatedBy: "&").last ?? ""
                 }
+                
                 
                 if let reUserId = model.reUserId{
                     var replyNameText: String = model.reUserName ?? ""
@@ -321,6 +327,13 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
                     lbTitle.text = nameText
                 }
                 
+                
+                lbTitle.snp.remakeConstraints({ (make) in
+                    make.top.equalTo(imgAvatar.snp_top).offset(0)
+                    make.left.equalTo(imgAvatar.snp_right).offset(13)
+                    make.right.equalTo(model.isMyPublish ? -45 : -10)
+                })
+
             }
             
         }
@@ -350,6 +363,7 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
         let lb = YXSLabel()
         lb.text = "王梓豪爸爸"
         lb.textColor = UIColor.white
+        lb.numberOfLines = 0
         lb.font = UIFont.systemFont(ofSize: 17)
         return lb
     }()

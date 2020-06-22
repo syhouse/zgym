@@ -113,9 +113,13 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             make.height.equalTo(64)
         })
         
-        view.addSubview(commentView)
+        view.addSubview(yxs_bgWindow)
+        yxs_bgWindow.snp.makeConstraints { (make) in
+            make.edges.equalTo(view)
+        }
+        yxs_bgWindow.addSubview(commentView)
         commentView.snp.makeConstraints({ (make) in
-            make.top.equalTo(view.snp_bottom)
+            make.top.equalTo(yxs_bgWindow.snp_bottom)
             make.left.right.equalTo(0)
         })
     }
@@ -172,14 +176,17 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             commentView.resourceId = model.id ?? 0
             commentView.reloadData()
             UIView.animate(withDuration: 0.25) {
+                self.yxs_bgWindow.alpha = 1
                 self.commentView.snp.remakeConstraints { (make) in
                     make.left.right.bottom.equalTo(0)
                 }
             }
         }else{
+            self.view.endEditing(true)
             UIView.animate(withDuration: 0.25) {
+                self.yxs_bgWindow.alpha = 0
                 self.commentView.snp.remakeConstraints { (make) in
-                    make.top.equalTo(self.view.snp_bottom)
+                    make.top.equalTo(self.yxs_bgWindow.snp_bottom)
                     make.left.right.equalTo(0)
                 }
             }
@@ -205,6 +212,10 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         }
     }
     
+    @objc func dismissComment(){
+        showCommentView(show: false)
+    }
+    
     @objc func commentClick(sender: UIButton) {
         showCommentView(show: true)
     }
@@ -217,7 +228,10 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     
     
     @objc func moreClick(sender: UIButton) {
-        let lists = [YXSCommonBottomParams.init(title: "保存到手机", event: "save"),YXSCommonBottomParams.init(title: "设置为封面", event: "setCover")]
+        var lists = [YXSCommonBottomParams.init(title: "保存到手机", event: "save")]
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            lists.append(YXSCommonBottomParams.init(title: "设置为封面", event: "setCover"))
+        }
         
         YXSCommonBottomAlerView.showIn(buttons: lists) { [weak self](model) in
             guard let weakSelf = self else {return}
@@ -328,6 +342,14 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
                 strongSelf.footerView.model = model
             }
         }
+        return view
+    }()
+    
+    lazy var yxs_bgWindow : UIControl = {
+        let view = UIControl()
+        view.backgroundColor = UIColor(white: 0.252, alpha: 0.7)
+        view.addTarget(self, action: #selector(dismissComment), for: .touchUpInside)
+        view.alpha = 0
         return view
     }()
     
