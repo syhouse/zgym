@@ -9,14 +9,24 @@
 import UIKit
 /// 赞/评论
 class YXSPhotoPreviewFooterView: UIView {
-    var model: YXSPhotoAlbumsPraiseModel!
+    var model: YXSPhotoAlbumsPraiseModel?{
+        didSet{
+            if let model = model{
+                minePriseButton.isSelected = model.praiseStat == 1
+                commentButton.title = "评论(\(model.commentCount ?? 0))"
+                let praiseCount = model.praiseCount ?? 0
+                currentPriseButton.title = praiseCount > 99 ? "99+" : "\(praiseCount)"
+            }
+            
+        }
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.black
         addSubview(minePriseButton)
         addSubview(commentButton)
         addSubview(currentPriseButton)
-        addSubview(moreActionButton)
+        
         
         minePriseButton.snp.makeConstraints { (make) in
             make.left.equalTo(14)
@@ -30,44 +40,35 @@ class YXSPhotoPreviewFooterView: UIView {
             make.height.equalTo(22)
         }
         
-        currentPriseButton.snp.makeConstraints { (make) in
-            make.right.equalTo(-56)
-            make.centerY.equalTo(minePriseButton)
-            make.height.equalTo(22)
+
+        if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
+            currentPriseButton.snp.makeConstraints { (make) in
+                make.right.equalTo(-56)
+                make.centerY.equalTo(minePriseButton)
+                make.height.equalTo(22)
+            }
+            addSubview(moreActionButton)
+            moreActionButton.snp.makeConstraints { (make) in
+                make.right.equalTo(-4.5)
+                make.centerY.equalTo(minePriseButton)
+                make.width.height.equalTo(42)
+            }
+        }else{
+            currentPriseButton.snp.makeConstraints { (make) in
+                make.right.equalTo(-14)
+                make.centerY.equalTo(minePriseButton)
+                make.height.equalTo(22)
+            }
         }
         
-        moreActionButton.snp.makeConstraints { (make) in
-            make.right.equalTo(-4.5)
-            make.centerY.equalTo(minePriseButton)
-            make.width.height.equalTo(42)
-        }
-        
-//        64 +
+        //        64 +
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setModel(model: YXSPhotoAlbumsPraiseModel){
-        self.model = model
-        minePriseButton.isSelected = model.isPraise == 1
-        commentButton.title = "评论\(model.commentList?.count ?? 0)"
-        let praiseCount = model.praiseCount ?? 0
-        currentPriseButton.title = praiseCount > 99 ? "99+" : "\(praiseCount)"
-    }
-    
     var cellBlock: ((_ isComment: Bool)->())?
-    
-    @objc func minePriseButtonClick(){
-        if model != nil{
-            let isCanclePraise = (model.isPraise ?? 0 ) == 1
-            model.isPraise =  isCanclePraise ? 0 : 1
-            model.praiseCount = isCanclePraise ? (model.praiseCount ?? 0) - 1 : (model.praiseCount ?? 0) + 1
-            cellBlock?(false)
-        }
-    }
-    
     
     // MARK: - LazyLoad
     lazy var minePriseButton: YXSCustomImageControl = {
@@ -80,6 +81,7 @@ class YXSPhotoPreviewFooterView: UIView {
         minePriseButton.setImage(UIImage.init(named: "yxs_photo_praise_normal"), for: .normal)
         minePriseButton.setImage(UIImage.init(named: "yxs_photo_praise_select"), for: .selected)
         minePriseButton.isSelected = false
+        minePriseButton.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return minePriseButton
     }()
     
@@ -89,6 +91,7 @@ class YXSPhotoPreviewFooterView: UIView {
         commentButton.title = "评论"
         commentButton.font = UIFont.systemFont(ofSize: 16)
         commentButton.locailImage = "yxs_photo_comment"
+        commentButton.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return commentButton
     }()
     
@@ -98,12 +101,14 @@ class YXSPhotoPreviewFooterView: UIView {
         currentPriseButton.title = "0"
         currentPriseButton.font = UIFont.systemFont(ofSize: 16)
         currentPriseButton.locailImage = "yxs_photo_praise_normal"
+        currentPriseButton.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return currentPriseButton
     }()
     
     lazy var moreActionButton: UIButton = {
         let button = UIButton.init()
         button.setImage(UIImage.init(named: "yxs_photo_more"), for: .normal)
+        button.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return button
     }()
 }

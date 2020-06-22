@@ -187,6 +187,12 @@ class YXSGlobalJumpManager: NSObject {
             visibleVC?.navigationController?.pushViewController(vc)
             hasJumpEnd = true
             break
+        case 7:
+            ///班级相册
+            let vc = YXSPhotoAlbumDetialListController(classId: classId, albumsId: model.serviceId ?? 0)
+            let visibleVC = fromViewControllter ?? getVisibleVC(inTabBarController: tabBar, index: 0)
+            visibleVC?.navigationController?.pushViewController(vc)
+            hasJumpEnd = true
         case 666:
             //                            getVisibleVC(inTabBarController: tabBar, index: 2)
             //                            hasJumpEnd = true

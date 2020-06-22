@@ -48,7 +48,23 @@ extension UIView {
         case .notice:
             UIUtil.currentNav().pushViewController(YXSNoticeListController(classId: classId,childId: childId))
         case .photo:
-            UIUtil.currentNav().pushViewController(YXSPhotoClassListController())
+            if YXSPersonDataModel.sharePerson.personRole == .PARENT{
+                let vc = YXSPhotoClassPhotoAlbumListController(classId: classId ?? 0)
+                UIUtil.currentNav().pushViewController(vc)
+            }else{
+                var currentClassId: Int? = classId
+                if yxs_user.gradeIds!.count == 1{
+                    currentClassId = yxs_user.gradeIds?.first
+                }
+                if let currentClassId = currentClassId{
+                    let vc = YXSPhotoClassPhotoAlbumListController(classId: currentClassId)
+                    UIUtil.currentNav().pushViewController(vc)
+                }else{
+                    let vc = YXSPhotoClassListController()
+                    UIUtil.currentNav().pushViewController(vc)
+                }
+                
+            }
         case .score:
             
             UIUtil.currentNav().pushViewController(YXSScoreListController(classId: classId ?? 0,childId: childId))

@@ -20,8 +20,8 @@ class YXSPhotoEditAlbumController: YXSEditAlbumBaseController {
         super.init(classId: albumModel.classId ?? 0)
     }
     required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+        fatalError("init(coder:) has not been implemented")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "编辑相册"
@@ -96,20 +96,24 @@ class YXSPhotoEditAlbumController: YXSEditAlbumBaseController {
     }
     
     @objc func deleteClick(){
-        MBProgressHUD.yxs_showLoading()
-        YXSEducationAlbumDeleteRequest.init(id: albumModel.id ?? 0, classId: albumModel.classId ?? 0).request({ (result) in
-            MBProgressHUD.yxs_showMessage(message: "删除成功")
-            self.navigationController?.yxs_existViewController(existClass: YXSPhotoClassPhotoAlbumListController.self, complete: { [weak self](vc) in
-                guard let weakSelf = self else {return}
-                vc.removeAlbum(albumModel: weakSelf.albumModel)
-                weakSelf.navigationController?.yxs_existViewController(existClass: YXSPhotoClassListController.self, complete: { (listVc) in
-                    listVc.yxs_loadData()
+        YXSCommonAlertView.showAlert(title: "提示",message:  "确定删除相册么？", rightClick: {
+            [weak self] in
+            guard let strongSelf = self else { return }
+            MBProgressHUD.yxs_showLoading()
+            YXSEducationAlbumDeleteRequest.init(id: strongSelf.albumModel.id ?? 0, classId: strongSelf.albumModel.classId ?? 0).request({ (result) in
+                MBProgressHUD.yxs_showMessage(message: "删除成功")
+                strongSelf.navigationController?.yxs_existViewController(existClass: YXSPhotoClassPhotoAlbumListController.self, complete: { (vc) in
+                    vc.removeAlbum(albumModel: strongSelf.albumModel)
+                    strongSelf.navigationController?.yxs_existViewController(existClass: YXSPhotoClassListController.self, complete: { (listVc) in
+                        listVc.yxs_loadData()
+                    })
+                    strongSelf.navigationController?.popToViewController(vc, animated: true)
                 })
-                weakSelf.navigationController?.popToViewController(vc, animated: true)
-            })
-
-        }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
-        }
+                
+            }) { (msg, code) in
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        })
+        
     }
 }

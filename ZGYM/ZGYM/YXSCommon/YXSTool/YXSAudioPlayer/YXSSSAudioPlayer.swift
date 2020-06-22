@@ -20,52 +20,36 @@ class YXSSSAudioPlayer: NSObject {
     func playMessageSoundEffect() {
         let str = Bundle.main.path(forResource: "message", ofType: "wav")
         let url = URL(fileURLWithPath: str ?? "")
-        play(url: url)
+        if avplayer == nil{
+            play(url: url)
+        }
     }
     
-//    - (void)playPassAudio {
-//        //获得本地文件路径
-//        NSString * str = [[NSBundle mainBundle] pathForResource:@"pass" ofType:@"mp3"];
-//        //将本地文件的路径转成url；
-//        NSURL * urlStr = [NSURL fileURLWithPath:str];
-//        [[QSPlayerManager shareManager] playWithURL:urlStr];
-//    }
-    
-    var player: AVPlayer?
-    var playerItem: AVPlayerItem?
     var sourceUrl: URL?
-    var isPause: Bool = false
+    var isPause: Bool {
+        get{
+            return avplayer?.playerStatus == .paused
+        }
+    }
     var isFinish: Bool = false
     
     var finish: (() -> ())?
+    
+    var avplayer: YXSAVPlayer?
     
     ///仅仅播放音频
     @objc public func play(url:URL, loop: Int = 1,finish: (() -> ())? = nil){
         self.sourceUrl = url
         self.finish = finish
         self.loop = loop
+        isFinish = false
         
-        do {
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch let error as NSError {
-            SLLog(error.localizedDescription)
-            return
-        }
-        
-         playerItem = AVPlayerItem(url: url)
-         //如果要切换视频需要调AVPlayer的replaceCurrentItemWithPlayerItem:方法
-         if player?.currentItem != nil {
-             player?.replaceCurrentItem(with: playerItem)
-             
-         } else {
-             player = AVPlayer(playerItem: playerItem)
-         }
-         player?.play()
-         isPause = false
-         isFinish = false
-         
-         NotificationCenter.default.addObserver(self, selector: #selector(videoPlayEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
+        
+        avplayer = YXSAVPlayer()
+        avplayer?.play(url: url)
+        avplayer?.avPlayerDelegate = self
+        
     }
     
     ///播放音频并缓存
@@ -81,47 +65,29 @@ class YXSSSAudioPlayer: NSObject {
         }
         
         play(url: localUrl, loop: loop, finish: finish)
+        
+        
     }
     
     /// 停止播放
     public func stopVoice(){
-        player?.pause()
-        player = nil
+        avplayer?.stopPlayer()
+        avplayer = nil
         isFinish = true
-        
         YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
     }
     
     
     /// 暂停播放
     public func pauseVoice(){
-        player?.pause()
-        isPause = true
+        avplayer?.pausePlayer()
         YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
     }
     
     /// 恢复
     @objc func resumeVoice() {
-        if let player = player{
-            if isFinish {
-                player.seek(to: CMTimeMake(value: 0, timescale: 1))
-                isFinish = false
-            }
-            player.play()
-            isPause = false
-            YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
-        }
-    }
-    
-    @objc func videoPlayEnd(notification: Notification){
-        if player != nil{
-            try? AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
-            isFinish = true
-            isPause = true
-            finish?()
-            player = nil
-            YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
-        }
+        avplayer?.resumePlayer()
+        YXSXMPlayerGlobalControlTool.share.pauseCompetitionPlayer()
     }
         
     // MARK: - Setter
@@ -131,5 +97,15 @@ class YXSSSAudioPlayer: NSObject {
         }
     }
 
+}
 
+extension YXSSSAudioPlayer: YXSAVPlayerDelegate{
+    func avPlayerPlayEnd() {
+        if avplayer != nil{
+            isFinish = true
+            finish?()
+            avplayer = nil
+            YXSXMPlayerGlobalControlTool.share.resumeCompetitionPlayer()
+        }
+    }
 }

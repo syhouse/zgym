@@ -42,25 +42,38 @@ class YXSProfileChildrenViewController: YXSProfileViewController {
         MBProgressHUD.yxs_showLoading()
         var dic = parameter
         dic["id"] = String(model?.id ?? 0)
-        YXSEducationChildrenUpdateRequest(parameter: dic).request({ [weak self](json) in
-            guard let weakSelf = self else {return}
+        YXSEducationChildrenUpdateRequest(parameter: dic).request({ (json) in
             MBProgressHUD.yxs_hideHUD()
             completionHandler()
-            weakSelf.tableView.reloadData()
-            weakSelf.navigationController?.yxs_existViewController(existClass: YXSProfileChildrenViewController(), complete: { (isExsit, vc) in
+            self.tableView.reloadData()
+            self.navigationController?.yxs_existViewController(existClass: YXSProfileChildrenViewController(), complete: { (isExsit, vc) in
                 if vc != nil {
                     vc!.tableView.reloadData()
                 }
             })
             
-            weakSelf.navigationController?.yxs_existViewController(existClass: YXSMineChildrenListViewController(), complete: { (isExsit, vc) in
+
+            if let avatar = dic["avatar"] {
+                if let childs = self.yxs_user.children{
+                    for child in childs{
+                        if child.id == self.model?.id{
+                            child.avatar = avatar
+                            break
+                        }
+                    }
+                }
+            }
+            
+            self.navigationController?.yxs_existViewController(existClass: YXSMineChildrenListViewController(), complete: { (isExsit, vc) in
                 if vc != nil {
                     vc!.tableView.reloadData()
                 }
             })
+            
+            
             
             MBProgressHUD.yxs_showMessage(message: "修改成功")
-            weakSelf.sucess?(weakSelf.model?.studentId)
+            self.sucess?(self.model?.studentId)
             
             NotificationCenter.default.post(name: NSNotification.Name(kMineChangeProfileNotification), object: nil)
             
@@ -248,6 +261,15 @@ class YXSProfileChildrenViewController: YXSProfileViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let sectionArr = dataSource()[indexPath.section] as! Array<Any>
+        let dic = sectionArr[indexPath.row] as! [String:String]
+        
+        if let action = dic["action"] {
+            let sel: Selector = NSSelectorFromString(action)
+            self.perform(sel)
+        }
+    }
     
     override func dataSource() -> Array<Any> {
         

@@ -37,6 +37,49 @@ private class YXSEducationUserDetailRequest: YXSBaseRequset {
         path = userDetail
     }
 }
+///首页瀑布流撤回model
+class YXSRecallModel: NSObject{
+    var serviceId: Int?
+    var createTime: String?
+    ///瀑布流id
+    var waterfallId: Int?
+    var classId: Int?
+    
+    var homeType: YXSHomeType = .homework
+    
+    static func initWithHomeModel(homeModel: YXSHomeListModel) -> YXSRecallModel{
+        let model = YXSRecallModel.init(serviceId: homeModel.serviceId, createTime: homeModel.createTime, homeType: homeModel.type)
+        model.classId = homeModel.classId
+        model.waterfallId = homeModel.id
+        return model
+    }
+    
+    
+    init(serviceId: Int?, createTime: String?, homeType: YXSHomeType) {
+        self.serviceId =  serviceId
+        self.createTime =  createTime
+        self.homeType = homeType
+    }
+    ///相册初始化
+    convenience init(waterfallId: Int?, createTime: String?, classId: Int?) {
+        self.init(serviceId: nil, createTime: createTime, homeType: .photo)
+        self.waterfallId = waterfallId
+        self.classId = classId
+    }
+}
+
+///首页红点model
+class YXSHomeRedModel: NSObject{
+    var serviceId: Int?
+    var waterfallId: Int?
+    var childrenId: Int?
+    /// waterfallId (目前只有相册老师撤销消除红点)必需传这个参数
+    init(serviceId: Int?, childrenId: Int?, waterfallId: Int? = nil) {
+        self.serviceId =  serviceId
+        self.waterfallId = waterfallId
+        self.childrenId =  childrenId
+    }
+}
 
 class UIUtil: NSObject {
     
@@ -391,7 +434,7 @@ extension UIUtil{
             isEnd = false
         }
         
-        UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: model.childrenId))
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER || model.isRead == 1 || isEnd{
             return
         }
@@ -416,40 +459,30 @@ extension UIUtil{
         }
     }
     
-    
     /// 撤销
     /// - Parameters:
-    ///   - model: homeModel
+    ///   - model: 撤回model
     ///   - positon: 操作位置
     ///   - complete: 撤销成功block
-    static func yxs_loadRecallData(_ model: YXSHomeListModel,positon: YXSOperationPosition = .home, complete:(() -> ())?){
-        yxs_loadRecallData(model.type, id: model.serviceId ?? 0, createTime: model.createTime ?? "",positon: positon, complete: complete)
-    }
-    
-    
-    /// 撤销
-    /// - Parameters:
-    ///   - type: 类型
-    ///   - id: 业务id
-    ///   - createTime: 创建时间
-    ///   - positon: 操作位置
-    ///   - complete: 撤销成功block
-    static func yxs_loadRecallData(_ type: YXSHomeType,id: Int = 0,createTime: String = "",positon: YXSOperationPosition = .home, complete:(() -> ())?){
-        let showTitle = type == YXSHomeType.friendCicle ? "是否撤销该条优成长？" : "你是否确认撤销？"
-        let sucessMessage = type == YXSHomeType.friendCicle ? "删除成功" : "撤销成功"
+    static func yxs_loadRecallData(_ model: YXSRecallModel,positon: YXSOperationPosition = .home, complete:(() -> ())?){
+        let showTitle = model.homeType == YXSHomeType.friendCicle ? "是否撤销该条优成长？" : "你是否确认撤销？"
+        let sucessMessage = model.homeType == YXSHomeType.friendCicle ? "删除成功" : "撤销成功"
         YXSCommonAlertView.showAlert(title: showTitle, rightClick: {
             var requset: YXSBaseRequset!
-            switch type {
+            switch model.homeType {
             case .homework:
-                requset = YXSEducationHomeworkCancelRequest.init( homeworkId: id,homeworkCreateTime: createTime)
+                requset = YXSEducationHomeworkCancelRequest.init( homeworkId: model.serviceId ?? 0,homeworkCreateTime: model.createTime ?? "")
             case .notice:
-                requset = YXSEducationNoticeCancelRequest.init( noticeId: id,noticeCreateTime: createTime)
+                requset = YXSEducationNoticeCancelRequest.init( noticeId: model.serviceId ?? 0,noticeCreateTime: model.createTime ?? "")
             case .solitaire:
-                requset = YXSEducationCensusTeacherUndoRequest.init(censusId: id)
+                requset = YXSEducationCensusTeacherUndoRequest.init(censusId: model.serviceId ?? 0)
             case .punchCard:
-                requset = YXSEducationClockInTeacherUndoRequest.init(clockInId: id)
+                requset = YXSEducationClockInTeacherUndoRequest.init(clockInId: model.serviceId ?? 0)
             case .friendCicle:
-                requset = YXSEducationClassCircleCancelRequest.init(classCircleId: id)
+                requset = YXSEducationClassCircleCancelRequest.init(classCircleId: model.serviceId ?? 0)
+            case .photo:
+                requset = YXSEducationAlbumCancelResourceRequest.init(classId: model.classId ?? 0, waterfallId: model.waterfallId ?? 0, waterfallCreateTime: model.createTime ?? "")
+            
             default:
                 break
             }
@@ -460,20 +493,20 @@ extension UIUtil{
                 
                 //                UIUtil.reduceHomeRed(serviceId: id)
                 if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
-                    NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kHomeAgendaReducNotification), object: [kEventKey: type])
+                    NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kHomeAgendaReducNotification), object: [kEventKey: model.homeType])
                 }
                 switch positon {
                 case .singleHome:
-                    NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationRecallInSingleClassHomeNotification), object: [kNotificationIdKey: id])
+                    NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationRecallInSingleClassHomeNotification), object: [kNotificationModelKey: model])
                 case .list:
-                    NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationRecallInItemListNotification), object: [kNotificationIdKey: id])
+                    NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationRecallInItemListNotification), object: [kNotificationModelKey: model])
                 case .friendCircle:
-                    if type == .friendCicle && YXSPersonDataModel.sharePerson.personRole == .TEACHER && YXSPersonDataModel.sharePerson.personStage == .KINDERGARTEN{
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationRecallInFriendCirleNotification), object: [kNotificationIdKey: id])
+                    if model.homeType == .friendCicle && YXSPersonDataModel.sharePerson.personRole == .TEACHER && YXSPersonDataModel.sharePerson.personStage == .KINDERGARTEN{
+                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationRecallInFriendCirleNotification), object: [kNotificationModelKey: model])
                     }
                 case .home:
-                    if type == .friendCicle && YXSPersonDataModel.sharePerson.personRole == .TEACHER && YXSPersonDataModel.sharePerson.personStage == .KINDERGARTEN{
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationRecallInHomeNotification), object: [kNotificationIdKey: id])
+                    if model.homeType == .friendCicle && YXSPersonDataModel.sharePerson.personRole == .TEACHER && YXSPersonDataModel.sharePerson.personStage == .KINDERGARTEN{
+                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kOperationRecallInHomeNotification), object: [kNotificationModelKey: model])
                     }
                 default:
                     break
@@ -593,12 +626,13 @@ extension UIUtil{
     
     
     /// 去掉首页红点
-    /// - Parameter serviceId: serviceId 
-    static func yxs_reduceHomeRed(serviceId: Int, childId: Int){
+    /// - Parameter serviceId: serviceId
+    /// - Parameter waterfallId: 瀑布流id
+    static func yxs_reduceHomeRed(_ model: YXSHomeRedModel){
         if YXSPersonDataModel.sharePerson.personRole == .PARENT{
-            if YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: serviceId,childId: childId){
-                YXSLocalMessageHelper.shareHelper.yxs_removeLocalMessage(serviceId: serviceId, childId: childId)
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kHomeCellReducNotification), object: serviceId)
+            if YXSLocalMessageHelper.shareHelper.yxs_isLocalMessage(serviceId: model.serviceId ?? 0,childId: model.childrenId ?? 0, waterfallId: model.waterfallId){
+                YXSLocalMessageHelper.shareHelper.yxs_removeLocalMessage(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0, waterfallId: model.waterfallId)
+                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kHomeCellReducNotification), object: [kNotificationModelKey: model])
             }
         }
     }

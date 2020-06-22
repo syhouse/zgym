@@ -120,7 +120,7 @@ class YXSHomeController: YXSHomeBaseController {
     }
     ///撤销
     override func yxs_homeyxs_loadRecallData(model: YXSHomeListModel, sucess: (() -> ())? = nil) {
-        UIUtil.yxs_loadRecallData(model, positon: .home, complete: sucess)
+        UIUtil.yxs_loadRecallData(YXSRecallModel.initWithHomeModel(homeModel: model), positon: .home, complete: sucess)
     }
     
     override func yxs_refreshData() {
@@ -571,7 +571,7 @@ extension YXSHomeController{
                     if let children = self.yxs_user.children{
                         for child in children{
                             if child.grade?.id == model.classId{
-                                UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: child.id ?? 0)
+                                UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: child.id ?? 0, waterfallId: model.callbackRequestParameter?.waterfallId))
                             }
                         }
                     }
@@ -595,19 +595,33 @@ extension YXSHomeController{
     
     @objc func updateListForReduceHomeCellRed(_ notification:Notification){
         DispatchQueue.global().async {
-            if let serviceId = notification.object as? Int{
+            if let homeRedModel = notification.userInfo?[kNotificationModelKey] as? YXSHomeRedModel{
                 var indexSection = 0
                 var indexRow = 0
                 for (section,sectionModel) in self.yxs_dataSource.enumerated(){
                     for (index,model) in sectionModel.items.enumerated(){
-                        if model.serviceId == serviceId{
-                            indexSection = section
-                            indexRow = index
-                            DispatchQueue.main.async {
-                                self.tableHeaderView.setHeaderModel(self.yxs_weathModel, agendaCount: self.yxs_agendaCount)
-                                self.yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))
+                        if model.childrenId == homeRedModel.childrenId{
+                            if let waterfallId = homeRedModel.waterfallId{
+                                if model.id == waterfallId{
+                                    indexSection = section
+                                       indexRow = index
+                                       DispatchQueue.main.async {
+                                           self.tableHeaderView.setHeaderModel(self.yxs_weathModel, agendaCount: self.yxs_agendaCount)
+                                           self.yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))
+                                       }
+                                       return
+                                }
+                            }else{
+                                if model.serviceId == homeRedModel.serviceId{
+                                    indexSection = section
+                                    indexRow = index
+                                    DispatchQueue.main.async {
+                                        self.tableHeaderView.setHeaderModel(self.yxs_weathModel, agendaCount: self.yxs_agendaCount)
+                                        self.yxs_reloadTableView(IndexPath.init(row: indexRow, section: indexSection))
+                                    }
+                                    return
+                                }
                             }
-                            return
                         }
                     }
                 }

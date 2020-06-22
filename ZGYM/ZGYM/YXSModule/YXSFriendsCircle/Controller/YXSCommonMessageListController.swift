@@ -12,6 +12,8 @@ enum YXSFriendMessageListType {
     case friends
     case punchCard  //打卡
     case homeWork   //作业
+    ///相册
+    case photo
 }
 
 class YXSCommonMessageListController: YXSBaseTableViewController {
@@ -19,8 +21,9 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
     var dataSource = [YXSFriendsMessageModel]()
     var punchCardSource = [YXSPunchCardMessageModel]()
     var homeworkSource = [YXSHomeworkMessageModel]()
+    var photoSource = [YXSAlbumsMessageModel]()
     let type:YXSFriendMessageListType
-
+    
     /// 默认朋友圈消息详情
     init(type: YXSFriendMessageListType = .friends) {
         self.type = type
@@ -55,6 +58,11 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
         self.classId = classId
         self.childId = childId
         self.isMyPublish = isMyPublish
+    }
+    
+    convenience init(photoClassId: Int){
+        self.init(type: .photo)
+        self.classId = photoClassId
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -95,7 +103,6 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
                 self.navigationController?.yxs_existViewController(existClass: YXSPunchCardDetialController.self, complete: { (vc) in
                     vc.messageModel = nil
                 })
-                YXSPersonDataModel.sharePerson.friendsTips = nil
                 self.loadSucess?()
             }) { (msg, code) in
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -108,7 +115,6 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
                 self.dataSource = list
                 self.tableView.reloadData()
                 YXSPersonDataModel.sharePerson.friendsTips = nil
-//                self.yxs_showBadgeOnItem(index: 1, count: 0)
                 self.loadSucess?()
             }) { (msg, code) in
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -124,7 +130,17 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
                     vc.model?.messageAvatar = ""
                     vc.model?.messageUserType = ""
                 })
-                YXSPersonDataModel.sharePerson.friendsTips = nil
+                self.loadSucess?()
+            }) { (msg, code) in
+                MBProgressHUD.hide(for: self.view, animated: true)
+                //            self.endingRefresh()
+                MBProgressHUD.yxs_showMessage(message: msg)
+            }
+        case .photo:
+            YXSEducationQueryAlbumMessageRequest(classId: classId ?? 0).requestCollection({ (list: [YXSAlbumsMessageModel]) in
+                MBProgressHUD.hide(for: self.view, animated: true)
+                self.photoSource = list
+                self.tableView.reloadData()
                 self.loadSucess?()
             }) { (msg, code) in
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -155,6 +171,8 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
             return dataSource.count
         case .homeWork:
             return homeworkSource.count
+        case .photo:
+            return photoSource.count
         }
     }
     
@@ -168,6 +186,8 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
             cell.setCellModel(dataSource[indexPath.row])
         case .homeWork:
             cell.setCellModel(homeworkSource[indexPath.row])
+        case .photo:
+            cell.setCellModel(photoSource[indexPath.row])
         }
         return cell
     }
@@ -185,6 +205,24 @@ class YXSCommonMessageListController: YXSBaseTableViewController {
         case .homeWork:
             let model = homeworkSource[indexPath.row]
             vc = YXSHomeworkMessageVC.init(deModel: self.deModel!, model: self.hmModel!, messageModel: model)
+        case .photo:
+            let model = photoSource[indexPath.row]
+            let detiamModel = YXSPhotoAlbumsDetailListModel.init(JSON: ["":""])!
+            detiamModel.albumId = model.albumId
+            
+            detiamModel.id = model.resourceId
+            detiamModel.resourceType = 0
+            detiamModel.resourceUrl = model.attachment
+            let preview = YXSPhotoPreviewController(dataSource: [detiamModel], classId: model.classId ?? 0, albumsId: model.albumId ?? 0)
+            preview.currentIndex = 0
+            preview.updateCoverBlock = {
+                [weak self] (cover) in
+                guard let strongSelf = self else { return }
+                strongSelf.navigationController?.yxs_existViewController(existClass: YXSPhotoClassPhotoAlbumListController.self, complete: { (vc) in
+                    vc.updateCover(cover: cover, albumId: model.albumId ?? 0)
+                })
+            }
+            vc = preview
         }
         navigationController?.pushViewController(vc)
     }

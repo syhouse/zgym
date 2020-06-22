@@ -307,6 +307,9 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                 return .friendCicle
             case 6:
                 return .classstart
+            case 7:
+                return .photo
+                
             case 9:
                 return .periodical
             default:
@@ -459,6 +462,11 @@ class YXSHomeListModel : NSObject, NSCoding, Mappable, NSCopying{
                     return friendsModel.friendHeight + 30
                 }
                 return 0
+            }
+            
+            //相册
+            if serviceType == 7{
+                return 142 + (SCREEN_WIDTH - 30 - 30 - 2*5)/3.0
             }
             
             /// 成绩

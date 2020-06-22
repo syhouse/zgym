@@ -16,7 +16,7 @@ class YXSRemoteControlInfoHelper: NSObject {
     }
     
     static var currentTime: UInt{
-        return UInt(YXSAVPlayer.share.curruntTime)
+        return UInt(YXSMusicPlayerManager.shareManager.avPlayer.getCurruntTime())
     }
     
     static var totalTime: Int{

@@ -109,6 +109,8 @@ class SLUploadDataSourceModel: NSObject{
     ///上传资源类型
     let type: SourceNameType
     
+    let fileName: String
+    
     ///阿里云返回的url
     var aliYunUploadBackUrl: String?
     
@@ -116,10 +118,11 @@ class SLUploadDataSourceModel: NSObject{
     var index: Int = 0
     
     
-    init(data: Data?, path: String, type: SourceNameType) {
+    init(data: Data?, path: String, type: SourceNameType, fileName: String) {
         self.data = data
         self.path = path
         self.type = type
+        self.fileName = fileName
         super.init()
     }
 }
@@ -208,7 +211,7 @@ class YXSUploadSourceHelper: NSObject {
                         model.getAssetImage { (assetImage) in
                             if let assetImage = assetImage{
                                 let data = YXSCompressionImageHelper.yxs_compressImage(image: assetImage, maxLength: imageMax)
-                                let uploadSourceModel = SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type)
+                                let uploadSourceModel = SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type, fileName: uploadModel.fileName)
                                 uploadSourceModel.index = index
                                 newUploadModels.append(uploadSourceModel)
                             }
@@ -235,7 +238,7 @@ class YXSUploadSourceHelper: NSObject {
                             HMVideoCompression().compressVideo(exportSession) { (data) in
                                 if data.count > 0 {//做判断,判断是否转化成功
                                     //进行视频上传
-                                    let uploadSourceModel = SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type)
+                                    let uploadSourceModel = SLUploadDataSourceModel.init(data: data, path: uploadModel.path, type: uploadModel.type, fileName: uploadModel.fileName)
                                     uploadSourceModel.index = index
                                     newUploadModels.append(uploadSourceModel)
                                 }else{
@@ -250,7 +253,7 @@ class YXSUploadSourceHelper: NSObject {
             case .voice:
                 if let audioModel = (uploadModel.model as? SLAudioModel){
                     let url = URL.init(fileURLWithPath: audioModel.path ?? "")
-                    let uploadSourceModel = SLUploadDataSourceModel.init(data: try? Data.init(contentsOf: url), path: uploadModel.path, type: uploadModel.type)
+                    let uploadSourceModel = SLUploadDataSourceModel.init(data: try? Data.init(contentsOf: url), path: uploadModel.path, type: uploadModel.type, fileName: uploadModel.fileName)
                     uploadSourceModel.index = index
                     newUploadModels.append(uploadSourceModel)
                 }

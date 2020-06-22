@@ -59,6 +59,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
         tableView.register(SLSolitaireListHomeCell.self, forCellReuseIdentifier: "SLSolitaireListHomeCell")
         tableView.register(YXSHomePeriodicalCell.self, forCellReuseIdentifier: "YXSHomePeriodicalCell")
         tableView.register(YXSScoreListHomeCell.self, forCellReuseIdentifier: "YXSScoreListHomeCell")
+        tableView.register(YXSHomePhotoCell.self, forCellReuseIdentifier: "YXSHomePhotoCell")
         tableView.tableFooterView = UIView(frame: CGRect.init(x: 0, y: 0, width: self.view.width, height: 0.01))
         //老师展示发布
         if YXSPersonDataModel.sharePerson.personRole == .TEACHER{
@@ -181,7 +182,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             YXSEducationNoticeCustodianCommitReceiptRequest(noticeId: model.serviceId ?? 0, childrenId: model.childrenId ?? 0, noticeCreateTime: model.createTime ?? "").request({ (json) in
                 NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: kParentSubmitSucessNotification), object: [kNotificationModelKey: model])
                 UIUtil.yxs_reduceAgenda(serviceId: model.serviceId ?? 0, info: [kEventKey: YXSHomeType.notice])
-                UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: model.childrenId ?? 0)
+                UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: model.childrenId ?? 0))
                 MBProgressHUD.yxs_hideHUD()
                 MBProgressHUD.yxs_showMessage(message: "提交成功", inView: self.navigationController?.view)
                 model.commitState = 2
@@ -199,6 +200,9 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                     strongSelf.yxs_refreshData()
                 }
             })
+        case .goPhotoLists:
+            let vc = YXSPhotoAlbumDetialListController(classId: model.classId ?? 0, albumsId: model.serviceId ?? 0)
+            self.navigationController?.pushViewController(vc)
             break
         default:
             break
@@ -282,7 +286,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
             navigationController?.pushViewController(vc)
         case .classstart:
             if let childModel = childModel{
-                UIUtil.yxs_reduceHomeRed(serviceId: model.serviceId ?? 0, childId: childModel.id ?? 0)
+                UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: model.serviceId, childrenId: childModel.id))
                 UIUtil.currentNav().pushViewController(YXSClassStarPartentDetialController.init(childrenModel: childModel, startTime: model.startTime,endTime: model.endTime))
             }
         case .friendCicle:
@@ -330,6 +334,8 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                     navigationController?.pushViewController(detail)
                 }
             }
+        case .photo:
+            yxs_dealCellEvent(.goPhotoLists, indexPath: indexPath)
         default:
             break
         }
@@ -382,7 +388,7 @@ class YXSHomeBaseController: YXSBaseTableViewController{
     ///点击头像去个人详情
     private func yxs_goToUserInfoController(_ indexPath: IndexPath){
         let friendCircleModel = yxs_dataSource[indexPath.section].items[indexPath.row].friendCircleModel
-        UIUtil.yxs_reduceHomeRed(serviceId: friendCircleModel?.classCircleId ?? 0, childId: friendCircleModel?.childrenId ?? 0)
+        UIUtil.yxs_reduceHomeRed(YXSHomeRedModel(serviceId: friendCircleModel?.classCircleId, childrenId: friendCircleModel?.childrenId))
         if let model = friendCircleModel{
             let vc = YXSFriendsCircleInfoController.init(userId:  model.userIdPublisher ?? 0, childId: model.childrenId ?? 0, type: model.typePublisher ?? "")
             self.navigationController?.pushViewController(vc)
@@ -474,6 +480,8 @@ class YXSHomeBaseController: YXSBaseTableViewController{
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomePeriodicalCell") as? YXSHomeBaseCell
                 } else if model.type == .score {
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSScoreListHomeCell") as? YXSHomeBaseCell
+                }else if  model.type == .photo{
+                    cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomePhotoCell") as? YXSHomePhotoCell
                 } else {
                     cell = tableView.dequeueReusableCell(withIdentifier: "YXSHomeBaseCell") as? YXSHomeBaseCell
                 }
@@ -606,14 +614,21 @@ extension YXSHomeBaseController{
     ///老师撤销刷新
     @objc func yxs_updateListForRecall(_ notification:Notification){
         let userInfo = notification.object as? [String: Any]
-        if let serviceId = userInfo?[kNotificationIdKey] as? Int{
+        if let recallModel = userInfo?[kNotificationModelKey] as? YXSRecallModel{
             for (section,sectionModel) in yxs_dataSource.enumerated(){
                 for (row,model) in sectionModel.items.enumerated(){
-                    if model.serviceId == serviceId{
+                    if recallModel.homeType == .photo && model.id == recallModel.waterfallId{
                         yxs_dataSource[section].items.remove(at: row)
                         tableView.reloadData()
                         break
+                    }else{
+                        if model.serviceId == recallModel.serviceId{
+                            yxs_dataSource[section].items.remove(at: row)
+                            tableView.reloadData()
+                            break
+                        }
                     }
+                    
                 }
             }
         }

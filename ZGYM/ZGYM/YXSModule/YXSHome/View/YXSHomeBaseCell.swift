@@ -27,6 +27,9 @@ enum YXSHomeType: Int{
     case score
     ///优期刊
     case periodical
+    
+    ///相册
+    case photo
 }
 
 public enum YXSHomeCellEvent: Int{
@@ -52,6 +55,8 @@ public enum YXSHomeCellEvent: Int{
     case noticeReceipt
     ///取消置顶
     case cancelStick
+    ///push相册资源列表
+    case goPhotoLists
 }
 
 
@@ -328,6 +333,7 @@ class YXSHomeBaseCell: UITableViewCell {
         let button = YXSButton()
         button.setImage(UIImage.init(named: "recall"), for: .normal)
         button.addTarget(self, action: #selector(yxs_recallClick), for: .touchUpInside)
+        button.yxs_touchInsets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
         return button
     }()
     

@@ -278,12 +278,6 @@ class YXSMineViewController: YXSBaseTableViewController{
         self.navigationController?.pushViewController(vc)
     }
     
-    /// 班级相册
-    @objc func classAlbumClick() {
-        let vc = YXSPhotoClassListController()
-        self.navigationController?.pushViewController(vc)
-    }
-    
     // MARK: - loadData
     func loadUserData(){
         UIUtil.yxs_loadUserDetailRequest({ [weak self](userModel: YXSEducationUserModel) in
@@ -422,10 +416,6 @@ class YXSMineViewController: YXSBaseTableViewController{
         var section4 = [["title":"常见问题", "imgName":"yxs_mine_question", "action":"questionClick"],["title":"推荐优学业", "imgName":"yxs_mine_recommend", "action":"recommendClick"],["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]
         arr.append(section4)
             
-        #if DEBUG
-        var section5 = [["title":"班级相册", "imgName":"yxs_mine_collect", "action":"classAlbumClick"]]
-        arr.append(section5)
-        #endif
         return arr
         
 //        var section4 = [["title":"设置", "imgName":"yxs_mine_setting", "action":"settingClick"]]

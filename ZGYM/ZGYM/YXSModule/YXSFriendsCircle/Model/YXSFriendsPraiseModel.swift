@@ -10,23 +10,23 @@ import UIKit
 import ObjectMapper
 
 class YXSFriendsPraiseModel : NSObject, NSCoding, Mappable{
-
+    
     var classCircleId : Int?
-    var createTime : String?
+    var createTime : Int?
     var id : Int?
     var userId : Int?
     var userName : String?
     var userType : String?
     
-    
+    var avatar: String?
     /// 是我当前id 身份操作
     var isMyOperation: Bool{
         return userId == yxs_user.id && userType == yxs_user.type
     }
-
+    
     required init?(map: Map){}
     private override init(){}
-
+    
     func mapping(map: Map)
     {
         classCircleId <- map["classCircleId"]
@@ -35,28 +35,30 @@ class YXSFriendsPraiseModel : NSObject, NSCoding, Mappable{
         userId <- map["userId"]
         userName <- map["userName"]
         userType <- map["userType"]
+        avatar <- map["avatar"]
         
     }
-
+    
     /**
-    * NSCoding required initializer.
-    * Fills the data from the passed decoder
-    */
+     * NSCoding required initializer.
+     * Fills the data from the passed decoder
+     */
     @objc required init(coder aDecoder: NSCoder)
     {
-         classCircleId = aDecoder.decodeObject(forKey: "classCircleId") as? Int
-         createTime = aDecoder.decodeObject(forKey: "createTime") as? String
-         id = aDecoder.decodeObject(forKey: "id") as? Int
-         userId = aDecoder.decodeObject(forKey: "userId") as? Int
-         userName = aDecoder.decodeObject(forKey: "userName") as? String
-         userType = aDecoder.decodeObject(forKey: "userType") as? String
-
+        classCircleId = aDecoder.decodeObject(forKey: "classCircleId") as? Int
+        createTime = aDecoder.decodeObject(forKey: "createTime") as? Int
+        id = aDecoder.decodeObject(forKey: "id") as? Int
+        userId = aDecoder.decodeObject(forKey: "userId") as? Int
+        userName = aDecoder.decodeObject(forKey: "userName") as? String
+        userType = aDecoder.decodeObject(forKey: "userType") as? String
+        avatar = aDecoder.decodeObject(forKey: "avatar") as? String
+        
     }
-
+    
     /**
-    * NSCoding required method.
-    * Encodes mode properties into the decoder
-    */
+     * NSCoding required method.
+     * Encodes mode properties into the decoder
+     */
     @objc func encode(with aCoder: NSCoder)
     {
         if classCircleId != nil{
@@ -77,7 +79,9 @@ class YXSFriendsPraiseModel : NSObject, NSCoding, Mappable{
         if userType != nil{
             aCoder.encode(userType, forKey: "userType")
         }
-
+        if avatar != nil{
+            aCoder.encode(avatar, forKey: "avatar")
+        }
     }
-
+    
 }

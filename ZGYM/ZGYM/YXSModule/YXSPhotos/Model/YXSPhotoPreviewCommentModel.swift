@@ -22,6 +22,10 @@ class YXSPhotoPreviewCommentModel : NSObject, NSCoding, Mappable{
     var userId : Int?
     var userName : String?
     var userType : String?
+    
+    var isMyPublish: Bool{
+        return userId == self.yxs_user.id && userType == self.yxs_user.type
+    }
 
 
     required init?(map: Map){}

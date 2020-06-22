@@ -9,31 +9,52 @@
 import UIKit
 import YBImageBrowser
 import NightNight
+import IQKeyboardManager
 
 /// 查看图片/视频 页面
 class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource, YBImageBrowserDelegate {
-
+    
     var dataSource: [YXSPhotoAlbumsDetailListModel] = [YXSPhotoAlbumsDetailListModel]()
-    var albumModel: YXSPhotoAlbumsModel?
     
     var browserView: YBImageBrowser?
-    var currentPage: Int?
     
-    var updateAlbumModel: ((_ albumModel:  YXSPhotoAlbumsModel)->())?
+    var classId: Int
+    var albumsId: Int
+    
+    var updateCoverBlock: ((_ cover: String)->())?
     
     /// 当前是否展示工具栏
     var iscurrentShowTool: Bool = true
     
+    var isShowingCommentView: Bool = false
+    
     var currentIndex: Int = 0
     
-    init(dataSource: [YXSPhotoAlbumsDetailListModel], albumModel: YXSPhotoAlbumsModel) {
+    var praiseAndComments = [Int: YXSPhotoAlbumsPraiseModel]()
+    
+    init(dataSource: [YXSPhotoAlbumsDetailListModel], classId: Int, albumsId: Int) {
+        self.classId = classId
+        self.albumsId = albumsId
         super.init()
         self.dataSource = dataSource
-        self.albumModel = albumModel
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        IQKeyboardManager.shared().isEnableAutoToolbar = false
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        IQKeyboardManager.shared().isEnableAutoToolbar = true
+        UIApplication.shared.statusBarStyle =  .default
     }
     
     override func viewDidLoad() {
@@ -56,26 +77,26 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         
         let browser = YBImageBrowser()
         // 禁止旋转（但是若当前控制器能旋转，图片浏览器也会跟随，布局可能会错位，这种情况还待处理）
-        browser.supportedOrientations = .portrait
+        //        browser.supportedOrientations = .portrait
         browser.dataSource = self
         browser.delegate = self
-        
-        browser.currentPage = currentPage ?? 0
+        browser.shouldHideStatusBar = false
+        browser.currentPage = currentIndex
         
         // 关闭入场和出场动效
         browser.defaultAnimatedTransition?.showType = .none
         browser.defaultAnimatedTransition?.hideType = .none
-                
+        
         // 删除工具视图（你可能需要自定义的工具视图，那请自己实现吧）
         browser.toolViewHandlers = []
         
         // 由于 self.view 的大小可能会变化，所以需要显式的赋值容器大小
-        let size = CGSize(width: SCREEN_WIDTH, height: SCREEN_HEIGHT - YBIBStatusbarHeight() - 44 - 64)
+        let size = CGSize(width: SCREEN_WIDTH, height: SCREEN_HEIGHT - kSafeTopHeight - 64)
         browser.show(to: contentPanel, containerSize: size)
         self.browserView = browser
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) {
-            self.browserView?.currentPage = self.currentPage ?? 0
+            self.browserView?.currentPage = self.currentIndex
         }
         
         view.addSubview(footerView)
@@ -101,32 +122,17 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     
     // MARK: - Request
     @objc func albumQueryPraiseCommentCountRequest(page: Int) {
-//        YXSEducationAlbumQueryPraiseCommentCountRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0)
+        //        YXSEducationAlbumQueryPraiseCommentCountRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0)
         let model = dataSource[page]
-        YXSEducationAlbumQueryPraiseCommentCountRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0).request({ [weak self](json) in
-            guard let weakSelf = self else {return}
+        YXSEducationAlbumQueryPraiseCommentCountRequest(albumId: albumsId, classId: classId, resourceId: model.id ?? 0).request({ (model: YXSPhotoAlbumsPraiseModel) in
             
-            let praiseCount = json["praiseCount"].intValue
-            let commentCount = json["commentCount"].intValue
-            let praiseStat = json["praiseStat"].boolValue
-            
-            weakSelf.footerView.minePriseButton.isSelected = praiseStat
-            weakSelf.footerView.commentButton.title = "评论(\(commentCount))"
-            weakSelf.footerView.currentPriseButton.title = "\(praiseCount)"
+            self.footerView.model = model
+            self.praiseAndComments[page] = model
             
         }) { (msg, code) in
             MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
-
-//    @objc func albumQueryCommentListRequest(page: Int) {
-//        let model = dataSource[page]
-//        YXSEducationAlbumQueryCommentListRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0).request({ (json) in
-//
-//        }) { (msg, code) in
-//
-//        }
-//    }
     
     // MARK: - private
     private func reloadToolStatus(){
@@ -139,46 +145,76 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
         }
     }
     
-    private  func updateUI(){
+    private func updateUI(){
         reloadToolStatus()
         customNav.title = "\(currentIndex + 1)/\(self.dataSource.count)"
+        let model = praiseAndComments[currentIndex]
+        footerView.model = model
         albumQueryPraiseCommentCountRequest(page: currentIndex)
-//        let model = praisesModels[dataSource[currentIndex].id ?? 0]
-//        if let model = model{
-//            footerView.setModel(model: model)
-//        }
+    }
+    
+    private func cellClickAction(){
+        self.view.endEditing(true)
+        if isShowingCommentView{
+            showCommentView(show: false)
+            isShowingCommentView = false
+        }else{
+            iscurrentShowTool = !iscurrentShowTool
+            reloadToolStatus()
+        }
+        
+    }
+    
+    private func showCommentView(show: Bool){
+        isShowingCommentView = show
+        if show{
+            let model = dataSource[currentIndex]
+            commentView.resourceId = model.id ?? 0
+            commentView.reloadData()
+            UIView.animate(withDuration: 0.25) {
+                self.commentView.snp.remakeConstraints { (make) in
+                    make.left.right.bottom.equalTo(0)
+                }
+            }
+        }else{
+            UIView.animate(withDuration: 0.25) {
+                self.commentView.snp.remakeConstraints { (make) in
+                    make.top.equalTo(self.view.snp_bottom)
+                    make.left.right.equalTo(0)
+                }
+            }
+        }
+        
     }
     
     // MARK: - Action
     @objc func praiseOrCancelClick(sender: UIButton) {
         let model = dataSource[browserView?.currentPage ?? 0]
-        YXSEducationAlbumPraiseOrCancelRequest(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: model.id ?? 0).request({ [weak self](json) in
-            guard let weakSelf = self else {return}
-            let selected = json.boolValue
-            let priseCount = weakSelf.footerView.currentPriseButton.title
-
-            var count: Int = priseCount?.int ?? 0
-            if selected {
-                count += 1
-            } else {
-                count -= 1
-            }
-            weakSelf.footerView.currentPriseButton.title = "\(count)"
-
-            sender.isSelected = selected
-            
+        let curruntPraiseModel = footerView.model
+        if curruntPraiseModel?.praiseStat == 0{
+            curruntPraiseModel?.praiseStat = 1
+            curruntPraiseModel?.praiseCount = (curruntPraiseModel?.praiseCount ?? 0) + 1
+        }else{
+            curruntPraiseModel?.praiseStat = 0
+            curruntPraiseModel?.praiseCount = (curruntPraiseModel?.praiseCount ?? 1) - 1
+        }
+        footerView.model = curruntPraiseModel
+        YXSEducationAlbumPraiseOrCancelRequest(albumId: albumsId, classId: classId, resourceId: model.id ?? 0).request({ (_)in
         }) { (msg, code) in
-            MBProgressHUD.yxs_showMessage(message: msg)
+            //            MBProgressHUD.yxs_showMessage(message: msg)
         }
     }
     
     @objc func commentClick(sender: UIButton) {
-        UIView.animate(withDuration: 0.25) {
-            self.commentView.snp.remakeConstraints { (make) in
-                make.left.right.bottom.equalTo(0)
-            }
-        }
+        showCommentView(show: true)
     }
+    
+    @objc func currentPriseClick(sender: UIButton) {
+        let model = dataSource[browserView?.currentPage ?? 0]
+        let vc = YXSPraiseDetialListController(classId: classId, resourceId: model.id ?? 0, albumId: model.albumId ?? 0)
+        self.navigationController?.pushViewController(vc)
+    }
+    
     
     @objc func moreClick(sender: UIButton) {
         let lists = [YXSCommonBottomParams.init(title: "保存到手机", event: "save"),YXSCommonBottomParams.init(title: "设置为封面", event: "setCover")]
@@ -192,16 +228,15 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             case "setCover":
                 let model = self?.dataSource[weakSelf.browserView?.currentPage ?? 0]
                 MBProgressHUD.yxs_showLoading()
-                YXSEducationAlbumUpdateAlbumNameOrCoverRequest(id: weakSelf.albumModel?.id ?? 0, classId: weakSelf.albumModel?.classId ?? 0, albumName: nil, coverUrl: model?.resourceUrl).request({ [weak self](json) in
+                YXSEducationAlbumUpdateAlbumNameOrCoverRequest(id: weakSelf.albumsId, classId: weakSelf.classId, albumName: nil, coverUrl: model?.resourceUrl).request({ [weak self](json) in
                     guard let weakSelf = self else {return}
                     MBProgressHUD.yxs_showMessage(message: "修改成功")
-                    weakSelf.albumModel?.coverUrl = model?.resourceUrl
-                    weakSelf.updateAlbumModel?(weakSelf.albumModel!)
+                    weakSelf.updateCoverBlock?(model?.resourceUrl ?? "")
                     
                 }) { (msg, code) in
                     MBProgressHUD.yxs_showMessage(message: msg)
                 }
-
+                
             default:
                 break
             }
@@ -223,8 +258,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             data.interactionProfile.disable = true
             data.singleTouchBlock = {[weak self](ybImgData)in
                 guard let strongSelf = self else { return }
-                strongSelf.iscurrentShowTool = !strongSelf.iscurrentShowTool
-                strongSelf.reloadToolStatus()
+                strongSelf.cellClickAction()
             }
             return data
             
@@ -236,8 +270,7 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
             data.shouldHideForkButton = true
             data.singleTouchBlock = {[weak self](ybImgData)in
                 guard let strongSelf = self else { return }
-                strongSelf.iscurrentShowTool = !strongSelf.iscurrentShowTool
-                strongSelf.reloadToolStatus()
+                strongSelf.cellClickAction()
             }
             return data
         }
@@ -246,7 +279,6 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, pageChanged page: Int, data: YBIBDataProtocol) {
         currentIndex = page
         updateUI()
-//        commentView.loadData(albumId: albumModel?.id ?? 0, classId: albumModel?.classId ?? 0, resourceId: dataSource[page].id ?? 0)
     }
     
     func yb_imageBrowser(_ imageBrowser: YBImageBrowser, respondsToLongPressWithData data: YBIBDataProtocol) {
@@ -264,9 +296,9 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     lazy var customNav: YXSCustomNav = {
         let view = YXSCustomNav(YXSCustomStyle.backAndTitle)
         view.backgroundColor = UIColor.black
-//        view.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
+        //        view.mixedBackgroundColor = MixedColor(normal: UIColor.white, night: kNightForegroundColor)
         view.backImageButton.setMixedImage(MixedImage(normal: "yxs_back_white", night: "yxs_back_white"), forState: .normal)
-//        view.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
+        //        view.titleLabel.mixedTextColor = MixedColor(normal: kTextMainBodyColor, night: UIColor.white)
         view.titleLabel.textColor = UIColor.white
         return view
     }()
@@ -274,36 +306,47 @@ class YXSPhotoPreviewController: YXSBaseViewController, YBImageBrowserDataSource
     lazy var footerView: YXSPhotoPreviewFooterView = {
         let view = YXSPhotoPreviewFooterView()
         view.backgroundColor = UIColor.black
-//        view.minePriseButton.addTarget(self, action: #selector(pra), for: .touchUpInside)
+        //        view.minePriseButton.addTarget(self, action: #selector(pra), for: .touchUpInside)
         view.minePriseButton.addTarget(self, action: #selector(praiseOrCancelClick(sender:)), for: .touchUpInside)
         view.commentButton.addTarget(self, action: #selector(commentClick(sender:)), for: .touchUpInside)
         view.moreActionButton.addTarget(self, action: #selector(moreClick(sender:)), for: .touchUpInside)
+        view.currentPriseButton.addTarget(self, action: #selector(currentPriseClick(sender:)), for: .touchUpInside)
         return view
     }()
     
     lazy var commentView: YXSPhotoPreviewCommentView = {
-        let view = YXSPhotoPreviewCommentView()
-        view.backgroundColor = UIColor.black
+        let view = YXSPhotoPreviewCommentView(albumId: albumsId, classId: classId)
+        view.backgroundColor = UIColor.yxs_hexToAdecimalColor(hex: "#000000", alpha: 0.9)
         view.isUserInteractionEnabled = true
+        view.updateCountBlock = {
+            [weak self] (count) in
+            guard let strongSelf = self else { return }
+            
+            let model = strongSelf.praiseAndComments[strongSelf.currentIndex]
+            if let model = model{
+                model.commentCount = count
+                strongSelf.footerView.model = model
+            }
+        }
         return view
     }()
     
-//    lazy var browser: YBImageBrowser = {
-//        let view = YBImageBrowser()
-//        // 禁止旋转（但是若当前控制器能旋转，图片浏览器也会跟随，布局可能会错位，这种情况还待处理）
-//        view.supportedOrientations = .portrait
-//        view.dataSource = self
-//        view.delegate = self
-////        view.currentPage = 4
-//        // 关闭入场和出场动效
-//        view.defaultAnimatedTransition?.showType = .none
-//        view.defaultAnimatedTransition?.hideType = .none
-//
-//        // 删除工具视图（你可能需要自定义的工具视图，那请自己实现吧）
-//        view.toolViewHandlers = []
-//        return view
-//    }()
-
+    //    lazy var browser: YBImageBrowser = {
+    //        let view = YBImageBrowser()
+    //        // 禁止旋转（但是若当前控制器能旋转，图片浏览器也会跟随，布局可能会错位，这种情况还待处理）
+    //        view.supportedOrientations = .portrait
+    //        view.dataSource = self
+    //        view.delegate = self
+    ////        view.currentPage = 4
+    //        // 关闭入场和出场动效
+    //        view.defaultAnimatedTransition?.showType = .none
+    //        view.defaultAnimatedTransition?.hideType = .none
+    //
+    //        // 删除工具视图（你可能需要自定义的工具视图，那请自己实现吧）
+    //        view.toolViewHandlers = []
+    //        return view
+    //    }()
+    
 }
 
 // MARK: -HMRouterEventProtocol
