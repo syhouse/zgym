@@ -306,7 +306,10 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
                 delectButton.isHidden = !model.isMyPublish
                 
 //                let nameText = model.isMyPublish ? "我" : model.userName ?? ""
-                let nameText = model.userName ?? ""
+                var nameText = model.userName ?? ""
+                if model.userType == PersonRole.PARENT.rawValue{
+                    nameText = nameText.components(separatedBy: "&").last ?? ""
+                }
                 
                 if let reUserId = model.reUserId{
                     var replyNameText: String = model.reUserName ?? ""
