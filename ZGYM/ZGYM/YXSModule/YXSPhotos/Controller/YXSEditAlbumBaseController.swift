@@ -125,7 +125,9 @@ class YXSEditAlbumBaseController: YXSBaseViewController {
         let section = FriendCircleImagesView()
         section.leftlabel.text = "相册封面"
         section.imageWidth = 34
-        section.setImages(images: [UIImage.init(named: "yxs_photo_nocover")])
+        
+        let image = NightNight.theme == .night ? UIImage.init(named: "defultImage_night") : UIImage.init(named: "defultImage")
+        section.setImages(images: [image])
         section.addTarget(self, action: #selector(selectCover), for: .touchUpInside)
         return section
     }()

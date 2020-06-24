@@ -144,6 +144,13 @@ class YXSPhotoAlbumDetialListController: YXSBaseCollectionViewController {
             
             self.refreshShowFooterData()
         }) { (msg, code) in
+            if let btn = self.rightButton {
+                if code == "607" {
+                    btn.isHidden = true
+                } else {
+                    btn.isHidden = false
+                }
+            }
             self.yxs_endingRefresh()
         }
     }

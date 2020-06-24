@@ -304,7 +304,11 @@ class YXSPhotoPreviewCommentCell: UITableViewCell {
     var model: YXSPhotoPreviewCommentModel? {
         didSet {
             if let model = model{
-                imgAvatar.sd_setImage(with: URL(string: model.avatar ?? ""), placeholderImage: UIImage(named: "defultImage"))
+                var placeholderImage = kImageUserIconTeacherDefualtImage
+                if model.userType == PersonRole.PARENT.rawValue {
+                    placeholderImage = kImageUserIconPartentDefualtImage
+                }
+                imgAvatar.sd_setImage(with: URL(string: model.avatar ?? ""), placeholderImage: placeholderImage)
                 lbDate.text = Date.yxs_Time(date: Date.init(timeIntervalSince1970: TimeInterval(model.createTime ?? 0)))
                 lbContent.text = model.content ?? ""
                 delectButton.isHidden = !model.isMyPublish

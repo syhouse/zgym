@@ -65,8 +65,8 @@ class YXSPhotoAlbumsListCell: UICollectionViewCell {
             imageView.image = UIImage.init(named: "yxs_photo_new_ablum")
             createLabel.isHidden = false
         }else{
-            
-            imageView.sd_setImage(with: URL.init(string: model.coverUrl ?? ""), placeholderImage: UIImage.init(named: "yxs_photo_nocover"))
+//             "yxs_photo_nocover"
+            imageView.yxs_setImageWithURL(url: URL.init(string: model.coverUrl ?? ""), placeholder: kImageDefualtMixedImage)
             titleLabel.isHidden = false
             countLabel.isHidden = false
             titleLabel.text = model.albumName
