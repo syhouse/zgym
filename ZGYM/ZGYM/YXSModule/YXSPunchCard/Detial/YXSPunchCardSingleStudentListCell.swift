@@ -81,7 +81,8 @@ class YXSPunchCardSingleStudentListCell: YXSBaseCommentCell {
             if isNeedCorners{
                 self.contentView.yxs_addRoundedCorners(corners: [.bottomRight,.bottomLeft], radii: CGSize.init(width: 2.5, height: 2.5), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height:model.cellHeight + 8))
             }else{
-                self.contentView.yxs_addRoundedCorners(corners: [.bottomRight,.bottomLeft], radii: CGSize.init(width: 0, height: 0), rect: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH - 15 - 15, height:model.cellHeight))
+                self.contentView.yxs_removeRoundedCorners()
+//                self.contentView.yxs_addRoundedCorners(corners: [.bottomRight,.bottomLeft], radii: CGSize.init(width: 0, height: 0), rect: CGRect.init(x: 15, y: 0, width: SCREEN_WIDTH - 15 - 15, height:model.cellHeight))
             }
         }
         
